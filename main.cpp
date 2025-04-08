@@ -38,6 +38,10 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "Goomba.h"
 #include "Coin.h"
 #include "Platform.h"
+#include "Pipe.h"
+#include "Fireball.h"
+#include "Plant.h"
+
 
 #include "SampleKeyEventHandler.h"
 
