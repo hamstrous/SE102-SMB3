@@ -10,8 +10,10 @@
 #include "Coin.h"
 #include "Platform.h"
 #include "Pipe.h"
+#include "Pipe2.h"
 #include "Fireball.h"
 #include "Plant.h"
+
 #include "SampleKeyEventHandler.h"
 
 
@@ -166,6 +168,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			sprite_begin, sprite_end
 		);
 		break;
+	}
+	case OBJECT_TYPE_PIPE2:
+	{
+		float cellWidth = (float)atof(tokens[3].c_str());
+		float cellHeight = (float)atof(tokens[4].c_str());
+		int height = atoi(tokens[5].c_str());
+		int spriteId_top_left = atoi(tokens[6].c_str());
+		int spriteId_top_right = atoi(tokens[7].c_str());
+		int	spriteId_bot_left = atoi(tokens[8].c_str());
+		int spriteId_bot_right = atoi(tokens[9].c_str());
+		BOOLEAN isGoInside = atoi(tokens[10].c_str());
+		obj = new CPipe2(x, y, cellWidth, cellHeight, height, spriteId_top_left, spriteId_top_right, spriteId_bot_left, spriteId_bot_right, isGoInside);
+
 	}
 
 
