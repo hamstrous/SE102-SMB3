@@ -3,6 +3,7 @@
 
 #define KOOPA_GRAVITY 0.002f
 #define KOOPA_WALKING_SPEED 0.05f
+#define KOOPA_SHELL_SPEED 0.25f
 
 
 #define KOOPA_BBOX_WIDTH 16
@@ -43,5 +44,6 @@ class CKoopa : public CGameObject
 public:
 	CKoopa(float x, float y);
 	virtual void SetState(int state);
+	void Kicked(LPCOLLISIONEVENT e);
 };
 

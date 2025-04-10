@@ -103,6 +103,9 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 		{
 			koopa->SetState(KOOPA_STATE_SHELL_IDLE);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}else{
+			koopa->Kicked(e);
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 	}
 	else 
@@ -120,6 +123,15 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 				{
 					DebugOut(L">>> Mario DIE >>> \n");
 					SetState(MARIO_STATE_DIE);
+				}
+			}
+			else {
+				if (e->nx != 0)
+				{
+					if (koopa->GetState() == KOOPA_STATE_SHELL_IDLE)
+					{
+						koopa->Kicked(e);
+					}
 				}
 			}
 		}

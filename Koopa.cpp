@@ -63,7 +63,6 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
-	DebugOut(L"[INFO] Koopa x: %f, y:%f !\n", x, y);
 
 }
 
@@ -79,6 +78,9 @@ void CKoopa::Render()
 			break;
 		case KOOPA_STATE_SHELL_IDLE:
 			aniId = ID_ANI_KOOPA_SHELL_IDLE;
+			break;
+		case KOOPA_STATE_SHELL_MOVING:
+			aniId = ID_ANI_KOOPA_SHELL_MOVING;
 			break;
 		default:
 			aniId = ID_ANI_KOOPA_WALKING_RIGHT;
@@ -99,5 +101,20 @@ void CKoopa::SetState(int state)
 	case KOOPA_STATE_WALKING:
 		vx = KOOPA_WALKING_SPEED;
 		break;
+	}
+	DebugOut(L"[INFO] Koopa state: %d\n", state);
+}
+
+void CKoopa::Kicked(LPCOLLISIONEVENT e)
+{
+	// Only when in shell state can Koopa be kicked by Mario
+	if (state == KOOPA_STATE_SHELL_IDLE) {
+		SetState(KOOPA_STATE_SHELL_MOVING);
+		if(e->nx > 0) {
+			vx = -KOOPA_SHELL_SPEED;
+		}
+		else if (e->nx < 0) {
+			vx = KOOPA_SHELL_SPEED;
+		}
 	}
 }
