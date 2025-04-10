@@ -29,9 +29,9 @@
 class CPlant : public CGameObject
 {
 protected:
-	int plant, stem;
 	ULONGLONG up_start;
 	float startY;
+	bool isFired;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
@@ -41,8 +41,8 @@ protected:
 	virtual void OnNoCollision(DWORD dt);
 	virtual void RenderBoundingBox();
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
-	virtual void OnCollisionWithStem(LPCOLLISIONEVENT e);
-
+	bool getIsFired() { return isFired; }
+	void ShootFireball();
 	int GetaniID();
 public:
 	CPlant(float x, float y);

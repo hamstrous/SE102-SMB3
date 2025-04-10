@@ -3,6 +3,7 @@
 #include "Mario.h"
 #include "Pipe.h"
 #include "PlayScene.h"
+#include "Fireball.h"
 void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x - PRIRANHA_BBOX_WIDTH / 2;
@@ -39,6 +40,19 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 	}
+	//If fireball in screen?
+	float cx, cy;
+	CGame::GetInstance()->GetCamPos(cx, cy);
+	float camWidth = CGame::GetInstance()->GetScreenWidth();
+	float camHeight = CGame::GetInstance()->GetScreenHeight();
+	if (state == STATE_PRIRANHA_STOP && y < startY && (GetTickCount64() - up_start > PRIRANHA_STOP_TIMEOUT / 2) 
+		&& isFired && ( x  >= cx && x  <= cx + camWidth &&
+						y  >= cy && y  <= cy + camHeight))
+	{
+		ShootFireball();
+	}
+
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -65,49 +79,99 @@ void CPlant::RenderBoundingBox()
 	CGame::GetInstance()->Draw(x - cx, yy - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
 }
 void CPlant::Render()
-{
-	CAnimations::GetInstance()->Get(ID_ANI_STEM)->Render(x, y + ( PRIRANHA_BBOX_HEIGHT / 2 ) +STEM_BBOX_HEIGHT);
+{	
+	
+	CAnimations::GetInstance()->Get(ID_ANI_STEM)->Render(x, y + (PRIRANHA_BBOX_HEIGHT / 2) + STEM_BBOX_HEIGHT);
 	CAnimations::GetInstance()->Get(GetaniID())->Render(x, y);
-	//RenderBoundingBox();
+	RenderBoundingBox();
+}
+
+void CPlant::ShootFireball()
+{
+	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
+	CFireball* fireball = new CFireball(x, y);
+	//fireball->SetState(FIREBALL_STATE_PIRANHA);
+	float mario_x, mario_y, a;
+	scene->GetPlayer()->GetPosition(mario_x, mario_y);
+	if (mario_x < x)
+	{
+		if (mario_y < y && mario_x > 264)
+		{
+			fireball->SetSpeed(-FIREBALL_SPEED, -FIREBALL_SPEED * 0.8f );
+		}
+		else if (mario_y < y && mario_x < 264)
+		{
+			fireball->SetSpeed(-FIREBALL_SPEED, -FIREBALL_SPEED * 0.2f);
+		}
+		else if (mario_y > y && mario_x < 264)
+		{
+			fireball->SetSpeed(-FIREBALL_SPEED, FIREBALL_SPEED * 0.2f);
+		}
+		else if (mario_y > y && mario_x > 264)
+		{
+			fireball->SetSpeed(-FIREBALL_SPEED, FIREBALL_SPEED * 0.5f );
+		}
+	}
+	else
+	{
+		if (mario_y < y && mario_x < 416)
+		{
+			fireball->SetSpeed(FIREBALL_SPEED, -FIREBALL_SPEED * 0.8f);
+		}
+		else if (mario_y < y && mario_x > 416)
+		{
+			fireball->SetSpeed(FIREBALL_SPEED, -FIREBALL_SPEED * 0.2f);
+		}
+		else if (mario_y > y && mario_x > 416)
+		{
+			fireball->SetSpeed(FIREBALL_SPEED, FIREBALL_SPEED * 0.2f);
+		}
+		else if (mario_y > y && mario_x < 416)
+		{
+			fireball->SetSpeed(FIREBALL_SPEED, FIREBALL_SPEED * 0.5f);
+		}
+	}
+	scene->AddObject(fireball);
+	isFired = false;
 }
 
 int CPlant::GetaniID()
-{
-	LPGAME game = CGame::GetInstance();
-	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+{	
+	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
 	float marioX, marioY;
-	mario->GetPosition(marioX, marioY);
+	scene->GetPlayer()->GetPosition(marioX, marioY);
 	int aniId = ID_ANI_PRIRANHA_RED_DOWN_LEFT;
-	
-		if (marioX < 350)
-		{
-			if (marioY < 130)
-				aniId = ID_ANI_PRIRANHA_RED_UP_LEFT;
-			else
-				aniId = ID_ANI_PRIRANHA_RED_DOWN_LEFT;
-		}
-		else if (marioX > 350)
-		{
-			if (marioY < 130)
-				aniId = ID_ANI_PRIRANHA_RED_UP_RIGHT;
-			else
-				aniId = ID_ANI_PRIRANHA_RED_DOWN_RIGHT;
-		}
+	if (marioX < x)
+	{
+		if (marioY < y)
+			aniId = ID_ANI_PRIRANHA_RED_UP_LEFT;
+		else
+			aniId = ID_ANI_PRIRANHA_RED_DOWN_LEFT;
+	}
+	else if (marioX > x)
+	{
+		if (marioY < y)
+			aniId = ID_ANI_PRIRANHA_RED_UP_RIGHT;
+		else
+			aniId = ID_ANI_PRIRANHA_RED_DOWN_RIGHT;
+	}
 	if (state == STATE_PRIRANHA_STOP)
-			if (marioX < 350)
-			{
-				if (marioY < 130)
-					aniId = ID_ANI_PRIRANHA_RED_UP_LEFT_STAY;
-				else
-					aniId = ID_ANI_PRIRANHA_RED_DOWN_LEFT_STAY;
-			}
-			else if (marioX > 350)
-			{
-				if (marioY < 130)
-					aniId = ID_ANI_PRIRANHA_RED_UP_RIGHT_STAY;
-				else
-					aniId = ID_ANI_PRIRANHA_RED_DOWN_RIGHT_STAY;
-			}
+	{ 
+		if (marioX < x)
+		{
+			if (marioY < y)
+				aniId = ID_ANI_PRIRANHA_RED_UP_LEFT_STAY;
+			else
+				aniId = ID_ANI_PRIRANHA_RED_DOWN_LEFT_STAY;
+		}
+		else if (marioX > x)
+		{
+			if (marioY < y)
+				aniId = ID_ANI_PRIRANHA_RED_UP_RIGHT_STAY;
+			else
+				aniId = ID_ANI_PRIRANHA_RED_DOWN_RIGHT_STAY;
+		}
+	}
 	return aniId;
 }
 
@@ -123,14 +187,6 @@ void CPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 
 }
 
-void CPlant::OnCollisionWithStem(LPCOLLISIONEVENT e)
-{
-	CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
-	if (pipe != nullptr)
-	{
-		return;
-	}
-}
 
 CPlant::CPlant(float x, float y)
 {
@@ -138,23 +194,22 @@ CPlant::CPlant(float x, float y)
 	this->y = y;
 	this->isDeleted = false;
 	startY = y;
+	isFired = false;
 	this->up_start = GetTickCount64();
 	SetState(STATE_PRIRANHA_UP);
 }
 
-//CPlant::CPlant(float x, float y, int IDplant, int IDstem)
-//{
-//}
+
 
 void CPlant::SetState(int state)
 {	
-	LPGAME game = CGame::GetInstance();
-	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
 	float marioX, marioY;
-	mario->GetPosition(marioX, marioY);
+	scene->GetPlayer()->GetPosition(marioX, marioY);
 	switch (state)
 	{
 	case STATE_PRIRANHA_UP:
+		isFired = true;
 		vy = -PIRANHA_SPEED;
 		up_start = 0;
 		break;
