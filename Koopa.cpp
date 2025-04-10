@@ -1,9 +1,11 @@
 #include "Koopa.h"
+#include "debug.h"
 
 CKoopa::CKoopa(float x, float y)
 {
 	this->x = x;
 	this->y = y;
+	ax = 0;
 	vx = KOOPA_WALKING_SPEED;
 	ay = KOOPA_GRAVITY;
 	SetState(KOOPA_STATE_WALKING);
@@ -51,6 +53,8 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
+	DebugOut(L"[INFO] Koopa x: %f, y:%f !\n", x, y);
+
 }
 
 
