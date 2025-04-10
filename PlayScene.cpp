@@ -125,7 +125,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_FIREBALL: obj = new CFireball(x, y); break;
-	case OBJECT_TYPE_PLANT: obj = new CPlant(x, y); break;
+	case OBJECT_TYPE_PLANT:
+	{
+		int color = atoi(tokens[3].c_str());
+		int type = atoi(tokens[4].c_str());
+		int size = atoi(tokens[5].c_str());
+		obj = new CPlant(x, y, color, type, size);
+		break;
+	}
 	case OBJECT_TYPE_PLATFORM:
 	{
 

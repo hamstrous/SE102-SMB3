@@ -5,10 +5,9 @@
 #include "Sprites.h"
 
 #define PIRANHA_SPEED 0.04f
-#define PIRANHA_BBOX 50
+#define PIRANHA_BBOX 44
 #define PRIRANHA_BBOX_WIDTH 15
 #define PRIRANHA_BBOX_HEIGHT 30
-#define STEM_BBOX_HEIGHT 5
 #define PRIRANHA_STOP_TIMEOUT 1700
 
 #define STATE_PRIRANHA_UP 100
@@ -32,6 +31,7 @@ protected:
 	ULONGLONG up_start;
 	float startY;
 	bool isFired;
+	int color, type, size;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
@@ -45,7 +45,7 @@ protected:
 	void ShootFireball();
 	int GetaniID();
 public:
-	CPlant(float x, float y);
+	CPlant(float x, float y, int corlor, int type, int size);
 	virtual void SetState(int state);
 };
 
