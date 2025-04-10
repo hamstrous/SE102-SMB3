@@ -7,6 +7,17 @@
 
 CCollision* CCollision::__instance = NULL;
 
+static bool isColliding(float al, float at, float ar, float ab, float bl, float bt, float br, float bb) {
+	return al < br && ar > bl && at < bb && ab > bt;
+}
+
+static int StillCollding(float al, float at, float ar, float ab, float dx, float dy, float bl, float bt, float br, float bb) {
+	int curTouch = isColliding(al, at, ar, ab, bl, bt, br, bb);
+	int nexTouch = isColliding(al + dx, at + dy, ar + dx, ab + dy, bl, bt, br, bb);
+	if(curTouch == 0) return 0; // not touch
+	return  curTouch + nexTouch; // 2: still touch, 1: touch then not touch
+}
+
 int CCollisionEvent::WasCollided() {
 	return
 		t >= 0.0f && t <= 1.0f && obj->IsDirectionColliable(nx, ny) == 1;
@@ -36,6 +47,16 @@ void CCollision::SweptAABB(
 
 	t = -1.0f;			// no collision
 	nx = ny = 0;
+
+	float n_ml = ml + dx;
+	float n_mt = mt + dy;
+	float n_mr = mr + dx;
+	float n_mb = mb + dy; 
+
+	//if (isColliding(ml,mt,mr,mb,sl,st,sr,sb) && isColliding(n_ml,n_mt,n_mr,n_mb,sl,st,sr,sb)){
+	//	t = 0;
+	//	return;
+	//}// if moving inside (collide before and after)
 
 	//
 	// Broad-phase test 
@@ -116,7 +137,6 @@ void CCollision::SweptAABB(
 		nx = 0.0f;
 		dy > 0 ? ny = -1.0f : ny = 1.0f;
 	}
-
 }
 
 /*
@@ -357,4 +377,36 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
+
+// 2: still touch, 1: touch then not touch, 0: not touch
+int CCollision::CheckStillTouchSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	int mxOutCome = 0;
+	if (coObjects->size() > 0)
+	{
+		for (auto obj : *coObjects)
+		{
+			if (obj->IsBlocking())
+			{
+				float sl, st, sr, sb;
+				obj->GetBoundingBox(sl, st, sr, sb);
+				float mdx = vx * dt;
+				float mdy = vy * dt;
+
+				float svx, svy;
+				obj->GetSpeed(svx, svy);
+				float sdx = svx * dt;
+				float sdy = svy * dt;
+
+				//
+				// NOTE: new m speed = original m speed - collide object speed
+				// 
+				float dx = mdx - sdx;
+				float dy = mdy - sdy;
+
+				mxOutCome = max(mxOutCome, StillCollding(ml, mt, mr, mb, dx, dy, sl, st, sr, sb));
+			}
+		}
+	}return mxOutCome;
 }

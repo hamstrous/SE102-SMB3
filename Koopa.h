@@ -10,6 +10,9 @@
 #define KOOPA_BBOX_HEIGHT 26
 #define KOOPA_BBOX_HEIGHT_SHELL 16
 
+#define KOOPA_FLOOR_CHECK_BBOX_HEIGHT 4
+#define KOOPA_FLOOR_CHECK_BBOX_WIDTH 4
+
 #define KOOPA_SHELL_TIMEOUT 500
 
 #define KOOPA_STATE_WALKING 100
@@ -29,9 +32,12 @@ class CKoopa : public CGameObject
 	float ax;
 	float ay;
 
+	CGameObject* FloorCheck;
+
 	ULONGLONG die_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	virtual void GetFloorBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
@@ -41,9 +47,11 @@ class CKoopa : public CGameObject
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
+	int OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+
 public:
 	CKoopa(float x, float y);
 	virtual void SetState(int state);
-	void Kicked(LPCOLLISIONEVENT e);
+	void Kicked(float mx);
 };
 

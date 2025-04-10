@@ -29,6 +29,20 @@ void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	
 }
 
+void CKoopa::GetFloorBoundingBox(float& left, float& top, float& right, float& bottom)
+{
+	top = y + KOOPA_BBOX_HEIGHT / 2;
+	bottom = top + KOOPA_FLOOR_CHECK_BBOX_HEIGHT;
+	if (vx > 0) {
+		left = x + KOOPA_BBOX_WIDTH / 2;
+		right = left + KOOPA_FLOOR_CHECK_BBOX_WIDTH;
+	}
+	else {
+		right = x - KOOPA_BBOX_WIDTH / 2;
+		left = right - KOOPA_FLOOR_CHECK_BBOX_WIDTH;
+	}
+}
+
 void CKoopa::OnNoCollision(DWORD dt)
 {
 	x += vx * dt;
@@ -50,10 +64,21 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 }
 
+int CKoopa::OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	float ml, mt, mr, mb;
+	GetFloorBoundingBox(ml, mt, mr, mb);
+	return CCollision::GetInstance()->CheckStillTouchSolid(ml, mt, mr, mb, vx, vy, dt, coObjects);
+}
+
 void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
+
+	if(state != KOOPA_STATE_SHELL_MOVING && OnFloor(dt, coObjects) == 1) {
+		vx = -vx;
+	}
 
 	/*if ((state == GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
 	{
@@ -105,16 +130,16 @@ void CKoopa::SetState(int state)
 	DebugOut(L"[INFO] Koopa state: %d\n", state);
 }
 
-void CKoopa::Kicked(LPCOLLISIONEVENT e)
+void CKoopa::Kicked(float mx)
 {
 	// Only when in shell state can Koopa be kicked by Mario
 	if (state == KOOPA_STATE_SHELL_IDLE) {
 		SetState(KOOPA_STATE_SHELL_MOVING);
-		if(e->nx > 0) {
-			vx = -KOOPA_SHELL_SPEED;
-		}
-		else if (e->nx < 0) {
+		if(mx <= x) {
 			vx = KOOPA_SHELL_SPEED;
+		}
+		else{
+			vx = -KOOPA_SHELL_SPEED;
 		}
 	}
 }

@@ -15,7 +15,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 	// reset untouchable timer if untouchable time has passed
@@ -104,7 +103,7 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 			koopa->SetState(KOOPA_STATE_SHELL_IDLE);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}else{
-			koopa->Kicked(e);
+			koopa->Kicked(x);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 	}
@@ -130,7 +129,7 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 				{
 					if (koopa->GetState() == KOOPA_STATE_SHELL_IDLE)
 					{
-						koopa->Kicked(e);
+						koopa->Kicked(x);
 					}
 				}
 			}
