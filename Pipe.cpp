@@ -1,11 +1,11 @@
-#include "Pipe2.h"
+#include "Pipe.h"
 
 #include "Sprite.h"
 #include "Sprites.h"
 #include "Game.h"
 #include "Textures.h"
 
-void CPipe2::RenderBoundingBox()
+void CPipe::RenderBoundingBox()
 {
 	D3DXVECTOR3 p(x, y, 0);
 	RECT rect;
@@ -27,7 +27,7 @@ void CPipe2::RenderBoundingBox()
 	CGame::GetInstance()->Draw(xx - cx, yy - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
 }
 
-void CPipe2::Render()
+void CPipe::Render()
 {
 	if (this->height <= 0) return;
 	float yy = y;
@@ -47,7 +47,7 @@ void CPipe2::Render()
 	//RenderBoundingBox();
 }
 
-void CPipe2::GetBoundingBox(float& l, float& t, float& r, float& b)
+void CPipe::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x - this->cellWidth / 2;
 	t = y - this->cellHeight / 2;

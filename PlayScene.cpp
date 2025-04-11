@@ -160,23 +160,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CPortal(x, y, r, b, scene_id);
 		break;
 	}
-
-	case OBJECT_TYPE_PILE:
-	{
-		float cell_width = (float)atof(tokens[3].c_str());
-		float cell_height = (float)atof(tokens[4].c_str());
-		int height = atoi(tokens[5].c_str());
-		int sprite_begin = atoi(tokens[6].c_str());
-		int sprite_end = atoi(tokens[7].c_str());
-
-		obj = new CPipe(
-			x, y,
-			cell_width, cell_height, height,
-			sprite_begin, sprite_end
-		);
-		break;
-	}
-	case OBJECT_TYPE_PIPE2:
+	case OBJECT_TYPE_PIPE:
 	{
 		float cellWidth = (float)atof(tokens[3].c_str());
 		float cellHeight = (float)atof(tokens[4].c_str());

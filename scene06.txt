@@ -5,7 +5,7 @@ brick.txt
 coin.txt
 goomba.txt
 cloud.txt
-pile.txt
+pipe.txt
 Fireball.txt
 Plant.txt
 
