@@ -107,6 +107,10 @@ public:
 	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
 	void GetCamPos(float& x, float& y) { x = cam_x; y = cam_y; }
 
+	int GetScreenWidth() { return backBufferWidth; }
+	int GetScreenHeight() { return backBufferHeight; }
+
+
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
 	void Load(LPCWSTR gameFile);
 	void SwitchScene();

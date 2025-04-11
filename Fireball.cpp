@@ -28,16 +28,8 @@ void CFireball::OnNoCollision(DWORD dt)
 	y += vy * dt;
 }
 
-void CFireball::OnCollisionWith(LPCOLLISIONEVENT e)
-{
 
-}
 
-CFireball::CFireball(float x, float y)
-{
-	time_start = GetTickCount64();
-
-}
 
 void CFireball::SetState(int state)
 {
