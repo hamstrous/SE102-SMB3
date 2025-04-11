@@ -12,10 +12,6 @@ void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	bottom = top + PRIRANHA_BBOX_HEIGHT + size;
 }
 
-int GetSize()
-{	
-	return 0;
-}
 void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	LPGAME game = CGame::GetInstance();

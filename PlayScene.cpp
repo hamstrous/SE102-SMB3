@@ -10,7 +10,6 @@
 #include "Coin.h"
 #include "Platform.h"
 #include "Pipe.h"
-#include "Pipe2.h"
 #include "Fireball.h"
 #include "Plant.h"
 #include "Koopa.h"
@@ -187,7 +186,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int	spriteId_bot_left = atoi(tokens[8].c_str());
 		int spriteId_bot_right = atoi(tokens[9].c_str());
 		BOOLEAN isGoInside = atoi(tokens[10].c_str());
-		obj = new CPipe2(x, y, cellWidth, cellHeight, height, spriteId_top_left, spriteId_top_right, spriteId_bot_left, spriteId_bot_right, isGoInside);
+		obj = new CPipe(x, y, cellWidth, cellHeight, height, spriteId_top_left, spriteId_top_right, spriteId_bot_left, spriteId_bot_right, isGoInside);
 	}
 
 

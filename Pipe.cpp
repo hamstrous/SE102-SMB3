@@ -1,35 +1,11 @@
-#include "Pipe.h"
-#include "Textures.h"
+#include "Pipe2.h"
+
 #include "Sprite.h"
 #include "Sprites.h"
-
 #include "Game.h"
-void CPipe::Render()
-{
-	if (this->height <= 0) return;
-	float yy = y;
-	CSprites* s = CSprites::GetInstance();
-	s->Get(this->spriteIdBegin)->Draw(x, yy);
-	yy += this->cellHeight;
-	for (int i = 1; i < this->height; i++)
-	{
-		s->Get(this->spriteIdEnd)->Draw(x, yy);
-		yy += this->cellHeight;
-	}
+#include "Textures.h"
 
-	RenderBoundingBox();
-}
-
-void CPipe::GetBoundingBox(float& l, float& t, float& r, float& b)
-{
-	float cellWidth_div_2 = this->cellWidth / 2;
-	l = x - cellWidth_div_2;
-	t = y - this->cellHeight / 2;
-	r = l + this->cellWidth;
-	b = t + this->cellHeight * this->height;
-}
-
-void CPipe::RenderBoundingBox()
+void CPipe2::RenderBoundingBox()
 {
 	D3DXVECTOR3 p(x, y, 0);
 	RECT rect;
@@ -46,23 +22,35 @@ void CPipe::RenderBoundingBox()
 
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
-
 	float yy = y - this->cellHeight / 2 + rect.bottom / 2;
-
-	CGame::GetInstance()->Draw(x - cx, yy - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
-
+	float xx = x + this->cellWidth / 2;
+	CGame::GetInstance()->Draw(xx - cx, yy - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
 }
 
-
-
-int CPipe::IsDirectionColliable(bool a)
+void CPipe2::Render()
 {
-	if (a == 1)
+	if (this->height <= 0) return;
+	float yy = y;
+	float xx = x;
+	CSprites* s = CSprites::GetInstance();
+
+	s->Get(this->spriteId_top_left)->Draw(x, y);
+	xx += this->cellWidth;
+	s->Get(this->spriteId_top_right)->Draw(xx, y);
+	for (int i = 1; i < this->height; i++)
 	{
-		return 0;
+		yy += this->cellHeight;
+		s->Get(this->spriteId_bot_left)->Draw(x, yy);
+		s->Get(this->spriteId_bot_right)->Draw(xx, yy);
 	}
-	else
-	{
-		return 1;
-	}
+
+	//RenderBoundingBox();
+}
+
+void CPipe2::GetBoundingBox(float& l, float& t, float& r, float& b)
+{
+	l = x - this->cellWidth / 2;
+	t = y - this->cellHeight / 2;
+	r = l + this->cellWidth * 2;
+	b = t + this->cellHeight * this->height;
 }

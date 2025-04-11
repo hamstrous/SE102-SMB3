@@ -144,7 +144,6 @@
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Pipe.h" />
-    <ClInclude Include="Pipe2.h" />
     <ClInclude Include="Plant.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayScene.h" />
@@ -172,7 +171,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Pipe.cpp" />
-    <ClCompile Include="Pipe2.cpp" />
     <ClCompile Include="Plant.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlayScene.cpp" />
