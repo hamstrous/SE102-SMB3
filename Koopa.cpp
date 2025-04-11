@@ -120,6 +120,7 @@ void CKoopa::Render()
 			else aniId = ID_ANI_KOOPA_WALKING_RIGHT;
 			break;
 		case KOOPA_STATE_SHELL_IDLE:
+		case KOOPA_STATE_SHELL_HELD:
 			aniId = ID_ANI_KOOPA_SHELL_IDLE;
 			break;
 		case KOOPA_STATE_SHELL_MOVING:
@@ -135,9 +136,16 @@ void CKoopa::Render()
 
 void CKoopa::SetState(int state)
 {
+	if (this->state == KOOPA_STATE_SHELL_HELD) {
+		isCollidable = true; // when koopa is kicked, it can be collided with again
+		ay = KOOPA_GRAVITY;
+	}
+
 	switch (state)
 	{
 	case KOOPA_STATE_SHELL_IDLE:
+		if (this->state == KOOPA_STATE_WALKING) y = (y + KOOPA_BBOX_HEIGHT / 2) - KOOPA_BBOX_HEIGHT_SHELL / 2; // when start walking, move up to normal y so dont drop through floor
+		// when start shell idle, move down to shell y so dont float above ground
 		vx = 0;
 		shell_start = GetTickCount64();
 		break;
@@ -150,8 +158,13 @@ void CKoopa::SetState(int state)
 		shell_start = -1;
 		InitHorizontalSpeed(KOOPA_SHELL_SPEED); // when kicked, move away from mario
 		break;
+	case KOOPA_STATE_SHELL_HELD:
+		isCollidable = false;
+		vx = 0;
+		vy = 0;
+		ay = 0;
+		break;
 	}
-	DebugOut(L"[INFO] Koopa vx: %f\n", vx);
 	CGameObject::SetState(state);
 
 }
@@ -159,7 +172,12 @@ void CKoopa::SetState(int state)
 void CKoopa::Kicked()
 {
 	// Only when in shell state can Koopa be kicked by Mario
-	if (state == KOOPA_STATE_SHELL_IDLE) {
+	if (state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_SHELL_HELD) {
 		SetState(KOOPA_STATE_SHELL_MOVING);
 	}
+}
+
+void CKoopa::Held()
+{
+	if(state == KOOPA_STATE_SHELL_IDLE) SetState(KOOPA_STATE_SHELL_HELD);
 }

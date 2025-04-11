@@ -35,6 +35,7 @@ class CKoopa : public CGameObject
 {
 	float ax;
 	float ay;
+	bool isCollidable = true;
 
 	CGameObject* FloorCheck;
 
@@ -46,7 +47,7 @@ class CKoopa : public CGameObject
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-	virtual int IsCollidable() { return 1; };
+	virtual int IsCollidable() { return isCollidable; };
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
@@ -59,5 +60,6 @@ public:
 	CKoopa(float x, float y);
 	virtual void SetState(int state);
 	void Kicked();
+	void Held();
 };
 

@@ -25,6 +25,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
+	if(holdingShell!=NULL) holdingShell->SetPosition(x, y);
+	if (!pick && holdingShell != NULL)
+	{
+		holdingShell->Kicked();
+		holdingShell = NULL;
+		
+	}
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -129,7 +136,15 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 				{
 					if (koopa->GetState() == KOOPA_STATE_SHELL_IDLE)
 					{
-						koopa->Kicked();
+						if(pick)
+						{
+							holdingShell = koopa;
+							koopa->Held();
+						}
+						else
+						{
+							koopa->Kicked();
+						}
 					}
 				}
 			}
@@ -295,6 +310,8 @@ void CMario::SetState(int state)
 {
 	// DIE is the end state, cannot be changed! 
 	if (this->state == MARIO_STATE_DIE) return; 
+
+	// run then walk mean release
 
 	switch (state)
 	{

@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+class CKoopa; // Forward declaration, stop circular dependency if include "Koopa.h"
 
 #include "Animation.h"
 #include "Animations.h"
@@ -113,6 +114,7 @@ class CMario : public CGameObject
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
 	int coin; 
+	CKoopa *holdingShell;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
@@ -123,6 +125,7 @@ class CMario : public CGameObject
 	int GetAniIdSmall();
 
 public:
+	bool pick = false;
 	CMario(float x, float y) : CGameObject(x, y)
 	{
 		isSitting = false;
@@ -135,6 +138,9 @@ public:
 		untouchable_start = -1;
 		isOnPlatform = false;
 		coin = 0;
+		pick = false;
+
+		holdingShell = NULL;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -154,4 +160,5 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	void SetPick(bool pick) { this->pick = pick; }
 };
