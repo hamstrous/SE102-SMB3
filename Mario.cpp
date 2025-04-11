@@ -8,7 +8,8 @@
 #include "Koopa.h"
 #include "Coin.h"
 #include "Portal.h"
-
+#include "Plant.h"
+#include "Fireball.h"
 #include "Collision.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -59,10 +60,13 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
-		OnCollisionWithPortal(e);
+		OnCollisionWithPortal(e);4
 	else if (dynamic_cast<CKoopa*>(e->obj))
-		OnCollisionWithKoopa(e);
-}
+		OnCollisionWithKoopa(e);4
+	else if (dynamic_cast<CPlant*>(e->obj))
+		OnCollisionWithPlant(e);
+	else if (dynamic_cast<CFireball*>(e->obj))
+		OnCollisionWithFireball(e);
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
@@ -162,6 +166,37 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
 	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+}
+
+void CMario::OnCollisionWithPlant(LPCOLLISIONEVENT e)
+{
+	Attacked();
+}
+
+void CMario::OnCollisionWithFireball(LPCOLLISIONEVENT e)
+{	
+	Attacked();
+}
+
+void CMario::Attacked() {
+	if (!untouchable)
+	{
+		if (level > MARIO_LEVEL_BIG)
+		{
+			SetLevel(MARIO_LEVEL_BIG);
+			StartUntouchable();
+		}
+		else if (level == MARIO_LEVEL_BIG)
+		{
+			SetLevel(MARIO_LEVEL_SMALL);
+			StartUntouchable();
+		}
+		else
+		{
+			DebugOut(L">>> Mario DIE >>> \n");
+			SetState(MARIO_STATE_DIE);
+		}
+	}
 }
 
 //

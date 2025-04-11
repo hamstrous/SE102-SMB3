@@ -19,6 +19,7 @@
 #define OBJECT_TYPE_FIREBALL	7
 #define OBJECT_TYPE_PLANT	8
 #define OBJECT_TYPE_PORTAL	50
+#define OBJECT_TYPE_PIPE2	9
 
 
 #pragma region MARIO 

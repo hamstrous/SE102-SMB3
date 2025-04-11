@@ -10,6 +10,7 @@
 #include "Coin.h"
 #include "Platform.h"
 #include "Pipe.h"
+#include "Pipe2.h"
 #include "Fireball.h"
 #include "Plant.h"
 #include "Koopa.h"
@@ -125,7 +126,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_FIREBALL: obj = new CFireball(x, y); break;
-	case OBJECT_TYPE_PLANT: obj = new CPlant(x, y); break;
+	case OBJECT_TYPE_PLANT:
+	{
+		int color = atoi(tokens[3].c_str());
+		int type = atoi(tokens[4].c_str());
+		int size = atoi(tokens[5].c_str());
+		obj = new CPlant(x, y, color, type, size);
+		break;
+	}
 	case OBJECT_TYPE_PLATFORM:
 	{
 
@@ -168,6 +176,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			sprite_begin, sprite_end
 		);
 		break;
+	}
+	case OBJECT_TYPE_PIPE2:
+	{
+		float cellWidth = (float)atof(tokens[3].c_str());
+		float cellHeight = (float)atof(tokens[4].c_str());
+		int height = atoi(tokens[5].c_str());
+		int spriteId_top_left = atoi(tokens[6].c_str());
+		int spriteId_top_right = atoi(tokens[7].c_str());
+		int	spriteId_bot_left = atoi(tokens[8].c_str());
+		int spriteId_bot_right = atoi(tokens[9].c_str());
+		BOOLEAN isGoInside = atoi(tokens[10].c_str());
+		obj = new CPipe2(x, y, cellWidth, cellHeight, height, spriteId_top_left, spriteId_top_right, spriteId_bot_left, spriteId_bot_right, isGoInside);
 	}
 
 
@@ -292,9 +312,23 @@ void CPlayScene::Update(DWORD dt)
 }
 
 void CPlayScene::Render()
-{
-	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+{	
+	//render objects except fireball
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		if (dynamic_cast<CFireball*>(objects[i]) == nullptr)
+		{
+			objects[i]->Render();
+		}
+	}
+	//render fireball to the top
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		if (dynamic_cast<CFireball*>(objects[i]) != nullptr) 
+		{
+			objects[i]->Render();
+		}
+	}
 }
 
 /*

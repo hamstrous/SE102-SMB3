@@ -39,6 +39,7 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "Coin.h"
 #include "Platform.h"
 #include "Pipe.h"
+#include "Pipe2.h"
 #include "Fireball.h"
 #include "Plant.h"
 
