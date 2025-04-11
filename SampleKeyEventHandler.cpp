@@ -13,6 +13,9 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 
 	switch (KeyCode)
 	{
+	case DIK_A:
+		mario->SetPick(true);
+		break;
 	case DIK_DOWN:
 		if(!mario->pick) mario->SetState(MARIO_STATE_SIT);
 		break;
@@ -75,8 +78,5 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	}
 	else
 		mario->SetState(MARIO_STATE_IDLE);
-	
-	if (game->IsKeyDown(DIK_A))
-		mario->SetPick(true);
 	
 }
