@@ -93,6 +93,8 @@
     <ClInclude Include="Plant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Koopa.h">
+      <Filter>Source Files</Filter>
     <ClInclude Include="Pipe2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -165,6 +167,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Plant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Koopa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pipe2.cpp">
