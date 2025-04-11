@@ -1,9 +1,13 @@
 #pragma once
 #include "GameObject.h"
+#include "Game.h"
+#include "PlayScene.h"
+#include "Scene.h"
 
 #define KOOPA_GRAVITY 0.002f
 #define KOOPA_WALKING_SPEED 0.05f
 #define KOOPA_SHELL_SPEED 0.25f
+#define KOOPA_SHELL_COOLDOWN 5000
 
 
 #define KOOPA_BBOX_WIDTH 16
@@ -35,6 +39,7 @@ class CKoopa : public CGameObject
 	CGameObject* FloorCheck;
 
 	ULONGLONG die_start;
+	ULONGLONG shell_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void GetFloorBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -48,10 +53,11 @@ class CKoopa : public CGameObject
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
 	int OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void InitHorizontalSpeed(float speed, float awayMario = 1);
 
 public:
 	CKoopa(float x, float y);
 	virtual void SetState(int state);
-	void Kicked(float mx);
+	void Kicked();
 };
 

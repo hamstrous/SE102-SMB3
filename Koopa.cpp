@@ -6,9 +6,10 @@ CKoopa::CKoopa(float x, float y)
 	this->x = x;
 	this->y = y;
 	ax = 0;
-	vx = KOOPA_WALKING_SPEED;
 	ay = KOOPA_GRAVITY;
 	SetState(KOOPA_STATE_WALKING);
+	InitHorizontalSpeed(KOOPA_WALKING_SPEED);
+	shell_start = -1;
 }
 
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -71,6 +72,19 @@ int CKoopa::OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	return CCollision::GetInstance()->CheckStillTouchSolid(ml, mt, mr, mb, vx, vy, dt, coObjects);
 }
 
+void CKoopa::InitHorizontalSpeed(float speed, float towardMario)
+{
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	float mario_x, mario_y;
+	scene->GetPlayer()->GetPosition(mario_x, mario_y);
+	if (mario_x <= x) {
+		vx = speed * towardMario;
+	}
+	else {
+		vx = -speed * towardMario;
+	}
+}
+
 void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
@@ -78,6 +92,10 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if(state != KOOPA_STATE_SHELL_MOVING && OnFloor(dt, coObjects) == 1) {
 		vx = -vx;
+	}
+
+	if(state == KOOPA_STATE_SHELL_IDLE && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN) {
+		SetState(KOOPA_STATE_WALKING);
 	}
 
 	/*if ((state == GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
@@ -122,24 +140,24 @@ void CKoopa::SetState(int state)
 	{
 	case KOOPA_STATE_SHELL_IDLE:
 		vx = 0;
+		shell_start = GetTickCount64();
 		break;
 	case KOOPA_STATE_WALKING:
-		vx = KOOPA_WALKING_SPEED;
+		shell_start = -1;
+		InitHorizontalSpeed(KOOPA_WALKING_SPEED, -1); // when start walking, walk toward mario
+		break;
+	case KOOPA_STATE_SHELL_MOVING:
+		shell_start = -1;
+		InitHorizontalSpeed(KOOPA_SHELL_SPEED); // when kicked, move away from mario
 		break;
 	}
-	DebugOut(L"[INFO] Koopa state: %d\n", state);
+	DebugOut(L"[INFO] Koopa vx: %f\n", vx);
 }
 
-void CKoopa::Kicked(float mx)
+void CKoopa::Kicked()
 {
 	// Only when in shell state can Koopa be kicked by Mario
 	if (state == KOOPA_STATE_SHELL_IDLE) {
 		SetState(KOOPA_STATE_SHELL_MOVING);
-		if(mx <= x) {
-			vx = KOOPA_SHELL_SPEED;
-		}
-		else{
-			vx = -KOOPA_SHELL_SPEED;
-		}
 	}
 }
