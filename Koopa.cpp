@@ -135,7 +135,6 @@ void CKoopa::Render()
 
 void CKoopa::SetState(int state)
 {
-	CGameObject::SetState(state);
 	switch (state)
 	{
 	case KOOPA_STATE_SHELL_IDLE:
@@ -144,6 +143,7 @@ void CKoopa::SetState(int state)
 		break;
 	case KOOPA_STATE_WALKING:
 		shell_start = -1;
+		if(this->state == KOOPA_STATE_SHELL_IDLE) y = (y + KOOPA_BBOX_HEIGHT_SHELL / 2) - KOOPA_BBOX_HEIGHT / 2; // when start walking, move up to normal y so dont drop through floor
 		InitHorizontalSpeed(KOOPA_WALKING_SPEED, -1); // when start walking, walk toward mario
 		break;
 	case KOOPA_STATE_SHELL_MOVING:
@@ -152,6 +152,8 @@ void CKoopa::SetState(int state)
 		break;
 	}
 	DebugOut(L"[INFO] Koopa vx: %f\n", vx);
+	CGameObject::SetState(state);
+
 }
 
 void CKoopa::Kicked()
