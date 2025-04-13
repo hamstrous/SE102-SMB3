@@ -45,17 +45,18 @@ void CQuestionBlock::SetState(int state)
 	case QUESTION_BLOCK_STATE_MOVEUP:
 		vy = -SPEED_QUESTION_BLOCK;
 		isUnbox = true;
-		break;
-	case QUESTION_BLOCK_STATE_MOVEDOWN:
-		vy = SPEED_QUESTION_BLOCK;
-		break;
-	case QUESTION_BLOCK_STATE_UNBOX:
 		if (type == ITEM_COIN)
 		{
 			CCoin* coin = new CCoin(x, y);
 			coin->SetState(COIN_STATE_MOVEUP);
 			scene->AddObject(coin);
 		}
+		break;
+	case QUESTION_BLOCK_STATE_MOVEDOWN:
+		vy = SPEED_QUESTION_BLOCK;
+		break;
+	case QUESTION_BLOCK_STATE_UNBOX:
+		
 		break;
 	}
 }

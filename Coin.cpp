@@ -12,6 +12,10 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (state == COIN_STATE_MOVEUP && startY - y >= DISTANCE_COIN_MOVEUP)
 	{
+		SetState(COIN_STATE_HOLDUP);
+	}
+	if (state == COIN_STATE_HOLDUP && startY - y >= DISTANCE_COIN_MOVEUP - DISTANCE_COIN_HOLDUP)
+	{
 		SetState(COIN_STATE_MOVEDOWN);
 	}
 	if ( vy > 0 && state == COIN_STATE_MOVEDOWN && startY - y <= DISTANCE_COIN_MOVEDOWN)
@@ -42,10 +46,13 @@ void CCoin::SetState(int state)
 		Delete();
 		break;
 	case COIN_STATE_MOVEUP:
-		vy = -SPEED_COIN;
+		vy = -SPEED_COIN_FAST;
 		break;
 	case COIN_STATE_MOVEDOWN:
-		vy = SPEED_COIN;
+		vy = SPEED_COIN_FAST;
+		break;
+	case COIN_STATE_HOLDUP:
+		vy = SPEED_COIN_SLOW;
 		break;
 	}
 
