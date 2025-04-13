@@ -22,3 +22,4 @@ height	240
 30	textures\enemies1.png
 40	textures\enemies2.png
 50	textures\background.png
+25	textures\misc2.png

@@ -19,7 +19,7 @@
 #define OBJECT_TYPE_PLANT	8
 #define OBJECT_TYPE_PORTAL	50
 #define OBJECT_TYPE_PIPE	9
-
+#define OBJECT_TYPE_QUESTION_BLOCK 15
 
 #pragma region MARIO 
 
