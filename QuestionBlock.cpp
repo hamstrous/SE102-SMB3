@@ -7,6 +7,7 @@ void CQuestionBlock::Render()
 		animations->Get(ID_ANI_BLOCK_UNBOX)->Render(x, y);
 	else
 	animations->Get(ID_ANI_BLOCK_NORMAL)->Render(x, y);
+	RenderBoundingBox();
 }
 
 void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -56,6 +57,12 @@ void CQuestionBlock::SetState(int state)
 		vy = SPEED_QUESTION_BLOCK;
 		break;
 	case QUESTION_BLOCK_STATE_UNBOX:
+		if (type == ITEM_RED_MUSHROOM)
+		{
+			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN_MUSHROOM, ITEM_GREEN_MUSHROOM);
+			mushroom->SetState(MUSHROOM_STATE_UP);
+			scene->AddObject(mushroom);
+		}
 		
 		break;
 	}

@@ -22,7 +22,7 @@ void CMushroom::Render()
 	if (type == TYPE_LEVELUP)
 		aniId = ID_ANI_MUSHROOM_1UP_WALKING;
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMushroom::OnNoCollision(DWORD dt)
@@ -56,7 +56,7 @@ void CMushroom::SetState(int state)
 		break;
 	case MUSHROOM_STATE_UP:
 		vx = 0;
-		ay = -MUSHROOM_GRAVITY;
+		ay = -MUSHROOM_GRAVITY/10;
 		break;
 	default:
 		break;
