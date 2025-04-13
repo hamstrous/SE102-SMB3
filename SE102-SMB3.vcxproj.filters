@@ -26,6 +26,7 @@
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="QuestionBlock.cpp" />
+    <ClCompile Include="Mushroom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -56,6 +57,7 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="QuestionBlock.h" />
+    <ClInclude Include="Mushroom.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

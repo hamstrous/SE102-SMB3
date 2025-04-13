@@ -143,6 +143,7 @@
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Plant.h" />
     <ClInclude Include="Platform.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="Plant.cpp" />
     <ClCompile Include="Platform.cpp" />

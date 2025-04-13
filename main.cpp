@@ -43,6 +43,7 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "Plant.h"
 #include "Koopa.h"
 #include "QuestionBlock.h"
+#include "Mushroom.h"
 
 
 #include "SampleKeyEventHandler.h"
