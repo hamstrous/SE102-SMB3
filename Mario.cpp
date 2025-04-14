@@ -335,7 +335,7 @@ void CMario::Render()
 
 	//RenderBoundingBox();
 	
-	DebugOutTitle(L"Coins: %d", coin);
+	//DebugOutTitle(L"Coins: %d", coin);
 }
 
 void CMario::SetState(int state)
@@ -451,18 +451,17 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 void CMario::HoldingProcess(DWORD dt)
 {
 	float hx, hy;
+	//holdingShell->SetPosition(x, y);
 	holdingShell->GetPosition(hx, hy);
-
+	holdingShell->SetPositionY(y);
 	if (nx == 1)
-		holdingShell->SetSpeed(min((x + KOOPA_BBOX_WIDTH - hx)/dt,vx), vy);
+		holdingShell->SetSpeed(min((x + KOOPA_BBOX_WIDTH - hx)/dt, MARIO_SHELL_TURNING_SPEED), vy);
 	else
-		holdingShell->SetSpeed(max((hx - x + KOOPA_BBOX_WIDTH) / dt,vx), vy);
-
+		holdingShell->SetSpeed(max((x - KOOPA_BBOX_WIDTH - hx) / dt, -MARIO_SHELL_TURNING_SPEED), vy);
 	if (!canHold)
 	{
 		holdingShell->Kicked();
 		holdingShell = NULL;
-
 	}
 }
 

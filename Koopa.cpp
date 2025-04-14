@@ -90,7 +90,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	if(state != KOOPA_STATE_SHELL_MOVING && OnFloor(dt, coObjects) == 1) {
+	if(state == KOOPA_STATE_WALKING && OnFloor(dt, coObjects) == 1) {
 		vx = -vx;
 	}
 
@@ -106,7 +106,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
-
+	DebugOutTitle(L"vx: %f, vy: %f", vx, vy);
 }
 
 
@@ -188,6 +188,7 @@ void CKoopa::Release()
 	if (state == KOOPA_STATE_SHELL_HELD) {
 		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
+		vy = -0.3;
 		player->Drop();
 	}
 }
