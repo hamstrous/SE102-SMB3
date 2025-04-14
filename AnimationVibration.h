@@ -14,7 +14,7 @@ using namespace std;
 
 class CAnimationVibration : public CAnimation
 {
-	const float VIBRATING_SPEED = 0.1f;
+	const float VIBRATING_SPEED = 0.5f;
 public:
 	CAnimationVibration(int defaultTime = 100) : CAnimation(defaultTime) {}
 	void Render(float x, float y);

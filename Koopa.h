@@ -9,13 +9,14 @@
 #define KOOPA_GRAVITY 0.002f
 #define KOOPA_WALKING_SPEED 0.05f
 #define KOOPA_SHELL_SPEED 0.25f
-#define KOOPA_SHELL_COOLDOWN 5000
-#define KOOPA_SHELL_COOLDOWN_VIBRATION 5000
+#define KOOPA_SHELL_COOLDOWN 6000
+#define KOOPA_SHELL_COOLDOWN_VIBRATION 4000
+#define KOOPA_SHELL_COOLDOWN_VIBRATION_LEG 5000
 
 
 #define KOOPA_BBOX_WIDTH 16
 #define KOOPA_BBOX_HEIGHT 26
-#define KOOPA_BBOX_HEIGHT_SHELL 16
+#define KOOPA_BBOX_HEIGHT_SHELL 12
 
 #define KOOPA_FLOOR_CHECK_BBOX_HEIGHT 4
 #define KOOPA_FLOOR_CHECK_BBOX_WIDTH 4
@@ -32,7 +33,8 @@
 #define ID_ANI_KOOPA_WALKING_RIGHT 20001
 #define ID_ANI_KOOPA_SHELL_IDLE 20002
 #define ID_ANI_KOOPA_SHELL_MOVING 20003
-#define ID_ANI_KOOPA_DIE 20004
+#define ID_ANI_KOOPA_SHELL_VIBRATING 20004
+#define ID_ANI_KOOPA_SHELL_VIBRATING_LEG 20005
 
 class CKoopa : public CGameObject
 {
@@ -42,7 +44,7 @@ class CKoopa : public CGameObject
 
 	CGameObject* FloorCheck;
 
-	ULONGLONG die_start;
+	bool isIdle = false;
 	ULONGLONG shell_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

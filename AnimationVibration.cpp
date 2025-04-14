@@ -19,6 +19,6 @@ void CAnimationVibration::Render(float x, float y)
 		}
 
 	}
-	int offsetY = currentFrame % 2 == 0 ? 1 : -1;
-	frames[currentFrame]->GetSprite()->Draw(x, y + offsetY * VIBRATING_SPEED);
+	int offsetX = currentFrame % 2 == 0 ? 1 : -1;
+	frames[currentFrame]->GetSprite()->Draw(x + offsetX * VIBRATING_SPEED, y);
 }

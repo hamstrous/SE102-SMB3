@@ -9,7 +9,7 @@ CKoopa::CKoopa(float x, float y)
 	ay = KOOPA_GRAVITY;
 	SetState(KOOPA_STATE_WALKING);
 	InitHorizontalSpeed(KOOPA_WALKING_SPEED);
-	shell_start = -1;
+	isIdle = -1;
 }
 
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -94,7 +94,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vx = -vx;
 	}
 
-	if((state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_SHELL_HELD) && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN) {
+	if(isIdle && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN) {
 		SetState(KOOPA_STATE_WALKING);
 	}
 
@@ -112,6 +112,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopa::Render()
 {
+	float shellTime = GetTickCount64() - shell_start;
 	int aniId = 0;
 	switch (state) {
 		case KOOPA_STATE_WALKING:
@@ -119,9 +120,17 @@ void CKoopa::Render()
 			else if (vx < 0) aniId = ID_ANI_KOOPA_WALKING_LEFT;
 			else aniId = ID_ANI_KOOPA_WALKING_RIGHT;
 			break;
-		case KOOPA_STATE_SHELL_IDLE:
 		case KOOPA_STATE_SHELL_HELD:
-			aniId = ID_ANI_KOOPA_SHELL_IDLE;
+		case KOOPA_STATE_SHELL_IDLE:
+			if (isIdle && shellTime > KOOPA_SHELL_COOLDOWN_VIBRATION && shellTime <= KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+				aniId = ID_ANI_KOOPA_SHELL_VIBRATING;
+			}
+			else if (isIdle && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+				aniId = ID_ANI_KOOPA_SHELL_VIBRATING_LEG;
+			}
+			else {
+				aniId = ID_ANI_KOOPA_SHELL_IDLE;
+			}
 			break;
 		case KOOPA_STATE_SHELL_MOVING:
 			aniId = ID_ANI_KOOPA_SHELL_MOVING;
@@ -148,15 +157,16 @@ void CKoopa::SetState(int state)
 		// when start shell idle, move down to shell y so dont float above ground
 		vx = 0;
 		shell_start = GetTickCount64();
+		isIdle = true;
 		break;
 	case KOOPA_STATE_WALKING:
-		shell_start = -1;
+		isIdle = false;
 		Release(); //call to make sure shell is released (mario not holding)
 		if(this->state == KOOPA_STATE_SHELL_IDLE) y = (y + KOOPA_BBOX_HEIGHT_SHELL / 2) - KOOPA_BBOX_HEIGHT / 2; // when start walking, move up to normal y so dont drop through floor
 		InitHorizontalSpeed(KOOPA_WALKING_SPEED, -1); // when start walking, walk toward mario
 		break;
 	case KOOPA_STATE_SHELL_MOVING:
-		shell_start = -1;
+		isIdle = false;
 		InitHorizontalSpeed(KOOPA_SHELL_SPEED); // when kicked, move away from mario
 		break;
 	case KOOPA_STATE_SHELL_HELD:
