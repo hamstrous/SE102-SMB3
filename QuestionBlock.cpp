@@ -14,7 +14,7 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {	
 	if (startY - y > DISTANCE_UP)
 	{
-		this->SetState(QUESTION_BLOCK_STATE_MOVEDOWN);
+		SetState(QUESTION_BLOCK_STATE_MOVEDOWN);
 	}
 	if (vy > 0 && y >= startY) {
 		SetState(QUESTION_BLOCK_STATE_UNBOX);
@@ -59,11 +59,24 @@ void CQuestionBlock::SetState(int state)
 	case QUESTION_BLOCK_STATE_UNBOX:
 		if (type == ITEM_RED_MUSHROOM)
 		{
-			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN_MUSHROOM, ITEM_GREEN_MUSHROOM);
+			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN_MUSHROOM, ITEM_RED_MUSHROOM);
 			mushroom->SetState(MUSHROOM_STATE_UP);
 			scene->AddObject(mushroom);
 		}
 		
 		break;
 	}
+}
+
+void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{	
+
+	//CMushroom* mushroom = dynamic_cast<CMushroom*>(e->obj);
+	//if (e->ny > 0) 
+	//{
+	//	if (mushroom->GetState() == MUSHROOM_STATE_WALKING /*&& GetState() == QUESTION_BLOCK_STATE_MOVEUP*/) 
+	//	{
+	//		mushroom->SetState(MUSHROOM_STATE_BOUNCING);
+	//	}
+	//}
 }
