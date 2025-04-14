@@ -184,7 +184,7 @@ void CMario::OnCollisionWithFireball(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
 {
 	CQuestionBlock* questionblock = (CQuestionBlock*)e->obj;
-	if (e->ny > 0)
+	if (e->ny > 0 && (x >= questionblock->ReturnXmin() || x <= questionblock->ReturnXmax()))
 	{
 		if (questionblock->GetState() == QUESTION_BLOCK_STATE_ITEM)
 		{

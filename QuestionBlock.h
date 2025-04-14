@@ -43,5 +43,15 @@ public:
 	void SetState(int state);
 	int IsCollidable() { return 1; };
 	int IsBlocking() { return 1; };
+	float ReturnXmin() {
+		float l;
+		l = x - BRICK_BBOX_WIDTH / 2;
+		return l;
+	};
+	float ReturnXmax() {
+		float r;
+		r = x + BRICK_BBOX_WIDTH / 2;
+		return r;
+	};
 };
 

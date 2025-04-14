@@ -67,7 +67,6 @@ void CQuestionBlock::SetState(int state)
 			mushroom->SetState(MUSHROOM_STATE_UP);
 			scene->AddObject(mushroom);
 		}
-		
 		break;
 	}
 }
