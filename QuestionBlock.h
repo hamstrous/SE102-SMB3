@@ -43,6 +43,5 @@ public:
 	void SetState(int state);
 	int IsCollidable() { return 1; };
 	int IsBlocking() { return 1; };
-	void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 };
 

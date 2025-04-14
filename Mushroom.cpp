@@ -13,13 +13,16 @@ void CMushroom::GetHaftBoundingBox(float& left, float& top, float& right, float&
 	left = x - MUSHROOM_BBOX_WIDTH / 2;
 	top = y;
 	right = left + MUSHROOM_BBOX_WIDTH;
-	bottom = top + MUSHROOM_BBOX_HEIGHT / 2 ;
+	bottom = top + MUSHROOM_BBOX_HEIGHT_PLUS / 2 ;
 }
 
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {	
-	if (state == MUSHROOM_STATE_UP && OnFloor(dt, coObjects) == 1) {
-		SetState(MUSHROOM_STATE_WALKING);
+	if (state == MUSHROOM_STATE_UP && OnFloor(dt, coObjects) == 1 && dir == true) {
+		SetState(MUSHROOM_STATE_WALKING_RIGHT);
+	}
+	else if (state == MUSHROOM_STATE_UP && OnFloor(dt, coObjects) == 1 && dir == false) {
+			SetState(MUSHROOM_STATE_WALKING_LEFT);
 	}
 	/*if (state == MUSHROOM_STATE_BOUNCING && OnFloor(dt, coObjects) == 1) {
 		SetState(MUSHROOM_STATE_WALKING);
@@ -92,8 +95,12 @@ void CMushroom::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case MUSHROOM_STATE_WALKING:
+	case MUSHROOM_STATE_WALKING_RIGHT:
 		vx = MUSHROOM_SPEED;
+		ay = MUSHROOM_GRAVITY;
+		break;
+	case MUSHROOM_STATE_WALKING_LEFT:
+		vx = -MUSHROOM_SPEED;
 		ay = MUSHROOM_GRAVITY;
 		break;
 	case MUSHROOM_STATE_UP:

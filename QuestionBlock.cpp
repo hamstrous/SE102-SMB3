@@ -37,6 +37,9 @@ void CQuestionBlock::GetBoundingBox(float& l, float& t, float& r, float& b)
 void CQuestionBlock::SetState(int state)
 {
 	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
+	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	float marioX, marioY;
+	mario->GetPosition(marioX, marioY);
 	CGameObject::SetState(state);
 	switch (state)
 	{
@@ -58,8 +61,9 @@ void CQuestionBlock::SetState(int state)
 		break;
 	case QUESTION_BLOCK_STATE_UNBOX:
 		if (type == ITEM_RED_MUSHROOM)
-		{
-			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN_MUSHROOM, ITEM_RED_MUSHROOM);
+		{	
+			bool dir = (x > marioX) ? true : false;
+			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN_MUSHROOM, ITEM_RED_MUSHROOM, dir);
 			mushroom->SetState(MUSHROOM_STATE_UP);
 			scene->AddObject(mushroom);
 		}
@@ -68,15 +72,4 @@ void CQuestionBlock::SetState(int state)
 	}
 }
 
-void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{	
 
-	//CMushroom* mushroom = dynamic_cast<CMushroom*>(e->obj);
-	//if (e->ny > 0) 
-	//{
-	//	if (mushroom->GetState() == MUSHROOM_STATE_WALKING /*&& GetState() == QUESTION_BLOCK_STATE_MOVEUP*/) 
-	//	{
-	//		mushroom->SetState(MUSHROOM_STATE_BOUNCING);
-	//	}
-	//}
-}
