@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Koopa.h"
 #include "Character.h"
 #include "Game.h"
 #include "PlayScene.h"
@@ -12,7 +13,7 @@
 #define KOOPA_SHELL_COOLDOWN 6000
 #define KOOPA_SHELL_COOLDOWN_VIBRATION 4000
 #define KOOPA_SHELL_COOLDOWN_VIBRATION_LEG 5000
-#define KOOPA_FLYING_SPEED 0.04f
+#define KOOPA_FLYING_SPEED 0.05f
 #define KOOPA_FLY_CHANGE_DIRECTION_TIME 1500
 
 
@@ -41,39 +42,25 @@
 #define ID_ANI_KOOPA_WING_LEFT 20006
 #define ID_ANI_KOOPA_WING_RIGHT 20007
 
-class CKoopa : public CGameObject
+class CKoopaRed : public CKoopa
 {
-protected:
-	float ax;
-	float ay;
-	bool isCollidable = true;
-	bool hasWing = true;
 
-	bool isIdle = false;
-	ULONGLONG shell_start;
-	ULONGLONG fly_start;
+	CGameObject* FloorCheck;
 
-	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	virtual void Render();
+	virtual void GetFloorBoundingBox(float& left, float& top, float& right, float& bottom);
 
 	virtual int IsCollidable() { return isCollidable; };
 	virtual int IsBlocking() { return 0; }
-	virtual void OnNoCollision(DWORD dt);
 
-	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
+	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void Flying();
 
-	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
-	virtual void Flying() = 0;
-
-	void InitHorizontalSpeed(float speed, float awayMario = 1);
+	int OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
 public:
-	CKoopa(float x, float y);
+	CKoopaRed(float x, float y);
 	virtual void SetState(int state);
-	virtual void Kicked();
-	virtual void Stomped();
-	virtual void Held();
-	virtual void Release(); //Mario releases the shell
 };
+
+
 

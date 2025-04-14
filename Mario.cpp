@@ -106,14 +106,8 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 	// jump on top >> kill Koopa and deflect a bit 
 	if (e->ny < 0)
 	{
-		if (koopa->GetState() != KOOPA_STATE_SHELL_IDLE)
-		{
-			koopa->SetState(KOOPA_STATE_SHELL_IDLE);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
-		}else{
-			koopa->Kicked();
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
-		}
+		koopa->Stomped();
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
 	}
 	else 
 	{

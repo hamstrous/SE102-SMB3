@@ -7,14 +7,21 @@ CKoopa::CKoopa(float x, float y)
 	this->y = y;
 	ax = 0;
 	ay = KOOPA_GRAVITY;
-	SetState(KOOPA_STATE_WALKING);
-	InitHorizontalSpeed(KOOPA_WALKING_SPEED);
+	if (!hasWing) {
+		SetState(KOOPA_STATE_WALKING);
+		InitHorizontalSpeed(KOOPA_WALKING_SPEED);
+	}
+	else {
+		nx = -1;
+		SetState(KOOPA_STATE_FLYING);
+	}
+	
 	isIdle = -1;
 }
 
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == KOOPA_STATE_WALKING)
+	if (state == KOOPA_STATE_WALKING || state == KOOPA_STATE_FLYING)
 	{
 		left = x - KOOPA_BBOX_WIDTH / 2;
 		top = y - KOOPA_BBOX_HEIGHT / 2;
@@ -28,20 +35,6 @@ void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		bottom = top + KOOPA_BBOX_HEIGHT_SHELL;
 	}
 	
-}
-
-void CKoopa::GetFloorBoundingBox(float& left, float& top, float& right, float& bottom)
-{
-	top = y + KOOPA_BBOX_HEIGHT / 2;
-	bottom = top + KOOPA_FLOOR_CHECK_BBOX_HEIGHT;
-	if (vx > 0) {
-		left = x + KOOPA_BBOX_WIDTH / 2;
-		right = left + KOOPA_FLOOR_CHECK_BBOX_WIDTH;
-	}
-	else {
-		right = x - KOOPA_BBOX_WIDTH / 2;
-		left = right - KOOPA_FLOOR_CHECK_BBOX_WIDTH;
-	}
 }
 
 void CKoopa::OnNoCollision(DWORD dt)
@@ -65,13 +58,6 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 }
 
-int CKoopa::OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
-	float ml, mt, mr, mb;
-	GetFloorBoundingBox(ml, mt, mr, mb);
-	return CCollision::GetInstance()->CheckStillTouchSolid(ml, mt, mr, mb, vx, vy, dt, coObjects);
-}
-
 void CKoopa::InitHorizontalSpeed(float speed, float towardMario)
 {
 	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
@@ -89,26 +75,14 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-
-	if(state == KOOPA_STATE_WALKING && OnFloor(dt, coObjects) == 1) {
-		vx = -vx;
-	}
-
-	if(isIdle && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN) {
-		SetState(KOOPA_STATE_WALKING);
-	}
-
-	/*if ((state == GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
-	{
-		isDeleted = true;
-		return;
-	}*/
-
+	if (hasWing)
+		Flying();
+	else
+		Walking(dt, coObjects);
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	DebugOutTitle(L"vx: %f, vy: %f", vx, vy);
 }
-
 
 void CKoopa::Render()
 {
@@ -136,10 +110,12 @@ void CKoopa::Render()
 			aniId = ID_ANI_KOOPA_SHELL_MOVING;
 			break;
 		default:
-			aniId = ID_ANI_KOOPA_WALKING_RIGHT;
+			aniId = ID_ANI_KOOPA_WALKING_LEFT;
 			break;
 	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	if(hasWing && nx == 1) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 3, y - 3);
+	else if(hasWing && nx == -1) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 3, y - 3);
 	RenderBoundingBox();
 }
 
@@ -147,6 +123,9 @@ void CKoopa::SetState(int state)
 {
 	if (this->state == KOOPA_STATE_SHELL_HELD) {
 		isCollidable = true; // when koopa is kicked, it can be collided with again
+		ay = KOOPA_GRAVITY;
+	}
+	else if (this->state == KOOPA_STATE_FLYING) {
 		ay = KOOPA_GRAVITY;
 	}
 
@@ -175,6 +154,11 @@ void CKoopa::SetState(int state)
 		vy = 0;
 		ay = 0;
 		break;
+	case KOOPA_STATE_FLYING:
+		ay = 0;
+		vy = KOOPA_FLYING_SPEED;
+		fly_start = GetTickCount64();
+		break;
 	}
 	CGameObject::SetState(state);
 
@@ -185,6 +169,21 @@ void CKoopa::Kicked()
 	// Only when in shell state can Koopa be kicked by Mario
 	if (state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_SHELL_HELD) {
 		SetState(KOOPA_STATE_SHELL_MOVING);
+	}
+}
+
+void CKoopa::Stomped()
+{
+	if (state == KOOPA_STATE_FLYING) {
+		hasWing = false;
+		SetState(KOOPA_STATE_WALKING);
+	}
+	else if (state != KOOPA_STATE_SHELL_IDLE)
+	{
+		SetState(KOOPA_STATE_SHELL_IDLE);
+	}
+	else {
+		Kicked();
 	}
 }
 
