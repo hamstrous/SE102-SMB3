@@ -26,13 +26,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
-	if(holdingShell!=NULL) holdingShell->SetPosition(x, y);
-	if (!pick && holdingShell != NULL)
-	{
-		holdingShell->Kicked();
-		holdingShell = NULL;
-		
+	if (holdingShell != NULL) {
+		HoldingProcess(dt);
 	}
+	
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -140,7 +137,7 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 				{
 					if (koopa->GetState() == KOOPA_STATE_SHELL_IDLE)
 					{
-						if(pick)
+						if(canHold)
 						{
 							holdingShell = koopa;
 							koopa->Held();
@@ -448,6 +445,24 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		top = y - MARIO_SMALL_BBOX_HEIGHT/2;
 		right = left + MARIO_SMALL_BBOX_WIDTH;
 		bottom = top + MARIO_SMALL_BBOX_HEIGHT;
+	}
+}
+
+void CMario::HoldingProcess(DWORD dt)
+{
+	float hx, hy;
+	holdingShell->GetPosition(hx, hy);
+
+	if (nx == 1)
+		holdingShell->SetSpeed(min((x + KOOPA_BBOX_WIDTH - hx)/dt,vx), vy);
+	else
+		holdingShell->SetSpeed(max((hx - x + KOOPA_BBOX_WIDTH) / dt,vx), vy);
+
+	if (!canHold)
+	{
+		holdingShell->Kicked();
+		holdingShell = NULL;
+
 	}
 }
 

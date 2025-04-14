@@ -94,7 +94,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vx = -vx;
 	}
 
-	if(state == KOOPA_STATE_SHELL_IDLE && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN) {
+	if((state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_SHELL_HELD) && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN) {
 		SetState(KOOPA_STATE_WALKING);
 	}
 
@@ -151,6 +151,7 @@ void CKoopa::SetState(int state)
 		break;
 	case KOOPA_STATE_WALKING:
 		shell_start = -1;
+		Release(); //call to make sure shell is released (mario not holding)
 		if(this->state == KOOPA_STATE_SHELL_IDLE) y = (y + KOOPA_BBOX_HEIGHT_SHELL / 2) - KOOPA_BBOX_HEIGHT / 2; // when start walking, move up to normal y so dont drop through floor
 		InitHorizontalSpeed(KOOPA_WALKING_SPEED, -1); // when start walking, walk toward mario
 		break;
@@ -180,4 +181,13 @@ void CKoopa::Kicked()
 void CKoopa::Held()
 {
 	if(state == KOOPA_STATE_SHELL_IDLE) SetState(KOOPA_STATE_SHELL_HELD);
+}
+
+void CKoopa::Release()
+{
+	if (state == KOOPA_STATE_SHELL_HELD) {
+		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
+		player->Drop();
+	}
 }

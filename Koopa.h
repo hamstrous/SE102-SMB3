@@ -1,8 +1,10 @@
 #pragma once
 #include "GameObject.h"
+#include "Character.h"
 #include "Game.h"
 #include "PlayScene.h"
 #include "Scene.h"
+
 
 #define KOOPA_GRAVITY 0.002f
 #define KOOPA_WALKING_SPEED 0.05f
@@ -61,5 +63,6 @@ public:
 	virtual void SetState(int state);
 	void Kicked();
 	void Held();
+	void Release(); //Mario releases the shell
 };
 
