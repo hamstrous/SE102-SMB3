@@ -26,6 +26,7 @@
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="AnimationVibration.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -56,6 +57,7 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="AnimationVibration.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
