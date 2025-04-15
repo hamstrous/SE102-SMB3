@@ -8,7 +8,7 @@ cloud.txt
 pipe.txt
 Fireball.txt
 Plant.txt
-
+number.txt
 #
 
 [OBJECTS]

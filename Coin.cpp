@@ -23,6 +23,9 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(COIN_STATE_GONE);
 	}
 	y += vy * dt;
+	CGameObject::Update(dt, coObjects);
+	CCollision::GetInstance()->Process(this, dt, coObjects);
+
 }
 
 
@@ -35,7 +38,8 @@ void CCoin::GetBoundingBox(float& l, float& t, float& r, float& b)
 }
 
 void CCoin::SetState(int state)
-{
+{	
+	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
 	CGameObject::SetState(state);
 	switch (state)
 	{
@@ -43,8 +47,14 @@ void CCoin::SetState(int state)
 		vy = 0;
 		break;
 	case COIN_STATE_GONE:
+		{
+		CScore* score = new CScore(x, y, ID_ANI_SCORE_100);
+		score->SetState(SCORE_STATE_UP1);
+		scene->AddObject(score);
 		Delete();
 		break;
+		}
+		
 	case COIN_STATE_MOVEUP:
 		vy = -SPEED_COIN_FAST;
 		break;

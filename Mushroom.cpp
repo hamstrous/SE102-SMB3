@@ -24,8 +24,11 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else if (state == MUSHROOM_STATE_UP && OnFloor(dt, coObjects) == 1 && dir == false) {
 			SetState(MUSHROOM_STATE_WALKING_LEFT);
 	}
-	/*if (state == MUSHROOM_STATE_BOUNCING && OnFloor(dt, coObjects) == 1) {
-		SetState(MUSHROOM_STATE_WALKING);
+	/*if (state == MUSHROOM_STATE_BOUNCING && OnFloor(dt, coObjects) == 0 && dir == true) {
+		SetState(MUSHROOM_STATE_WALKING_RIGHT);
+	}
+	else if (state == MUSHROOM_STATE_BOUNCING && OnFloor(dt, coObjects) == 0 && dir == false) {
+		SetState(MUSHROOM_STATE_WALKING_LEFT);
 	}*/
 	vy += ay * dt;
 	vx += ax * dt;
