@@ -39,11 +39,7 @@ void CScore::Render()
 void CScore::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	y += vy * dt;
-	if (y < startY - SCORE_DISTANCE_UP_1 && state == SCORE_STATE_UP1)
-	{
-		SetState(SCORE_STATE_UP2);
-	}
-	else if (y < startY - SCORE_DISTANCE_UP_2 && state == SCORE_STATE_UP2)
+	if (y < startY - SCORE_DISTANCE_UP && state == SCORE_STATE_UP)
 	{
 		SetState(SCORE_STATE_DONE);
 	}
@@ -59,11 +55,8 @@ void CScore::SetState(int state)
 	case SCORE_STATE_INIT:
 		vy = 0;
 		break;
-	case SCORE_STATE_UP1:
-		vy = -SCORE_SPEED_1;
-		break;
-	case SCORE_STATE_UP2:
-		vy = -SCORE_SPEED_2;
+	case SCORE_STATE_UP:
+		vy = -SCORE_SPEED;
 		break;
 	case SCORE_STATE_DONE:
 		Delete();

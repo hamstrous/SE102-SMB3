@@ -13,15 +13,12 @@
 #define ID_ANI_SCORE_4000 9006
 #define ID_ANI_SCORE_8000 9007
 
-#define SCORE_SPEED_1 0.05f
-#define SCORE_SPEED_2 0.1f
+#define SCORE_SPEED 0.015f
 
-#define SCORE_DISTANCE_UP_1 10
-#define SCORE_DISTANCE_UP_2 20
+#define SCORE_DISTANCE_UP 10
 
 #define SCORE_STATE_INIT 100
-#define SCORE_STATE_UP1 200
-#define SCORE_STATE_UP2 300
+#define SCORE_STATE_UP 200
 #define SCORE_STATE_DONE 400
 class CScore : public CGameObject
 {

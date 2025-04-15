@@ -49,7 +49,7 @@ void CCoin::SetState(int state)
 	case COIN_STATE_GONE:
 		{
 		CScore* score = new CScore(x, y, ID_ANI_SCORE_100);
-		score->SetState(SCORE_STATE_UP1);
+		score->SetState(SCORE_STATE_UP);
 		scene->AddObject(score);
 		Delete();
 		break;
