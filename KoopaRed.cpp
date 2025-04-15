@@ -1,7 +1,7 @@
 #include "KoopaRed.h"
 #include "debug.h"
 
-CKoopaRed::CKoopaRed(float x, float y) : CKoopa(x, y)
+CKoopaRed::CKoopaRed(float x, float y, bool hasWing) : CKoopa(x, y, hasWing)
 {
 	
 }
@@ -29,6 +29,21 @@ int CKoopaRed::OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 
 
+void CKoopaRed::OnCollisionWith(LPCOLLISIONEVENT e)
+{
+	if (!e->obj->IsBlocking()) return;
+	if (dynamic_cast<CKoopa*>(e->obj)) return;
+
+	if (e->ny != 0 && !hasWing)
+	{
+		vy = 0;
+	}
+	else if (e->nx != 0)
+	{
+		vx = -vx;
+	}
+}
+
 void CKoopaRed::Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (state == KOOPA_STATE_WALKING && OnFloor(dt, coObjects) == 1) {
@@ -49,7 +64,6 @@ void CKoopaRed::Flying()
 		fly_start = GetTickCount64();
 	}
 }
-
 
 void CKoopaRed::SetState(int state)
 {
@@ -73,12 +87,17 @@ void CKoopaRed::SetState(int state)
 	case KOOPA_STATE_WALKING:
 		isIdle = false;
 		Release(); //call to make sure shell is released (mario not holding)
-		if (this->state == KOOPA_STATE_SHELL_IDLE) y = (y + KOOPA_BBOX_HEIGHT_SHELL / 2) - KOOPA_BBOX_HEIGHT / 2; // when start walking, move up to normal y so dont drop through floor
-		InitHorizontalSpeed(KOOPA_WALKING_SPEED, -1); // when start walking, walk toward mario
+		if (this->state == KOOPA_STATE_SHELL_IDLE) {
+			y = (y + KOOPA_BBOX_HEIGHT_SHELL / 2) - KOOPA_BBOX_HEIGHT / 2; // when start walking, move up to normal y so dont drop through floor
+			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
+			break;
+		}
+		vx = KOOPA_WALKING_SPEED * nx;
+		// when start walking, walk toward mario
 		break;
 	case KOOPA_STATE_SHELL_MOVING:
 		isIdle = false;
-		InitHorizontalSpeed(KOOPA_SHELL_SPEED); // when kicked, move away from mario
+		InitHorizontalSpeedBasedOnMario(KOOPA_SHELL_SPEED); // when kicked, move away from mario
 		break;
 	case KOOPA_STATE_SHELL_HELD:
 		isCollidable = false;
@@ -96,4 +115,42 @@ void CKoopaRed::SetState(int state)
 
 }
 
+void CKoopaRed::Render()
+{
+	float shellTime = GetTickCount64() - shell_start;
+	int aniId = 0;
+	switch (state) {
+	case KOOPA_STATE_FLYING:
+		if (nx == 1) aniId = ID_ANI_KOOPA_WALKING_RIGHT;
+		else aniId = ID_ANI_KOOPA_WALKING_LEFT;
+		break;
 
+	case KOOPA_STATE_WALKING:
+		if (vx > 0) aniId = ID_ANI_KOOPA_WALKING_RIGHT;
+		else if (vx < 0) aniId = ID_ANI_KOOPA_WALKING_LEFT;
+		else aniId = ID_ANI_KOOPA_WALKING_RIGHT;
+		break;
+	case KOOPA_STATE_SHELL_HELD:
+	case KOOPA_STATE_SHELL_IDLE:
+		if (isIdle && shellTime > KOOPA_SHELL_COOLDOWN_VIBRATION && shellTime <= KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+			aniId = ID_ANI_KOOPA_SHELL_VIBRATING;
+		}
+		else if (isIdle && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+			aniId = ID_ANI_KOOPA_SHELL_VIBRATING_LEG;
+		}
+		else {
+			aniId = ID_ANI_KOOPA_SHELL_IDLE;
+		}
+		break;
+	case KOOPA_STATE_SHELL_MOVING:
+		aniId = ID_ANI_KOOPA_SHELL_MOVING;
+		break;
+	default:
+		aniId = ID_ANI_KOOPA_WALKING_LEFT;
+		break;
+	}
+	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	if (hasWing && nx == 1) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 3, y - 3);
+	else if (hasWing && nx == -1) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 3, y - 3);
+	RenderBoundingBox();
+}

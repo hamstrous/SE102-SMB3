@@ -6,7 +6,7 @@
 #include "PlayScene.h"
 #include "Scene.h"
 
-#define KOOPA_FLYING_BOOST 0.05f
+#define KOOPA_FLYING_BOOST 0.5f
 
 #define ID_ANI_KOOPA_WALKING_LEFT 20100
 #define ID_ANI_KOOPA_WALKING_RIGHT 20101
@@ -23,9 +23,11 @@ protected:
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Flying();
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
+	virtual void Render();
 
 public:
-	CKoopaGreen(float x, float y);
+	CKoopaGreen(float x, float y, bool hasWing);
 	virtual void SetState(int state);
+
 };
 

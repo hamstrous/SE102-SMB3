@@ -32,15 +32,6 @@
 #define KOOPA_STATE_SHELL_HELD 500
 #define KOOPA_STATE_FLYING 600
 
-#define ID_ANI_KOOPA_WALKING_LEFT 20000
-#define ID_ANI_KOOPA_WALKING_RIGHT 20001
-#define ID_ANI_KOOPA_SHELL_IDLE 20002
-#define ID_ANI_KOOPA_SHELL_MOVING 20003
-#define ID_ANI_KOOPA_SHELL_VIBRATING 20004
-#define ID_ANI_KOOPA_SHELL_VIBRATING_LEG 20005
-#define ID_ANI_KOOPA_WING_LEFT 20006
-#define ID_ANI_KOOPA_WING_RIGHT 20007
-
 class CKoopa : public CGameObject
 {
 protected:
@@ -55,7 +46,7 @@ protected:
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	virtual void Render();
+	virtual void Render() = 0;
 
 	virtual int IsCollidable() { return isCollidable; };
 	virtual int IsBlocking() { return 0; }
@@ -66,10 +57,10 @@ protected:
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
 	virtual void Flying() = 0;
 
-	void InitHorizontalSpeed(float speed, float awayMario = 1);
+	void InitHorizontalSpeedBasedOnMario(float speed, float awayMario = 1);
 
 public:
-	CKoopa(float x, float y);
+	CKoopa(float x, float y, bool hasWing);
 	virtual void SetState(int state);
 	virtual void Kicked();
 	virtual void Stomped();
