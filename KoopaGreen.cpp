@@ -76,6 +76,9 @@ void CKoopaGreen::SetState(int state)
 	case KOOPA_STATE_FLYING:
 		InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
 		break;
+	case KOOPA_STATE_DIE:
+		isDeleted = true;
+		break;
 	}
 	CGameObject::SetState(state);
 

@@ -1,14 +1,10 @@
 #include "Character.h"
+#include "PlayScene.h"
+#include "Mario.h"
 
-void CCharacter::ShellHit()
+void CCharacter::Touched()
 {
-}
-void CCharacter::TailHit()
-{
-}
-void CCharacter::BlockHit()
-{
-}
-void CCharacter::Stomp()
-{
+	CPlayScene* scene = (CPlayScene*)(CGame::GetInstance()->GetCurrentScene());
+	CMario* mario = dynamic_cast<CMario*>(scene->GetPlayer());
+	mario->Attacked();
 }

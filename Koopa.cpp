@@ -1,7 +1,7 @@
 #include "Koopa.h"
 #include "debug.h"
 
-CKoopa::CKoopa(float x, float y, bool hasWing)
+CKoopa::CKoopa(float x, float y, bool hasWing) : CCharacter(x, y)
 {
 	this->x = x;
 	this->y = y;
@@ -48,8 +48,11 @@ void CKoopa::OnNoCollision(DWORD dt)
 
 void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if (dynamic_cast<CCharacter*>(e->obj)) {
+		OnCollisionWithCharacter(e);
+		return;
+	}
 	if (!e->obj->IsBlocking()) return;
-	if (dynamic_cast<CKoopa*>(e->obj)) return;
 
 	if (e->ny != 0)
 	{
@@ -59,6 +62,14 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = -vx;
 	}
+
+}
+
+void CKoopa::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
+{
+	CCharacter * character = dynamic_cast<CCharacter*>(e->obj);
+	if (state == KOOPA_STATE_SHELL_MOVING) character->ShellHit(x);
+	else if (state == KOOPA_STATE_WALKING) vx = -vx;
 }
 
 void CKoopa::InitHorizontalSpeedBasedOnMario(float speed, float towardMario)
@@ -138,6 +149,9 @@ void CKoopa::SetState(int state)
 		vy = KOOPA_FLYING_SPEED;
 		fly_start = GetTickCount64();
 		break;
+	case KOOPA_STATE_DIE:
+		isDeleted = true;
+		break;
 	}
 	CGameObject::SetState(state);
 
@@ -178,5 +192,22 @@ void CKoopa::Release()
 		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
 		vy = -0.3f;
 		player->Drop();
+	}
+}
+
+void CKoopa::ShellHit(int shellX)
+{
+	SetState(KOOPA_STATE_DIE);
+}
+
+void CKoopa::Touched()
+{
+	CPlayScene* scene = (CPlayScene*)(CGame::GetInstance()->GetCurrentScene());
+	CMario* mario = dynamic_cast<CMario*>(scene->GetPlayer());
+	if (state != KOOPA_STATE_SHELL_IDLE) {
+		mario->Attacked();
+	}
+	else {
+		Kicked();
 	}
 }

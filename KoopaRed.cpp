@@ -31,8 +31,11 @@ int CKoopaRed::OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopaRed::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if (dynamic_cast<CCharacter*>(e->obj)) {
+		OnCollisionWithCharacter(e);
+		return;
+	}
 	if (!e->obj->IsBlocking()) return;
-	if (dynamic_cast<CKoopa*>(e->obj)) return;
 
 	if (e->ny != 0 && !hasWing)
 	{
@@ -109,6 +112,9 @@ void CKoopaRed::SetState(int state)
 		ay = 0;
 		vy = KOOPA_FLYING_SPEED;
 		fly_start = GetTickCount64();
+		break;
+	case KOOPA_STATE_DIE:
+		isDeleted = true;
 		break;
 	}
 	CGameObject::SetState(state);

@@ -10,6 +10,7 @@ protected:
 	float maxVy;
 	float minVx;
 	float minVy;
+	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e) = 0;
 public:
 	CCharacter(float x, float y) : CGameObject(x, y)
 	{
@@ -20,9 +21,12 @@ public:
 		minVx = 0.0f;
 		minVy = 0.0f;
 	}
-	virtual void Stomp();
-	virtual void ShellHit();
-	virtual void TailHit();
-	virtual void BlockHit();
+
+	virtual void Stomped() = 0;
+	virtual void ShellHit(int shellX) = 0;
+	virtual void TailHit() = 0;
+	virtual void BlockHit() = 0;
+	virtual void Touched();
+	virtual bool CanHold() { return false; };
 };
 

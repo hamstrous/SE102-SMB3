@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Character.h"
 class CKoopa; // Forward declaration, stop circular dependency if include "Koopa.h"
 
 #include "Animation.h"
@@ -105,13 +106,10 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 
-class CMario : public CGameObject
+class CMario : public CCharacter
 {
+protected:
 	BOOLEAN isSitting;
-	float maxVx;
-	float ax;				// acceleration on x 
-	float ay;				// acceleration on y 
-
 	int level;
 	int untouchable;
 	ULONGLONG untouchable_start;
@@ -119,21 +117,19 @@ class CMario : public CGameObject
 	int coin;
 	CKoopa* holdingShell;
 
-	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
-	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
+	void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
 	void OnCollisionWithFireball(LPCOLLISIONEVENT e);
 	void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
-	void Attacked();
 	int GetAniIdBig();
 	int GetAniIdSmall();
 
 public:
 	bool canHold = false;
-	CMario(float x, float y) : CGameObject(x, y)
+	CMario(float x, float y) : CCharacter(x, y)
 	{
 		isSitting = false;
 		maxVx = 0.0f;
@@ -170,4 +166,9 @@ public:
 	void SetCanHold(bool pick) { this->canHold = pick; }
 	void Drop() { holdingShell = NULL; }
 	void HoldingProcess(DWORD dt);
+	void Attacked();
+	virtual void Stomped() {};
+	virtual void ShellHit(int shellX) {};
+	virtual void TailHit() {};
+	virtual void BlockHit() {};
 };
