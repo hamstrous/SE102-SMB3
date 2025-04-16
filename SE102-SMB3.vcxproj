@@ -146,7 +146,7 @@
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="KoopaGreen.h" />
     <ClInclude Include="KoopaRed.h" />
-    <ClInclude Include="Leaf.h" 
+    <ClInclude Include="Leaf.h"  />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Pipe.h" />
