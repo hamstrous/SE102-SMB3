@@ -1,0 +1,78 @@
+#include "Leaf.h"
+
+void CLeaf::GetBoundingBox(float& left, float& top, float& right, float& bottom)
+{
+	left = x - LEAF_BBOX_WIDTH / 2;
+	top = y - LEAF_BBOX_HEIGHT / 2;
+	right = left + LEAF_BBOX_WIDTH;
+	bottom = top + LEAF_BBOX_HEIGHT;
+
+}
+
+void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	if (state == LEAF_STATE_UP && startY - y >= LEAF_UP_DISTANCE)
+	{
+		SetState(LEAF_STATE_STOP);
+	}
+	if (state == LEAF_STATE_STOP)
+	{
+		SetState(LEAF_STATE_FALL);
+		
+	}
+	if (state == LEAF_STATE_FALL && GetTickCount64() - fallReverse_start >= LEAF_FALL_REVERSE_TIME)
+	{
+		vx = -vx;
+		fallReverse_start = GetTickCount64();
+	}
+	vy += ay * dt;
+	vx += ax * dt;
+	CGameObject::Update(dt, coObjects);
+	CCollision::GetInstance()->Process(this, dt, coObjects);
+}
+
+void CLeaf::Render()
+{
+	int aniId = ID_ANI_LEAF_RIGHT;
+	if (vx < 0) aniId = ID_ANI_LEAF_LEFT;
+	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	//RenderBoundingBox();
+}
+
+void CLeaf::OnNoCollision(DWORD dt)
+{
+	x += vx * dt;
+	y += vy * dt;
+	//DebugOut(L"Leaf: %f %f \n", x, y);
+}
+
+void CLeaf::OnCollisionWith(LPCOLLISIONEVENT e)
+{
+	if (!e->obj->IsBlocking()) return;
+}
+
+void CLeaf::SetState(int state)
+{
+	CGameObject::SetState(state);
+	switch (state)
+	{
+	case LEAF_STATE_UP:
+		vy = -LEAF_SPEED_UP;
+		vx = 0;
+		ax = 0;
+		ay = 0;
+		break;
+	case LEAF_STATE_FALL:
+		vx = LEAF_SPEED;
+		ax = 0;
+		ay = LEAF_GRAVITY;
+		fallReverse_start = GetTickCount64();
+		break;
+	case LEAF_STATE_STOP:
+		vx = 0;
+		vy = 0;
+		break;
+	default:
+		break;
+	}
+}

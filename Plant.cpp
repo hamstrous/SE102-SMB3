@@ -14,7 +14,6 @@ void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	LPGAME game = CGame::GetInstance();
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	float marioX, marioY;
 	mario->GetPosition(marioX, marioY);

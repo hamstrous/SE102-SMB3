@@ -41,6 +41,10 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "Pipe.h"
 #include "Fireball.h"
 #include "Plant.h"
+#include "Koopa.h"
+#include "QuestionBlock.h"
+#include "Mushroom.h"
+#include "Leaf.h"
 
 
 #include "SampleKeyEventHandler.h"
