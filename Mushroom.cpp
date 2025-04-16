@@ -54,7 +54,8 @@ void CMushroom::OnNoCollision(DWORD dt)
 void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (!e->obj->IsBlocking()) return;
-	if (dynamic_cast<CMushroom*>(e->obj)) return;
+	float qbX, qbY;
+	e->obj->GetPosition(qbX, qbY);
 	if (e->ny != 0)
 	{
 		if (e->ny < 0) 
@@ -62,9 +63,14 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 			if (dynamic_cast<CQuestionBlock*>(e->obj))
 			{
 				CQuestionBlock* qb = dynamic_cast<CQuestionBlock*>(e->obj);
-				if (qb->GetState() == QUESTION_BLOCK_STATE_MOVEUP)
+				if (qb->GetState() == QUESTION_BLOCK_STATE_MOVEUP && x >= qbX)
 				{
 					SetState(MUSHROOM_STATE_BOUNCING);
+					return;
+				}
+				else if (qb->GetState() == QUESTION_BLOCK_STATE_MOVEUP && x < qbX)
+				{
+					SetState(MUSHROOM_STATE_BOUNCING_REVERSE);
 					return;
 				}
 			}
@@ -113,7 +119,11 @@ void CMushroom::SetState(int state)
 	case MUSHROOM_STATE_BOUNCING:
 		vy = -MUSHROOM_BOUNCING;
 		ay = MUSHROOM_GRAVITY;   
-		vx = MUSHROOM_SPEED_BOUNCING;
+		break;
+	case MUSHROOM_STATE_BOUNCING_REVERSE:
+		vy = -MUSHROOM_BOUNCING;
+		ay = MUSHROOM_GRAVITY;
+		vx = -vx;
 		break;
 	case MUSHROOM_STATE_DELETE:
 	{

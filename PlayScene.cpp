@@ -344,7 +344,7 @@ void CPlayScene::Render()
 	//render objects except fireball
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (dynamic_cast<CFireball*>(objects[i]) == nullptr)
+		if (dynamic_cast<CFireball*>(objects[i]) == nullptr || dynamic_cast<CLeaf*>(objects[i]) == nullptr)
 		{
 			objects[i]->Render();
 		}
@@ -352,7 +352,7 @@ void CPlayScene::Render()
 	//render fireball to the top
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (dynamic_cast<CFireball*>(objects[i]) != nullptr) 
+		if (dynamic_cast<CFireball*>(objects[i]) != nullptr || dynamic_cast<CLeaf*>(objects[i]) != nullptr)
 		{
 			objects[i]->Render();
 		}
