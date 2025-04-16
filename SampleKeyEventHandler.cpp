@@ -4,6 +4,7 @@
 #include "Game.h"
 
 #include "Mario.h"
+#include "Character.h"
 #include "PlayScene.h"
 
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
@@ -14,10 +15,10 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_A:
-		mario->SetPick(true);
+		mario->SetCanHold(true);
 		break;
 	case DIK_DOWN:
-		if(!mario->pick) mario->SetState(MARIO_STATE_SIT);
+		if(!mario->canHold) mario->SetState(MARIO_STATE_SIT);
 		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_JUMP);
@@ -50,7 +51,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
 	case DIK_A:
 		DebugOut(L"A UP\n"),
-		mario->SetPick(false);
+		mario->SetCanHold(false);
 		break;
 	}
 }

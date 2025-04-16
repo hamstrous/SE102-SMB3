@@ -25,6 +25,10 @@
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="Character.cpp" />
+    <ClCompile Include="AnimationVibration.cpp" />
+    <ClCompile Include="KoopaRed.cpp" />
+    <ClCompile Include="KoopaGreen.cpp" />
     <ClCompile Include="QuestionBlock.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="Score.cpp" />
@@ -58,6 +62,10 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="AnimationVibration.h" />
+    <ClInclude Include="KoopaRed.h" />
+    <ClInclude Include="KoopaGreen.h" />
     <ClInclude Include="QuestionBlock.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Score.h" />

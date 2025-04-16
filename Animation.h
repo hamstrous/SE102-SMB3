@@ -10,6 +10,7 @@ using namespace std;
 
 class CAnimation
 {
+protected:
 	ULONGLONG lastFrameTime;
 	int defaultTime;
 	int currentFrame;
@@ -17,7 +18,7 @@ class CAnimation
 public:
 	CAnimation(int defaultTime = 100) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }
 	void Add(int spriteId, DWORD time = 0);
-	void Render(float x, float y);
+	virtual void Render(float x, float y);
 };
 
 typedef CAnimation* LPANIMATION;

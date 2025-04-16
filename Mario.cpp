@@ -28,13 +28,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
-	if(holdingShell!=NULL) holdingShell->SetPosition(x, y);
-	if (!pick && holdingShell != NULL)
-	{
-		holdingShell->Kicked();
-		holdingShell = NULL;
-		
+	if (holdingShell != NULL) {
+		HoldingProcess(dt);
 	}
+	
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -115,14 +112,8 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 	// jump on top >> kill Koopa and deflect a bit 
 	if (e->ny < 0)
 	{
-		if (koopa->GetState() != KOOPA_STATE_SHELL_IDLE)
-		{
-			koopa->SetState(KOOPA_STATE_SHELL_IDLE);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
-		}else{
-			koopa->Kicked();
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
-		}
+		koopa->Stomped();
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
 	}
 	else 
 	{
@@ -146,7 +137,7 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 				{
 					if (koopa->GetState() == KOOPA_STATE_SHELL_IDLE)
 					{
-						if(pick)
+						if(canHold)
 						{
 							holdingShell = koopa;
 							koopa->Held();
@@ -370,7 +361,7 @@ void CMario::Render()
 
 	//RenderBoundingBox();
 	
-	DebugOutTitle(L"Coins: %d", coin);
+	//DebugOutTitle(L"Coins: %d", coin);
 }
 
 void CMario::SetState(int state)
@@ -480,6 +471,25 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		top = y - MARIO_SMALL_BBOX_HEIGHT/2;
 		right = left + MARIO_SMALL_BBOX_WIDTH;
 		bottom = top + MARIO_SMALL_BBOX_HEIGHT;
+	}
+}
+
+void CMario::HoldingProcess(DWORD dt)
+{
+	float hx, hy;
+	//holdingShell->SetPosition(x, y);
+	holdingShell->GetPosition(hx, hy);
+	holdingShell->SetPositionY(y);
+
+	// move the shell, also move faster when mario turn
+	if (nx == 1)
+		holdingShell->SetSpeed(min((x + KOOPA_BBOX_WIDTH - hx)/dt, MARIO_SHELL_TURNING_SPEED), vy);
+	else
+		holdingShell->SetSpeed(max((x - KOOPA_BBOX_WIDTH - hx) / dt, -MARIO_SHELL_TURNING_SPEED), vy);
+	if (!canHold)
+	{
+		holdingShell->Kicked();
+		holdingShell = NULL;
 	}
 }
 
