@@ -72,6 +72,15 @@ void CLeaf::SetState(int state)
 		vx = 0;
 		vy = 0;
 		break;
+	case LEAF_STATE_DELETE:
+	{
+		CScore* score = new CScore(x, y, ID_ANI_SCORE_1000);
+		score->SetState(SCORE_STATE_UP);
+		LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
+		scene->AddObject(score);
+		Delete();
+		break;
+	}
 	default:
 		break;
 	}

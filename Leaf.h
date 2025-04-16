@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Score.h"
 #define LEAF_GRAVITY 0.00002f
 #define LEAF_SPEED_UP 0.1f
 #define LEAF_SPEED 0.08f
@@ -10,6 +11,7 @@
 #define LEAF_STATE_UP 100
 #define LEAF_STATE_FALL 200
 #define LEAF_STATE_STOP 300
+#define LEAF_STATE_DELETE 400
 
 #define ID_ANI_LEAF_RIGHT 8601
 #define ID_ANI_LEAF_LEFT 8600

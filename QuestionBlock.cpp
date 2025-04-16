@@ -56,7 +56,7 @@ void CQuestionBlock::SetState(int state)
 			scene->AddObject(coin);
 		}
 		if (type == ITEM_LEAF /*&& mario->GetLevel() >= MARIO_LEVEL_BIG*/) {
-			CLeaf* leaf = new CLeaf(x, y - DISTANCE_SPAWN);
+			CLeaf* leaf = new CLeaf(x, y - DISTANCE_SPAWN - 15);
 			leaf->SetState(LEAF_STATE_UP);
 			scene->AddObject(leaf);
 		}
@@ -68,7 +68,7 @@ void CQuestionBlock::SetState(int state)
 		if (type == ITEM_RED_MUSHROOM)
 		{	
 			bool dir = (x > marioX) ? true : false;
-			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN, ITEM_RED_MUSHROOM, dir);
+			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN, ITEM_GREEN_MUSHROOM, dir);
 			mushroom->SetState(MUSHROOM_STATE_UP);
 			scene->AddObject(mushroom);
 		}
