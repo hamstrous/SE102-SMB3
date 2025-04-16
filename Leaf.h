@@ -1,26 +1,23 @@
 #pragma once
 #include "GameObject.h"
-#define LEAF_GRAVITY 0.0001f
+#define LEAF_GRAVITY 0.00002f
 #define LEAF_SPEED_UP 0.1f
-#define LEAF_SPEED 0.05f
+#define LEAF_SPEED 0.08f
 
 #define LEAF_BBOX_WIDTH 16
 #define LEAF_BBOX_HEIGHT 14
 
 #define LEAF_STATE_UP 100
 #define LEAF_STATE_FALL 200
-#define LEAF_STATE_FLY_UP 300
-#define LEAF_STATE_STOP 400
-#define LEAF_STATE_DOWN 500
+#define LEAF_STATE_STOP 300
 
 #define ID_ANI_LEAF_RIGHT 8601
 #define ID_ANI_LEAF_LEFT 8600
 
 #define LEAF_UP_DISTANCE 50
-#define LEAF_FALL_REVERSE_TIME 800
-#define LEAF_BLOW_UP_TIME LEAF_FALL_REVERSE_TIME/2
+#define LEAF_FALL_REVERSE_TIME 300
 
-#define LEAF_TIME_STOP 200
+#define LEAF_TIME_STOP 10
 
 class CLeaf : public CGameObject
 {
@@ -28,7 +25,6 @@ protected:
 	float ax;
 	float ay;
 	float startY;
-	ULONGLONG time_stop;
 	ULONGLONG fallReverse_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

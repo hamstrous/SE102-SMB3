@@ -15,15 +15,16 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		SetState(LEAF_STATE_STOP);
 	}
-	if (state == LEAF_STATE_STOP && (GetTickCount64() - time_stop >= LEAF_TIME_STOP))
+	if (state == LEAF_STATE_STOP)
 	{
 		SetState(LEAF_STATE_FALL);
 		
 	}
-	/*if (state == LEAF_STATE_FLY_UP && GetTickCount64() - fallReverse_start > LEAF_BLOW_UP_TIME)
+	if (state == LEAF_STATE_FALL && GetTickCount64() - fallReverse_start >= LEAF_FALL_REVERSE_TIME)
 	{
-		SetState(LEAF_STATE_FALL);
-	}*/
+		vx = -vx;
+		fallReverse_start = GetTickCount64();
+	}
 	vy += ay * dt;
 	vx += ax * dt;
 	CGameObject::Update(dt, coObjects);
@@ -35,7 +36,7 @@ void CLeaf::Render()
 	int aniId = ID_ANI_LEAF_RIGHT;
 	if (vx < 0) aniId = ID_ANI_LEAF_LEFT;
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CLeaf::OnNoCollision(DWORD dt)
@@ -62,22 +63,15 @@ void CLeaf::SetState(int state)
 		ay = 0;
 		break;
 	case LEAF_STATE_FALL:
-		vx = LEAF_SPEED/4;
+		vx = LEAF_SPEED;
 		ax = 0;
 		ay = LEAF_GRAVITY;
 		fallReverse_start = GetTickCount64();
 		break;
-	case LEAF_STATE_FLY_UP:
-		vx = -LEAF_SPEED;
-		ax = 0;
-		ay = -LEAF_GRAVITY;
-		break;
 	case LEAF_STATE_STOP:
 		vx = 0;
 		vy = 0;
-		time_stop = GetTickCount64();
 		break;
-
 	default:
 		break;
 	}
