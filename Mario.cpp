@@ -11,6 +11,8 @@
 #include "Plant.h"
 #include "Fireball.h"
 #include "Collision.h"
+#include "QuestionBlock.h"
+#include "Mushroom.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -57,13 +59,17 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
-		OnCollisionWithPortal(e); 
+		OnCollisionWithPortal(e);
 	else if (dynamic_cast<CKoopa*>(e->obj))
-		OnCollisionWithKoopa(e); 
+		OnCollisionWithKoopa(e);
 	else if (dynamic_cast<CPlant*>(e->obj))
 		OnCollisionWithPlant(e);
 	else if (dynamic_cast<CFireball*>(e->obj))
 		OnCollisionWithFireball(e);
+	else if (dynamic_cast<CQuestionBlock*>(e->obj))
+		OnCollisionWithQuestionBlock(e);
+	else if (dynamic_cast<CMushroom*>(e->obj))
+		OnCollisionWithMushroom(e);
 }
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
@@ -167,6 +173,32 @@ void CMario::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithFireball(LPCOLLISIONEVENT e)
 {	
 	Attacked();
+}
+
+void CMario::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
+{
+	CQuestionBlock* questionblock = (CQuestionBlock*)e->obj;
+	if (e->ny > 0 && (x >= questionblock->ReturnXmin() || x <= questionblock->ReturnXmax()))
+	{
+		if (questionblock->GetState() == QUESTION_BLOCK_STATE_ITEM)
+		{
+			questionblock->SetState(QUESTION_BLOCK_STATE_MOVEUP);
+		}
+		else
+		{
+			questionblock->SetState(QUESTION_BLOCK_STATE_ITEM);
+		}
+	}
+}
+
+void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+	CMushroom* mushroom = (CMushroom*)e->obj;
+	mushroom->SetState(MUSHROOM_STATE_DELETE);
+	if (level == MARIO_LEVEL_SMALL)
+	{
+		SetLevel(MARIO_LEVEL_BIG);
+	}
 }
 
 void CMario::Attacked() {

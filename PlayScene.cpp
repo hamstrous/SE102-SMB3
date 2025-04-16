@@ -14,6 +14,10 @@
 #include "Plant.h"
 #include "KoopaRed.h"
 #include "KoopaGreen.h"
+#include "Koopa.h"
+#include "QuestionBlock.h"
+#include "Mushroom.h"
+#include "Leaf.h"
 #include "SampleKeyEventHandler.h"
 
 
@@ -186,6 +190,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CPortal(x, y, r, b, scene_id);
 		break;
 	}
+	case OBJECT_TYPE_QUESTION_BLOCK:
+	{
+		int type = atoi(tokens[3].c_str());
+		obj = new CQuestionBlock(x, y, type);
+		break;
+	}
 	case OBJECT_TYPE_PIPE:
 	{
 		float cellWidth = (float)atof(tokens[3].c_str());
@@ -198,7 +208,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		BOOLEAN isGoInside = atoi(tokens[10].c_str());
 		obj = new CPipe(x, y, cellWidth, cellHeight, height, spriteId_top_left, spriteId_top_right, spriteId_bot_left, spriteId_bot_right, isGoInside);
 	}
-
+	case OBJECT_TYPE_MUSHROOM:
+	{
+		int type = atoi(tokens[3].c_str());
+		int dir = atoi(tokens[4].c_str());
+		obj = new CMushroom(x, y, type, dir);
+		break;
+	}
 
 
 	break;

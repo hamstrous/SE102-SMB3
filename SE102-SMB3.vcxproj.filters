@@ -29,6 +29,10 @@
     <ClCompile Include="AnimationVibration.cpp" />
     <ClCompile Include="KoopaRed.cpp" />
     <ClCompile Include="KoopaGreen.cpp" />
+    <ClCompile Include="QuestionBlock.cpp" />
+    <ClCompile Include="Mushroom.cpp" />
+    <ClCompile Include="Score.cpp" />
+    <ClCompile Include="Leaf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -62,6 +66,10 @@
     <ClInclude Include="AnimationVibration.h" />
     <ClInclude Include="KoopaRed.h" />
     <ClInclude Include="KoopaGreen.h" />
+    <ClInclude Include="QuestionBlock.h" />
+    <ClInclude Include="Mushroom.h" />
+    <ClInclude Include="Score.h" />
+    <ClInclude Include="Leaf.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
