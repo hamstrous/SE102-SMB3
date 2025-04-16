@@ -1,6 +1,6 @@
 #include "Goomba.h"
 
-CGoomba::CGoomba(float x, float y):CGameObject(x, y)
+CGoomba::CGoomba(float x, float y):CCharacter(x, y)
 {
 	this->ax = 0;
 	this->ay = GOOMBA_GRAVITY;
@@ -76,10 +76,12 @@ void CGoomba::Render()
 
 void CGoomba::SetState(int state)
 {
-	CGameObject::SetState(state);
 	switch (state)
 	{
 		case GOOMBA_STATE_DIE:
+			if ((this->state == GOOMBA_STATE_DIE) && (GetTickCount64() - die_start <= GOOMBA_DIE_TIMEOUT))
+				break;
+			// Set the die animation
 			die_start = GetTickCount64();
 			y += (GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE)/2;
 			vx = 0;
@@ -90,4 +92,15 @@ void CGoomba::SetState(int state)
 			vx = -GOOMBA_WALKING_SPEED;
 			break;
 	}
+	CGameObject::SetState(state);
+}
+
+void CGoomba::Stomped()
+{
+	SetState(GOOMBA_STATE_DIE);
+}
+
+void CGoomba::ShellHit(int shellX)
+{
+	SetState(GOOMBA_STATE_DIE);
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Character.h"
 
 #define GOOMBA_GRAVITY 0.002f
 #define GOOMBA_WALKING_SPEED 0.05f
@@ -17,16 +18,16 @@
 #define ID_ANI_GOOMBA_WALKING 5000
 #define ID_ANI_GOOMBA_DIE 5001
 
-class CGoomba : public CGameObject
+class CGoomba : public CCharacter
 {
 protected:
-	float ax;				
-	float ay; 
+	float ax;
+	float ay;
 
 	ULONGLONG die_start;
 
-	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
 	virtual int IsCollidable() { return 1; };
@@ -34,8 +35,13 @@ protected:
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
+	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e) {};
 
-public: 	
+public:
 	CGoomba(float x, float y);
 	virtual void SetState(int state);
+	virtual void Stomped();
+	virtual void ShellHit(int shellX);
+	virtual void TailHit() {};
+	virtual void BlockHit() {};
 };

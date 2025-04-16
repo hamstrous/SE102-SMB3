@@ -32,7 +32,7 @@
 #define KOOPA_STATE_SHELL_HELD 500
 #define KOOPA_STATE_FLYING 600
 
-class CKoopa : public CGameObject
+class CKoopa : public CCharacter
 {
 protected:
 	float ax;
@@ -53,6 +53,8 @@ protected:
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
+	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
+
 
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
 	virtual void Flying() = 0;
@@ -66,5 +68,11 @@ public:
 	virtual void Stomped();
 	virtual void Held();
 	virtual void Release(); //Mario releases the shell
+	virtual void ShellHit(int shellX);
+	virtual void TailHit() {};
+	virtual void BlockHit() {};
+	virtual void Touched();
+	virtual bool CanHold() { return state == KOOPA_STATE_SHELL_IDLE; };
+
 };
 
