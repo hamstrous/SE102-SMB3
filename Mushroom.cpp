@@ -115,6 +115,14 @@ void CMushroom::SetState(int state)
 		ay = MUSHROOM_GRAVITY;   
 		vx = MUSHROOM_SPEED_BOUNCING;
 		break;
+	case MUSHROOM_STATE_DELETE:
+	{
+		CScore* score = new CScore(x, y - MUSHROOM_BBOX_HEIGHT, SCORE_1000);
+		score->SetState(SCORE_STATE_UP);
+		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(score);
+		Delete();
+		break;
+	}
 	default:
 		break;
 	}

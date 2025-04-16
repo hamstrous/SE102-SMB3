@@ -12,6 +12,7 @@
 #include "Fireball.h"
 #include "Collision.h"
 #include "QuestionBlock.h"
+#include "Mushroom.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -70,6 +71,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithFireball(e);
 	else if (dynamic_cast<CQuestionBlock*>(e->obj))
 		OnCollisionWithQuestionBlock(e);
+	else if (dynamic_cast<CMushroom*>(e->obj))
+		OnCollisionWithMushroom(e);
 }
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
@@ -194,6 +197,16 @@ void CMario::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
 		{
 			questionblock->SetState(QUESTION_BLOCK_STATE_ITEM);
 		}
+	}
+}
+
+void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+	CMushroom* mushroom = (CMushroom*)e->obj;
+	mushroom->SetState(MUSHROOM_STATE_DELETE);
+	if (level == MARIO_LEVEL_SMALL)
+	{
+		SetLevel(MARIO_LEVEL_BIG);
 	}
 }
 

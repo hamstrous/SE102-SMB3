@@ -6,6 +6,8 @@
 #include "PlayScene.h"
 #include "Coin.h"
 #include "Mushroom.h"
+#include "Leaf.h"
+#include "debug.h"
 
 #define ID_ANI_BLOCK_NORMAL 8000
 #define ID_ANI_BLOCK_UNBOX 8001
@@ -19,11 +21,12 @@
 
 #define SPEED_QUESTION_BLOCK 0.14f
 #define DISTANCE_UP 16
-#define DISTANCE_SPAWN_MUSHROOM 5
+#define DISTANCE_SPAWN 5
 
 #define ITEM_COIN 1
 #define ITEM_RED_MUSHROOM 2
 #define ITEM_GREEN_MUSHROOM 3
+#define ITEM_LEAF 4
 class CQuestionBlock : public CGameObject
 {	
 private:

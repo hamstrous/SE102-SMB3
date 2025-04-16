@@ -15,6 +15,7 @@
 #include "Koopa.h"
 #include "QuestionBlock.h"
 #include "Mushroom.h"
+#include "Leaf.h"
 #include "SampleKeyEventHandler.h"
 
 
