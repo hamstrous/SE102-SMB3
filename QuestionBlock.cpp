@@ -55,7 +55,7 @@ void CQuestionBlock::SetState(int state)
 			coin->SetState(COIN_STATE_MOVEUP);
 			scene->AddObject(coin);
 		}
-		if (type == ITEM_LEAF /*&& mario->GetLevel() >= MARIO_LEVEL_BIG*/) {
+		if (type == ITEM_LEAF && mario->GetLevel() >= MARIO_LEVEL_BIG) {
 			CLeaf* leaf = new CLeaf(x, y - DISTANCE_SPAWN - 15);
 			leaf->SetState(LEAF_STATE_UP);
 			scene->AddObject(leaf);
