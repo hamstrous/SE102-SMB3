@@ -18,6 +18,7 @@
 #include "QuestionBlock.h"
 #include "Mushroom.h"
 #include "Leaf.h"
+#include "Headbush.h"
 #include "SampleKeyEventHandler.h"
 
 
@@ -172,11 +173,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int sprite_begin = atoi(tokens[6].c_str());
 		int sprite_middle = atoi(tokens[7].c_str());
 		int sprite_end = atoi(tokens[8].c_str());
-
+		int blocking = atoi(tokens[9].c_str());
 		obj = new CPlatform(
 			x, y,
 			cell_width, cell_height, length,
-			sprite_begin, sprite_middle, sprite_end
+			sprite_begin, sprite_middle, sprite_end, blocking
 		);
 
 		break;
@@ -215,7 +216,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMushroom(x, y, type, dir);
 		break;
 	}
-
+	case OBJECT_TYPE_HEADBUSH:
+	{
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int sprite_id_begin = atoi(tokens[5].c_str());
+		int sprite_id_end = atoi(tokens[6].c_str());
+		obj = new CHeadbush(x, y, cell_width, cell_height, sprite_id_begin, sprite_id_end);
+		break;
+	}
 
 	break;
 
