@@ -71,7 +71,7 @@ void CQuestionBlock::SetState(int state)
 			int type = (mario->GetLevel() == MARIO_LEVEL_BIG) ? ITEM_GREEN_MUSHROOM : ITEM_RED_MUSHROOM;
 			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN, type, dir);
 			mushroom->SetState(MUSHROOM_STATE_UP);
-			scene->AddObject2(mushroom, 5);
+			scene->AddObject2(mushroom, 4);
 		}
 		break;
 	}

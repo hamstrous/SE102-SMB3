@@ -359,16 +359,16 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {	
-	//render objects except fireball
+	//render objects except ...
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (dynamic_cast<CFireball*>(objects[i]) == nullptr || dynamic_cast<CLeaf*>(objects[i]) == nullptr
-			|| dynamic_cast<CScore*>(objects[i]) == nullptr)
+			|| dynamic_cast<CScore*>(objects[i]) == nullptr )
 		{
 			objects[i]->Render();
 		}
 	}
-	//render fireball to the top
+	//render ... to the top
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (dynamic_cast<CFireball*>(objects[i]) != nullptr || dynamic_cast<CLeaf*>(objects[i]) != nullptr
