@@ -171,4 +171,5 @@ public:
 	virtual void ShellHit(int shellX) {};
 	virtual void TailHit() {};
 	virtual void BlockHit() {};
+	int GetLevel() { return level; }
 };

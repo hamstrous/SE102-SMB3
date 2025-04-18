@@ -34,6 +34,7 @@
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="ColorBlock.cpp" />
+    <ClCompile Include="Headbush.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -72,6 +73,7 @@
     <ClInclude Include="Score.h" />
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="ColorBlock.h" />
+    <ClInclude Include="Headbush.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
