@@ -7,7 +7,7 @@ void CQuestionBlock::Render()
 		animations->Get(ID_ANI_BLOCK_UNBOX)->Render(x, y);
 	else
 	animations->Get(ID_ANI_BLOCK_NORMAL)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
