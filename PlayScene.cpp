@@ -14,6 +14,7 @@
 #include "Plant.h"
 #include "KoopaRed.h"
 #include "KoopaGreen.h"
+#include "ColorBlock.h"
 #include "Koopa.h"
 #include "QuestionBlock.h"
 #include "Mushroom.h"
@@ -156,6 +157,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_FIREBALL: obj = new CFireball(x, y); break;
+	case OBJECT_TYPE_COLOR_BLOCK: obj = new CColorBlock(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str()), atoi(tokens[5].c_str())); break;
 	case OBJECT_TYPE_PLANT:
 	{
 		int color = atoi(tokens[3].c_str());
