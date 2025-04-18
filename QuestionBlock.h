@@ -44,7 +44,7 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void SetState(int state);
-	int IsCollidable() { return 1; };
+	int IsCollidable() { return 0; };
 	int IsBlocking() { return 1; };
 	float ReturnXmin() {
 		float l;
