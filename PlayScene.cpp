@@ -348,6 +348,13 @@ void CPlayScene::Update(DWORD dt)
 	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 
 	PurgeDeletedObjects();
+
+	for (int i = 0; i < addobj.size(); i++)
+	{
+		objects.insert(objects.begin() + addobj[i].second, addobj[i].first);
+	}
+
+	addobj.clear();
 }
 
 void CPlayScene::Render()
@@ -355,7 +362,8 @@ void CPlayScene::Render()
 	//render objects except fireball
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (dynamic_cast<CFireball*>(objects[i]) == nullptr || dynamic_cast<CLeaf*>(objects[i]) == nullptr)
+		if (dynamic_cast<CFireball*>(objects[i]) == nullptr || dynamic_cast<CLeaf*>(objects[i]) == nullptr
+			|| dynamic_cast<CScore*>(objects[i]) == nullptr)
 		{
 			objects[i]->Render();
 		}
@@ -363,7 +371,8 @@ void CPlayScene::Render()
 	//render fireball to the top
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (dynamic_cast<CFireball*>(objects[i]) != nullptr || dynamic_cast<CLeaf*>(objects[i]) != nullptr)
+		if (dynamic_cast<CFireball*>(objects[i]) != nullptr || dynamic_cast<CLeaf*>(objects[i]) != nullptr
+			|| dynamic_cast<CScore*>(objects[i]) != nullptr)
 		{
 			objects[i]->Render();
 		}

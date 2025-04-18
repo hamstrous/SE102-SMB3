@@ -58,7 +58,7 @@ void CQuestionBlock::SetState(int state)
 		if (type == ITEM_LEAF && mario->GetLevel() >= MARIO_LEVEL_BIG) {
 			CLeaf* leaf = new CLeaf(x, y - DISTANCE_SPAWN - 15);
 			leaf->SetState(LEAF_STATE_UP);
-			scene->AddObject(leaf);
+			scene->AddObject2(leaf, 1);
 		}
 		break;
 	case QUESTION_BLOCK_STATE_MOVEDOWN:
@@ -71,7 +71,7 @@ void CQuestionBlock::SetState(int state)
 			int type = (mario->GetLevel() == MARIO_LEVEL_BIG) ? ITEM_GREEN_MUSHROOM : ITEM_RED_MUSHROOM;
 			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN, type, dir);
 			mushroom->SetState(MUSHROOM_STATE_UP);
-			scene->AddObject(mushroom);
+			scene->AddObject2(mushroom, 5);
 		}
 		break;
 	}

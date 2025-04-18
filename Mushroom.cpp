@@ -129,7 +129,7 @@ void CMushroom::SetState(int state)
 	{
 		CScore* score = new CScore(x, y - MUSHROOM_BBOX_HEIGHT, SCORE_1000);
 		score->SetState(SCORE_STATE_UP);
-		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(score);
+		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject2(score,1);
 		Delete();
 		break;
 	}
