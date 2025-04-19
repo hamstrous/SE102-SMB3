@@ -35,6 +35,8 @@
     <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="ColorBlock.cpp" />
     <ClCompile Include="Headbush.cpp" />
+    <ClCompile Include="Floor.cpp" />
+    <ClCompile Include="Cloud.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -74,6 +76,8 @@
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="ColorBlock.h" />
     <ClInclude Include="Headbush.h" />
+    <ClInclude Include="Floor.h" />
+    <ClInclude Include="Cloud.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

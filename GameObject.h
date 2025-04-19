@@ -10,6 +10,8 @@
 #include "Sprites.h"
 #include "Collision.h"
 
+#define TILE_SIZE 16
+
 using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
