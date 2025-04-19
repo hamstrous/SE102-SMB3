@@ -141,6 +141,7 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 	{
 		SetLevel(MARIO_LEVEL_BIG);
 	}
+
 }
 
 void CMario::Attacked() {

@@ -18,6 +18,7 @@ protected:
 
 	vector<LPGAMEOBJECT> objects;
 
+	vector<pair<CGameObject*, int>> addobj;
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATIONS_VIBRATION(string line);
@@ -37,6 +38,10 @@ public:
 
 	LPGAMEOBJECT GetPlayer() { return player; }
 	void AddObject(CGameObject* obj) { objects.insert(objects.begin() + 1, obj); }
+	void AddObject2(CGameObject* obj, int index)
+	{
+		addobj.push_back({ obj, index });
+	}
 	void Clear();
 	void PurgeDeletedObjects();
 
