@@ -1,4 +1,6 @@
 #include "Goomba.h"
+#include "Smoke.h"
+#include "PlayScene.h"
 
 CGoomba::CGoomba(float x, float y):CCharacter(x, y)
 {
@@ -70,9 +72,13 @@ void CGoomba::Render()
 	{
 		aniId = ID_ANI_GOOMBA_DIE;
 	}
-	if (state == GOOMBA_STATE_DIE_UP)
+	if (state == GOOMBA_STATE_DIE_UP && dir>0)
 	{
 		aniId = ID_ANI_GOOMBA_DIE + 1;
+	}
+	if (state == GOOMBA_STATE_DIE_UP && dir < 0)
+	{
+		aniId = ID_ANI_GOOMBA_DIE + 2;
 	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
 	//RenderBoundingBox();
@@ -104,8 +110,11 @@ void CGoomba::SetState(int state)
 }
 
 void CGoomba::Stomped()
-{
+{	
+	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
 	SetState(GOOMBA_STATE_DIE);
+	CSmoke* smoke = new CSmoke(x, y);
+	scene->AddObject2(smoke,1);
 }
 
 void CGoomba::ShellHit(int shellX)
@@ -113,9 +122,11 @@ void CGoomba::ShellHit(int shellX)
 	if (shellX <= 0)
 	{
 		vx = GOOMBA_FLYING_SPEED_X;
+		dir = -1;
 	}
 	else
-	{
+	{	
+		dir = 1;
 		vx = -GOOMBA_FLYING_SPEED_X;
 	}
 	SetState(GOOMBA_STATE_DIE_UP);

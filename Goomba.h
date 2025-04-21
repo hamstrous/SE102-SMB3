@@ -7,7 +7,7 @@
 #define GOOMBA_GRAVITY 0.002f
 #define GOOMBA_WALKING_SPEED 0.05f
 
-#define GOOMBA_FLYING_SPEED 0.4f
+#define GOOMBA_FLYING_SPEED 0.3f
 #define GOOMBA_FLYING_SPEED_X 0.1f
 
 #define GOOMBA_BBOX_WIDTH 16
@@ -28,7 +28,7 @@ class CGoomba : public CCharacter
 protected:
 	float ax;
 	float ay;
-
+	int dir;
 	ULONGLONG die_start;
 	ULONGLONG die_up;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
