@@ -68,7 +68,7 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 void CKoopa::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 {
 	CCharacter * character = dynamic_cast<CCharacter*>(e->obj);
-	if (state == KOOPA_STATE_SHELL_MOVING) character->ShellHit(x);
+	if (state == KOOPA_STATE_SHELL_MOVING) character->ShellHit(e->nx);
 	else if (state == KOOPA_STATE_WALKING) vx = -vx;
 }
 

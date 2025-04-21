@@ -56,7 +56,10 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isDeleted = true;
 		return;
 	}
-
+	/*if ((state == GOOMBA_STATE_DIE_UP) && (GetTickCount64() - die_up >= TIME_UP))
+	{
+		SetState(GOOMBA_STATE_DIE_DOWN);
+	}*/
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -69,9 +72,12 @@ void CGoomba::Render()
 	{
 		aniId = ID_ANI_GOOMBA_DIE;
 	}
-
+	if (state == GOOMBA_STATE_DIE_UP)
+	{
+		aniId = ID_ANI_GOOMBA_DIE + 1;
+	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CGoomba::SetState(int state)
@@ -91,6 +97,10 @@ void CGoomba::SetState(int state)
 		case GOOMBA_STATE_WALKING: 
 			vx = -GOOMBA_WALKING_SPEED;
 			break;
+		case GOOMBA_STATE_DIE_UP:
+			//vx = GOOMBA_FLYING_SPEED_X;
+			vy = -GOOMBA_FLYING_SPEED;
+			break;
 	}
 	CGameObject::SetState(state);
 }
@@ -101,6 +111,14 @@ void CGoomba::Stomped()
 }
 
 void CGoomba::ShellHit(int shellX)
-{
-	SetState(GOOMBA_STATE_DIE);
+{	
+	if (shellX >= x)
+	{
+		vx = GOOMBA_FLYING_SPEED_X;
+	}
+	else
+	{
+		vx = -GOOMBA_FLYING_SPEED_X;
+	}
+	SetState(GOOMBA_STATE_DIE_UP);
 }

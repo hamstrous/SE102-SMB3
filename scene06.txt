@@ -10,6 +10,8 @@ Fireball.txt
 Plant.txt
 number.txt
 background.txt
+koopa-green.txt
+koopa-red.txt
 #
 
 [OBJECTS]
@@ -49,6 +51,9 @@ background.txt
 # MARIO
 0	120	10
 
+
+2	50	50
+3	150	50	0
 
 #QUESTIONBLOCK
 15	96	110	1
