@@ -47,7 +47,7 @@ protected:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render() = 0;
 
-	virtual int IsCollidable() { return 1; };
+	virtual int IsCollidable() { return KOOPA_STATE_SHELL_HELD != state; };
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 

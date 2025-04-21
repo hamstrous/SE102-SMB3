@@ -48,14 +48,11 @@ void CKoopa::OnNoCollision(DWORD dt)
 
 void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (state == KOOPA_STATE_SHELL_HELD) return;
-
 	if (dynamic_cast<CCharacter*>(e->obj)) {
 		OnCollisionWithCharacter(e);
 		return;
 	}
 	if (!e->obj->IsBlocking()) return;
-	if (state == KOOPA_STATE_SHELL_HELD) return;
 
 	if (e->ny != 0)
 	{
@@ -71,7 +68,10 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 void CKoopa::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 {
 	CCharacter * character = dynamic_cast<CCharacter*>(e->obj);
-	if (state == KOOPA_STATE_SHELL_HELD) return;
+	//if (state == KOOPA_STATE_SHELL_HELD) 
+	if(dynamic_cast<CKoopa*>(character)) DebugOut(L"[KOOPA] Touch Koopa\n");
+	if(dynamic_cast<CGoomba*>(character)) DebugOut(L"[KOOPA] Touch Goomba\n");
+
 	if (state == KOOPA_STATE_SHELL_MOVING) {
 		// if hit another moving shell, then both get shell hit
 		// call this Koppa shell hit first, else no effect
@@ -80,8 +80,8 @@ void CKoopa::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		}
 		character->ShellHit(e->nx);
 	}
-	else if (state == KOOPA_STATE_SHELL_HELD && dynamic_cast<CMario*>(character) == NULL) {
-		//HeldDie();
+	else if (state == KOOPA_STATE_SHELL_HELD ) {
+		HeldDie();
 		character->ShellHit(e->nx);
 	}
 	else if (state == KOOPA_STATE_WALKING) vx = -vx;
@@ -107,6 +107,7 @@ void CKoopa::InitHorizontalSpeedBasedOnMario(float speed, float towardMario)
 
 void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	DebugOutTitle(L"[KOOPA] Speed vx: %f, vy: %f\n", vx, vy);
 	vy += ay * dt;
 	vx += ax * dt;
 	if (hasWing)
