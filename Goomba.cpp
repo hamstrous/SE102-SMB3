@@ -10,12 +10,9 @@ CGoomba::CGoomba(float x, float y):CCharacter(x, y)
 
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (state == GOOMBA_STATE_DIE)
+	if (state == GOOMBA_STATE_DIE || state == GOOMBA_STATE_DIE_UP)
 	{
-		left = x - GOOMBA_BBOX_WIDTH/2;
-		top = y - GOOMBA_BBOX_HEIGHT_DIE/2;
-		right = left + GOOMBA_BBOX_WIDTH;
-		bottom = top + GOOMBA_BBOX_HEIGHT_DIE;
+		left = top = right = bottom = 0;
 	}
 	else
 	{ 
@@ -51,7 +48,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-	if ( (state==GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT) )
+	if ( ( (state==GOOMBA_STATE_DIE) || (state == GOOMBA_STATE_DIE_UP) )
+		&& (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT) )
 	{
 		isDeleted = true;
 		return;
@@ -98,7 +96,7 @@ void CGoomba::SetState(int state)
 			vx = -GOOMBA_WALKING_SPEED;
 			break;
 		case GOOMBA_STATE_DIE_UP:
-			//vx = GOOMBA_FLYING_SPEED_X;
+			die_start = GetTickCount64();
 			vy = -GOOMBA_FLYING_SPEED;
 			break;
 	}
@@ -111,8 +109,8 @@ void CGoomba::Stomped()
 }
 
 void CGoomba::ShellHit(int shellX)
-{	
-	if (shellX >= x)
+{
+	if (shellX <= 0)
 	{
 		vx = GOOMBA_FLYING_SPEED_X;
 	}

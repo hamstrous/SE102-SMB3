@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 #include "Character.h"
+#include "debug.h"
+
 
 #define GOOMBA_GRAVITY 0.002f
 #define GOOMBA_WALKING_SPEED 0.05f
@@ -33,10 +35,7 @@ protected:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-	virtual int IsCollidable() {	
-		if (state == GOOMBA_STATE_DIE || state == GOOMBA_STATE_DIE_UP)
-			return 0;
-		else return 1; };
+	virtual int IsCollidable() { return 1; }
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
