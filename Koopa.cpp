@@ -37,8 +37,7 @@ void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		right = left + KOOPA_BBOX_WIDTH;
 		bottom = top + KOOPA_BBOX_HEIGHT_SHELL;
 	}
-	if (hit)
-		left = top = right = bottom = 0;
+	
 }
 
 void CKoopa::OnNoCollision(DWORD dt)
@@ -69,7 +68,7 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 void CKoopa::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 {
 	CCharacter * character = dynamic_cast<CCharacter*>(e->obj);
-	if (state == KOOPA_STATE_SHELL_MOVING) character->ShellHit(e->nx);
+	if (state == KOOPA_STATE_SHELL_MOVING) character->ShellHit(x);
 	else if (state == KOOPA_STATE_WALKING) vx = -vx;
 }
 
@@ -153,13 +152,6 @@ void CKoopa::SetState(int state)
 	case KOOPA_STATE_DIE:
 		isDeleted = true;
 		break;
-	case KOOPA_STATE_SHELL_HIT:
-		if (this->state == KOOPA_STATE_WALKING) y = (y + KOOPA_BBOX_HEIGHT / 2) - KOOPA_BBOX_HEIGHT_SHELL / 2; // when start walking, move up to normal y so dont drop through floor
-		// when start shell idle, move down to shell y so dont float above ground
-		vx = 0;
-		shell_start = GetTickCount64();
-		isIdle = true;
-		break;
 	}
 	CGameObject::SetState(state);
 
@@ -205,11 +197,7 @@ void CKoopa::Release()
 
 void CKoopa::ShellHit(int shellX)
 {
-	SetState(KOOPA_STATE_SHELL_IDLE);
-	if (shellX < 0) vx = KOOPA_FLYING_SPEED_X;
-	else vx = -KOOPA_FLYING_SPEED_X;
-	vy = -KOOPA_STATE_FLYING_UP;
-	hit = true;
+	SetState(KOOPA_STATE_DIE);
 }
 
 void CKoopa::Touched()

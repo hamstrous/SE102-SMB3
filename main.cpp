@@ -46,7 +46,6 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "Mushroom.h"
 #include "Leaf.h"
 #include "Headbush.h"
-#include "Smoke.h"
 
 
 #include "SampleKeyEventHandler.h"

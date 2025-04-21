@@ -186,7 +186,7 @@ void CPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 }
 
 
-CPlant::CPlant(float x, float y, int color, int type, int size) :CCharacter(x, y)
+CPlant::CPlant(float x, float y, int color, int type, int size)
 {
 	this->x = x;
 	this->y = y;
@@ -225,28 +225,6 @@ void CPlant::SetState(int state)
 			up_start = GetTickCount64();
 		else up_start = 0;
 		break;
-	case STATE_PRIRANHA_SHELL_HIT:
-		isDeleted = true;
-		CSmoke* smoke = new CSmoke(x, y);
-		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject2(smoke, 1);
 	}
 	CGameObject::SetState(state);
 }
-
-void CPlant::Stomped()
-{
-	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-	mario->Attacked();
-}
-
-void CPlant::ShellHit(int shellX)
-{
-	SetState(STATE_PRIRANHA_SHELL_HIT);
-}
-
-void CPlant::TailHit()
-{
-	SetState(STATE_PRIRANHA_SHELL_HIT);
-}
-
-

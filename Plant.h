@@ -1,10 +1,8 @@
 #pragma once
 #include "GameObject.h"
-#include "Character.h"
 #include "Animation.h"
 #include "Animations.h"
 #include "Sprites.h"
-#include "Smoke.h"
 
 #define PIRANHA_SPEED 0.04f
 #define PIRANHA_BBOX 44
@@ -27,11 +25,7 @@
 #define ID_ANI_PRIRANHA_RED_UP_RIGHT_STAY 7318
 
 
-//get hit by shell, tail
-#define STATE_PRIRANHA_SHELL_HIT 400
-
-
-class CPlant : public CCharacter
+class CPlant : public CGameObject
 {
 protected:
 	ULONGLONG up_start;
@@ -47,18 +41,11 @@ protected:
 	virtual void OnNoCollision(DWORD dt);
 	virtual void RenderBoundingBox();
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
-	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e) {};
-
 	bool getIsFired() { return isFired; }
 	void ShootFireball();
 	int GetaniID();
 public:
 	CPlant(float x, float y, int corlor, int type, int size);
 	virtual void SetState(int state);
-	virtual void Stomped();
-
-	virtual void ShellHit(int shellX);
-	virtual void TailHit();
-	virtual void BlockHit() {};
 };
 
