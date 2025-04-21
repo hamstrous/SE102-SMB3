@@ -1,5 +1,7 @@
 #include "Collision.h"
 #include "GameObject.h"
+#include "Mario.h"
+#include "Character.h"
 
 #include "debug.h"
 
@@ -440,4 +442,41 @@ bool CCollision::CheckTouchingSolid(float ml, float mt, float mr, float mb, floa
 			}
 		}
 	}return false;
+}
+
+bool CCollision::CheckTouchCharacter(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool notMario = 1)
+{
+	bool isTouching = false;
+	if (coObjects->size() > 0)
+	{
+		for (auto obj : *coObjects)
+		{
+			if(notMario && dynamic_cast<CMario*>(obj)) continue;
+			if(dynamic_cast<CCharacter*>(obj) == NULL) continue;
+			CCharacter* character = dynamic_cast<CCharacter*>(obj);
+			if (obj->IsCollidable() )
+			{
+				float sl, st, sr, sb;
+				obj->GetBoundingBox(sl, st, sr, sb);
+				float mdx = vx * dt;
+				float mdy = vy * dt;
+
+				float svx, svy;
+				obj->GetSpeed(svx, svy);
+				float sdx = svx * dt;
+				float sdy = svy * dt;
+
+				//
+				// NOTE: new m speed = original m speed - collide object speed
+				// 
+				float dx = mdx - sdx;
+				float dy = mdy - sdy;
+
+				if (IsColliding(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) {
+					isTouching = true;
+					character->ShellHeldHit((ml+mr)/2);
+				}
+			}
+		}
+	}return isTouching;
 }

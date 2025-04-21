@@ -66,7 +66,7 @@ public:
 	virtual void Kicked();
 	virtual void Stomped();
 	virtual void Held();
-	virtual void Release(); //Mario releases the shell
+	virtual void Release(bool dead); //Mario releases the shell
 	virtual void ShellHit(int shellX);
 	virtual void TailHit() {};
 	virtual void BlockHit() {};
@@ -74,5 +74,6 @@ public:
 	virtual bool CanHold() { return state == KOOPA_STATE_SHELL_IDLE; };
 	void HeldDie();
 	void ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 };
 

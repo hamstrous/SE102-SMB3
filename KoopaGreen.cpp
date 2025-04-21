@@ -55,7 +55,7 @@ void CKoopaGreen::SetState(int state)
 		break;
 	case KOOPA_STATE_WALKING:
 		isIdle = false;
-		Release(); //call to make sure shell is released (mario not holding)
+		Release(false); //call to make sure shell is released (mario not holding)
 		if (this->state == KOOPA_STATE_SHELL_IDLE) {
 			y = (y + KOOPA_BBOX_HEIGHT_SHELL / 2) - KOOPA_BBOX_HEIGHT / 2; // when start walking, move up to normal y so dont drop through floor
 			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
@@ -78,6 +78,7 @@ void CKoopaGreen::SetState(int state)
 		break;
 	case KOOPA_STATE_DIE:
 		isDeleted = true;
+		Release(true);
 		break;
 	}
 	CGameObject::SetState(state);

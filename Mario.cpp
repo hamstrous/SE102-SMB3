@@ -91,7 +91,6 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		}else if (untouchable == 0)
 		{
 			character->Touched();
-			DebugOut(L"can hold %d\n", canHold);
 		}
 		
 	}
