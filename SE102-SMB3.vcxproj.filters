@@ -37,6 +37,7 @@
     <ClCompile Include="Headbush.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Cloud.cpp" />
+    <ClCompile Include="Smoke.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -78,6 +79,7 @@
     <ClInclude Include="Headbush.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Cloud.h" />
+    <ClInclude Include="Smoke.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

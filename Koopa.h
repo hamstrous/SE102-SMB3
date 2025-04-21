@@ -32,6 +32,12 @@
 #define KOOPA_STATE_SHELL_HELD 500
 #define KOOPA_STATE_FLYING 600
 
+//get hit by shell, tail
+#define KOOPA_STATE_SHELL_HIT 700
+#define KOOPA_STATE_FLYING_UP 0.3f
+
+#define KOOPA_FLYING_SPEED_X 0.1f
+
 class CKoopa : public CCharacter
 {
 protected:
@@ -41,6 +47,8 @@ protected:
 	bool hasWing = true;
 
 	bool isIdle = false;
+
+	bool hit = false;
 	ULONGLONG shell_start;
 	ULONGLONG fly_start;
 
