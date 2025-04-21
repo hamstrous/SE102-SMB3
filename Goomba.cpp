@@ -7,6 +7,7 @@ CGoomba::CGoomba(float x, float y):CCharacter(x, y)
 	this->ax = 0;
 	this->ay = GOOMBA_GRAVITY;
 	die_start = -1;
+	tailhit = false;
 	SetState(GOOMBA_STATE_WALKING);
 }
 
@@ -103,7 +104,8 @@ void CGoomba::SetState(int state)
 			break;
 		case GOOMBA_STATE_DIE_UP:
 			die_start = GetTickCount64();
-			vy = -GOOMBA_FLYING_SPEED;
+			if (tailhit) vy = -GOOMBA_TAILHIT_SPEED_Y;
+			else vy = -GOOMBA_FLYING_SPEED;
 			break;
 	}
 	CGameObject::SetState(state);
@@ -111,10 +113,7 @@ void CGoomba::SetState(int state)
 
 void CGoomba::Stomped()
 {	
-	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
 	SetState(GOOMBA_STATE_DIE);
-	CSmoke* smoke = new CSmoke(x, y);
-	scene->AddObject2(smoke,1);
 }
 
 void CGoomba::ShellHit(int shellX)
