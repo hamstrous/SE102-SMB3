@@ -87,9 +87,11 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 			CKoopa* koopa = dynamic_cast<CKoopa*>(character);
 			holdingShell = koopa;
 			koopa->Held();
+			DebugOut(L"HOLD\n");
 		}else if (untouchable == 0)
 		{
 			character->Touched();
+			DebugOut(L"can hold %d\n", canHold);
 		}
 		
 	}

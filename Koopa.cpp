@@ -68,7 +68,14 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 void CKoopa::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 {
 	CCharacter * character = dynamic_cast<CCharacter*>(e->obj);
-	if (state == KOOPA_STATE_SHELL_MOVING) character->ShellHit(x);
+	if (state == KOOPA_STATE_SHELL_MOVING) {
+		// if hit another moving shell, then both get shell hit
+		// call this Koppa shell hit first, else no effect
+		if (dynamic_cast<CKoopa*>(character) && dynamic_cast<CKoopa*>(character)->state == KOOPA_STATE_SHELL_MOVING) {
+			ShellHit(-e->nx);
+		}
+		character->ShellHit(e->nx);
+	}
 	else if (state == KOOPA_STATE_WALKING) vx = -vx;
 }
 
@@ -204,10 +211,10 @@ void CKoopa::Touched()
 {
 	CPlayScene* scene = (CPlayScene*)(CGame::GetInstance()->GetCurrentScene());
 	CMario* mario = dynamic_cast<CMario*>(scene->GetPlayer());
-	if (state != KOOPA_STATE_SHELL_IDLE) {
+	if (state != KOOPA_STATE_SHELL_IDLE && state != KOOPA_STATE_SHELL_HELD) {
 		mario->Attacked();
 	}
-	else {
+	else if(state == KOOPA_STATE_SHELL_IDLE){
 		Kicked();
 	}
 }
