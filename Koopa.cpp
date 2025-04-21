@@ -48,11 +48,14 @@ void CKoopa::OnNoCollision(DWORD dt)
 
 void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if (state == KOOPA_STATE_SHELL_HELD) return;
+
 	if (dynamic_cast<CCharacter*>(e->obj)) {
 		OnCollisionWithCharacter(e);
 		return;
 	}
 	if (!e->obj->IsBlocking()) return;
+	if (state == KOOPA_STATE_SHELL_HELD) return;
 
 	if (e->ny != 0)
 	{
@@ -68,12 +71,17 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 void CKoopa::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 {
 	CCharacter * character = dynamic_cast<CCharacter*>(e->obj);
+	if (state == KOOPA_STATE_SHELL_HELD) return;
 	if (state == KOOPA_STATE_SHELL_MOVING) {
 		// if hit another moving shell, then both get shell hit
 		// call this Koppa shell hit first, else no effect
 		if (dynamic_cast<CKoopa*>(character) && dynamic_cast<CKoopa*>(character)->state == KOOPA_STATE_SHELL_MOVING) {
 			ShellHit(-e->nx);
 		}
+		character->ShellHit(e->nx);
+	}
+	else if (state == KOOPA_STATE_SHELL_HELD && dynamic_cast<CMario*>(character) == NULL) {
+		//HeldDie();
 		character->ShellHit(e->nx);
 	}
 	else if (state == KOOPA_STATE_WALKING) vx = -vx;
@@ -107,14 +115,12 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		Walking(dt, coObjects);
 	if(vx > 0) nx = 1;
 	else if(vx < 0) nx = -1;
-	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CKoopa::SetState(int state)
 {
 	if (this->state == KOOPA_STATE_SHELL_HELD) {
-		isCollidable = true; // when koopa is kicked, it can be collided with again
 		ay = KOOPA_GRAVITY;
 	}
 	else if (this->state == KOOPA_STATE_FLYING) {
@@ -146,7 +152,6 @@ void CKoopa::SetState(int state)
 		InitHorizontalSpeedBasedOnMario(KOOPA_SHELL_SPEED); // when kicked, move away from mario
 		break;
 	case KOOPA_STATE_SHELL_HELD:
-		isCollidable = false;
 		vx = 0;
 		vy = 0;
 		ay = 0;
@@ -176,6 +181,7 @@ void CKoopa::Stomped()
 {
 	if (state == KOOPA_STATE_FLYING) {
 		hasWing = false;
+		DebugOut(L"[KOOPA] Stomped\n");
 		SetState(KOOPA_STATE_WALKING);
 	}
 	else if (state != KOOPA_STATE_SHELL_IDLE)
@@ -216,5 +222,23 @@ void CKoopa::Touched()
 	}
 	else if(state == KOOPA_STATE_SHELL_IDLE){
 		Kicked();
+	}
+}
+
+void CKoopa::HeldDie()
+{
+	if (state == KOOPA_STATE_SHELL_HELD) {
+		SetState(KOOPA_STATE_DIE);
+	}
+}
+
+void CKoopa::ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	if(state == KOOPA_STATE_SHELL_MOVING) {
+		float ml, mt, mr, mb;
+		GetBoundingBox(ml, mt, mr, mb);
+		if (CCollision::GetInstance()->CheckTouchingSolid(ml, mt, mr, mb, vx, vy, dt, coObjects)) {
+			SetState(KOOPA_STATE_DIE);
+		}
 	}
 }

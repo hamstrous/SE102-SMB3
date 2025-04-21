@@ -411,7 +411,7 @@ int CCollision::CheckStillTouchSolid(float ml, float mt, float mr, float mb, flo
 	}return mxOutCome;
 }
 
-int CCollision::CheckTouchingSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+bool CCollision::CheckTouchingSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	int mxOutCome = 0;
 	if (coObjects->size() > 0)

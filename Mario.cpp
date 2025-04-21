@@ -29,7 +29,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	if (holdingShell != NULL) {
-		HoldingProcess(dt);
+		HoldingProcess(dt, coObjects);
 	}
 	
 }
@@ -419,7 +419,7 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	}
 }
 
-void CMario::HoldingProcess(DWORD dt)
+void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float hx, hy;
 	//holdingShell->SetPosition(x, y);
@@ -434,6 +434,7 @@ void CMario::HoldingProcess(DWORD dt)
 	if (!canHold)
 	{
 		holdingShell->Kicked();
+		holdingShell->ThrownInBlock(dt, coObjects);
 		holdingShell = NULL;
 	}
 }

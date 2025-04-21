@@ -22,7 +22,7 @@ protected:
 
 	virtual void GetFloorBoundingBox(float& left, float& top, float& right, float& bottom);
 
-	virtual int IsCollidable() { return isCollidable; };
+	virtual int IsCollidable() { return 1; };
 	virtual int IsBlocking() { return 0; }
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);

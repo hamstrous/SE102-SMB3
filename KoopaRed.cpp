@@ -71,7 +71,6 @@ void CKoopaRed::Flying()
 void CKoopaRed::SetState(int state)
 {
 	if (this->state == KOOPA_STATE_SHELL_HELD) {
-		isCollidable = true; // when koopa is kicked, it can be collided with again
 		ay = KOOPA_GRAVITY;
 	}
 	else if (this->state == KOOPA_STATE_FLYING) {
@@ -103,7 +102,6 @@ void CKoopaRed::SetState(int state)
 		InitHorizontalSpeedBasedOnMario(KOOPA_SHELL_SPEED); // when kicked, move away from mario
 		break;
 	case KOOPA_STATE_SHELL_HELD:
-		isCollidable = false;
 		vx = 0;
 		vy = 0;
 		ay = 0;
