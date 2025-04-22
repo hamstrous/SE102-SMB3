@@ -38,7 +38,8 @@
 
 #define KOOPA_FLYING_SPEED_X 0.1f
 
-#define KOOPA_STATE_DIE_UP 800
+#define KOOPA_STATE_DIE_UP_ANI 800
+#define KOOPA_STATE_DIE_UP 900
 
 #define KOOPA_TIME_DELETE 1000
 class CKoopa : public CCharacter

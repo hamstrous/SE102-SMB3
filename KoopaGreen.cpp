@@ -81,11 +81,16 @@ void CKoopaGreen::SetState(int state)
 		Release(true);
 		break;
 	case KOOPA_STATE_DIE_UP:
-		//isDeleted = true;
-		DebugOut(L"[Koopa] Before release\n");
+		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
 		Release(true);
-		ShellHit(nx);
-		DebugOut(L"[Koopa] After release release\n");
+		float player_x, player_y;
+		player->GetSpeed(player_x, player_y);
+		vx = player_x;
+		vy = -KOOPA_STATE_FLYING_UP;
+		hit = true;
+		hasWing = false;
+		delete_time = GetTickCount64();
 		break;
 	}
 	CGameObject::SetState(state);
@@ -140,6 +145,9 @@ void CKoopaGreen::Render()
 		break;
 	case KOOPA_STATE_SHELL_MOVING:
 		aniId = ID_ANI_KOOPA_SHELL_MOVING;
+		break;
+	case KOOPA_STATE_DIE_UP_ANI:
+		aniId = ID_ANI_KOOPA_DIE_UP;
 		break;
 	case KOOPA_STATE_DIE_UP:
 		aniId = ID_ANI_KOOPA_DIE_UP;
