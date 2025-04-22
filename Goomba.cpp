@@ -1,21 +1,21 @@
 #include "Goomba.h"
+#include "Smoke.h"
+#include "PlayScene.h"
 
 CGoomba::CGoomba(float x, float y):CCharacter(x, y)
 {
 	this->ax = 0;
 	this->ay = GOOMBA_GRAVITY;
 	die_start = -1;
+	tailhit = false;
 	SetState(GOOMBA_STATE_WALKING);
 }
 
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (state == GOOMBA_STATE_DIE)
+	if (state == GOOMBA_STATE_DIE || state == GOOMBA_STATE_DIE_UP)
 	{
-		left = x - GOOMBA_BBOX_WIDTH/2;
-		top = y - GOOMBA_BBOX_HEIGHT_DIE/2;
-		right = left + GOOMBA_BBOX_WIDTH;
-		bottom = top + GOOMBA_BBOX_HEIGHT_DIE;
+		left = top = right = bottom = 0;
 	}
 	else
 	{ 
@@ -51,12 +51,16 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-	if ( (state==GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT) )
+	if ( ( (state==GOOMBA_STATE_DIE) || (state == GOOMBA_STATE_DIE_UP) )
+		&& (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT) )
 	{
 		isDeleted = true;
 		return;
 	}
-
+	/*if ((state == GOOMBA_STATE_DIE_UP) && (GetTickCount64() - die_up >= TIME_UP))
+	{
+		SetState(GOOMBA_STATE_DIE_DOWN);
+	}*/
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -69,9 +73,16 @@ void CGoomba::Render()
 	{
 		aniId = ID_ANI_GOOMBA_DIE;
 	}
-
+	if (state == GOOMBA_STATE_DIE_UP && dir>0)
+	{
+		aniId = ID_ANI_GOOMBA_DIE + 1;
+	}
+	if (state == GOOMBA_STATE_DIE_UP && dir < 0)
+	{
+		aniId = ID_ANI_GOOMBA_DIE + 2;
+	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CGoomba::SetState(int state)
@@ -91,16 +102,31 @@ void CGoomba::SetState(int state)
 		case GOOMBA_STATE_WALKING: 
 			vx = -GOOMBA_WALKING_SPEED;
 			break;
+		case GOOMBA_STATE_DIE_UP:
+			die_start = GetTickCount64();
+			if (tailhit) vy = -GOOMBA_TAILHIT_SPEED_Y;
+			else vy = -GOOMBA_FLYING_SPEED;
+			break;
 	}
 	CGameObject::SetState(state);
 }
 
 void CGoomba::Stomped()
-{
+{	
 	SetState(GOOMBA_STATE_DIE);
 }
 
 void CGoomba::ShellHit(int shellX)
 {
-	SetState(GOOMBA_STATE_DIE);
+	if (shellX <= 0)
+	{
+		vx = GOOMBA_FLYING_SPEED_X;
+		dir = -1;
+	}
+	else
+	{	
+		dir = 1;
+		vx = -GOOMBA_FLYING_SPEED_X;
+	}
+	SetState(GOOMBA_STATE_DIE_UP);
 }
