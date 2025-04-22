@@ -1,5 +1,7 @@
 #include "Collision.h"
 #include "GameObject.h"
+#include "Mario.h"
+#include "Character.h"
 
 #include "debug.h"
 
@@ -7,13 +9,13 @@
 
 CCollision* CCollision::__instance = NULL;
 
-static bool isColliding(float al, float at, float ar, float ab, float bl, float bt, float br, float bb) {
+static bool IsColliding(float al, float at, float ar, float ab, float bl, float bt, float br, float bb) {
 	return al < br && ar > bl && at < bb && ab > bt;
 }
 
-static int StillCollding(float al, float at, float ar, float ab, float dx, float dy, float bl, float bt, float br, float bb) {
-	int curTouch = isColliding(al, at, ar, ab, bl, bt, br, bb);
-	int nexTouch = isColliding(al + dx, at + dy, ar + dx, ab + dy, bl, bt, br, bb);
+static int StillColliding(float al, float at, float ar, float ab, float dx, float dy, float bl, float bt, float br, float bb) {
+	int curTouch = IsColliding(al, at, ar, ab, bl, bt, br, bb);
+	int nexTouch = IsColliding(al + dx, at + dy, ar + dx, ab + dy, bl, bt, br, bb);
 	if(curTouch == 0) return 0; // not touch
 	return  curTouch + nexTouch; // 2: still touch, 1: touch then not touch
 }
@@ -405,8 +407,76 @@ int CCollision::CheckStillTouchSolid(float ml, float mt, float mr, float mb, flo
 				float dx = mdx - sdx;
 				float dy = mdy - sdy;
 
-				mxOutCome = max(mxOutCome, StillCollding(ml, mt, mr, mb, dx, dy, sl, st, sr, sb));
+				mxOutCome = max(mxOutCome, StillColliding(ml, mt, mr, mb, dx, dy, sl, st, sr, sb));
 			}
 		}
 	}return mxOutCome;
+}
+
+bool CCollision::CheckTouchingSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	int mxOutCome = 0;
+	if (coObjects->size() > 0)
+	{
+		for (auto obj : *coObjects)
+		{
+			if (obj->IsBlocking())
+			{
+				float sl, st, sr, sb;
+				obj->GetBoundingBox(sl, st, sr, sb);
+				float mdx = vx * dt;
+				float mdy = vy * dt;
+
+				float svx, svy;
+				obj->GetSpeed(svx, svy);
+				float sdx = svx * dt;
+				float sdy = svy * dt;
+
+				//
+				// NOTE: new m speed = original m speed - collide object speed
+				// 
+				float dx = mdx - sdx;
+				float dy = mdy - sdy;
+
+				if(IsColliding(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) return true;
+			}
+		}
+	}return false;
+}
+
+bool CCollision::CheckTouchCharacter(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool notMario = 1)
+{
+	bool isTouching = false;
+	if (coObjects->size() > 0)
+	{
+		for (auto obj : *coObjects)
+		{
+			if(notMario && dynamic_cast<CMario*>(obj)) continue;
+			if(dynamic_cast<CCharacter*>(obj) == NULL) continue;
+			CCharacter* character = dynamic_cast<CCharacter*>(obj);
+			if (obj->IsCollidable() )
+			{
+				float sl, st, sr, sb;
+				obj->GetBoundingBox(sl, st, sr, sb);
+				float mdx = vx * dt;
+				float mdy = vy * dt;
+
+				float svx, svy;
+				obj->GetSpeed(svx, svy);
+				float sdx = svx * dt;
+				float sdy = svy * dt;
+
+				//
+				// NOTE: new m speed = original m speed - collide object speed
+				// 
+				float dx = mdx - sdx;
+				float dy = mdy - sdy;
+
+				if (IsColliding(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) {
+					isTouching = true;
+					character->ShellHeldHit((ml+mr)/2);
+				}
+			}
+		}
+	}return isTouching;
 }

@@ -164,8 +164,8 @@ public:
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void SetCanHold(bool pick) { this->canHold = pick; }
-	void Drop() { holdingShell = NULL; }
-	void HoldingProcess(DWORD dt);
+	void Drop() { holdingShell = NULL; DebugOut(L"NULL SHELL\n"); }
+	void HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Attacked();
 	virtual void Stomped() {};
 	virtual void ShellHit(int shellX) {};

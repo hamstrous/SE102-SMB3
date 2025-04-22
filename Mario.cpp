@@ -29,7 +29,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	if (holdingShell != NULL) {
-		HoldingProcess(dt);
+		HoldingProcess(dt, coObjects);
 	}
 	
 }
@@ -87,6 +87,7 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 			CKoopa* koopa = dynamic_cast<CKoopa*>(character);
 			holdingShell = koopa;
 			koopa->Held();
+			DebugOut(L"HOLD\n");
 		}else if (untouchable == 0)
 		{
 			character->Touched();
@@ -417,7 +418,7 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	}
 }
 
-void CMario::HoldingProcess(DWORD dt)
+void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float hx, hy;
 	//holdingShell->SetPosition(x, y);
@@ -432,6 +433,7 @@ void CMario::HoldingProcess(DWORD dt)
 	if (!canHold)
 	{
 		holdingShell->Kicked();
+		holdingShell->ThrownInBlock(dt, coObjects);
 		holdingShell = NULL;
 	}
 }

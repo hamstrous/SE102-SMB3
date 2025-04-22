@@ -76,13 +76,15 @@ public:
 		LPGAMEOBJECT objSrc,
 		vector<LPCOLLISIONEVENT>& coEvents,
 		LPCOLLISIONEVENT &colX,
-		LPCOLLISIONEVENT &colY, 
+		LPCOLLISIONEVENT &colY,
 		int filterBlock,		
 		int filterX,
 		int filterY);
 
 	void Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	int CheckStillTouchSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	bool CheckTouchingSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	bool CheckTouchCharacter(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool notMario);
 
 	static CCollision* GetInstance();
 };

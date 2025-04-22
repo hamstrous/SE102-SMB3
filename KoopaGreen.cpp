@@ -16,13 +16,15 @@ void CKoopaGreen::Flying()
 
 void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if (dynamic_cast<CCharacter*>(e->obj)) {
+		OnCollisionWithCharacter(e);
+		return;
+	}
 	if (!e->obj->IsBlocking()) return;
-	if (dynamic_cast<CKoopa*>(e->obj)) return;
 
 	if (e->ny != 0)
 	{
 		if (e->ny == -1 && hasWing) {
-			DebugOutTitle(L"[KOOPA GREEN] Wing hit\n");
 			vy = -KOOPA_FLYING_BOOST;
 		}
 		else vy = 0;
@@ -36,7 +38,6 @@ void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 void CKoopaGreen::SetState(int state)
 {
 	if (this->state == KOOPA_STATE_SHELL_HELD) {
-		isCollidable = true; // when koopa is kicked, it can be collided with again
 		ay = KOOPA_GRAVITY;
 	}
 	else if (this->state == KOOPA_STATE_FLYING) {
@@ -54,7 +55,7 @@ void CKoopaGreen::SetState(int state)
 		break;
 	case KOOPA_STATE_WALKING:
 		isIdle = false;
-		Release(); //call to make sure shell is released (mario not holding)
+		Release(false); //call to make sure shell is released (mario not holding)
 		if (this->state == KOOPA_STATE_SHELL_IDLE) {
 			y = (y + KOOPA_BBOX_HEIGHT_SHELL / 2) - KOOPA_BBOX_HEIGHT / 2; // when start walking, move up to normal y so dont drop through floor
 			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
@@ -68,7 +69,6 @@ void CKoopaGreen::SetState(int state)
 		InitHorizontalSpeedBasedOnMario(KOOPA_SHELL_SPEED); // when kicked, move away from mario
 		break;
 	case KOOPA_STATE_SHELL_HELD:
-		isCollidable = false;
 		vx = 0;
 		vy = 0;
 		ay = 0;
@@ -78,6 +78,7 @@ void CKoopaGreen::SetState(int state)
 		break;
 	case KOOPA_STATE_DIE:
 		isDeleted = true;
+		Release(true);
 		break;
 	}
 	CGameObject::SetState(state);
@@ -90,7 +91,7 @@ CKoopaGreen::CKoopaGreen(float x, float y, bool hasWing) :CKoopa(x, y, hasWing)
 	this->y = y;
 	ax = 0;
 	ay = KOOPA_GRAVITY;
-	hasWing = true;
+	this->hasWing = hasWing;
 	if (!hasWing) {
 		SetState(KOOPA_STATE_WALKING);
 		InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED);

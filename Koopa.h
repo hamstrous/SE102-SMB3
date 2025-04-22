@@ -43,7 +43,6 @@ class CKoopa : public CCharacter
 protected:
 	float ax;
 	float ay;
-	bool isCollidable = true;
 	bool hasWing = true;
 
 	bool isIdle = false;
@@ -56,7 +55,7 @@ protected:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render() = 0;
 
-	virtual int IsCollidable() { return isCollidable; };
+	virtual int IsCollidable() { return KOOPA_STATE_SHELL_HELD != state; };
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
@@ -75,12 +74,14 @@ public:
 	virtual void Kicked();
 	virtual void Stomped();
 	virtual void Held();
-	virtual void Release(); //Mario releases the shell
+	virtual void Release(bool dead); //Mario releases the shell
 	virtual void ShellHit(int shellX);
 	virtual void TailHit() {};
 	virtual void BlockHit() {};
 	virtual void Touched();
 	virtual bool CanHold() { return state == KOOPA_STATE_SHELL_IDLE; };
-
+	void HeldDie();
+	void ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 };
 
