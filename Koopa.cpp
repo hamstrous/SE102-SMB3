@@ -116,6 +116,11 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == KOOPA_STATE_SHELL_HELD) {
 		ShellHeldTouch(dt, coObjects);
 	}
+	if (state == KOOPA_STATE_DIE_UP) {
+		if (GetTickCount64() - delete_time > KOOPA_TIME_DELETE) {
+			isDeleted = true;
+		}
+	}
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
@@ -173,6 +178,13 @@ void CKoopa::SetState(int state)
 		shell_start = GetTickCount64();
 		isIdle = true;
 		break;
+	case KOOPA_STATE_DIE_UP:
+		//isDeleted = true;
+		DebugOut(L"[Koopa] Before release\n");
+		Release(true);
+		ShellHit(nx);	
+		DebugOut(L"[Koopa] After release release\n");
+		break;
 	}
 	CGameObject::SetState(state);
 
@@ -218,11 +230,13 @@ void CKoopa::Release(bool dead = false)
 
 void CKoopa::ShellHit(int shellX)
 {
-	SetState(KOOPA_STATE_SHELL_IDLE);
+	SetState(KOOPA_STATE_DIE_UP);
 	if (shellX < 0) vx = KOOPA_FLYING_SPEED_X;
 	else vx = -KOOPA_FLYING_SPEED_X;
 	vy = -KOOPA_STATE_FLYING_UP;
 	hit = true;
+	hasWing = false;
+	delete_time = GetTickCount64();
 }
 
 void CKoopa::Touched()
@@ -258,7 +272,7 @@ void CKoopa::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchCharacter(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
-			SetState(KOOPA_STATE_DIE);
+			SetState(KOOPA_STATE_DIE_UP);
 		}
 	}
 }

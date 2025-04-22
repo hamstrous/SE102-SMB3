@@ -115,6 +115,13 @@ void CKoopaRed::SetState(int state)
 		isDeleted = true;
 		Release(true);
 		break;
+	case KOOPA_STATE_DIE_UP:
+		//isDeleted = true;
+		DebugOut(L"[Koopa] Before release\n");
+		Release(true);
+		ShellHit(nx);
+		DebugOut(L"[Koopa] After release release\n");;
+		break;
 	}
 	CGameObject::SetState(state);
 
@@ -149,6 +156,9 @@ void CKoopaRed::Render()
 		break;
 	case KOOPA_STATE_SHELL_MOVING:
 		aniId = ID_ANI_KOOPA_SHELL_MOVING;
+		break;
+	case KOOPA_STATE_DIE_UP:
+		aniId = ID_ANI_KOOPA_DIE_UP;
 		break;
 	default:
 		aniId = ID_ANI_KOOPA_WALKING_LEFT;

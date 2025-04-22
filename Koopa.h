@@ -38,6 +38,9 @@
 
 #define KOOPA_FLYING_SPEED_X 0.1f
 
+#define KOOPA_STATE_DIE_UP 800
+
+#define KOOPA_TIME_DELETE 1000
 class CKoopa : public CCharacter
 {
 protected:
@@ -50,7 +53,7 @@ protected:
 	bool hit = false;
 	ULONGLONG shell_start;
 	ULONGLONG fly_start;
-
+	ULONGLONG delete_time;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render() = 0;

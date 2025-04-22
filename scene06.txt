@@ -46,16 +46,16 @@ koopa-red.txt
 
 
 #######WOODBRICK#######
-#5	350	164	16	16	3	150001	150001	150001	1
+5	350	164	16	16	3	150001	150001	150001	1
 
 # MARIO
 0	120	10
 
 #ENEMIES
 #2	50	50
-3	150	50	0
+14	150	50	0
 
-3	50	50	0
+14	50	50	0
 
 #CLOUDDELETE
 17	100	100
@@ -86,7 +86,7 @@ koopa-red.txt
 #for green fireplant (color = 10, type = 0, size = 0)
 #8	348	156.5	10	0	0
 #for red fireplant ( color = 0, type = 0, size =1)
-8	158	152	0	0	1
+#8	158	152	0	0	1
 #for green plant (color = 10, type = 1, size = 0)
 #8	100	173	10	1	0
 
