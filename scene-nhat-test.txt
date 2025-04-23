@@ -10,6 +10,7 @@ koopa-green.txt
 color-block.txt
 floor.txt
 cloud.txt
+number.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -22,7 +23,7 @@ cloud.txt
 19	0	180	22	2	0
 19	0	40	1	10	0
 
-#COLOR BROCK
+#COLOR BLOCK
 12	110	80	5	3	2
 12	200	120	5	3	1
 12	50	100	5	3	0
@@ -36,7 +37,10 @@ cloud.txt
 # MARIO
 0	20	10
 
-
+#QUESTIONBLOCK
+15	96	110	1
+15	80	110	4
+15	64	110	2
 
 
 #BRICK
