@@ -83,6 +83,29 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT 1600
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT 1601
 
+// RACCOON MARIO
+#define ID_ANI_MARIO_RACCOON_IDLE_RIGHT 1700
+#define ID_ANI_MARIO_RACCOON_IDLE_LEFT 1702
+
+#define ID_ANI_MARIO_RACCOON_WALKING_RIGHT 1800
+#define ID_ANI_MARIO_RACCOON_WALKING_LEFT 1801
+
+#define ID_ANI_MARIO_RACCOON_RUNNING_RIGHT 1900
+#define ID_ANI_MARIO_RACCOON_RUNNING_LEFT 1901
+
+#define ID_ANI_MARIO_RACCOON_BRACE_RIGHT 2000
+#define ID_ANI_MARIO_RACCOON_BRACE_LEFT 2001
+
+#define ID_ANI_MARIO_RACCOON_JUMP_WALK_RIGHT 2100
+#define ID_ANI_MARIO_RACCOON_JUMP_WALK_LEFT 2101
+
+#define ID_ANI_MARIO_RACCOON_JUMP_RUN_RIGHT 2200
+#define ID_ANI_MARIO_RACCOON_JUMP_RUN_LEFT 2201
+
+#define ID_ANI_MARIO_RACCOON_SIT_RIGHT 2300
+#define ID_ANI_MARIO_RACCOON_SIT_LEFT 2301
+
+
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -92,6 +115,7 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
+#define	MARIO_LEVEL_RACCOON		3
 
 #define MARIO_BIG_BBOX_WIDTH  14
 #define MARIO_BIG_BBOX_HEIGHT 24
@@ -126,6 +150,7 @@ protected:
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
 	int GetAniIdBig();
 	int GetAniIdSmall();
+	int GetAniIdRaccoon();
 
 public:
 	bool canHold = false;
@@ -133,10 +158,11 @@ public:
 	{
 		isSitting = false;
 		maxVx = 0.0f;
+		maxVy = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
 
-		level = MARIO_LEVEL_BIG;
+		level = MARIO_LEVEL_RACCOON;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
