@@ -77,4 +77,20 @@ void CQuestionBlock::SetState(int state)
 	}
 }
 
+void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
+{	
+	/*if (dynamic_cast<CKoopa*>(e->obj))
+	{
+		CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+		if (e->nx != 0)
+		{
+			if (koopa->GetState() == KOOPA_STATE_SHELL_MOVING)
+			{
+				SetState(QUESTION_BLOCK_STATE_MOVEUP);
+			}
+			
+		}
+	}*/
+}
+
 

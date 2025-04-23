@@ -3,6 +3,7 @@
 #include "Character.h"
 #include "Game.h"
 #include "PlayScene.h"
+#include "QuestionBlock.h"
 #include "Scene.h"
 
 
@@ -40,6 +41,7 @@
 
 #define KOOPA_STATE_DIE_UP_ANI 800
 #define KOOPA_STATE_DIE_UP 900
+#define KOOPA_STATE_HIT_DIE 1000
 
 #define KOOPA_TIME_DELETE 1000
 class CKoopa : public CCharacter
@@ -65,7 +67,7 @@ protected:
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
-
+	virtual void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
 
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
 	virtual void Flying() = 0;

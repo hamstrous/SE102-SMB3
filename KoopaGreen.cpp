@@ -20,6 +20,9 @@ void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCharacter(e);
 		return;
 	}
+	if (dynamic_cast<CQuestionBlock*>(e->obj)) {
+		OnCollisionWithQuestionBlock(e);
+	}
 	if (!e->obj->IsBlocking()) return;
 
 	if (e->ny != 0)
@@ -32,6 +35,37 @@ void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (e->nx != 0)
 	{
 		vx = -vx;
+	}
+}
+
+void CKoopaGreen::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
+{
+	CQuestionBlock* questionblock = (CQuestionBlock*)e->obj;
+	if (questionblock->GetState() == QUESTION_BLOCK_STATE_MOVEUP) {
+		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
+		if (state == KOOPA_STATE_WALKING) {
+			float xx, yy;
+			player->GetPosition(xx, yy);
+			/*if (xx < x) {
+				vx = KOOPA_FLYING_SPEED_X;
+			}
+			else {
+				vx = -KOOPA_FLYING_SPEED_X;
+			}*/
+			ShellHit(nx);
+			//vy = -KOOPA_STATE_FLYING_UP;
+			//DebugOut(L"vy cua hit die vy: %f\n", vy);
+			////hit = true;
+			//hasWing = false;
+			//delete_time = GetTickCount64();
+		}
+
+	}
+	if (questionblock->GetState() != QUESTION_BLOCK_STATE_UNBOX) {
+		if (state == KOOPA_STATE_SHELL_MOVING) {
+			questionblock->SetState(QUESTION_BLOCK_STATE_MOVEUP);
+		}
 	}
 }
 

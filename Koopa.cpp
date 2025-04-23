@@ -53,6 +53,10 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCharacter(e);
 		return;
 	}
+	if (dynamic_cast<CQuestionBlock*>(e->obj)) {
+		OnCollisionWithQuestionBlock(e);
+		return;
+	}
 	if (!e->obj->IsBlocking()) return;
 
 	if (e->ny != 0)
@@ -82,6 +86,32 @@ void CKoopa::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		character->ShellHit(e->nx);
 	}
 	else if (state == KOOPA_STATE_WALKING) vx = -vx;
+}
+
+void CKoopa::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
+{
+	CQuestionBlock* questionblock = (CQuestionBlock*)e->obj;
+	if (questionblock->GetState() == QUESTION_BLOCK_STATE_MOVEUP) {
+		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
+		if (state == KOOPA_STATE_WALKING) {
+			float xx, yy;
+			player->GetPosition(xx, yy);
+			if (xx < x) {
+				vx = KOOPA_FLYING_SPEED_X;
+			}
+			else {
+				vx = -KOOPA_FLYING_SPEED_X;
+			}
+
+			vy = -KOOPA_STATE_FLYING_UP;
+			DebugOut(L"vy cua hit die vy: %f\n", vy);
+			//hit = true;
+			hasWing = false;
+			delete_time = GetTickCount64();
+		}
+	}
+	
 }
 
 void CKoopa::InitHorizontalSpeedBasedOnMario(float speed, float towardMario)
@@ -125,7 +155,9 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 
 void CKoopa::SetState(int state)
-{
+{	
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
 	if (this->state == KOOPA_STATE_SHELL_HELD) {
 		ay = KOOPA_GRAVITY;
 	}
@@ -179,13 +211,21 @@ void CKoopa::SetState(int state)
 		isIdle = true;
 		break;
 	case KOOPA_STATE_DIE_UP:
-		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
 		Release(true);
 		float player_x, player_y;
 		player->GetSpeed(player_x, player_y);
 		vx = player_x;
 		vy = -KOOPA_STATE_FLYING_UP;
+		hit = true;
+		hasWing = false;
+		delete_time = GetTickCount64();
+		break;
+	case KOOPA_STATE_HIT_DIE:
+		float xx, yy;
+		player->GetPosition(xx, yy);
+		if (xx < x) vx = KOOPA_FLYING_SPEED_X;
+		else vx = -KOOPA_FLYING_SPEED_X;
+		vy = -0.2f;
 		hit = true;
 		hasWing = false;
 		delete_time = GetTickCount64();

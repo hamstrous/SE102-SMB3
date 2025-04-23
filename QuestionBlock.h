@@ -46,6 +46,7 @@ public:
 	void SetState(int state);
 	int IsCollidable() { return 0; };
 	int IsBlocking() { return 1; };
+	void OnCollisionWith(LPCOLLISIONEVENT e);
 	float ReturnXmin() {
 		float l;
 		l = x - BRICK_BBOX_WIDTH / 2;

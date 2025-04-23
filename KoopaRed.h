@@ -27,7 +27,7 @@ protected:
 	virtual int IsBlocking() { return 0; }
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
-
+	virtual void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
 
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Flying();
