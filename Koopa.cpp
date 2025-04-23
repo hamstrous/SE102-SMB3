@@ -236,8 +236,10 @@ void CKoopa::Release(bool dead = false)
 void CKoopa::ShellHit(int shellX)
 {
 	SetState(KOOPA_STATE_DIE_UP_ANI);
-	if (shellX < 0) vx = KOOPA_FLYING_SPEED_X;
-	else vx = -KOOPA_FLYING_SPEED_X;
+	if (shellX == -1) vx = KOOPA_FLYING_SPEED_X;
+	else if (shellX==1) vx = -KOOPA_FLYING_SPEED_X;
+	else if (shellX < x) vx = KOOPA_FLYING_SPEED_X;
+	else if (shellX > x) vx = -KOOPA_FLYING_SPEED_X;
 	vy = -KOOPA_STATE_FLYING_UP;
 	hit = true;
 	hasWing = false;
@@ -278,7 +280,6 @@ void CKoopa::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchCharacter(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
 			SetState(KOOPA_STATE_DIE_UP);
-			//ShellHit(nx);
 		}
 	}
 }

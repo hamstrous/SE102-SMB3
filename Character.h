@@ -24,7 +24,9 @@ public:
 
 	virtual void Stomped() = 0;
 	virtual void ShellHit(int shellX) = 0;
-	virtual void ShellHeldHit(int shellX) { isDeleted = true; }; //hit while the shell is held
+	virtual void ShellHeldHit(int shellX) { //isDeleted = true;
+		ShellHit(shellX);
+	}; //hit while the shell is held
 	virtual void TailHit() = 0;
 	virtual void BlockHit() = 0;
 	virtual void Touched();

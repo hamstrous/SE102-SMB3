@@ -118,15 +118,30 @@ void CGoomba::Stomped()
 
 void CGoomba::ShellHit(int shellX)
 {
-	if (shellX <= 0)
+	if (shellX == -1)
 	{
 		vx = GOOMBA_FLYING_SPEED_X;
 		dir = -1;
 	}
-	else
+	else if (shellX == 1)
 	{	
 		dir = 1;
 		vx = -GOOMBA_FLYING_SPEED_X;
+	}
+	else if (shellX < x)
+	{
+		dir = -1;
+		vx = GOOMBA_FLYING_SPEED_X;
+	}
+	else if (shellX > x)
+	{
+		dir = 1;
+		vx = -GOOMBA_FLYING_SPEED_X;
+	}
+	else
+	{
+		dir = 0;
+		vx = 0;
 	}
 	SetState(GOOMBA_STATE_DIE_UP);
 }
