@@ -105,6 +105,15 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 #define ID_ANI_MARIO_RACCOON_SIT_RIGHT 2300
 #define ID_ANI_MARIO_RACCOON_SIT_LEFT 2301
 
+#define ID_ANI_MARIO_RACCOON_TAIL_ATTACK_RIGHT 2400
+#define ID_ANI_MARIO_RACCOON_TAIL_ATTACK_LEFT 2401
+
+#define ID_ANI_MARIO_RACCOON_TAIL_JUMP_GLIDE_RIGHT 2500
+#define ID_ANI_MARIO_RACCOON_TAIL_JUMP_GLIDE_LEFT 2501
+
+#define ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_RIGHT 2600
+#define ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_LEFT 2601
+
 
 #pragma endregion
 
@@ -127,6 +136,9 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 12
 
+#define ATTACK_TIME	400
+#define GLIDE_TIME	300
+#define FLY_TIME	400
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 
@@ -140,6 +152,12 @@ protected:
 	BOOLEAN isOnPlatform;
 	int coin;
 	CKoopa* holdingShell;
+
+	// timers for animations
+	int attackTimer = 0; 
+	int glideTimer = 0; 
+	int flyTimer = 0; 
+
 
 	void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -158,7 +176,7 @@ public:
 	{
 		isSitting = false;
 		maxVx = 0.0f;
-		maxVy = 0.0f;
+		maxVy = 0.3f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
 
@@ -189,6 +207,7 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	void GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2, float& t2, float& r2, float& b2);
 	void SetCanHold(bool pick) { this->canHold = pick; }
 	void Drop() { holdingShell = NULL; }
 	void HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -197,5 +216,12 @@ public:
 	virtual void ShellHit(int shellX) {};
 	virtual void TailHit() {};
 	virtual void BlockHit() {};
+
+	void TailAttackInit();
+	void TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+
+	void SpecialPressed();
+	void JumpPressed();
+
 	int GetLevel() { return level; }
 };
