@@ -22,6 +22,13 @@ public:
 	virtual void Render(float x, float y);
 	bool IsDone() { return done; }
 	void Reset() { currentFrame = -1; done = false; }
+	int FullTime()
+	{
+		int t = 0;
+		for (int i = 0; i < frames.size(); i++)
+			t += frames[i]->GetTime();
+		return t;
+	}
 };
 
 typedef CAnimation* LPANIMATION;
