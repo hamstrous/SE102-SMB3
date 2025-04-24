@@ -227,6 +227,9 @@ void CMario::JumpPressed()
 		}else if (flyTimer <= 0 && abs(ax) == abs(MARIO_ACCEL_RUN_X)) {
 			flyTimer = FLY_TIME;
 			vy = -MARIO_JUMP_SPEED_Y;
+			if (nx > 0) currentAnimation = ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_RIGHT;
+			else currentAnimation = ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_LEFT;
+			CAnimations::GetInstance()->Get(currentAnimation)->Reset();
 		}
 	}
 }
@@ -429,7 +432,7 @@ void CMario::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
 	int aniId = -1;
-
+	
 	if (state == MARIO_STATE_DIE)
 		aniId = ID_ANI_MARIO_DIE;
 	else if (level == MARIO_LEVEL_BIG)
@@ -439,7 +442,12 @@ void CMario::Render()
 	else if (level == MARIO_LEVEL_SMALL)
 		aniId = GetAniIdSmall();
 
-	animations->Get(aniId)->Render(x, y);
+	if (currentAnimation <= 0 || animations->Get(currentAnimation)->IsDone())
+	{
+		currentAnimation = aniId;
+	}
+
+	animations->Get(currentAnimation)->Render(x, y);
 
 	//RenderBoundingBox();
 	

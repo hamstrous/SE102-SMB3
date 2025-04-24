@@ -29,7 +29,10 @@ void CAnimation::Render(float x, float y)
 		{
 			currentFrame++;
 			lastFrameTime = now;
-			if (currentFrame == frames.size()) currentFrame = 0;
+			if (currentFrame == frames.size()) {
+				done = 1;
+				currentFrame = 0;
+			}
 		}
 
 	}

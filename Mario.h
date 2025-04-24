@@ -136,9 +136,10 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 12
 
+// time = animation time (sum of all frame duration)
 #define ATTACK_TIME	400
 #define GLIDE_TIME	300
-#define FLY_TIME	400
+#define FLY_TIME	300
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 
@@ -158,6 +159,7 @@ protected:
 	int glideTimer = 0; 
 	int flyTimer = 0; 
 
+	int currentAnimation = -1;
 
 	void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
