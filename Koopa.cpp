@@ -308,7 +308,7 @@ void CKoopa::ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchingSolid(ml, mt, mr, mb, vx, vy, dt, coObjects)) {
-			SetState(KOOPA_STATE_DIE);
+			SetState(KOOPA_STATE_DIE_UP);
 		}
 	}
 }
