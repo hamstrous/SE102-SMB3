@@ -36,6 +36,10 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_R: // reset
 		//Reload();
 		break;
+	case DIK_LEFT:
+	case DIK_RIGHT:
+		mario->HoldTurn();
+		break;
 	}
 }
 

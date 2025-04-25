@@ -209,6 +209,12 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects);
 }
 
+void CMario::HoldTurn()
+{
+	if (holdingShell == NULL) return;
+	if (level == MARIO_LEVEL_BIG) currentAnimation = ID_ANI_MARIO_HOLD_FRONT;
+}
+
 //Change animaion when mario kick the shell
 void CMario::KickedShell()
 {
@@ -224,6 +230,7 @@ void CMario::KickedShell()
 		if (nx > 0) currentAnimation = ID_ANI_MARIO_RACCOON_KICK_RIGHT;
 		else currentAnimation = ID_ANI_MARIO_RACCOON_KICK_LEFT;
 	}
+	ResetCurrentAnimation();
 }
 
 void CMario::SpecialPressed()
@@ -246,7 +253,7 @@ void CMario::JumpPressed()
 			vy = -MARIO_JUMP_SPEED_Y;
 			if (nx > 0) currentAnimation = ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_RIGHT;
 			else currentAnimation = ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_LEFT;
-			CAnimations::GetInstance()->Get(currentAnimation)->Reset();
+			ResetCurrentAnimation();
 		}
 	}
 }
@@ -390,6 +397,31 @@ int CMario::GetAniIdRaccoon()
 int CMario::GetAniIdBig()
 {
 	int aniId = -1;
+	if (holdingShell != NULL) {
+		if (!isOnPlatform)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_JUMP_HOLD_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_JUMP_HOLD_LEFT;
+		}
+		else
+				if (vx == 0)
+				{
+					if (nx > 0) aniId = ID_ANI_MARIO_IDLE_HOLD_RIGHT;
+					else aniId = ID_ANI_MARIO_IDLE_HOLD_LEFT;
+				}
+				else if (vx > 0)
+				{
+					aniId = ID_ANI_MARIO_WALK_HOLD_RIGHT;
+				}
+				else // vx < 0
+				{
+					aniId = ID_ANI_MARIO_WALK_HOLD_LEFT;
+				}
+		return aniId;
+	}
+
 	if (!isOnPlatform)
 	{
 		if (abs(ax) == MARIO_ACCEL_RUN_X)
@@ -449,8 +481,7 @@ void CMario::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
 	int aniId = -1;
-	
-	// if animation havent finished (for special animation like ki
+		// if animation havent finished (for special animation )
 	if (currentAnimation <= 0 || animations->Get(currentAnimation)->IsDone())
 	{
 		if (state == MARIO_STATE_DIE)
@@ -618,6 +649,7 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (!canHold)
 	{
 		holdingShell->Kicked();
+		KickedShell();
 		holdingShell->ThrownInBlock(dt, coObjects);
 		holdingShell = NULL;
 	}

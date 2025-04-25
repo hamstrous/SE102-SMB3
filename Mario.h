@@ -65,6 +65,18 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 #define ID_ANI_MARIO_KICK_RIGHT	1010
 #define ID_ANI_MARIO_KICK_LEFT	1011
 
+#define ID_ANI_MARIO_IDLE_HOLD_RIGHT	1012
+#define ID_ANI_MARIO_IDLE_HOLD_LEFT	1013
+
+#define ID_ANI_MARIO_WALK_HOLD_RIGHT	1014
+#define ID_ANI_MARIO_WALK_HOLD_LEFT	1015
+
+//turning
+#define ID_ANI_MARIO_HOLD_FRONT	1020
+
+#define ID_ANI_MARIO_JUMP_HOLD_RIGHT	1021
+#define ID_ANI_MARIO_JUMP_HOLD_LEFT	1022
+
 #define ID_ANI_MARIO_DIE 999
 
 // SMALL MARIO
@@ -227,9 +239,17 @@ public:
 	virtual void TailHit() {};
 	virtual void BlockHit() {};
 
+	void ResetCurrentAnimation() {
+		if(currentAnimation > 0) {
+			CAnimations::GetInstance()->Get(currentAnimation)->Reset();
+		}
+	
+	}
+
 	void TailAttackInit();
 	void TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
+	void HoldTurn();
 	void KickedShell();
 
 	void SpecialPressed();
