@@ -8,6 +8,39 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 
 #include "debug.h"
 
+// Mario Constants
+
+namespace MarioConstants {
+
+	constexpr float WALKING_SPEED = 0.1f;
+
+
+	enum State {
+
+		DIE = -10
+
+	};
+
+
+	enum Level {
+
+		SMALL = 1,
+
+		BIG = 2,
+
+		RACCOON = 3
+
+	};
+
+
+	const std::unordered_map<int, int> AnimationIds = {
+
+		{ 100, 400 }
+
+	};
+
+}
+
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
 #define MARIO_SHELL_TURNING_SPEED		0.3f
@@ -158,7 +191,6 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 
 #define ID_ANI_MARIO_RACCOON_JUMP_HOLD_RIGHT     2655
 #define ID_ANI_MARIO_RACCOON_JUMP_HOLD_LEFT      2656
-
 
 #pragma endregion
 
