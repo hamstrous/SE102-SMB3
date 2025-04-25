@@ -62,6 +62,9 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 #define ID_ANI_MARIO_BRACE_RIGHT 1000
 #define ID_ANI_MARIO_BRACE_LEFT 1001
 
+#define ID_ANI_MARIO_KICK_RIGHT	1010
+#define ID_ANI_MARIO_KICK_LEFT	1011
+
 #define ID_ANI_MARIO_DIE 999
 
 // SMALL MARIO
@@ -82,6 +85,9 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT 1600
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT 1601
+
+#define ID_ANI_MARIO_SMALL_KICK_RIGHT 1610 
+#define ID_ANI_MARIO_SMALL_KICK_LEFT 1611
 
 // RACCOON MARIO
 #define ID_ANI_MARIO_RACCOON_IDLE_RIGHT 1700
@@ -114,6 +120,8 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 #define ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_RIGHT 2600
 #define ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_LEFT 2601
 
+#define ID_ANI_MARIO_RACCOON_KICK_RIGHT	2610
+#define ID_ANI_MARIO_RACCOON_KICK_LEFT	2611
 
 #pragma endregion
 
@@ -221,6 +229,8 @@ public:
 
 	void TailAttackInit();
 	void TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+
+	void KickedShell();
 
 	void SpecialPressed();
 	void JumpPressed();

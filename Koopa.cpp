@@ -234,6 +234,7 @@ void CKoopa::Touched()
 	}
 	else if(state == KOOPA_STATE_SHELL_IDLE){
 		Kicked();
+		mario->KickedShell();
 	}
 }
 

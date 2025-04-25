@@ -209,6 +209,23 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects);
 }
 
+//Change animaion when mario kick the shell
+void CMario::KickedShell()
+{
+	if (level == MARIO_LEVEL_SMALL) {
+		if (nx > 0) currentAnimation = ID_ANI_MARIO_SMALL_KICK_RIGHT;
+		else currentAnimation = ID_ANI_MARIO_SMALL_KICK_LEFT;
+	}
+	else if (level == MARIO_LEVEL_BIG) {
+		if (nx > 0) currentAnimation = ID_ANI_MARIO_KICK_RIGHT;
+		else currentAnimation = ID_ANI_MARIO_KICK_LEFT;
+	}
+	else if (level == MARIO_LEVEL_RACCOON) {
+		if (nx > 0) currentAnimation = ID_ANI_MARIO_RACCOON_KICK_RIGHT;
+		else currentAnimation = ID_ANI_MARIO_RACCOON_KICK_LEFT;
+	}
+}
+
 void CMario::SpecialPressed()
 {
 	if (level == MARIO_LEVEL_RACCOON) {
@@ -433,17 +450,17 @@ void CMario::Render()
 	CAnimations* animations = CAnimations::GetInstance();
 	int aniId = -1;
 	
-	if (state == MARIO_STATE_DIE)
-		aniId = ID_ANI_MARIO_DIE;
-	else if (level == MARIO_LEVEL_BIG)
-		aniId = GetAniIdBig();
-	else if (level == MARIO_LEVEL_RACCOON)
-		aniId = GetAniIdRaccoon();
-	else if (level == MARIO_LEVEL_SMALL)
-		aniId = GetAniIdSmall();
-
+	// if animation havent finished (for special animation like ki
 	if (currentAnimation <= 0 || animations->Get(currentAnimation)->IsDone())
 	{
+		if (state == MARIO_STATE_DIE)
+			aniId = ID_ANI_MARIO_DIE;
+		else if (level == MARIO_LEVEL_BIG)
+			aniId = GetAniIdBig();
+		else if (level == MARIO_LEVEL_RACCOON)
+			aniId = GetAniIdRaccoon();
+		else if (level == MARIO_LEVEL_SMALL)
+			aniId = GetAniIdSmall();
 		currentAnimation = aniId;
 	}
 
