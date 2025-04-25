@@ -71,7 +71,6 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 #define ID_ANI_MARIO_WALK_HOLD_RIGHT	1014
 #define ID_ANI_MARIO_WALK_HOLD_LEFT	1015
 
-//turning
 #define ID_ANI_MARIO_HOLD_FRONT	1020
 
 #define ID_ANI_MARIO_JUMP_HOLD_RIGHT	1021
@@ -100,6 +99,19 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 
 #define ID_ANI_MARIO_SMALL_KICK_RIGHT 1610 
 #define ID_ANI_MARIO_SMALL_KICK_LEFT 1611
+
+// MARIO_SMALL hold animations
+#define ID_ANI_MARIO_SMALL_IDLE_HOLD_RIGHT    1650
+#define ID_ANI_MARIO_SMALL_IDLE_HOLD_LEFT     1651
+
+#define ID_ANI_MARIO_SMALL_WALK_HOLD_RIGHT    1652
+#define ID_ANI_MARIO_SMALL_WALK_HOLD_LEFT     1653
+
+#define ID_ANI_MARIO_SMALL_HOLD_FRONT         1654
+
+#define ID_ANI_MARIO_SMALL_JUMP_HOLD_RIGHT    1655
+#define ID_ANI_MARIO_SMALL_JUMP_HOLD_LEFT     1656
+
 
 // RACCOON MARIO
 #define ID_ANI_MARIO_RACCOON_IDLE_RIGHT 1700
@@ -134,6 +146,19 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 
 #define ID_ANI_MARIO_RACCOON_KICK_RIGHT	2610
 #define ID_ANI_MARIO_RACCOON_KICK_LEFT	2611
+
+// MARIO_RACCOON hold animations
+#define ID_ANI_MARIO_RACCOON_IDLE_HOLD_RIGHT     2650
+#define ID_ANI_MARIO_RACCOON_IDLE_HOLD_LEFT      2651
+
+#define ID_ANI_MARIO_RACCOON_WALK_HOLD_RIGHT     2652
+#define ID_ANI_MARIO_RACCOON_WALK_HOLD_LEFT      2653
+
+#define ID_ANI_MARIO_RACCOON_HOLD_FRONT          2654
+
+#define ID_ANI_MARIO_RACCOON_JUMP_HOLD_RIGHT     2655
+#define ID_ANI_MARIO_RACCOON_JUMP_HOLD_LEFT      2656
+
 
 #pragma endregion
 

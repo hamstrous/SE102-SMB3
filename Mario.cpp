@@ -213,6 +213,9 @@ void CMario::HoldTurn()
 {
 	if (holdingShell == NULL) return;
 	if (level == MARIO_LEVEL_BIG) currentAnimation = ID_ANI_MARIO_HOLD_FRONT;
+	else if (level == MARIO_LEVEL_SMALL) currentAnimation = ID_ANI_MARIO_SMALL_HOLD_FRONT;
+	else if (level == MARIO_LEVEL_RACCOON) currentAnimation = ID_ANI_MARIO_RACCOON_HOLD_FRONT;
+	ResetCurrentAnimation();
 }
 
 //Change animaion when mario kick the shell
@@ -264,6 +267,33 @@ void CMario::JumpPressed()
 int CMario::GetAniIdSmall()
 {
 	int aniId = -1;
+
+	if (holdingShell != NULL) {
+		if (!isOnPlatform)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_SMALL_JUMP_HOLD_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_SMALL_JUMP_HOLD_LEFT;
+				aniId = ID_ANI_MARIO_SMALL_JUMP_HOLD_LEFT;
+		}
+		else
+			if (vx == 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_SMALL_IDLE_HOLD_RIGHT;
+				else aniId = ID_ANI_MARIO_SMALL_IDLE_HOLD_LEFT;
+			}
+			else if (vx > 0)
+			{
+				aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_RIGHT;
+			}
+			else // vx < 0
+			{
+				aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_LEFT;
+			}
+		return aniId;
+	}
+
 	if (!isOnPlatform)
 	{
 		if (abs(ax) == MARIO_ACCEL_RUN_X)
@@ -322,6 +352,32 @@ int CMario::GetAniIdSmall()
 int CMario::GetAniIdRaccoon()
 {
 	int aniId = -1;
+
+	if (holdingShell != NULL) {
+		if (!isOnPlatform)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_RACCOON_JUMP_HOLD_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_RACCOON_JUMP_HOLD_LEFT;
+		}
+		else
+			if (vx == 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_IDLE_HOLD_RIGHT;
+				else aniId = ID_ANI_MARIO_RACCOON_IDLE_HOLD_LEFT;
+			}
+			else if (vx > 0)
+			{
+				aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_RIGHT;
+			}
+			else // vx < 0
+			{
+				aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_LEFT;
+			}
+		return aniId;
+	}
+
 	if (attackTimer > 0) {
 		if(nx > 0)
 			aniId = ID_ANI_MARIO_RACCOON_TAIL_ATTACK_RIGHT;
