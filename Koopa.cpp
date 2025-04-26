@@ -319,7 +319,7 @@ void CKoopa::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == KOOPA_STATE_SHELL_HELD) {
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
-		if (CCollision::GetInstance()->CheckTouchCharacter(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
+		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
 			SetState(KOOPA_STATE_DIE_UP);
 		}
 	}
