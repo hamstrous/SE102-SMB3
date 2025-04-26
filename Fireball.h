@@ -11,7 +11,7 @@
 
 #define FIREBALL_STATE_MARIO 100
 #define FIREBALL_STATE_PIRANHA 200
-#define ID_ANI_FIREBALL 2500
+#define ID_ANI_FIREBALL 2500000
 
 
 class CFireball : public CGameObject
