@@ -17,12 +17,14 @@
 #define ID_ANI_KOOPA_WING_LEFT 20106
 #define ID_ANI_KOOPA_WING_RIGHT 20107
 
+#define ID_ANI_KOOPA_DIE_UP 20108
 class CKoopaGreen : public CKoopa
 {
 protected:
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Flying();
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
+	virtual void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
 	virtual void Render();
 
 public:

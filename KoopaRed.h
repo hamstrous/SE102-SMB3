@@ -15,6 +15,8 @@
 #define ID_ANI_KOOPA_WING_LEFT 20006
 #define ID_ANI_KOOPA_WING_RIGHT 20007
 
+#define ID_ANI_KOOPA_DIE_UP 20008
+
 class CKoopaRed : public CKoopa
 {
 protected:
@@ -25,7 +27,7 @@ protected:
 	virtual int IsBlocking() { return 0; }
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
-
+	virtual void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
 
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Flying();

@@ -3,6 +3,7 @@
 #include "Character.h"
 #include "Game.h"
 #include "PlayScene.h"
+#include "QuestionBlock.h"
 #include "Scene.h"
 
 
@@ -38,6 +39,11 @@
 
 #define KOOPA_FLYING_SPEED_X 0.1f
 
+#define KOOPA_STATE_DIE_UP_ANI 800
+#define KOOPA_STATE_DIE_UP 900
+#define KOOPA_STATE_HIT_DIE 1000
+
+#define KOOPA_TIME_DELETE 1000
 class CKoopa : public CCharacter
 {
 protected:
@@ -50,7 +56,7 @@ protected:
 	bool hit = false;
 	ULONGLONG shell_start;
 	ULONGLONG fly_start;
-
+	ULONGLONG delete_time;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render() = 0;
@@ -61,7 +67,7 @@ protected:
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
-
+	virtual void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
 
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
 	virtual void Flying() = 0;
