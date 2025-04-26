@@ -53,6 +53,10 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCharacter(e);
 		return;
 	}
+	if (dynamic_cast<CQuestionBlock*>(e->obj)) {
+		OnCollisionWithQuestionBlock(e);
+		return;
+	}
 	if (!e->obj->IsBlocking()) return;
 
 	if (e->ny != 0)
@@ -82,6 +86,32 @@ void CKoopa::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		character->ShellHit(e->nx);
 	}
 	else if (state == KOOPA_STATE_WALKING) vx = -vx;
+}
+
+void CKoopa::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
+{
+	CQuestionBlock* questionblock = (CQuestionBlock*)e->obj;
+	if (questionblock->GetState() == QUESTION_BLOCK_STATE_MOVEUP) {
+		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
+		if (state == KOOPA_STATE_WALKING) {
+			float xx, yy;
+			player->GetPosition(xx, yy);
+			if (xx < x) {
+				vx = KOOPA_FLYING_SPEED_X;
+			}
+			else {
+				vx = -KOOPA_FLYING_SPEED_X;
+			}
+
+			vy = -KOOPA_STATE_FLYING_UP;
+			DebugOut(L"vy cua hit die vy: %f\n", vy);
+			//hit = true;
+			hasWing = false;
+			delete_time = GetTickCount64();
+		}
+	}
+	
 }
 
 void CKoopa::InitHorizontalSpeedBasedOnMario(float speed, float towardMario)
@@ -116,11 +146,18 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == KOOPA_STATE_SHELL_HELD) {
 		ShellHeldTouch(dt, coObjects);
 	}
+	if (state == KOOPA_STATE_DIE_UP_ANI || state == KOOPA_STATE_DIE_UP) {
+		if (GetTickCount64() - delete_time > KOOPA_TIME_DELETE) {
+			isDeleted = true;
+		}
+	}
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CKoopa::SetState(int state)
-{
+{	
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
 	if (this->state == KOOPA_STATE_SHELL_HELD) {
 		ay = KOOPA_GRAVITY;
 	}
@@ -173,6 +210,26 @@ void CKoopa::SetState(int state)
 		shell_start = GetTickCount64();
 		isIdle = true;
 		break;
+	case KOOPA_STATE_DIE_UP:
+		Release(true);
+		float player_x, player_y;
+		player->GetSpeed(player_x, player_y);
+		vx = player_x;
+		vy = -KOOPA_STATE_FLYING_UP;
+		hit = true;
+		hasWing = false;
+		delete_time = GetTickCount64();
+		break;
+	case KOOPA_STATE_HIT_DIE:
+		float xx, yy;
+		player->GetPosition(xx, yy);
+		if (xx < x) vx = KOOPA_FLYING_SPEED_X;
+		else vx = -KOOPA_FLYING_SPEED_X;
+		vy = -0.2f;
+		hit = true;
+		hasWing = false;
+		delete_time = GetTickCount64();
+		break;
 	}
 	CGameObject::SetState(state);
 
@@ -218,11 +275,15 @@ void CKoopa::Release(bool dead = false)
 
 void CKoopa::ShellHit(int shellX)
 {
-	SetState(KOOPA_STATE_SHELL_IDLE);
-	if (shellX < 0) vx = KOOPA_FLYING_SPEED_X;
-	else vx = -KOOPA_FLYING_SPEED_X;
+	SetState(KOOPA_STATE_DIE_UP_ANI);
+	if (shellX == -1) vx = KOOPA_FLYING_SPEED_X;
+	else if (shellX==1) vx = -KOOPA_FLYING_SPEED_X;
+	else if (shellX < x) vx = KOOPA_FLYING_SPEED_X;
+	else if (shellX > x) vx = -KOOPA_FLYING_SPEED_X;
 	vy = -KOOPA_STATE_FLYING_UP;
 	hit = true;
+	hasWing = false;
+	delete_time = GetTickCount64();
 }
 
 void CKoopa::Touched()
@@ -248,7 +309,7 @@ void CKoopa::ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchingSolid(ml, mt, mr, mb, vx, vy, dt, coObjects)) {
-			SetState(KOOPA_STATE_DIE);
+			SetState(KOOPA_STATE_DIE_UP);
 		}
 	}
 }
@@ -258,8 +319,8 @@ void CKoopa::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == KOOPA_STATE_SHELL_HELD) {
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
-		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
-			SetState(KOOPA_STATE_DIE);
+		if (CCollision::GetInstance()->CheckTouchCharacter(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
+			SetState(KOOPA_STATE_DIE_UP);
 		}
 	}
 }
