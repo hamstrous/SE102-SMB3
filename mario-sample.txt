@@ -1,5 +1,5 @@
 [SETTINGS]
-start	6
+start	8
 width	320
 height	240
 
@@ -12,6 +12,7 @@ height	240
 5	scene0005.txt
 6	scene06.txt
 7	scene-nhat-test.txt
+8	level1-1.txt
 
 # id	file 
 [TEXTURES]

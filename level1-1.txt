@@ -1,0 +1,42 @@
+[ASSETS]
+mario.txt
+brick.txt
+coin.txt
+goomba.txt
+cloud.txt
+floor.txt
+background.txt
+koopa.txt
+
+#0 : mario
+#1 : brick
+#2 : goomba
+#3 : koopa red
+#4 : coin
+#5 : platform
+#7 : fireball
+#8 : plant
+#9 : pipe
+#10 : headbush
+#12 : color block
+#14 : koopa green
+#15 : question block
+#16 : mushroom
+#17 : smoke
+#18 : cloud
+#19 : floor
+#20 : background color
+#50 : portal
+
+[OBJECTS]
+
+#BG COLOR
+20	7	7	40	176	0
+20	2487	7	40	21	1
+20	7	439	43	176	1
+
+#FLOOR
+19	7	423	1	39	0
+
+#MARIO
+0	10	0
