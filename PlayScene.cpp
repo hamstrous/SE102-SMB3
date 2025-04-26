@@ -352,15 +352,36 @@ void CPlayScene::Update(DWORD dt)
 
 	// Update camera to follow mario
 	float cx, cy;
-	player->GetPosition(cx, cy);
-
+	float mx, my;
+	float screenW, screenH;
 	CGame* game = CGame::GetInstance();
-	cx -= game->GetBackBufferWidth() / 2;
-	cy -= game->GetBackBufferHeight() / 2;
+
+	screenW = game->GetBackBufferWidth();
+	screenH = game->GetBackBufferHeight();
+	game->GetCamPos(cx, cy);
+	player->GetPosition(mx, my);
+	float cl, cr, ct, cb; //line to check if we need to move the camera
+
+	cl = cx + screenW / 2 - 20;
+	cr = cx + screenW / 2 + 20;
+	ct = cy + screenH / 2 - 20;
+	cb = cy + screenH / 2 + 20;
+
+	if (mx < cl) cx -= cl - mx;
+	if (mx > cr) cx += mx - cr;
+	if (my < ct) cy -= ct - my;
+	if (my > cb) cy += my - cb;
+
+	
 
 	if (cx < 0) cx = 0;
+	if (cy < 0) cy = 0;
+	//if (cx > LEVEL_WIDTH - screenW) cx = LEVEL_WIDTH - screenW;
+	//if (cx > LEVEL_HEIGHT - screenH) cx = LEVEL_HEIGHT - screenH;
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	DebugOutTitle(L"Cam pos %f %f, mario pos %f %f", cx, cy, mx, my);
+
+	CGame::GetInstance()->SetCamPos(cx, cy);
 
 	PurgeDeletedObjects();
 
