@@ -19,6 +19,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
+	if (vy > 0 && abs(vy) > abs(maxVy)) vy = maxVy;
+	//DebugOutTitle(L"vx: %f, vy: %f\n", vx, vy);
 
 	// reset untouchable timer if untouchable time has passed
 	if ( GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME) 
@@ -30,6 +32,27 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
+	}
+
+	//Attack
+	if (attackTimer > 0)
+	{
+		attackTimer -= dt;
+		TailAttack(dt, coObjects);
+	}
+
+	if (glideTimer > 0) {
+		glideTimer -= dt;
+	}
+	else {
+		ay = MARIO_GRAVITY;
+	}
+
+	if (flyTimer > 0) {
+		flyTimer -= dt;
+	}
+	else {
+		//ay = MARIO_GRAVITY;
 	}
 	
 }
@@ -158,10 +181,82 @@ void CMario::Attacked() {
 			SetLevel(MARIO_LEVEL_SMALL);
 			StartUntouchable();
 		}
+		else if (level == MARIO_LEVEL_RACCOON) 
+		{
+			SetLevel(MARIO_LEVEL_BIG);
+			StartUntouchable();
+		}
 		else
 		{
 			DebugOut(L">>> Mario DIE >>> \n");
 			SetState(MARIO_STATE_DIE);
+		}
+	}
+}
+
+void CMario::TailAttackInit()
+{
+	attackTimer = ATTACK_TIME;
+}
+
+void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	if(attackTimer <= 0) return;
+	float l1, t1, r1, b1;
+	float l2, t2, r2, b2;
+	GetTailHitBox(l1, t1, r1, b1, l2, t2, r2, b2);
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, vx, vy, dt, coObjects);
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects);
+}
+
+void CMario::HoldTurn()
+{
+	if (holdingShell == NULL) return;
+	if (level == MARIO_LEVEL_BIG) currentAnimation = ID_ANI_MARIO_HOLD_FRONT;
+	else if (level == MARIO_LEVEL_SMALL) currentAnimation = ID_ANI_MARIO_SMALL_HOLD_FRONT;
+	else if (level == MARIO_LEVEL_RACCOON) currentAnimation = ID_ANI_MARIO_RACCOON_HOLD_FRONT;
+	ResetCurrentAnimation();
+}
+
+//Change animaion when mario kick the shell
+void CMario::KickedShell()
+{
+	if (level == MARIO_LEVEL_SMALL) {
+		if (nx > 0) currentAnimation = ID_ANI_MARIO_SMALL_KICK_RIGHT;
+		else currentAnimation = ID_ANI_MARIO_SMALL_KICK_LEFT;
+	}
+	else if (level == MARIO_LEVEL_BIG) {
+		if (nx > 0) currentAnimation = ID_ANI_MARIO_KICK_RIGHT;
+		else currentAnimation = ID_ANI_MARIO_KICK_LEFT;
+	}
+	else if (level == MARIO_LEVEL_RACCOON) {
+		if (nx > 0) currentAnimation = ID_ANI_MARIO_RACCOON_KICK_RIGHT;
+		else currentAnimation = ID_ANI_MARIO_RACCOON_KICK_LEFT;
+	}
+	ResetCurrentAnimation();
+}
+
+void CMario::SpecialPressed()
+{
+	if (level == MARIO_LEVEL_RACCOON) {
+		if (attackTimer <= 0) TailAttackInit();
+	}
+}
+
+void CMario::JumpPressed()
+{
+	SetState(MARIO_STATE_JUMP);
+	if (!isOnPlatform && level == MARIO_LEVEL_RACCOON) {
+		if (glideTimer <= 0 && abs(ax) != abs(MARIO_ACCEL_RUN_X)) {
+			glideTimer = GLIDE_TIME;
+			ay /= 10;
+			vy = 0;
+		}else if (flyTimer <= 0 && abs(ax) == abs(MARIO_ACCEL_RUN_X)) {
+			flyTimer = FLY_TIME;
+			vy = -MARIO_JUMP_SPEED_Y;
+			if (nx > 0) currentAnimation = ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_RIGHT;
+			else currentAnimation = ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_LEFT;
+			ResetCurrentAnimation();
 		}
 	}
 }
@@ -172,6 +267,33 @@ void CMario::Attacked() {
 int CMario::GetAniIdSmall()
 {
 	int aniId = -1;
+
+	if (holdingShell != NULL) {
+		if (!isOnPlatform)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_SMALL_JUMP_HOLD_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_SMALL_JUMP_HOLD_LEFT;
+				aniId = ID_ANI_MARIO_SMALL_JUMP_HOLD_LEFT;
+		}
+		else
+			if (vx == 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_SMALL_IDLE_HOLD_RIGHT;
+				else aniId = ID_ANI_MARIO_SMALL_IDLE_HOLD_LEFT;
+			}
+			else if (vx > 0)
+			{
+				aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_RIGHT;
+			}
+			else // vx < 0
+			{
+				aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_LEFT;
+			}
+		return aniId;
+	}
+
 	if (!isOnPlatform)
 	{
 		if (abs(ax) == MARIO_ACCEL_RUN_X)
@@ -227,6 +349,103 @@ int CMario::GetAniIdSmall()
 	return aniId;
 }
 
+int CMario::GetAniIdRaccoon()
+{
+	int aniId = -1;
+
+	if (holdingShell != NULL) {
+		if (!isOnPlatform)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_RACCOON_JUMP_HOLD_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_RACCOON_JUMP_HOLD_LEFT;
+		}
+		else
+			if (vx == 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_IDLE_HOLD_RIGHT;
+				else aniId = ID_ANI_MARIO_RACCOON_IDLE_HOLD_LEFT;
+			}
+			else if (vx > 0)
+			{
+				aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_RIGHT;
+			}
+			else // vx < 0
+			{
+				aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_LEFT;
+			}
+		return aniId;
+	}
+
+	if (attackTimer > 0) {
+		if(nx > 0)
+			aniId = ID_ANI_MARIO_RACCOON_TAIL_ATTACK_RIGHT;
+		else
+			aniId = ID_ANI_MARIO_RACCOON_TAIL_ATTACK_LEFT;
+	}
+	else if (!isOnPlatform && glideTimer > 0) {
+		if (nx > 0)
+			aniId = ID_ANI_MARIO_RACCOON_TAIL_JUMP_GLIDE_RIGHT;
+		else
+			aniId = ID_ANI_MARIO_RACCOON_TAIL_JUMP_GLIDE_LEFT;
+	}
+	else if (!isOnPlatform)
+	{
+		if (abs(ax) == MARIO_ACCEL_RUN_X)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_RACCOON_JUMP_RUN_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_RACCOON_JUMP_RUN_LEFT;
+		}
+		else
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_LEFT;
+		}
+	}
+	else
+		if (isSitting)
+		{
+			if (nx > 0)
+				aniId = ID_ANI_MARIO_RACCOON_SIT_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_RACCOON_SIT_LEFT;
+		}
+		else
+			if (vx == 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_IDLE_RIGHT;
+				else aniId = ID_ANI_MARIO_RACCOON_IDLE_LEFT;
+			}
+			else if (vx > 0)
+			{
+				if (ax < 0)
+					aniId = ID_ANI_MARIO_RACCOON_BRACE_RIGHT;
+				else if (ax == MARIO_ACCEL_RUN_X)
+					aniId = ID_ANI_MARIO_RACCOON_RUNNING_RIGHT;
+				else if (ax == MARIO_ACCEL_WALK_X)
+					aniId = ID_ANI_MARIO_RACCOON_WALKING_RIGHT;
+			}
+			else // vx < 0
+			{
+				if (ax > 0)
+					aniId = ID_ANI_MARIO_RACCOON_BRACE_LEFT;
+				else if (ax == -MARIO_ACCEL_RUN_X)
+					aniId = ID_ANI_MARIO_RACCOON_RUNNING_LEFT;
+				else if (ax == -MARIO_ACCEL_WALK_X)
+					aniId = ID_ANI_MARIO_RACCOON_WALKING_LEFT;
+			}
+
+	if (aniId == -1) aniId = ID_ANI_MARIO_RACCOON_IDLE_RIGHT;
+
+	return aniId;
+
+}
+
 
 //
 // Get animdation ID for big Mario
@@ -234,6 +453,31 @@ int CMario::GetAniIdSmall()
 int CMario::GetAniIdBig()
 {
 	int aniId = -1;
+	if (holdingShell != NULL) {
+		if (!isOnPlatform)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_JUMP_HOLD_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_JUMP_HOLD_LEFT;
+		}
+		else
+				if (vx == 0)
+				{
+					if (nx > 0) aniId = ID_ANI_MARIO_IDLE_HOLD_RIGHT;
+					else aniId = ID_ANI_MARIO_IDLE_HOLD_LEFT;
+				}
+				else if (vx > 0)
+				{
+					aniId = ID_ANI_MARIO_WALK_HOLD_RIGHT;
+				}
+				else // vx < 0
+				{
+					aniId = ID_ANI_MARIO_WALK_HOLD_LEFT;
+				}
+		return aniId;
+	}
+
 	if (!isOnPlatform)
 	{
 		if (abs(ax) == MARIO_ACCEL_RUN_X)
@@ -293,15 +537,21 @@ void CMario::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
 	int aniId = -1;
+		// if animation havent finished (for special animation )
+	if (currentAnimation <= 0 || animations->Get(currentAnimation)->IsDone())
+	{
+		if (state == MARIO_STATE_DIE)
+			aniId = ID_ANI_MARIO_DIE;
+		else if (level == MARIO_LEVEL_BIG)
+			aniId = GetAniIdBig();
+		else if (level == MARIO_LEVEL_RACCOON)
+			aniId = GetAniIdRaccoon();
+		else if (level == MARIO_LEVEL_SMALL)
+			aniId = GetAniIdSmall();
+		currentAnimation = aniId;
+	}
 
-	if (state == MARIO_STATE_DIE)
-		aniId = ID_ANI_MARIO_DIE;
-	else if (level == MARIO_LEVEL_BIG)
-		aniId = GetAniIdBig();
-	else if (level == MARIO_LEVEL_SMALL)
-		aniId = GetAniIdSmall();
-
-	animations->Get(aniId)->Render(x, y);
+	animations->Get(currentAnimation)->Render(x, y);
 
 	//RenderBoundingBox();
 	
@@ -392,7 +642,7 @@ void CMario::SetState(int state)
 
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (level==MARIO_LEVEL_BIG)
+	if (level==MARIO_LEVEL_BIG || level == MARIO_LEVEL_RACCOON)
 	{
 		if (isSitting)
 		{
@@ -418,6 +668,28 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	}
 }
 
+void CMario::GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2, float& t2, float& r2, float& b2)
+{
+	// 1 is left hit box
+	// 2 is right hit box
+	if(level == MARIO_LEVEL_RACCOON)
+	{
+		l1 = x - 3/2 * MARIO_BIG_BBOX_WIDTH;
+		t1 = y;
+		r1 = l1 + MARIO_BIG_BBOX_WIDTH;
+		b1 = t1 + MARIO_BIG_BBOX_HEIGHT / 2;
+
+		l2 = x + MARIO_BIG_BBOX_WIDTH / 2;
+		t2 = y;
+		r2 = l2 + MARIO_BIG_BBOX_WIDTH;
+		b2 = t2 + MARIO_BIG_BBOX_HEIGHT / 2;
+	}
+	else
+	{
+		l1 = l2 = t1 = t2 = r1 = r2 = b1 = b2 = 0;
+	}
+}
+
 void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float hx, hy;
@@ -433,6 +705,7 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (!canHold)
 	{
 		holdingShell->Kicked();
+		KickedShell();
 		holdingShell->ThrownInBlock(dt, coObjects);
 		holdingShell = NULL;
 	}

@@ -16,12 +16,13 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	{
 	case DIK_A:
 		mario->SetCanHold(true);
+		mario->SpecialPressed();
 		break;
 	case DIK_DOWN:
 		if(!mario->canHold) mario->SetState(MARIO_STATE_SIT);
 		break;
 	case DIK_S:
-		mario->SetState(MARIO_STATE_JUMP);
+		mario->JumpPressed();
 		break;
 	case DIK_1:
 		mario->SetLevel(MARIO_LEVEL_SMALL);
@@ -34,6 +35,10 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_R: // reset
 		//Reload();
+		break;
+	case DIK_LEFT:
+	case DIK_RIGHT:
+		mario->HoldTurn();
 		break;
 	}
 }
