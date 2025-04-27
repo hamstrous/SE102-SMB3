@@ -1,10 +1,11 @@
 #pragma once
 #include "GameObject.h"
+#include "GenericPlatform.h"
 #include "AssetIDs.h"
 
 #define TILE_SIZE 16
 
-class CColorBlock : public CGameObject
+class CColorBlock : public CGenericPlatform
 {
 protected:
 	int width;				// Unit: cell 
