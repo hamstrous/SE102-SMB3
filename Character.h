@@ -32,5 +32,9 @@ public:
 	virtual void Touched();
 	virtual bool CanHold() { return false; };
 	virtual bool ShellHeldTouched() { return false; };
+	virtual int IsCollidable() { return 1; };
+	virtual int IsBlocking() {
+		return 0;
+	}
 };
 

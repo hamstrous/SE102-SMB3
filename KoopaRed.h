@@ -24,10 +24,13 @@ protected:
 
 	virtual void GetFloorBoundingBox(float& left, float& top, float& right, float& bottom);
 
+	virtual int IsCollidable() { return KOOPA_STATE_SHELL_HELD != state; };
 	virtual int IsBlocking() { return 0; }
 
+	virtual void OnNoCollision(DWORD dt);
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	virtual void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
+	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
 
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Flying();
@@ -39,6 +42,23 @@ protected:
 public:
 	CKoopaRed(float x, float y, bool hasWing);
 	virtual void SetState(int state);
+
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+
+	void InitHorizontalSpeedBasedOnMario(float speed, float awayMario = 1);
+	virtual void Kicked();
+	virtual void Stomped();
+	virtual void Held();
+	virtual void Release(bool dead); //Mario releases the shell
+	virtual void ShellHit(int shellX);
+	virtual void TailHit() {};
+	virtual void BlockHit() {};
+	virtual void Touched();
+	virtual bool CanHold() { return state == KOOPA_STATE_SHELL_IDLE; };
+	void HeldDie();
+	void ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 };
 
 

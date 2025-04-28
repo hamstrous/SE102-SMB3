@@ -8,6 +8,8 @@ floor.txt
 background.txt
 color-block.txt
 koopa.txt
+koopa-red.txt
+koopa-green.txt
 cloud.txt
 
 #0 : mario
@@ -116,6 +118,7 @@ cloud.txt
 10	2759	407	2	1	1	1
 
 #COLOR BLOCK 0: White, 1: Green, 2: Red, 3: Blue
+3	279	300	0
 12	279	343	3	5	3
 12	247	375	3	3	2
 12	519	311	4	7	0
