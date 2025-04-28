@@ -145,14 +145,15 @@
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GenericPlatform.h" />
     <ClInclude Include="Goomba.h" />
-    <ClInclude Include="Headbush.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="KoopaGreen.h" />
     <ClInclude Include="KoopaRed.h" />
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="Mountain.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Plant.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Unbreakablebrick.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
@@ -187,14 +189,15 @@
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GenericPlatform.cpp" />
     <ClCompile Include="Goomba.cpp" />
-    <ClCompile Include="Headbush.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="KoopaGreen.cpp" />
     <ClCompile Include="KoopaRed.cpp" />
     <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="Mountain.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="Plant.cpp" />
@@ -209,6 +212,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Unbreakablebrick.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>

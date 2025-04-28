@@ -131,7 +131,7 @@ void CKoopaGreen::SetState(int state)
 
 }
 
-CKoopaGreen::CKoopaGreen(float x, float y, bool hasWing) :CKoopa(x, y, hasWing)
+CKoopaGreen::CKoopaGreen(float x, float y, bool hasWing) :CKoopa(x, y)
 {
 	this->x = x;
 	this->y = y;
@@ -196,3 +196,175 @@ void CKoopaGreen::Render()
 	RenderBoundingBox();
 }
 
+void CKoopaGreen::GetBoundingBox(float& left, float& top, float& right, float& bottom)
+{
+	if (state == KOOPA_STATE_WALKING || state == KOOPA_STATE_FLYING)
+	{
+		left = x - KOOPA_BBOX_WIDTH / 2;
+		top = y - KOOPA_BBOX_HEIGHT / 2;
+		right = left + KOOPA_BBOX_WIDTH;
+		bottom = top + KOOPA_BBOX_HEIGHT;
+	}
+	else {
+		left = x - KOOPA_BBOX_WIDTH / 2;
+		top = y - KOOPA_BBOX_HEIGHT_SHELL / 2;
+		right = left + KOOPA_BBOX_WIDTH;
+		bottom = top + KOOPA_BBOX_HEIGHT_SHELL;
+	}
+	if (hit)
+		left = top = right = bottom = 0;
+}
+
+void CKoopaGreen::OnNoCollision(DWORD dt)
+{
+	x += vx * dt;
+	y += vy * dt;
+};
+
+void CKoopaGreen::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
+{
+	CCharacter* character = dynamic_cast<CCharacter*>(e->obj);
+	if (state == KOOPA_STATE_SHELL_MOVING) {
+		// if hit another moving shell, then both get shell hit
+		// call this Koppa shell hit first, else no effect
+		if (dynamic_cast<CKoopa*>(character) && dynamic_cast<CKoopa*>(character)->GetState() == KOOPA_STATE_SHELL_MOVING) {
+			ShellHit(-e->nx);
+		}
+		character->ShellHit(e->nx);
+	}
+	else if (state == KOOPA_STATE_SHELL_HELD) {
+		HeldDie();
+		character->ShellHit(e->nx);
+	}
+	else if (state == KOOPA_STATE_WALKING) vx = -vx;
+}
+
+void CKoopaGreen::InitHorizontalSpeedBasedOnMario(float speed, float towardMario)
+{
+	// if towardMario == 0, then koopa will walk in the same direction as it is facing
+	if (towardMario == 0) {
+		vx = speed * nx;
+		return;
+	}
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	float mario_x = 0, mario_y = 0;
+	CMario* mario = (CMario*)scene->GetPlayer();
+	if (mario != NULL) mario->GetPosition(mario_x, mario_y);
+	if (mario_x <= x) {
+		vx = speed * towardMario;
+	}
+	else {
+		vx = -speed * towardMario;
+	}
+}
+
+void CKoopaGreen::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	vy += ay * dt;
+	vx += ax * dt;
+	if (hasWing)
+		Flying();
+	else
+		Walking(dt, coObjects);
+	if (vx > 0) nx = 1;
+	else if (vx < 0) nx = -1;
+	if (state == KOOPA_STATE_SHELL_HELD) {
+		ShellHeldTouch(dt, coObjects);
+	}
+	if (state == KOOPA_STATE_DIE_UP_ANI || state == KOOPA_STATE_DIE_UP) {
+		if (GetTickCount64() - delete_time > KOOPA_TIME_DELETE) {
+			isDeleted = true;
+		}
+	}
+	CCollision::GetInstance()->Process(this, dt, coObjects);
+}
+
+void CKoopaGreen::Kicked()
+{
+	// Only when in shell state can Koopa be kicked by Mario
+	if (state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_SHELL_HELD) {
+		SetState(KOOPA_STATE_SHELL_MOVING);
+	}
+}
+
+void CKoopaGreen::Stomped()
+{
+	if (state == KOOPA_STATE_FLYING) {
+		hasWing = false;
+		SetState(KOOPA_STATE_WALKING);
+	}
+	else if (state != KOOPA_STATE_SHELL_IDLE)
+	{
+		SetState(KOOPA_STATE_SHELL_IDLE);
+	}
+	else {
+		Kicked();
+	}
+}
+
+void CKoopaGreen::Held()
+{
+	if (state == KOOPA_STATE_SHELL_IDLE) SetState(KOOPA_STATE_SHELL_HELD);
+}
+
+void CKoopaGreen::Release(bool dead = false)
+{
+	if (state == KOOPA_STATE_SHELL_HELD) {
+		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
+		if (!dead) vy = -0.3f;
+		player->Drop();
+	}
+}
+
+void CKoopaGreen::ShellHit(int shellX)
+{
+	SetState(KOOPA_STATE_DIE_UP_ANI);
+	if (shellX == -1) vx = KOOPA_FLYING_SPEED_X;
+	else if (shellX == 1) vx = -KOOPA_FLYING_SPEED_X;
+	else if (shellX < x) vx = KOOPA_FLYING_SPEED_X;
+	else if (shellX > x) vx = -KOOPA_FLYING_SPEED_X;
+	vy = -KOOPA_STATE_FLYING_UP;
+	hit = true;
+	hasWing = false;
+	delete_time = GetTickCount64();
+}
+
+void CKoopaGreen::Touched()
+{
+	CPlayScene* scene = (CPlayScene*)(CGame::GetInstance()->GetCurrentScene());
+	CMario* mario = dynamic_cast<CMario*>(scene->GetPlayer());
+	if (state != KOOPA_STATE_SHELL_IDLE && state != KOOPA_STATE_SHELL_HELD) {
+		mario->Attacked();
+	}
+	else if (state == KOOPA_STATE_SHELL_IDLE) {
+		Kicked();
+		mario->KickedShell();
+	}
+}
+
+void CKoopaGreen::HeldDie()
+{
+}
+
+void CKoopaGreen::ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	if (state == KOOPA_STATE_SHELL_MOVING) {
+		float ml, mt, mr, mb;
+		GetBoundingBox(ml, mt, mr, mb);
+		if (CCollision::GetInstance()->CheckTouchingSolid(ml, mt, mr, mb, vx, vy, dt, coObjects)) {
+			SetState(KOOPA_STATE_DIE_UP);
+		}
+	}
+}
+
+void CKoopaGreen::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	if (state == KOOPA_STATE_SHELL_HELD) {
+		float ml, mt, mr, mb;
+		GetBoundingBox(ml, mt, mr, mb);
+		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
+			SetState(KOOPA_STATE_DIE_UP);
+		}
+	}
+}

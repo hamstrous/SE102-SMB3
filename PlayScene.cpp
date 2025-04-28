@@ -21,7 +21,7 @@
 #include "QuestionBlock.h"
 #include "Mushroom.h"
 #include "Leaf.h"
-#include "Headbush.h"
+#include "Mountain.h"
 #include "Smoke.h"
 #include "SampleKeyEventHandler.h"
 #include "BackgroundColor.h"
@@ -235,13 +235,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMushroom(x, y, type, dir);
 		break;
 	}
-	case OBJECT_TYPE_HEADBUSH:
+	case OBJECT_TYPE_MOUNTAIN:
 	{
 		float cell_width = (float)atof(tokens[3].c_str());
 		float cell_height = (float)atof(tokens[4].c_str());
-		int sprite_id_begin = atoi(tokens[5].c_str());
-		int sprite_id_end = atoi(tokens[6].c_str());
-		obj = new CHeadbush(x, y, cell_width, cell_height, sprite_id_begin, sprite_id_end);
+		float type = (float)atof(tokens[5].c_str());
+		float color = (float)atof(tokens[6].c_str());
+		obj = new CMountain(x, y, cell_width, cell_height, type, color);
 		break;
 	}
 	
@@ -380,8 +380,6 @@ void CPlayScene::Update(DWORD dt)
 	if (cy < 0) cy = 0;
 	//if (cx > LEVEL_WIDTH - screenW) cx = LEVEL_WIDTH - screenW;
 	//if (cx > LEVEL_HEIGHT - screenH) cx = LEVEL_HEIGHT - screenH;
-
-	DebugOutTitle(L"Cam pos %f %f, mario pos %f %f", cx, cy, mx, my);
 
 	CGame::GetInstance()->SetCamPos(cx, cy);
 

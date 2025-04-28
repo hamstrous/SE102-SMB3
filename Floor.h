@@ -51,5 +51,7 @@ public:
     void Update(DWORD dt) {}
     void GetBoundingBox(float& l, float& t, float& r, float& b);
     void RenderBoundingBox();
+    virtual int IsCollidable() { return 1; };
+
 };
 

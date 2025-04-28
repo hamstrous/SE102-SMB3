@@ -1,10 +1,11 @@
 #pragma once
 #include "GameObject.h"
+#include "GenericPlatform.h"
 #include "AssetIDs.h"
 
 #define TILE_SIZE 16
 
-class CColorBlock : public CGameObject
+class CColorBlock : public CGenericPlatform
 {
 protected:
 	int width;				// Unit: cell 
@@ -57,6 +58,8 @@ public:
 	void Update(DWORD dt) {}
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void RenderBoundingBox();
+    virtual int IsCollidable() { return 1; };
+	virtual int IsBlocking() { return 1; };
 
     int IsDirectionColliable(float nx, float ny) {
         if (nx == 0 && ny == -1) return 1;

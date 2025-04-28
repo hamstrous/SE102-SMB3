@@ -57,37 +57,41 @@ protected:
 	ULONGLONG shell_start;
 	ULONGLONG fly_start;
 	ULONGLONG delete_time;
-	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	virtual void Render() = 0;
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
 
 	virtual int IsCollidable() { return KOOPA_STATE_SHELL_HELD != state; };
 	virtual int IsBlocking() { return 0; }
-	virtual void OnNoCollision(DWORD dt);
+	virtual void OnNoCollision(DWORD dt) = 0;
 
-	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
-	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
-	virtual void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
+	virtual void OnCollisionWith(LPCOLLISIONEVENT e) = 0;
+	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e) = 0;
+	virtual void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e) = 0;
 
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
 	virtual void Flying() = 0;
 
-	void InitHorizontalSpeedBasedOnMario(float speed, float awayMario = 1);
+	virtual void InitHorizontalSpeedBasedOnMario(float speed, float awayMario = 1) = 0;
 
 public:
-	CKoopa(float x, float y, bool hasWing);
-	virtual void SetState(int state);
-	virtual void Kicked();
-	virtual void Stomped();
-	virtual void Held();
-	virtual void Release(bool dead); //Mario releases the shell
-	virtual void ShellHit(int shellX);
-	virtual void TailHit() {};
-	virtual void BlockHit() {};
-	virtual void Touched();
+	CKoopa(float x, float y) : CCharacter(x, y)
+	{
+		shell_start = -1;
+		fly_start = -1;
+		delete_time = -1;
+	}
+	virtual void SetState(int state) = 0;
+	virtual void Kicked() = 0;
+	virtual void Stomped() = 0;
+	virtual void Held() = 0;
+	virtual void Release(bool dead) = 0; //Mario releases the shell
+	virtual void ShellHit(int shellX) = 0;
+	virtual void TailHit() = 0;
+	virtual void BlockHit() = 0;
+	virtual void Touched() = 0;
 	virtual bool CanHold() { return state == KOOPA_STATE_SHELL_IDLE; };
-	void HeldDie();
-	void ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	void ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void HeldDie() = 0;
+	virtual void ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
+	virtual void ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
 };
 

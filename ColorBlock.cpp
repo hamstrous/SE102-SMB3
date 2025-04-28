@@ -1,6 +1,6 @@
 #include "ColorBlock.h"
 
-CColorBlock::CColorBlock(float x, float y, int width, int height, int color = 0) : CGameObject(x,y)
+CColorBlock::CColorBlock(float x, float y, int width, int height, int color = 0) : CGenericPlatform(x,y)
 {
 	this->width = width;
 	this->height = height;

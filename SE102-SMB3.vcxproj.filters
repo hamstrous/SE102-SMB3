@@ -34,11 +34,13 @@
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="ColorBlock.cpp" />
-    <ClCompile Include="Headbush.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Cloud.cpp" />
     <ClCompile Include="Smoke.cpp" />
     <ClCompile Include="BackgroundColor.cpp" />
+    <ClCompile Include="GenericPlatform.cpp" />
+    <ClCompile Include="Mountain.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Unbreakablebrick.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -78,11 +80,13 @@
     <ClInclude Include="Score.h" />
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="ColorBlock.h" />
-    <ClInclude Include="Headbush.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Cloud.h" />
     <ClInclude Include="Smoke.h" />
     <ClInclude Include="BackgroundColor.h" />
+    <ClInclude Include="GenericPlatform.h" />
+    <ClInclude Include="Mountain.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Unbreakablebrick.h" />
   </ItemGroup>
   <ItemGroup>
