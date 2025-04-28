@@ -206,7 +206,7 @@
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="QuestionBlock.cpp" />
     <ClCompile Include="SampleKeyEventHandler.cpp" />
-    <ClCompile Include="Scence.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Smoke.cpp" />
     <ClCompile Include="Sprite.cpp" />

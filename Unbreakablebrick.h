@@ -2,14 +2,16 @@
 #include "GameObject.h"
 #define BRICK_BBOX_HEIGHT 16
 #define BRICK_BBOX_WIDTH 10
-class CUnbreakablebrick : public CGameObject
+class CUnbreakableBrick : public CGameObject
 {
 	int width;				// Unit: cell 
 	int height;				// Unit: cell 
-	int type; //	type: 0:cloud, 1: uood, 2:blue
+	int type; //	type: 0:cloud, 1: wood, 2:blue
 	int brickSpriteId[3] = { 140001, 150001, 160001 };
 public:
-	CUnbreakablebrick(float x, float y, int type) : CGameObject(x, y) {
+	int IsCollidable() { return 1; }
+
+	CUnbreakableBrick(float x, float y, int type) : CGameObject(x, y) {
 		this->type = type;
 	}
 	void GetBoundingBox(float& l, float& t, float& r, float& b) {

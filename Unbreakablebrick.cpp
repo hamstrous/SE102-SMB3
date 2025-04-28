@@ -1,6 +1,6 @@
 #include "Unbreakablebrick.h"
 
-void CUnbreakablebrick::Render()
+void CUnbreakableBrick::Render()
 {
 	CSprites::GetInstance()->Get(brickSpriteId[type])->Draw(x, y);
 }

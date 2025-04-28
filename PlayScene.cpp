@@ -166,7 +166,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_COLOR_BLOCK: obj = new CColorBlock(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str()), atoi(tokens[5].c_str())); break;
 	case OBJECT_TYPE_CLOUD: obj = new CCloud(x, y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_BACKGROUND_COLOR: obj = new CBackgroundColor(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str()), atoi(tokens[5].c_str())); break;
-	case OBJECT_TYPE_UNBREAKABLEBRICK: obj = new CUnbreakablebrick(x,y, atoi(tokens[3].c_str())); break;
+	case OBJECT_TYPE_UNBREAKABLEBRICK: obj = new CUnbreakableBrick(x,y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_FLOOR:
 	{
 		int width = atoi(tokens[3].c_str());
