@@ -41,6 +41,7 @@
     <ClCompile Include="GenericPlatform.cpp" />
     <ClCompile Include="Mountain.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Unbreakablebrick.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -86,6 +87,7 @@
     <ClInclude Include="GenericPlatform.h" />
     <ClInclude Include="Mountain.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Unbreakablebrick.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
