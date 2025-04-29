@@ -20,7 +20,6 @@
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="SampleKeyEventHandler.cpp" />
-    <ClCompile Include="Scence.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
@@ -42,6 +41,8 @@
     <ClCompile Include="Mountain.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Unbreakablebrick.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="BaseBrick.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -88,6 +89,7 @@
     <ClInclude Include="Mountain.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Unbreakablebrick.h" />
+    <ClInclude Include="BaseBrick.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

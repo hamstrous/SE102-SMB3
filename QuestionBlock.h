@@ -8,7 +8,7 @@
 #include "Mushroom.h"
 #include "Leaf.h"
 #include "debug.h"
-
+#include "BaseBrick.h"
 #define ID_ANI_BLOCK_NORMAL 8000
 #define ID_ANI_BLOCK_UNBOX 8001
 #define BRICK_BBOX_WIDTH 14
@@ -27,14 +27,14 @@
 #define ITEM_RED_MUSHROOM 2
 #define ITEM_GREEN_MUSHROOM 3
 #define ITEM_LEAF 4
-class CQuestionBlock : public CGameObject
+class CQuestionBlock : public CBaseBrick
 {	
 private:
 	int type;
 	float startY;
 	bool isUnbox;
 public:
-	CQuestionBlock(float x, float y, int type) : CGameObject(x, y) {
+	CQuestionBlock(float x, float y, int type) : CBaseBrick(x, y) {
 		this->type = type;
 		this->startY = y;
 		this->isUnbox = false;
@@ -44,8 +44,11 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void SetState(int state);
-	int IsCollidable() { return 1; };
-	int IsBlocking() { return 1; };
+	int IsCollidable() {
+		return 1;
+	};
+	bool hit() { return isUnbox; };
+	int IsBlocking() { return 0; };
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 	float ReturnXmin() {
 		float l;
