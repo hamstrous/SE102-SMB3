@@ -48,3 +48,18 @@
 #Die_up_right
 5103	33005	100
 
+#Wing
+[SPRITES]
+#right
+34001	144	7	151	16	40
+
+#left
+34002	232	7	239	16	40
+
+
+[ANIMATIONS]
+#Lefttwing
+5200	34001	100
+#Rightwing
+5201	34002	100
+
