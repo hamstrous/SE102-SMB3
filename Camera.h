@@ -1,9 +1,9 @@
 #pragma once
 #include "GameObject.h"
-#include "Mario.h"
 
 #define CAMERA_SPEED 0.5f
 #define FIXED_BOX_SIZE 20.0f
+class CMario;
 
 class CCamera : public CGameObject
 {

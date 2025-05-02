@@ -14,6 +14,98 @@
 #include "QuestionBlock.h"
 #include "Mushroom.h"
 
+
+std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap = {
+	{
+		MarioLevel::BIG, {
+			{MarioAnimationType::IDLE_RIGHT, 400},
+			{MarioAnimationType::IDLE_LEFT, 401},
+			{MarioAnimationType::WALKING_RIGHT, 500},
+			{MarioAnimationType::WALKING_LEFT, 501},
+			{MarioAnimationType::RUNNING_RIGHT, 600},
+			{MarioAnimationType::RUNNING_LEFT, 601},
+			{MarioAnimationType::JUMP_WALK_RIGHT, 700},
+			{MarioAnimationType::JUMP_WALK_LEFT, 701},
+			{MarioAnimationType::JUMP_RUN_RIGHT, 800},
+			{MarioAnimationType::JUMP_RUN_LEFT, 801},
+			{MarioAnimationType::SIT_RIGHT, 900},
+			{MarioAnimationType::SIT_LEFT, 901},
+			{MarioAnimationType::BRACE_RIGHT, 1001},
+			{MarioAnimationType::BRACE_LEFT, 1000},
+			{MarioAnimationType::KICK_RIGHT, 1010},
+			{MarioAnimationType::KICK_LEFT, 1011},
+			{MarioAnimationType::IDLE_HOLD_RIGHT, 1012},
+			{MarioAnimationType::IDLE_HOLD_LEFT, 1013},
+			{MarioAnimationType::WALK_HOLD_RIGHT, 1014},
+			{MarioAnimationType::WALK_HOLD_LEFT, 1015},
+			{MarioAnimationType::HOLD_FRONT, 1020},
+			{MarioAnimationType::JUMP_HOLD_RIGHT, 1021},
+			{MarioAnimationType::JUMP_HOLD_LEFT, 1022},
+			{MarioAnimationType::DIE, 999}
+		}
+	},
+	{
+		MarioLevel::SMALL, {
+			{MarioAnimationType::IDLE_RIGHT, 1100},
+			{MarioAnimationType::IDLE_LEFT, 1102},
+			{MarioAnimationType::WALKING_RIGHT, 1200},
+			{MarioAnimationType::WALKING_LEFT, 1201},
+			{MarioAnimationType::RUNNING_RIGHT, 1300},
+			{MarioAnimationType::RUNNING_LEFT, 1301},
+			{MarioAnimationType::BRACE_RIGHT, 1401},
+			{MarioAnimationType::BRACE_LEFT, 1400},
+			{MarioAnimationType::JUMP_WALK_RIGHT, 1500},
+			{MarioAnimationType::JUMP_WALK_LEFT, 1501},
+			{MarioAnimationType::JUMP_RUN_RIGHT, 1600},
+			{MarioAnimationType::JUMP_RUN_LEFT, 1601},
+			{MarioAnimationType::KICK_RIGHT, 1610},
+			{MarioAnimationType::KICK_LEFT, 1611},
+			{MarioAnimationType::IDLE_HOLD_RIGHT, 1650},
+			{MarioAnimationType::IDLE_HOLD_LEFT, 1651},
+			{MarioAnimationType::WALK_HOLD_RIGHT, 1652},
+			{MarioAnimationType::WALK_HOLD_LEFT, 1653},
+			{MarioAnimationType::HOLD_FRONT, 1654},
+			{MarioAnimationType::JUMP_HOLD_RIGHT, 1655},
+			{MarioAnimationType::JUMP_HOLD_LEFT, 1656}
+		}
+	},
+	{
+		MarioLevel::RACCOON, {
+			{MarioAnimationType::IDLE_RIGHT, 1700},
+			{MarioAnimationType::IDLE_LEFT, 1702},
+			{MarioAnimationType::WALKING_RIGHT, 1800},
+			{MarioAnimationType::WALKING_LEFT, 1801},
+			{MarioAnimationType::RUNNING_RIGHT, 1900},
+			{MarioAnimationType::RUNNING_LEFT, 1901},
+			{MarioAnimationType::BRACE_RIGHT, 2001},
+			{MarioAnimationType::BRACE_LEFT, 2000},
+			{MarioAnimationType::JUMP_WALK_RIGHT, 2100},
+			{MarioAnimationType::JUMP_WALK_LEFT, 2101},
+			{MarioAnimationType::JUMP_RUN_RIGHT, 2200},
+			{MarioAnimationType::JUMP_RUN_LEFT, 2201},
+			{MarioAnimationType::SIT_RIGHT, 2300},
+			{MarioAnimationType::SIT_LEFT, 2301},
+			{MarioAnimationType::TAIL_ATTACK_RIGHT, 2400},
+			{MarioAnimationType::TAIL_ATTACK_LEFT, 2401},
+			{MarioAnimationType::TAIL_JUMP_GLIDE_RIGHT, 2500},
+			{MarioAnimationType::TAIL_JUMP_GLIDE_LEFT, 2501},
+			{MarioAnimationType::TAIL_JUMP_FLY_RIGHT, 2600},
+			{MarioAnimationType::TAIL_JUMP_FLY_LEFT, 2601},
+			{MarioAnimationType::KICK_RIGHT, 2610},
+			{MarioAnimationType::KICK_LEFT, 2611},
+			{MarioAnimationType::IDLE_HOLD_RIGHT, 2650},
+			{MarioAnimationType::IDLE_HOLD_LEFT, 2651},
+			{MarioAnimationType::WALK_HOLD_RIGHT, 2652},
+			{MarioAnimationType::WALK_HOLD_LEFT, 2653},
+			{MarioAnimationType::HOLD_FRONT, 2654},
+			{MarioAnimationType::JUMP_HOLD_RIGHT, 2655},
+			{MarioAnimationType::JUMP_HOLD_LEFT, 2656}
+		}
+	}
+};
+
+
+
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
