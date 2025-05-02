@@ -43,6 +43,7 @@
     <ClCompile Include="Unbreakablebrick.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="BaseBrick.cpp" />
+    <ClCompile Include="Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -90,6 +91,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Unbreakablebrick.h" />
     <ClInclude Include="BaseBrick.h" />
+    <ClInclude Include="Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

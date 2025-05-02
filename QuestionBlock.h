@@ -47,8 +47,8 @@ public:
 	int IsCollidable() {
 		return 1;
 	};
-	bool hit() { return isUnbox; };
-	int IsBlocking() { return 0; };
+	bool Hit() { return isUnbox; };
+	int IsBlocking() { return 1; };
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 	float ReturnXmin() {
 		float l;

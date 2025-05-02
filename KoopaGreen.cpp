@@ -22,6 +22,7 @@ void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	if (dynamic_cast<CQuestionBlock*>(e->obj)) {
 		OnCollisionWithQuestionBlock(e);
+		return;
 	}
 	if (!e->obj->IsBlocking()) return;
 
@@ -61,6 +62,16 @@ void CKoopaGreen::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
 			//delete_time = GetTickCount64();
 		}
 
+	}
+	else {
+		if (e->ny != 0 && !hasWing)
+		{
+			vy = 0;
+		}
+		else if (e->nx != 0)
+		{
+			vx = -vx;
+		}
 	}
 	if (questionblock->GetState() != QUESTION_BLOCK_STATE_UNBOX) {
 		if (state == KOOPA_STATE_SHELL_MOVING) {
