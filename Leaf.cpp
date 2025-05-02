@@ -48,7 +48,18 @@ void CLeaf::OnNoCollision(DWORD dt)
 
 void CLeaf::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlocking()) return;
+	if (dynamic_cast<CMario*>(e->obj))
+	{
+		DebugOut(L"Leaf collided with Mario\n");
+		CMario* mario = dynamic_cast<CMario*>(e->obj);
+		mario->SetLevel(MARIO_LEVEL_RACCOON);
+		this->Delete(); 
+	}
+	else
+	{	
+		DebugOut(L"Leaf collided with another object\n");
+		return;
+	}
 }
 
 void CLeaf::SetState(int state)

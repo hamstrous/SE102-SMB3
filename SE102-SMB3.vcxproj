@@ -149,6 +149,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GenericPlatform.h" />
     <ClInclude Include="Goomba.h" />
+    <ClInclude Include="GoombaFly.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="KoopaGreen.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GenericPlatform.cpp" />
     <ClCompile Include="Goomba.cpp" />
+    <ClCompile Include="GoombaFly.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="KoopaGreen.cpp" />
     <ClCompile Include="KoopaRed.cpp" />

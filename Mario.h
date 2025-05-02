@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "BaseBrick.h"
 #include "Character.h"
 class CKoopa; // Forward declaration, stop circular dependency if include "Koopa.h"
 
@@ -239,12 +240,13 @@ protected:
 	int currentAnimation = -1;
 
 	void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
+	void OnCollisionWithBaseBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
 	void OnCollisionWithFireball(LPCOLLISIONEVENT e);
-	void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
+	void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
 	int GetAniIdBig();
 	int GetAniIdSmall();
 	int GetAniIdRaccoon();

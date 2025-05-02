@@ -12,7 +12,7 @@
 #define ID_ANI_BLOCK_NORMAL 8000
 #define ID_ANI_BLOCK_UNBOX 8001
 #define BRICK_BBOX_WIDTH 14
-#define BRICK_BBOX_HEIGHT 14
+#define BRICK_BBOX_HEIGHT 16
 
 #define QUESTION_BLOCK_STATE_ITEM 1
 #define QUESTION_BLOCK_STATE_MOVEUP 2
@@ -26,7 +26,6 @@
 #define ITEM_COIN 1
 #define ITEM_RED_MUSHROOM 2
 #define ITEM_GREEN_MUSHROOM 3
-#define ITEM_LEAF 4
 class CQuestionBlock : public CBaseBrick
 {	
 private:
@@ -60,5 +59,7 @@ public:
 		r = x + BRICK_BBOX_WIDTH / 2;
 		return r;
 	};
+	void SideHit();
+	void BottomHit();
 };
 
