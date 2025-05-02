@@ -13,6 +13,7 @@
 #include "Collision.h"
 #include "QuestionBlock.h"
 #include "Mushroom.h"
+#include "Leaf.h"
 
 
 std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap = {
@@ -170,9 +171,11 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		{
 			vx = 0;
 		}
-
+	
 	if (dynamic_cast<CCharacter*>(e->obj))
 		OnCollisionWithCharacter(e);
+	else if (dynamic_cast<CBaseBrick*>(e->obj))
+		OnCollisionWithBaseBrick(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
@@ -181,10 +184,10 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPlant(e);
 	else if (dynamic_cast<CFireball*>(e->obj))
 		OnCollisionWithFireball(e);
-	else if (dynamic_cast<CQuestionBlock*>(e->obj))
-		OnCollisionWithQuestionBlock(e);
 	else if (dynamic_cast<CMushroom*>(e->obj))
 		OnCollisionWithMushroom(e);
+	else if (dynamic_cast<CLeaf*>(e->obj))
+		OnCollisionWithLeaf(e);
 }
 
 void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
@@ -213,6 +216,15 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 	}
 }
 
+void CMario::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
+{
+	CBaseBrick* brick = dynamic_cast<CBaseBrick*>(e->obj);
+	if (e->ny > 0)
+	{
+		brick->BottomHit();
+	}
+}
+
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
@@ -235,22 +247,6 @@ void CMario::OnCollisionWithFireball(LPCOLLISIONEVENT e)
 	Attacked();
 }
 
-void CMario::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
-{
-	CQuestionBlock* questionblock = (CQuestionBlock*)e->obj;
-	if (e->ny > 0 && (x >= questionblock->ReturnXmin() || x <= questionblock->ReturnXmax()))
-	{
-		if (questionblock->GetState() == QUESTION_BLOCK_STATE_ITEM)
-		{
-			questionblock->SetState(QUESTION_BLOCK_STATE_MOVEUP);
-		}
-		else
-		{
-			questionblock->SetState(QUESTION_BLOCK_STATE_ITEM);
-		}
-	}
-}
-
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
 	CMushroom* mushroom = (CMushroom*)e->obj;
@@ -259,6 +255,12 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 	{
 		SetLevel(MarioLevel::BIG);
 	}
+}
+
+void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
+{	
+	e->obj->Delete();
+	SetLevel(MARIO_LEVEL_RACCOON);
 }
 
 void CMario::Attacked() {

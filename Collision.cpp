@@ -491,8 +491,6 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 		for (auto obj : *coObjects)
 		{
 			if (dynamic_cast<CMario*>(obj)) continue;
-			if (dynamic_cast<CCharacter*>(obj) == NULL) continue;
-			CCharacter* character = dynamic_cast<CCharacter*>(obj);
 			if (obj->IsCollidable())
 			{
 				float sl, st, sr, sb;
@@ -513,7 +511,14 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 
 				if (IsColliding(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) {
 					isTouching = true;
-					character->ShellHeldHit((ml + mr) / 2);
+					if (CCharacter* character = dynamic_cast<CCharacter*>(obj))
+					{
+						character->ShellHeldHit((ml + mr) / 2);
+					}
+					else if (CBaseBrick* brick = dynamic_cast<CBaseBrick*>(obj))
+					{
+						brick->SideHit();
+					}
 				}
 			}
 		}

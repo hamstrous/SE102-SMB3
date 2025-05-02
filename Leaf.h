@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "PowerUp.h"
 #include "Score.h"
+#include "Mario.h"
 #define LEAF_GRAVITY 0.00002f
 #define LEAF_SPEED_UP 0.1f
 #define LEAF_SPEED 0.08f
@@ -29,12 +30,16 @@ protected:
 	float ay;
 	float startY;
 	ULONGLONG fallReverse_start;
-
+	bool touch;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-	virtual int IsCollidable() { return 1; };
+	int IsCollidable(LPGAMEOBJECT obj)  {
+		if (dynamic_cast<CMario*>(obj))
+			return 1; 
+		return 0;
+	};
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
@@ -44,6 +49,7 @@ public:
 	CLeaf(float x, float y) {
 		this->x = x;
 		this->y = y;
+		this->touch = false;
 		ax = 0;
 		ay = LEAF_GRAVITY;
 		startY = y;

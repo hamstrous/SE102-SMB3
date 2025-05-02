@@ -31,7 +31,6 @@
 #include "PowerUp.h"
 #include "Score.h"
 
-
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -184,6 +183,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
+	case OBJECT_TYPE_GOOMBAFLY: obj = new CGoombaFly(x, y); break;
 	case OBJECT_TYPE_KOOPA_RED: obj = new CKoopaRed(x, y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_KOOPA_GREEN: obj = new CKoopaGreen(x, y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;

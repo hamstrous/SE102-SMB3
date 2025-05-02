@@ -22,8 +22,6 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy = 0;
 	}
 	y += vy * dt;
-	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CQuestionBlock::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -55,7 +53,7 @@ void CQuestionBlock::SetState(int state)
 			coin->SetState(COIN_STATE_MOVEUP);
 			scene->AddObject(coin);
 		}
-		if (type == ITEM_LEAF && mario->GetLevel() != MarioLevel::SMALL) {
+		if (type == ITEM_RED_MUSHROOM && mario->GetLevel() == MarioLevel::BIG) {
 			CLeaf* leaf = new CLeaf(x, y - DISTANCE_SPAWN - 15);
 			leaf->SetState(LEAF_STATE_UP);
 			scene->AddObject2(leaf, 1);
@@ -65,11 +63,18 @@ void CQuestionBlock::SetState(int state)
 		vy = SPEED_QUESTION_BLOCK;
 		break;
 	case QUESTION_BLOCK_STATE_UNBOX:
-		if (type == ITEM_RED_MUSHROOM)
+		if (type == ITEM_RED_MUSHROOM && mario->GetLevel() == MARIO_LEVEL_SMALL)
 		{	
 			bool dir = (x > marioX) ? true : false;
 			int type = (mario->GetLevel() == MarioLevel::BIG) ? ITEM_GREEN_MUSHROOM : ITEM_RED_MUSHROOM;
 			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN, type, dir);
+			mushroom->SetState(MUSHROOM_STATE_UP);
+			scene->AddObject2(mushroom, 14);
+		}
+		if (type == ITEM_GREEN_MUSHROOM)
+		{
+			bool dir = (x > marioX) ? true : false;
+			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN, ITEM_GREEN_MUSHROOM, dir);
 			mushroom->SetState(MUSHROOM_STATE_UP);
 			scene->AddObject2(mushroom, 14);
 		}
@@ -79,18 +84,23 @@ void CQuestionBlock::SetState(int state)
 
 void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
 {	
-	/*if (dynamic_cast<CKoopa*>(e->obj))
+	
+}
+
+void CQuestionBlock::SideHit()
+{
+	if (state == QUESTION_BLOCK_STATE_ITEM)
 	{
-		CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
-		if (e->nx != 0)
-		{
-			if (koopa->GetState() == KOOPA_STATE_SHELL_MOVING)
-			{
-				SetState(QUESTION_BLOCK_STATE_MOVEUP);
-			}
-			
-		}
-	}*/
+		SetState(QUESTION_BLOCK_STATE_MOVEUP);
+	}
+}
+
+void CQuestionBlock::BottomHit()
+{
+	if (state == QUESTION_BLOCK_STATE_ITEM)
+	{
+		SetState(QUESTION_BLOCK_STATE_MOVEUP);
+	}
 }
 
 
