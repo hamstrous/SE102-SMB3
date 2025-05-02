@@ -260,7 +260,7 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 {	
 	e->obj->Delete();
-	SetLevel(MARIO_LEVEL_RACCOON);
+	SetLevel(MarioLevel::RACCOON);
 }
 
 void CMario::Attacked() {
