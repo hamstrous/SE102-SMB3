@@ -3,44 +3,60 @@
 #include "Timer.h"
 
 
-Timer::Timer(ULONGLONG timeSpan)
+CTimer::CTimer(ULONGLONG timeSpan)
 {
 	this->timeSpan = timeSpan;
 	timeStart = -1;
 	started = false;
 }
 
-Timer::Timer()
+CTimer::CTimer()
 {
+	timeSpan = 0;
 	timeStart = -1;
 	started = false;
 }
 
-void Timer::Start()
+void CTimer::Start()
 {
 	timeStart = GetTickCount64();
 	started = true;
 }
 
-bool Timer::IsDone()
+bool CTimer::IsRunning()
 {
 	if (timeStart == -1) return false;
+	if (timeSpan == -1) return true;
 	ULONGLONG elapsed = GetTickCount64() - timeStart;
-	if (elapsed >= timeSpan)
+	if (elapsed <= timeSpan)
+		return true;
+	else
 	{
 		started = false;
 		timeStart = -1;
-		return true;
 	}
+	return false;
 }
 
-void Timer::Reset()
+void CTimer::Reset()
 {
 	timeStart = -1;
 	started = false;
 }
 
-ULONGLONG Timer::ElapsedTime()
+void CTimer::Flip()
+{
+	if(!IsRunning())
+	{
+		Start();
+	}
+	else
+	{
+		Reset();
+	}
+}
+
+ULONGLONG CTimer::ElapsedTime()
 {
 	if (timeStart == -1) return 0;
 	return GetTickCount64() - timeStart;

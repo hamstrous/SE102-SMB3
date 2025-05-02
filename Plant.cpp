@@ -228,7 +228,7 @@ void CPlant::SetState(int state)
 	case STATE_PRIRANHA_SHELL_HIT:
 		isDeleted = true;
 		CSmoke* smoke = new CSmoke(x, y);
-		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject2(smoke, 1);
+		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(smoke);
 	}
 	CGameObject::SetState(state);
 }

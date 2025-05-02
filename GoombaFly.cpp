@@ -31,6 +31,7 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CGoombaFly::Render()
 {
+	if (GetIsPause()) return;
 	int aniId = ID_ANI_GOOMBAFLY_WALKING;
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	if (hasWing) 
@@ -50,6 +51,8 @@ void CGoombaFly::Render()
 	{
 		aniId = ID_ANI_GOOMBAFLY_DIE + 2;
 	}
+	if(!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	//RenderBoundingBox();
 }
 

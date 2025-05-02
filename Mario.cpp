@@ -68,6 +68,8 @@ std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> anim
 			{MarioAnimationType::HOLD_FRONT, 1654},
 			{MarioAnimationType::JUMP_HOLD_RIGHT, 1655},
 			{MarioAnimationType::JUMP_HOLD_LEFT, 1656},
+			{MarioAnimationType::GROW_RIGHT, 1657},
+			{MarioAnimationType::GROW_LEFT, 1658},
 			{MarioAnimationType::DIE, 999}
 		}
 	},
@@ -102,6 +104,8 @@ std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> anim
 			{MarioAnimationType::HOLD_FRONT, 2654},
 			{MarioAnimationType::JUMP_HOLD_RIGHT, 2655},
 			{MarioAnimationType::JUMP_HOLD_LEFT, 2656},
+			{MarioAnimationType::GROW_RIGHT, 2657},
+			{MarioAnimationType::GROW_LEFT, 2658},
 			{MarioAnimationType::DIE, 999}
 		}
 	}
@@ -410,6 +414,7 @@ void CMario::GetAniId()
 
 void CMario::Render()
 {
+	if (GetIsPause()) return;
 	CAnimations* animations = CAnimations::GetInstance();
 		// if animation havent finished (for special animation )
 	if (currentAnimation <= 0 || animations->Get(currentAnimation)->IsDone())
@@ -422,9 +427,9 @@ void CMario::Render()
 		animations->Get(currentAnimation)->SetType(2);
 	}
 	else {
-		animations->Get(currentAnimation)->SetType(0);
+		animations->Get(currentAnimation)->ResetType();
 	}
-
+	
 	animations->Get(currentAnimation)->Render(x, y);
 
 	//RenderBoundingBox();
@@ -591,6 +596,10 @@ void CMario::SetLevel(MarioLevel l)
 	if (level == MarioLevel::SMALL)
 	{
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
+	}
+	if(level == MarioLevel::SMALL && l == MarioLevel::BIG)
+	{
+		AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::GROW_RIGHT : MarioAnimationType::GROW_LEFT);
 	}
 	level = l;
 }
