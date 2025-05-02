@@ -90,8 +90,6 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPlant(e);
 	else if (dynamic_cast<CFireball*>(e->obj))
 		OnCollisionWithFireball(e);
-	else if (dynamic_cast<CQuestionBlock*>(e->obj))
-		OnCollisionWithQuestionBlock(e);
 	else if (dynamic_cast<CMushroom*>(e->obj))
 		OnCollisionWithMushroom(e);
 	else if (dynamic_cast<CLeaf*>(e->obj))
@@ -130,7 +128,6 @@ void CMario::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 	if (e->ny > 0)
 	{
 		brick->BottomHit();
-		
 	}
 }
 
@@ -154,24 +151,6 @@ void CMario::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithFireball(LPCOLLISIONEVENT e)
 {	
 	Attacked();
-}
-
-void CMario::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
-{
-	CQuestionBlock* questionblock = (CQuestionBlock*)e->obj;
-	if (e->ny > 0 && (x >= questionblock->ReturnXmin() || x <= questionblock->ReturnXmax()))
-	{
-		/*if (questionblock->GetState() == QUESTION_BLOCK_STATE_ITEM)
-		{
-			questionblock->SetState(QUESTION_BLOCK_STATE_MOVEUP);
-		}*/
-	}
-	
-}
-
-void CMario::OnCollisionWithQuestionBlock2(LPCOLLISIONEVENT e)
-{
-
 }
 
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)

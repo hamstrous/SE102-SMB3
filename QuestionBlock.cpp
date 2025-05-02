@@ -88,7 +88,10 @@ void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CQuestionBlock::SideHit()
 {
-
+	if (state == QUESTION_BLOCK_STATE_ITEM)
+	{
+		SetState(QUESTION_BLOCK_STATE_MOVEUP);
+	}
 }
 
 void CQuestionBlock::BottomHit()
