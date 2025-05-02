@@ -294,7 +294,6 @@ void CKoopaRed::OnNoCollision(DWORD dt)
 {
 	x += vx * dt;
 	y += vy * dt;
-	DebugOutTitle(L"%f\n", vy);
 };
 
 void CKoopaRed::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
