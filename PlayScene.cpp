@@ -156,6 +156,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
+	case OBJECT_TYPE_GOOMBAFLY: obj = new CGoombaFly(x, y); break;
 	case OBJECT_TYPE_KOOPA_RED: obj = new CKoopaRed(x, y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_KOOPA_GREEN: obj = new CKoopaGreen(x, y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
@@ -243,6 +244,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMountain(x, y, cell_width, cell_height, type, color);
 		break;
 	}
+	
 	break;
 
 

@@ -44,6 +44,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="BaseBrick.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="GoombaFly.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -92,6 +93,7 @@
     <ClInclude Include="Unbreakablebrick.h" />
     <ClInclude Include="BaseBrick.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="GoombaFly.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
