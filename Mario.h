@@ -251,7 +251,7 @@ class CMario : public CCharacter
 {
 protected:
 	BOOLEAN isSitting;
-	int level;
+	MarioLevel level;
 	int untouchable;
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
@@ -272,9 +272,20 @@ protected:
 	void OnCollisionWithFireball(LPCOLLISIONEVENT e);
 	void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
-	int GetAniIdBig();
-	int GetAniIdSmall();
-	int GetAniIdRaccoon();
+	void GetAniId();
+	void AssignCurrentAnimation(MarioLevel level, MarioAnimationType type) {
+		//if not in list
+		if (animationMap.find(level) == animationMap.end()) {
+			DebugOut(L"[ERROR] Mario::AssignCurrentAnimation: level %d not found\n", level);
+			return;
+		}
+		if (animationMap[level].find(type) == animationMap[level].end()) {
+			DebugOut(L"[ERROR] Mario::AssignCurrentAnimation: type %d not found\n", type);
+			return;
+		}
+		currentAnimation = animationMap[level][type];
+		ResetCurrentAnimation();
+	}
 
 public:
 	bool canHold = false;
@@ -285,8 +296,7 @@ public:
 		maxVy = 0.3f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
-
-		level = MARIO_LEVEL_RACCOON;
+		level = MarioLevel::RACCOON;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
@@ -309,7 +319,7 @@ public:
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
-	void SetLevel(int l);
+	void SetLevel(MarioLevel l);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -339,5 +349,5 @@ public:
 	void SpecialPressed();
 	void JumpPressed();
 
-	int GetLevel() { return level; }
+	MarioLevel GetLevel() { return level; }
 };
