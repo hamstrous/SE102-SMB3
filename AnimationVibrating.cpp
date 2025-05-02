@@ -1,6 +1,6 @@
-#include "AnimationVibration.h"
+#include "AnimationVibrating.h"
 
-void CAnimationVibration::Render(float x, float y)
+void CAnimationVibrating::Render(float x, float y)
 {
 	ULONGLONG now = GetTickCount64();
 	if (currentFrame == -1)

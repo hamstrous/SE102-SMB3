@@ -49,7 +49,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define ASSETS_SECTION_UNKNOWN -1
 #define ASSETS_SECTION_SPRITES 1
 #define ASSETS_SECTION_ANIMATIONS 2
-#define ASSETS_SECTION_ANIMATIONS_VIBRATION 3
+#define ASSETS_SECTION_ANIMATIONS_VIBRATING 3
 
 #define MAX_SCENE_LINE 1024
 
@@ -109,7 +109,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	CAnimations::GetInstance()->Add(ani_id, ani);
 }
 
-void CPlayScene::_ParseSection_ANIMATIONS_VIBRATION(string line)
+void CPlayScene::_ParseSection_ANIMATIONS_VIBRATING(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -117,7 +117,7 @@ void CPlayScene::_ParseSection_ANIMATIONS_VIBRATION(string line)
 
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
-	LPANIMATION_VIBRATION ani = new CAnimationVibration();
+	LPANIMATION_VIBRATING ani = new CAnimationVibrating();
 
 	int ani_id = atoi(tokens[0].c_str());
 
@@ -283,7 +283,7 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		if (line == "[SPRITES]") { section = ASSETS_SECTION_SPRITES; continue; };
 		if (line == "[ANIMATIONS]") { section = ASSETS_SECTION_ANIMATIONS; continue; };
 		// many types of animation
-		if (line == "[ANIMATIONS_VIBRATION]") { section = ASSETS_SECTION_ANIMATIONS_VIBRATION; continue; };
+		if (line == "[ANIMATIONS_VIBRATION]") { section = ASSETS_SECTION_ANIMATIONS_VIBRATING; continue; };
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -293,7 +293,7 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		{
 		case ASSETS_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 		case ASSETS_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
-		case ASSETS_SECTION_ANIMATIONS_VIBRATION: _ParseSection_ANIMATIONS_VIBRATION(line); break;
+		case ASSETS_SECTION_ANIMATIONS_VIBRATING: _ParseSection_ANIMATIONS_VIBRATING(line); break;
 		}
 	}
 
