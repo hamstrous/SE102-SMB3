@@ -25,11 +25,14 @@ protected:
 	vector<LPGAMEOBJECT> thirdRenderObjects;
 	vector<LPGAMEOBJECT> projectileRenderObjects;
 
+	CTimer* pauseTimer = new CTimer(-1), * stopTimer = new CTimer();
+
 	vector<pair<CGameObject*, int>> addobj;
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATIONS_VIBRATING(string line);
 	void _ParseSection_ANIMATIONS_FLICKERING(string line);
+	void _ParseSection_ANIMATIONS_STOPPING(string line);
 
 	void _ParseSection_ASSETS(string line);
 	void _ParseSection_OBJECTS(string line);
@@ -46,16 +49,21 @@ public:
 
 	LPGAMEOBJECT GetPlayer() { return player; }
 	CCamera* GetCamera() { return camera; }
-	void AddObject(CGameObject* obj) { objects.push_back(obj);; }
-	void AddObject2(CGameObject* obj, int index)
-	{
-		//addobj.push_back({ obj, index });
-			objects.push_back(obj);
-	}
+	void AddObject(CGameObject* obj) { objects.push_back(obj); }
 	void Clear();
 	void PurgeDeletedObjects();
 
 	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
+
+	bool GetIsPause() { return pauseTimer->IsRunning(); }
+	void SetIsPause() {
+		pauseTimer->Flip();
+	}
+	bool GetIsStop() { return stopTimer->IsRunning(); }
+	void SetIsStop(int timeSpan) {
+		stopTimer->SetTimeSpan(timeSpan);
+		stopTimer->Start();
+	}
 };
 
 typedef CPlayScene* LPPLAYSCENE;

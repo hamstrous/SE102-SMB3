@@ -1,4 +1,7 @@
 #include "Animation.h"
+#include "Animations.h"
+#include "Game.h"
+#include "PlayScene.h"
 #include "debug.h"
 
 void CAnimation::Add(int spriteId, DWORD time)
@@ -14,14 +17,21 @@ void CAnimation::Add(int spriteId, DWORD time)
 	frames.push_back(frame);
 }
 
-void CAnimation::Render(float x, float y)
+void CAnimation::Render(float x, float y, int mode)
 {
+	if (mode == 1 && type != 3) {
+		StillRender(x, y);
+		return;
+	}
+
 	if (type == 0)
 		NormalRender(x, y);
 	else if (type == 1)
 		VibratingRender(x, y);
 	else if (type == 2)
 		FlickeringRender(x, y);
+	else if (type == 3)
+		StoppingRender(x, y);
 	else
 		NormalRender(x, y);
 }
@@ -104,5 +114,36 @@ void CAnimation::FlickeringRender(float x, float y)
 
 	}
 	if (!flickering) frames[currentFrame]->GetSprite()->Draw(x, y);
+}
+
+void CAnimation::StoppingRender(float x, float y)
+{
+	ULONGLONG now = GetTickCount64();
+	if (currentFrame == -1)
+	{
+		dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->SetIsStop(FullTime());
+		currentFrame = 0;
+		lastFrameTime = now;
+	}
+	else
+	{
+		DWORD t = frames[currentFrame]->GetTime();
+		if (now - lastFrameTime > t)
+		{
+			currentFrame++;
+			lastFrameTime = now;
+			if (currentFrame == frames.size()) {
+				done = 1;
+				currentFrame = 0;
+			}
+		}
+
+	}
+	frames[currentFrame]->GetSprite()->Draw(x, y);
+}
+
+void CAnimation::StillRender(float x, float y)
+{
+	frames[currentFrame]->GetSprite()->Draw(x, y);
 }
 

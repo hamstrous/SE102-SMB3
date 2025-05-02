@@ -78,6 +78,8 @@ protected:
 public:
 	CKoopa(float x, float y) : CCharacter(x, y)
 	{
+		ax = 0;
+		ay = KOOPA_GRAVITY;
 		shell_start = -1;
 		fly_start = -1;
 		delete_time = -1;

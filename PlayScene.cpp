@@ -50,6 +50,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define ASSETS_SECTION_ANIMATIONS 2
 #define ASSETS_SECTION_ANIMATIONS_VIBRATING 3
 #define ASSETS_SECTION_ANIMATIONS_FLICKERING 4
+#define ASSETS_SECTION_ANIMATIONS_STOPPING 5
 
 #define MAX_SCENE_LINE 1024
 
@@ -140,6 +141,28 @@ void CPlayScene::_ParseSection_ANIMATIONS_FLICKERING(string line)
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
 	LPANIMATION ani = new CAnimation(100, 2);
+
+	int ani_id = atoi(tokens[0].c_str());
+
+	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
+	{
+		int sprite_id = atoi(tokens[i].c_str());
+		int frame_time = atoi(tokens[i + 1].c_str());
+		ani->Add(sprite_id, frame_time);
+	}
+
+	CAnimations::GetInstance()->Add(ani_id, ani);
+}
+
+void CPlayScene::_ParseSection_ANIMATIONS_STOPPING(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 3) return; // skip invalid lines - an animation must at least has 1 frame and 1 frame time
+
+	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+
+	LPANIMATION ani = new CAnimation(100, 3);
 
 	int ani_id = atoi(tokens[0].c_str());
 
@@ -308,6 +331,7 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		// many types of animation
 		if (line == "[ANIMATIONS_VIBRATION]") { section = ASSETS_SECTION_ANIMATIONS_VIBRATING; continue; };
 		if (line == "[ANIMATIONS_FLICKERING]") { section = ASSETS_SECTION_ANIMATIONS_FLICKERING; continue; };
+		if (line == "[ANIMATIONS_STOPPING]") { section = ASSETS_SECTION_ANIMATIONS_FLICKERING; continue; };
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -318,7 +342,7 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		case ASSETS_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 		case ASSETS_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case ASSETS_SECTION_ANIMATIONS_VIBRATING: _ParseSection_ANIMATIONS_VIBRATING(line); break;
-		case ASSETS_SECTION_ANIMATIONS_FLICKERING: _ParseSection_ANIMATIONS_FLICKERING(line); break;
+		case ASSETS_SECTION_ANIMATIONS_FLICKERING: _ParseSection_ANIMATIONS_STOPPING(line); break;
 		}
 	}
 
@@ -367,6 +391,8 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
+
+	if (GetIsPause() || GetIsStop()) return;
 
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 0; i < objects.size(); i++)
@@ -419,6 +445,7 @@ void CPlayScene::Render()
 			projectileRenderObjects.push_back(i);
 	}
 
+	int mode = 0;
 	for(auto i : backgroundRenderObjects)
 		i->Render();
 	for (auto i : firstRenderObjects)

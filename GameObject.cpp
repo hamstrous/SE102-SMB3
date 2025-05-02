@@ -7,6 +7,8 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Sprites.h"
+#include "Game.h"
+#include "PlayScene.h"
 
 CGameObject::CGameObject()
 {
@@ -41,4 +43,17 @@ void CGameObject::RenderBoundingBox()
 CGameObject::~CGameObject()
 {
 
+}
+
+bool CGameObject::GetIsPause()
+{
+	CGame* game = CGame::GetInstance();
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	return scene->GetIsPause();
+}
+bool CGameObject::GetIsStop()
+{
+	CGame* game = CGame::GetInstance();
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	return scene->GetIsStop();
 }

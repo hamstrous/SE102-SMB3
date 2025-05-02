@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Animation.h"
+#include "Timer.h"
 #include "Sprite.h"
 
 class CAnimations
@@ -15,4 +16,5 @@ public:
 	void Clear();
 
 	static CAnimations* GetInstance();
+
 };
