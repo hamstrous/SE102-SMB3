@@ -3,6 +3,7 @@
 #include "AssetIDs.h"
 
 #include "PlayScene.h"
+#include "Camera.h"
 #include "Utils.h"
 #include "Textures.h"
 #include "Sprites.h"
@@ -25,7 +26,10 @@
 #include "Smoke.h"
 #include "SampleKeyEventHandler.h"
 #include "BackgroundColor.h"
-#include "Unbreakablebrick.h"
+#include "UnbreakableBrick.h"
+#include "GenericPlatform.h"
+#include "PowerUp.h"
+#include "Score.h"
 
 using namespace std;
 
@@ -44,7 +48,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define ASSETS_SECTION_UNKNOWN -1
 #define ASSETS_SECTION_SPRITES 1
 #define ASSETS_SECTION_ANIMATIONS 2
-#define ASSETS_SECTION_ANIMATIONS_VIBRATION 3
+#define ASSETS_SECTION_ANIMATIONS_VIBRATING 3
+#define ASSETS_SECTION_ANIMATIONS_FLICKERING 4
 
 #define MAX_SCENE_LINE 1024
 
@@ -104,7 +109,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	CAnimations::GetInstance()->Add(ani_id, ani);
 }
 
-void CPlayScene::_ParseSection_ANIMATIONS_VIBRATION(string line)
+void CPlayScene::_ParseSection_ANIMATIONS_VIBRATING(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -112,7 +117,29 @@ void CPlayScene::_ParseSection_ANIMATIONS_VIBRATION(string line)
 
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
-	LPANIMATION_VIBRATION ani = new CAnimationVibration();
+	LPANIMATION ani = new CAnimation(100, 1);
+
+	int ani_id = atoi(tokens[0].c_str());
+
+	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
+	{
+		int sprite_id = atoi(tokens[i].c_str());
+		int frame_time = atoi(tokens[i + 1].c_str());
+		ani->Add(sprite_id, frame_time);
+	}
+
+	CAnimations::GetInstance()->Add(ani_id, ani);
+}
+
+void CPlayScene::_ParseSection_ANIMATIONS_FLICKERING(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 3) return; // skip invalid lines - an animation must at least has 1 frame and 1 frame time
+
+	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+
+	LPANIMATION ani = new CAnimation(100, 2);
 
 	int ani_id = atoi(tokens[0].c_str());
 
@@ -279,7 +306,8 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		if (line == "[SPRITES]") { section = ASSETS_SECTION_SPRITES; continue; };
 		if (line == "[ANIMATIONS]") { section = ASSETS_SECTION_ANIMATIONS; continue; };
 		// many types of animation
-		if (line == "[ANIMATIONS_VIBRATION]") { section = ASSETS_SECTION_ANIMATIONS_VIBRATION; continue; };
+		if (line == "[ANIMATIONS_VIBRATION]") { section = ASSETS_SECTION_ANIMATIONS_VIBRATING; continue; };
+		if (line == "[ANIMATIONS_FLICKERING]") { section = ASSETS_SECTION_ANIMATIONS_FLICKERING; continue; };
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -289,7 +317,8 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		{
 		case ASSETS_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 		case ASSETS_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
-		case ASSETS_SECTION_ANIMATIONS_VIBRATION: _ParseSection_ANIMATIONS_VIBRATION(line); break;
+		case ASSETS_SECTION_ANIMATIONS_VIBRATING: _ParseSection_ANIMATIONS_VIBRATING(line); break;
+		case ASSETS_SECTION_ANIMATIONS_FLICKERING: _ParseSection_ANIMATIONS_FLICKERING(line); break;
 		}
 	}
 
@@ -328,6 +357,7 @@ void CPlayScene::Load()
 		}
 	}
 
+	camera = new CCamera();
 	f.close();
 
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
@@ -348,40 +378,9 @@ void CPlayScene::Update(DWORD dt)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
-
+	camera->Update(dt, &coObjects);
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
-
-	// Update camera to follow mario
-	float cx, cy;
-	float mx, my;
-	float screenW, screenH;
-	CGame* game = CGame::GetInstance();
-
-	screenW = game->GetBackBufferWidth();
-	screenH = game->GetBackBufferHeight();
-	game->GetCamPos(cx, cy);
-	player->GetPosition(mx, my);
-	float cl, cr, ct, cb; //line to check if we need to move the camera
-
-	cl = cx + screenW / 2 - 20;
-	cr = cx + screenW / 2 + 20;
-	ct = cy + screenH / 2 - 20;
-	cb = cy + screenH / 2 + 20;
-
-	if (mx < cl) cx -= cl - mx;
-	if (mx > cr) cx += mx - cr;
-	if (my < ct) cy -= ct - my;
-	if (my > cb) cy += my - cb;
-
-	
-
-	if (cx < 0) cx = 0;
-	if (cy < 0) cy = 0;
-	//if (cx > LEVEL_WIDTH - screenW) cx = LEVEL_WIDTH - screenW;
-	//if (cx > LEVEL_HEIGHT - screenH) cx = LEVEL_HEIGHT - screenH;
-
-	CGame::GetInstance()->SetCamPos(cx, cy);
 
 	PurgeDeletedObjects();
 
@@ -395,24 +394,46 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {	
-	//render objects except ...
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		if (dynamic_cast<CFireball*>(objects[i]) == nullptr || dynamic_cast<CLeaf*>(objects[i]) == nullptr
-			|| dynamic_cast<CScore*>(objects[i]) == nullptr )
-		{
-			objects[i]->Render();
-		}
+
+	for (auto i : objects) {
+		if (dynamic_cast<CBackgroundColor*>(i))
+			backgroundRenderObjects.push_back(i);
+
+		if(dynamic_cast<CGenericPlatform*>(i)
+			|| dynamic_cast<CMountain*>(i))
+			firstRenderObjects.push_back(i);
+
+		if(dynamic_cast<CCharacter*>(i)
+			|| dynamic_cast<CCoin*>(i)
+			|| dynamic_cast<CMushroom*>(i))
+			secondRenderObjects.push_back(i);
+
+		if (dynamic_cast<CFloor*>(i)
+			|| dynamic_cast<CBaseBrick*>(i)
+			|| dynamic_cast<CPipe*>(i))
+			thirdRenderObjects.push_back(i);
+
+		if (dynamic_cast<CFireball*>(i)
+			|| dynamic_cast<CScore*>(i)
+			|| dynamic_cast<CLeaf*>(i))
+			projectileRenderObjects.push_back(i);
 	}
-	//render ... to the top
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		if (dynamic_cast<CFireball*>(objects[i]) != nullptr || dynamic_cast<CLeaf*>(objects[i]) != nullptr
-			|| dynamic_cast<CScore*>(objects[i]) != nullptr)
-		{
-			objects[i]->Render();
-		}
-	}
+
+	for(auto i : backgroundRenderObjects)
+		i->Render();
+	for (auto i : firstRenderObjects)
+		i->Render();
+	for (auto i : secondRenderObjects)
+		i->Render();
+	for (auto i : thirdRenderObjects)
+		i->Render();
+	for (auto i : projectileRenderObjects)
+		i->Render();
+	backgroundRenderObjects.clear();
+	firstRenderObjects.clear();
+	secondRenderObjects.clear();
+	thirdRenderObjects.clear();
+	projectileRenderObjects.clear();
 }
 
 /*

@@ -15,6 +15,100 @@
 #include "Mushroom.h"
 #include "Leaf.h"
 
+
+std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap = {
+	{
+		MarioLevel::BIG, {
+			{MarioAnimationType::IDLE_RIGHT, 400},
+			{MarioAnimationType::IDLE_LEFT, 401},
+			{MarioAnimationType::WALKING_RIGHT, 500},
+			{MarioAnimationType::WALKING_LEFT, 501},
+			{MarioAnimationType::RUNNING_RIGHT, 600},
+			{MarioAnimationType::RUNNING_LEFT, 601},
+			{MarioAnimationType::JUMP_WALK_RIGHT, 700},
+			{MarioAnimationType::JUMP_WALK_LEFT, 701},
+			{MarioAnimationType::JUMP_RUN_RIGHT, 800},
+			{MarioAnimationType::JUMP_RUN_LEFT, 801},
+			{MarioAnimationType::SIT_RIGHT, 900},
+			{MarioAnimationType::SIT_LEFT, 901},
+			{MarioAnimationType::BRACE_RIGHT, 1001},
+			{MarioAnimationType::BRACE_LEFT, 1000},
+			{MarioAnimationType::KICK_RIGHT, 1010},
+			{MarioAnimationType::KICK_LEFT, 1011},
+			{MarioAnimationType::IDLE_HOLD_RIGHT, 1012},
+			{MarioAnimationType::IDLE_HOLD_LEFT, 1013},
+			{MarioAnimationType::WALK_HOLD_RIGHT, 1014},
+			{MarioAnimationType::WALK_HOLD_LEFT, 1015},
+			{MarioAnimationType::HOLD_FRONT, 1020},
+			{MarioAnimationType::JUMP_HOLD_RIGHT, 1021},
+			{MarioAnimationType::JUMP_HOLD_LEFT, 1022},
+			{MarioAnimationType::DIE, 999}
+		}
+	},
+	{
+		MarioLevel::SMALL, {
+			{MarioAnimationType::IDLE_RIGHT, 1100},
+			{MarioAnimationType::IDLE_LEFT, 1102},
+			{MarioAnimationType::WALKING_RIGHT, 1200},
+			{MarioAnimationType::WALKING_LEFT, 1201},
+			{MarioAnimationType::RUNNING_RIGHT, 1300},
+			{MarioAnimationType::RUNNING_LEFT, 1301},
+			{MarioAnimationType::BRACE_RIGHT, 1401},
+			{MarioAnimationType::BRACE_LEFT, 1400},
+			{MarioAnimationType::JUMP_WALK_RIGHT, 1500},
+			{MarioAnimationType::JUMP_WALK_LEFT, 1501},
+			{MarioAnimationType::JUMP_RUN_RIGHT, 1600},
+			{MarioAnimationType::JUMP_RUN_LEFT, 1601},
+			{MarioAnimationType::KICK_RIGHT, 1610},
+			{MarioAnimationType::KICK_LEFT, 1611},
+			{MarioAnimationType::IDLE_HOLD_RIGHT, 1650},
+			{MarioAnimationType::IDLE_HOLD_LEFT, 1651},
+			{MarioAnimationType::WALK_HOLD_RIGHT, 1652},
+			{MarioAnimationType::WALK_HOLD_LEFT, 1653},
+			{MarioAnimationType::HOLD_FRONT, 1654},
+			{MarioAnimationType::JUMP_HOLD_RIGHT, 1655},
+			{MarioAnimationType::JUMP_HOLD_LEFT, 1656},
+			{MarioAnimationType::DIE, 999}
+		}
+	},
+	{
+		MarioLevel::RACCOON, {
+			{MarioAnimationType::IDLE_RIGHT, 1700},
+			{MarioAnimationType::IDLE_LEFT, 1702},
+			{MarioAnimationType::WALKING_RIGHT, 1800},
+			{MarioAnimationType::WALKING_LEFT, 1801},
+			{MarioAnimationType::RUNNING_RIGHT, 1900},
+			{MarioAnimationType::RUNNING_LEFT, 1901},
+			{MarioAnimationType::BRACE_RIGHT, 2001},
+			{MarioAnimationType::BRACE_LEFT, 2000},
+			{MarioAnimationType::JUMP_WALK_RIGHT, 2100},
+			{MarioAnimationType::JUMP_WALK_LEFT, 2101},
+			{MarioAnimationType::JUMP_RUN_RIGHT, 2200},
+			{MarioAnimationType::JUMP_RUN_LEFT, 2201},
+			{MarioAnimationType::SIT_RIGHT, 2300},
+			{MarioAnimationType::SIT_LEFT, 2301},
+			{MarioAnimationType::TAIL_ATTACK_RIGHT, 2400},
+			{MarioAnimationType::TAIL_ATTACK_LEFT, 2401},
+			{MarioAnimationType::TAIL_JUMP_GLIDE_RIGHT, 2500},
+			{MarioAnimationType::TAIL_JUMP_GLIDE_LEFT, 2501},
+			{MarioAnimationType::TAIL_JUMP_FLY_RIGHT, 2600},
+			{MarioAnimationType::TAIL_JUMP_FLY_LEFT, 2601},
+			{MarioAnimationType::KICK_RIGHT, 2610},
+			{MarioAnimationType::KICK_LEFT, 2611},
+			{MarioAnimationType::IDLE_HOLD_RIGHT, 2650},
+			{MarioAnimationType::IDLE_HOLD_LEFT, 2651},
+			{MarioAnimationType::WALK_HOLD_RIGHT, 2652},
+			{MarioAnimationType::WALK_HOLD_LEFT, 2653},
+			{MarioAnimationType::HOLD_FRONT, 2654},
+			{MarioAnimationType::JUMP_HOLD_RIGHT, 2655},
+			{MarioAnimationType::JUMP_HOLD_LEFT, 2656},
+			{MarioAnimationType::DIE, 999}
+		}
+	}
+};
+
+
+
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
@@ -157,11 +251,10 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
 	CMushroom* mushroom = (CMushroom*)e->obj;
 	mushroom->SetState(MUSHROOM_STATE_DELETE);
-	if (level == MARIO_LEVEL_SMALL)
+	if (level == MarioLevel::SMALL)
 	{
-		SetLevel(MARIO_LEVEL_BIG);
+		SetLevel(MarioLevel::BIG);
 	}
-
 }
 
 void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
@@ -173,19 +266,19 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 void CMario::Attacked() {
 	if (!untouchable)
 	{
-		if (level > MARIO_LEVEL_BIG)
+		if (level == MarioLevel::RACCOON)
 		{
-			SetLevel(MARIO_LEVEL_BIG);
+			SetLevel(MarioLevel::BIG);
 			StartUntouchable();
 		}
-		else if (level == MARIO_LEVEL_BIG)
+		else if (level == MarioLevel::BIG)
 		{
-			SetLevel(MARIO_LEVEL_SMALL);
+			SetLevel(MarioLevel::SMALL);
 			StartUntouchable();
 		}
-		else if (level == MARIO_LEVEL_RACCOON) 
+		else if (level > MarioLevel::BIG) // For future levels beyond RACCOON
 		{
-			SetLevel(MARIO_LEVEL_BIG);
+			SetLevel(MarioLevel::BIG);
 			StartUntouchable();
 		}
 		else
@@ -199,6 +292,7 @@ void CMario::Attacked() {
 void CMario::TailAttackInit()
 {
 	attackTimer = ATTACK_TIME;
+	AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_ATTACK_RIGHT : MarioAnimationType::TAIL_ATTACK_LEFT);
 }
 
 void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -211,36 +305,22 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects);
 }
 
-void CMario::HoldTurn()
+void CMario::HoldTurn(int dir)
 {
 	if (holdingShell == NULL) return;
-	if (level == MARIO_LEVEL_BIG) currentAnimation = ID_ANI_MARIO_HOLD_FRONT;
-	else if (level == MARIO_LEVEL_SMALL) currentAnimation = ID_ANI_MARIO_SMALL_HOLD_FRONT;
-	else if (level == MARIO_LEVEL_RACCOON) currentAnimation = ID_ANI_MARIO_RACCOON_HOLD_FRONT;
-	ResetCurrentAnimation();
+	if (nx != dir)
+		AssignCurrentAnimation(level,MarioAnimationType::HOLD_FRONT);
 }
 
 //Change animaion when mario kick the shell
 void CMario::KickedShell()
 {
-	if (level == MARIO_LEVEL_SMALL) {
-		if (nx > 0) currentAnimation = ID_ANI_MARIO_SMALL_KICK_RIGHT;
-		else currentAnimation = ID_ANI_MARIO_SMALL_KICK_LEFT;
-	}
-	else if (level == MARIO_LEVEL_BIG) {
-		if (nx > 0) currentAnimation = ID_ANI_MARIO_KICK_RIGHT;
-		else currentAnimation = ID_ANI_MARIO_KICK_LEFT;
-	}
-	else if (level == MARIO_LEVEL_RACCOON) {
-		if (nx > 0) currentAnimation = ID_ANI_MARIO_RACCOON_KICK_RIGHT;
-		else currentAnimation = ID_ANI_MARIO_RACCOON_KICK_LEFT;
-	}
-	ResetCurrentAnimation();
+	AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::KICK_RIGHT : MarioAnimationType::KICK_LEFT);
 }
 
 void CMario::SpecialPressed()
 {
-	if (level == MARIO_LEVEL_RACCOON) {
+	if (level == MarioLevel::RACCOON) {
 		if (attackTimer <= 0) TailAttackInit();
 	}
 }
@@ -248,309 +328,101 @@ void CMario::SpecialPressed()
 void CMario::JumpPressed()
 {
 	SetState(MARIO_STATE_JUMP);
-	if (!isOnPlatform && level == MARIO_LEVEL_RACCOON) {
+	if (!isOnPlatform && level == MarioLevel::RACCOON) {
 		if (glideTimer <= 0 && abs(ax) != abs(MARIO_ACCEL_RUN_X)) {
 			glideTimer = GLIDE_TIME;
+			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_GLIDE_RIGHT : MarioAnimationType::TAIL_JUMP_GLIDE_LEFT);
 			ay /= 10;
 			vy = 0;
 		}else if (flyTimer <= 0 && abs(ax) == abs(MARIO_ACCEL_RUN_X)) {
 			flyTimer = FLY_TIME;
 			vy = -MARIO_JUMP_SPEED_Y;
-			if (nx > 0) currentAnimation = ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_RIGHT;
-			else currentAnimation = ID_ANI_MARIO_RACCOON_TAIL_JUMP_FLY_LEFT;
-			ResetCurrentAnimation();
+			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_FLY_RIGHT : MarioAnimationType::TAIL_JUMP_FLY_LEFT);
 		}
 	}
 }
 
-//
-// Get animation ID for small Mario
-//
-int CMario::GetAniIdSmall()
+void CMario::GetAniId()
 {
-	int aniId = -1;
+	if (state == MARIO_STATE_DIE)
+	{
+		currentAnimation = animationMap[level][MarioAnimationType::DIE];
+		return;
+	}
 
 	if (holdingShell != NULL) {
-		if (!isOnPlatform)
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_SMALL_JUMP_HOLD_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_SMALL_JUMP_HOLD_LEFT;
-				aniId = ID_ANI_MARIO_SMALL_JUMP_HOLD_LEFT;
+		if (!isOnPlatform) {
+			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_HOLD_RIGHT : MarioAnimationType::JUMP_HOLD_LEFT];
 		}
-		else
-			if (vx == 0)
-			{
-				if (nx > 0) aniId = ID_ANI_MARIO_SMALL_IDLE_HOLD_RIGHT;
-				else aniId = ID_ANI_MARIO_SMALL_IDLE_HOLD_LEFT;
-			}
-			else if (vx > 0)
-			{
-				aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_RIGHT;
-			}
-			else // vx < 0
-			{
-				aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_LEFT;
-			}
-		return aniId;
+		else if (vx == 0) {
+			currentAnimation = animationMap[level][nx > 0 ? MarioAnimationType::IDLE_HOLD_RIGHT : MarioAnimationType::IDLE_HOLD_LEFT];
+		}
+		else if (vx > 0) {
+			currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_RIGHT];
+		}
+		else { // vx < 0
+			currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_LEFT];
+		}
+		return;
 	}
 
-	if (!isOnPlatform)
-	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X)
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT;
+	if (!isOnPlatform) {
+		if (abs(ax) == MARIO_ACCEL_RUN_X) {
+			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_RUN_RIGHT : MarioAnimationType::JUMP_RUN_LEFT];
 		}
-		else
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_SMALL_JUMP_WALK_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_SMALL_JUMP_WALK_LEFT;
+		else {
+			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_WALK_RIGHT : MarioAnimationType::JUMP_WALK_LEFT];
 		}
 	}
-	else
-		if (isSitting)
-		{
-			if (nx > 0)
-				aniId = ID_ANI_MARIO_SIT_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_SIT_LEFT;
-		}
-		else
-			if (vx == 0)
-			{
-				if (nx > 0) aniId = ID_ANI_MARIO_SMALL_IDLE_RIGHT;
-				else aniId = ID_ANI_MARIO_SMALL_IDLE_LEFT;
-			}
-			else if (vx > 0)
-			{
-				if (ax < 0)
-					aniId = ID_ANI_MARIO_SMALL_BRACE_RIGHT;
-				else if (ax == MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_SMALL_RUNNING_RIGHT;
-				else if (ax == MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_MARIO_SMALL_WALKING_RIGHT;
-			}
-			else // vx < 0
-			{
-				if (ax > 0)
-					aniId = ID_ANI_MARIO_SMALL_BRACE_LEFT;
-				else if (ax == -MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_SMALL_RUNNING_LEFT;
-				else if (ax == -MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_MARIO_SMALL_WALKING_LEFT;
-			}
-
-	if (aniId == -1) aniId = ID_ANI_MARIO_SMALL_IDLE_RIGHT;
-
-	return aniId;
-}
-
-int CMario::GetAniIdRaccoon()
-{
-	int aniId = -1;
-
-	if (holdingShell != NULL) {
-		if (!isOnPlatform)
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_RACCOON_JUMP_HOLD_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_RACCOON_JUMP_HOLD_LEFT;
-		}
-		else
-			if (vx == 0)
-			{
-				if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_IDLE_HOLD_RIGHT;
-				else aniId = ID_ANI_MARIO_RACCOON_IDLE_HOLD_LEFT;
-			}
-			else if (vx > 0)
-			{
-				aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_RIGHT;
-			}
-			else // vx < 0
-			{
-				aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_LEFT;
-			}
-		return aniId;
+	else if (isSitting) {
+		currentAnimation = animationMap[level][nx > 0 ? MarioAnimationType::SIT_RIGHT : MarioAnimationType::SIT_LEFT];
 	}
-
-	if (attackTimer > 0) {
-		if(nx > 0)
-			aniId = ID_ANI_MARIO_RACCOON_TAIL_ATTACK_RIGHT;
-		else
-			aniId = ID_ANI_MARIO_RACCOON_TAIL_ATTACK_LEFT;
+	else if (vx == 0) {
+		currentAnimation = animationMap[level][nx > 0 ? MarioAnimationType::IDLE_RIGHT : MarioAnimationType::IDLE_LEFT];
 	}
-	else if (!isOnPlatform && glideTimer > 0) {
-		if (nx > 0)
-			aniId = ID_ANI_MARIO_RACCOON_TAIL_JUMP_GLIDE_RIGHT;
-		else
-			aniId = ID_ANI_MARIO_RACCOON_TAIL_JUMP_GLIDE_LEFT;
-	}
-	else if (!isOnPlatform)
-	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X)
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_RACCOON_JUMP_RUN_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_RACCOON_JUMP_RUN_LEFT;
+	else if (vx > 0) {
+		if (ax < 0) {
+			currentAnimation = animationMap[level][MarioAnimationType::BRACE_RIGHT];
 		}
-		else
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_LEFT;
+		else if (ax == MARIO_ACCEL_RUN_X) {
+			currentAnimation = animationMap[level][MarioAnimationType::RUNNING_RIGHT];
+		}
+		else if (ax == MARIO_ACCEL_WALK_X) {
+			currentAnimation = animationMap[level][MarioAnimationType::WALKING_RIGHT];
 		}
 	}
-	else
-		if (isSitting)
-		{
-			if (nx > 0)
-				aniId = ID_ANI_MARIO_RACCOON_SIT_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_RACCOON_SIT_LEFT;
+	else { // vx < 0
+		if (ax > 0) {
+			currentAnimation = animationMap[level][MarioAnimationType::BRACE_LEFT];
 		}
-		else
-			if (vx == 0)
-			{
-				if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_IDLE_RIGHT;
-				else aniId = ID_ANI_MARIO_RACCOON_IDLE_LEFT;
-			}
-			else if (vx > 0)
-			{
-				if (ax < 0)
-					aniId = ID_ANI_MARIO_RACCOON_BRACE_RIGHT;
-				else if (ax == MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_RACCOON_RUNNING_RIGHT;
-				else if (ax == MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_MARIO_RACCOON_WALKING_RIGHT;
-			}
-			else // vx < 0
-			{
-				if (ax > 0)
-					aniId = ID_ANI_MARIO_RACCOON_BRACE_LEFT;
-				else if (ax == -MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_RACCOON_RUNNING_LEFT;
-				else if (ax == -MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_MARIO_RACCOON_WALKING_LEFT;
-			}
-
-	if (aniId == -1) aniId = ID_ANI_MARIO_RACCOON_IDLE_RIGHT;
-
-	return aniId;
-
-}
-
-
-//
-// Get animdation ID for big Mario
-//
-int CMario::GetAniIdBig()
-{
-	int aniId = -1;
-	if (holdingShell != NULL) {
-		if (!isOnPlatform)
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_JUMP_HOLD_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_JUMP_HOLD_LEFT;
+		else if (ax == -MARIO_ACCEL_RUN_X) {
+			currentAnimation = animationMap[level][MarioAnimationType::RUNNING_LEFT];
 		}
-		else
-				if (vx == 0)
-				{
-					if (nx > 0) aniId = ID_ANI_MARIO_IDLE_HOLD_RIGHT;
-					else aniId = ID_ANI_MARIO_IDLE_HOLD_LEFT;
-				}
-				else if (vx > 0)
-				{
-					aniId = ID_ANI_MARIO_WALK_HOLD_RIGHT;
-				}
-				else // vx < 0
-				{
-					aniId = ID_ANI_MARIO_WALK_HOLD_LEFT;
-				}
-		return aniId;
-	}
-
-	if (!isOnPlatform)
-	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X)
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_JUMP_RUN_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_JUMP_RUN_LEFT;
-		}
-		else
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_JUMP_WALK_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_JUMP_WALK_LEFT;
+		else if (ax == -MARIO_ACCEL_WALK_X) {
+			currentAnimation = animationMap[level][MarioAnimationType::WALKING_LEFT];
 		}
 	}
-	else
-		if (isSitting)
-		{
-			if (nx > 0)
-				aniId = ID_ANI_MARIO_SIT_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_SIT_LEFT;
-		}
-		else
-			if (vx == 0)
-			{
-				if (nx > 0) aniId = ID_ANI_MARIO_IDLE_RIGHT;
-				else aniId = ID_ANI_MARIO_IDLE_LEFT;
-			}
-			else if (vx > 0)
-			{
-				if (ax < 0)
-					aniId = ID_ANI_MARIO_BRACE_RIGHT;
-				else if (ax == MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_RUNNING_RIGHT;
-				else if (ax == MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_MARIO_WALKING_RIGHT;
-			}
-			else // vx < 0
-			{
-				if (ax > 0)
-					aniId = ID_ANI_MARIO_BRACE_LEFT;
-				else if (ax == -MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_RUNNING_LEFT;
-				else if (ax == -MARIO_ACCEL_WALK_X)
-					aniId = ID_ANI_MARIO_WALKING_LEFT;
-			}
 
-	if (aniId == -1) aniId = ID_ANI_MARIO_IDLE_RIGHT;
-
-	return aniId;
+	if (currentAnimation == -1) {
+		currentAnimation = animationMap[level][MarioAnimationType::IDLE_RIGHT];
+	}
 }
 
 void CMario::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
-	int aniId = -1;
 		// if animation havent finished (for special animation )
 	if (currentAnimation <= 0 || animations->Get(currentAnimation)->IsDone())
 	{
-		if (state == MARIO_STATE_DIE)
-			aniId = ID_ANI_MARIO_DIE;
-		else if (level == MARIO_LEVEL_BIG)
-			aniId = GetAniIdBig();
-		else if (level == MARIO_LEVEL_RACCOON)
-			aniId = GetAniIdRaccoon();
-		else if (level == MARIO_LEVEL_SMALL)
-			aniId = GetAniIdSmall();
-		currentAnimation = aniId;
+		GetAniId();
+	}
+
+	if(untouchable)
+	{
+		animations->Get(currentAnimation)->SetType(2);
+	}
+	else {
+		animations->Get(currentAnimation)->SetType(0);
 	}
 
 	animations->Get(currentAnimation)->Render(x, y);
@@ -609,7 +481,7 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_SIT:
-		if (isOnPlatform && level != MARIO_LEVEL_SMALL)
+		if (isOnPlatform && level != MarioLevel::SMALL)
 		{
 			state = MARIO_STATE_IDLE;
 			isSitting = true;
@@ -644,7 +516,7 @@ void CMario::SetState(int state)
 
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (level==MARIO_LEVEL_BIG || level == MARIO_LEVEL_RACCOON)
+	if (level==MarioLevel::BIG || level == MarioLevel::RACCOON)
 	{
 		if (isSitting)
 		{
@@ -674,7 +546,7 @@ void CMario::GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2
 {
 	// 1 is left hit box
 	// 2 is right hit box
-	if(level == MARIO_LEVEL_RACCOON)
+	if(level == MarioLevel::RACCOON)
 	{
 		l1 = x - 3/2 * MARIO_BIG_BBOX_WIDTH;
 		t1 = y;
@@ -713,10 +585,10 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 }
 
-void CMario::SetLevel(int l)
+void CMario::SetLevel(MarioLevel l)
 {
 	// Adjust position to avoid falling off platform
-	if (this->level == MARIO_LEVEL_SMALL)
+	if (level == MarioLevel::SMALL)
 	{
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 	}

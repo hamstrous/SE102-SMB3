@@ -51,3 +51,11 @@ LPCWSTR ToLPCWSTR(string st)
 	// delete wcstring   // << can I ? 
 	return w->c_str();
 }
+
+void Clamp(float& x, float min, float max)
+{
+	if (x < min)
+		x = min;
+	if (x > max)
+		x = max;
+}

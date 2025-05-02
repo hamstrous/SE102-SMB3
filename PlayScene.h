@@ -16,14 +16,20 @@ class CPlayScene: public CScene
 protected: 
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
-	LPGAMEOBJECT camera;					
+	CCamera* camera;					
 
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> backgroundRenderObjects;
+	vector<LPGAMEOBJECT> firstRenderObjects; // background
+	vector<LPGAMEOBJECT> secondRenderObjects; //
+	vector<LPGAMEOBJECT> thirdRenderObjects;
+	vector<LPGAMEOBJECT> projectileRenderObjects;
 
 	vector<pair<CGameObject*, int>> addobj;
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
-	void _ParseSection_ANIMATIONS_VIBRATION(string line);
+	void _ParseSection_ANIMATIONS_VIBRATING(string line);
+	void _ParseSection_ANIMATIONS_FLICKERING(string line);
 
 	void _ParseSection_ASSETS(string line);
 	void _ParseSection_OBJECTS(string line);
@@ -39,6 +45,7 @@ public:
 	virtual void Unload();
 
 	LPGAMEOBJECT GetPlayer() { return player; }
+	CCamera* GetCamera() { return camera; }
 	void AddObject(CGameObject* obj) { objects.push_back(obj);; }
 	void AddObject2(CGameObject* obj, int index)
 	{

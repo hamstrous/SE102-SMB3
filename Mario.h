@@ -1,4 +1,6 @@
 #pragma once
+
+#include <unordered_map>
 #include "GameObject.h"
 #include "BaseBrick.h"
 #include "Character.h"
@@ -8,39 +10,70 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 #include "Animations.h"
 
 #include "debug.h"
+using namespace std;
 
-// Mario Constants
+enum class MarioLevel {
+	SMALL,
+	BIG,
+	RACCOON
+};
 
-namespace MarioConstants {
+enum class MarioAnimationType {
+	IDLE_RIGHT,
+	IDLE_LEFT,
+	WALKING_RIGHT,
+	WALKING_LEFT,
+	RUNNING_RIGHT,
+	RUNNING_LEFT,
+	JUMP_WALK_RIGHT,
+	JUMP_WALK_LEFT,
+	JUMP_RUN_RIGHT,
+	JUMP_RUN_LEFT,
+	SIT_RIGHT,
+	SIT_LEFT,
+	BRACE_RIGHT,
+	BRACE_LEFT,
+	KICK_RIGHT,
+	KICK_LEFT,
+	IDLE_HOLD_RIGHT,
+	IDLE_HOLD_LEFT,
+	WALK_HOLD_RIGHT,
+	WALK_HOLD_LEFT,
+	HOLD_FRONT,
+	JUMP_HOLD_RIGHT,
+	JUMP_HOLD_LEFT,
+	TAIL_ATTACK_RIGHT,
+	TAIL_ATTACK_LEFT,
+	TAIL_JUMP_GLIDE_RIGHT,
+	TAIL_JUMP_GLIDE_LEFT,
+	TAIL_JUMP_FLY_RIGHT,
+	TAIL_JUMP_FLY_LEFT,
+	GROW_RIGHT,
+	GROW_LEFT,
+	SHRINK_RIGHT,
+	SHRINK_LEFT,
+	FLICKERING_RIGHT,
+	FLICKERING_LEFT,
+	DIE
+};
 
-	constexpr float WALKING_SPEED = 0.1f;
-
-
-	enum State {
-
-		DIE = -10
-
+namespace std {
+	template <>
+	struct hash<MarioLevel> {
+		size_t operator()(const MarioLevel& k) const {
+			return static_cast<int>(k);
+		}
 	};
 
-
-	enum Level {
-
-		SMALL = 1,
-
-		BIG = 2,
-
-		RACCOON = 3
-
+	template <>
+	struct hash<MarioAnimationType> {
+		size_t operator()(const MarioAnimationType& k) const {
+			return static_cast<int>(k);
+		}
 	};
-
-
-	const std::unordered_map<int, int> AnimationIds = {
-
-		{ 100, 400 }
-
-	};
-
 }
+
+extern std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
@@ -225,7 +258,7 @@ class CMario : public CCharacter
 {
 protected:
 	BOOLEAN isSitting;
-	int level;
+	MarioLevel level;
 	int untouchable;
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
@@ -246,10 +279,21 @@ protected:
 	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
 	void OnCollisionWithFireball(LPCOLLISIONEVENT e);
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
-	void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
-	int GetAniIdBig();
-	int GetAniIdSmall();
-	int GetAniIdRaccoon();
+  void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
+	void GetAniId();
+	void AssignCurrentAnimation(MarioLevel level, MarioAnimationType type) {
+		//if not in list
+		if (animationMap.find(level) == animationMap.end()) {
+			DebugOut(L"[ERROR] Mario::AssignCurrentAnimation: level %d not found\n", level);
+			return;
+		}
+		if (animationMap[level].find(type) == animationMap[level].end()) {
+			DebugOut(L"[ERROR] Mario::AssignCurrentAnimation: type %d not found\n", type);
+			return;
+		}
+		currentAnimation = animationMap[level][type];
+		ResetCurrentAnimation();
+	}
 
 public:
 	bool canHold = false;
@@ -260,8 +304,7 @@ public:
 		maxVy = 0.3f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
-
-		level = MARIO_LEVEL_RACCOON;
+		level = MarioLevel::RACCOON;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
@@ -284,7 +327,7 @@ public:
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
-	void SetLevel(int l);
+	void SetLevel(MarioLevel l);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -308,11 +351,11 @@ public:
 	void TailAttackInit();
 	void TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
-	void HoldTurn();
+	void HoldTurn(int dir);
 	void KickedShell();
 
 	void SpecialPressed();
 	void JumpPressed();
 
-	int GetLevel() { return level; }
+	MarioLevel GetLevel() { return level; }
 };

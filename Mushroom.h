@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "PowerUp.h"
 #define MUSHROOM_GRAVITY 0.0007f
 #define MUSHROOM_SPEED 0.05f
 #define MUSHROOM_SPEED_BOUNCING 0.07f
@@ -23,7 +24,7 @@
 
 #define TYPE_NORMAL 2
 #define TYPE_LEVELUP 3
-class CMushroom : public CGameObject
+class CMushroom : public CPowerUp
 {
 protected:
 	float ax;
@@ -46,8 +47,10 @@ protected:
 	int OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void InitHorizontalSpeed(float speed, float awayMario = 1);
 public:
-	CMushroom(float x, float y, int type, bool dir) : CGameObject(x, y)
+	CMushroom(float x, float y, int type, bool dir)
 	{
+		this->x = x;
+		this->y = y;
 		this->type = type;
 		ax = 0;
 		ay = MUSHROOM_GRAVITY;

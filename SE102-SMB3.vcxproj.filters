@@ -25,7 +25,6 @@
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Character.cpp" />
-    <ClCompile Include="AnimationVibration.cpp" />
     <ClCompile Include="KoopaRed.cpp" />
     <ClCompile Include="KoopaGreen.cpp" />
     <ClCompile Include="QuestionBlock.cpp" />
@@ -40,11 +39,12 @@
     <ClCompile Include="GenericPlatform.cpp" />
     <ClCompile Include="Mountain.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Unbreakablebrick.cpp" />
+    <ClCompile Include="UnbreakableBrick.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="BaseBrick.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="GoombaFly.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
+    <ClCompile Include="GoombaFly.cpp" />4
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -75,7 +75,6 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Character.h" />
-    <ClInclude Include="AnimationVibration.h" />
     <ClInclude Include="KoopaRed.h" />
     <ClInclude Include="KoopaGreen.h" />
     <ClInclude Include="QuestionBlock.h" />
@@ -90,9 +89,10 @@
     <ClInclude Include="GenericPlatform.h" />
     <ClInclude Include="Mountain.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="Unbreakablebrick.h" />
+    <ClInclude Include="UnbreakableBrick.h" />
     <ClInclude Include="BaseBrick.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="PowerUp.h" />
     <ClInclude Include="GoombaFly.h" />
   </ItemGroup>
   <ItemGroup>

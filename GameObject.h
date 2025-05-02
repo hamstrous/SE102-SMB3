@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "Animation.h"
-#include "AnimationVibration.h"
 #include "Animations.h"
 #include "Sprites.h"
 #include "Collision.h"

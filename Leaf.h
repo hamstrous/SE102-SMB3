@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "PowerUp.h"
 #include "Score.h"
 #include "Mario.h"
 #define LEAF_GRAVITY 0.00002f
@@ -22,7 +23,7 @@
 
 #define LEAF_TIME_STOP 10
 
-class CLeaf : public CGameObject
+class CLeaf : public CPowerUp
 {
 protected:
 	float ax;

@@ -406,8 +406,6 @@ void CGame::ProcessKeyboard()
 		}
 	}
 
-	keyHandler->KeyState((BYTE*)&keyStates);
-
 	// Collect all buffered events
 	DWORD dwElements = KEYBOARD_BUFFER_SIZE;
 	hr = didv->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), keyEvents, &dwElements, 0);
@@ -427,6 +425,8 @@ void CGame::ProcessKeyboard()
 		else
 			keyHandler->OnKeyUp(KeyCode);
 	}
+
+	keyHandler->KeyState((BYTE*)&keyStates);
 }
 
 #define MAX_GAME_LINE 1024
