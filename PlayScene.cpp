@@ -27,7 +27,6 @@
 #include "BackgroundColor.h"
 #include "Unbreakablebrick.h"
 
-
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -244,7 +243,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMountain(x, y, cell_width, cell_height, type, color);
 		break;
 	}
-	
 	break;
 
 

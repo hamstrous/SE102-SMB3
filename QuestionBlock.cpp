@@ -7,7 +7,7 @@ void CQuestionBlock::Render()
 		animations->Get(ID_ANI_BLOCK_UNBOX)->Render(x, y);
 	else
 	animations->Get(ID_ANI_BLOCK_NORMAL)->Render(x, y);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -21,9 +21,13 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		y = startY;
 		vy = 0;
 	}
-	y += vy * dt;
+	if (y != startY && state == QUESTION_BLOCK_STATE_UNBOX)
+	{
+		SetState(QUESTION_BLOCK_STATE_MOVEDOWN);
+	}
+	y += vy * dt;/*
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->Process(this, dt, coObjects);*/
 }
 
 void CQuestionBlock::GetBoundingBox(float& l, float& t, float& r, float& b)

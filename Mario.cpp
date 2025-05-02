@@ -150,11 +150,13 @@ void CMario::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
 		{
 			questionblock->SetState(QUESTION_BLOCK_STATE_MOVEUP);
 		}
-		else
-		{
-			questionblock->SetState(QUESTION_BLOCK_STATE_ITEM);
-		}
 	}
+	
+}
+
+void CMario::OnCollisionWithQuestionBlock2(LPCOLLISIONEVENT e)
+{
+
 }
 
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
