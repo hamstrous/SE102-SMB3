@@ -15,6 +15,7 @@ class CPlayScene: public CScene
 protected: 
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
+	LPGAMEOBJECT camera;					
 
 	vector<LPGAMEOBJECT> objects;
 
