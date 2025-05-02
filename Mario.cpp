@@ -13,6 +13,7 @@
 #include "Collision.h"
 #include "QuestionBlock.h"
 #include "Mushroom.h"
+#include "Leaf.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -91,6 +92,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithQuestionBlock(e);
 	else if (dynamic_cast<CMushroom*>(e->obj))
 		OnCollisionWithMushroom(e);
+	else if (dynamic_cast<CLeaf*>(e->obj))
+		OnCollisionWithLeaf(e);
 }
 
 void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
@@ -168,6 +171,12 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 		SetLevel(MARIO_LEVEL_BIG);
 	}
 
+}
+
+void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
+{	
+	e->obj->Delete();
+	SetLevel(MARIO_LEVEL_RACCOON);
 }
 
 void CMario::Attacked() {

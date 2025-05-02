@@ -26,7 +26,6 @@
 #define ITEM_COIN 1
 #define ITEM_RED_MUSHROOM 2
 #define ITEM_GREEN_MUSHROOM 3
-#define ITEM_LEAF 4
 class CQuestionBlock : public CBaseBrick
 {	
 private:
