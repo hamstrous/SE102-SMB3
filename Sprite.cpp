@@ -36,7 +36,7 @@ void CSprite::Draw(float x, float y)
 {
 	CGame* g = CGame::GetInstance();
 	float cx, cy;
-	g->GetCamPos(cx, cy);
+	g->GetCurrentScene()->GetCamera()->GetPosition(cx, cy);
 
 	cx = (FLOAT)floor(cx);
 	cy = (FLOAT)floor(cy);

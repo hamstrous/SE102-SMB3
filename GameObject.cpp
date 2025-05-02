@@ -33,7 +33,7 @@ void CGameObject::RenderBoundingBox()
 	rect.bottom = (int)b - (int)t;
 
 	float cx, cy; 
-	CGame::GetInstance()->GetCamPos(cx, cy);
+	CGame::GetInstance()->GetCurrentScene()->GetCamera()->GetPosition(cx, cy);
 
 	CGame::GetInstance()->Draw(x - cx, y - cy, bbox, &rect, BBOX_ALPHA);
 }
