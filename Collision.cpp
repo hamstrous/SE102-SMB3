@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Mario.h"
 #include "Character.h"
+#include "BaseBrick.h"
 
 #include "debug.h"
 
@@ -421,7 +422,7 @@ bool CCollision::CheckTouchingSolid(float ml, float mt, float mr, float mb, floa
 	{
 		for (auto obj : *coObjects)
 		{
-			if (obj->IsBlocking())
+			if (dynamic_cast<CBaseBrick*>(obj))
 			{
 				float sl, st, sr, sb;
 				obj->GetBoundingBox(sl, st, sr, sb);

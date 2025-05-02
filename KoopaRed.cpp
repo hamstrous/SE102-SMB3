@@ -40,7 +40,7 @@ void CKoopaRed::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	if (dynamic_cast<CQuestionBlock*>(e->obj)) {
 		OnCollisionWithQuestionBlock(e);
-		
+		return;
 	}
 	if (!e->obj->IsBlocking()) return;
 
@@ -71,13 +71,23 @@ void CKoopaRed::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
 					vx = -KOOPA_FLYING_SPEED_X;
 				}
 				//ShellHit(nx);
-				vy = -100.0f;
+				vy = -KOOPA_BOUNCE_SPEED;
 				//DebugOut(L"vy cua hit die vy: %f\n", vy);
 				////hit = true;
 				//hasWing = false;
 				//delete_time = GetTickCount64();
 			}
 		
+	}
+	else {
+		if (e->ny != 0 && !hasWing)
+		{
+			vy = 0;
+		}
+		else if (e->nx != 0)
+		{
+			vx = -vx;
+		}
 	}
 	if (questionblock->GetState() != QUESTION_BLOCK_STATE_UNBOX) {
 		if (state == KOOPA_STATE_SHELL_MOVING) {
