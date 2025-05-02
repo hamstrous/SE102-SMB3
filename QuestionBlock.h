@@ -59,5 +59,7 @@ public:
 		r = x + BRICK_BBOX_WIDTH / 2;
 		return r;
 	};
+	void SideHit();
+	void BottomHit();
 };
 

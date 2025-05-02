@@ -86,4 +86,17 @@ void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
 	
 }
 
+void CQuestionBlock::SideHit()
+{
+
+}
+
+void CQuestionBlock::BottomHit()
+{
+	if (state == QUESTION_BLOCK_STATE_ITEM)
+	{
+		SetState(QUESTION_BLOCK_STATE_MOVEUP);
+	}
+}
+
 

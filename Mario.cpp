@@ -77,9 +77,11 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		{
 			vx = 0;
 		}
-
+	
 	if (dynamic_cast<CCharacter*>(e->obj))
 		OnCollisionWithCharacter(e);
+	else if (dynamic_cast<CBaseBrick*>(e->obj))
+		OnCollisionWithBaseBrick(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
@@ -122,6 +124,16 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 	}
 }
 
+void CMario::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
+{
+	CBaseBrick* brick = dynamic_cast<CBaseBrick*>(e->obj);
+	if (e->ny > 0)
+	{
+		brick->BottomHit();
+		
+	}
+}
+
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
@@ -149,10 +161,10 @@ void CMario::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
 	CQuestionBlock* questionblock = (CQuestionBlock*)e->obj;
 	if (e->ny > 0 && (x >= questionblock->ReturnXmin() || x <= questionblock->ReturnXmax()))
 	{
-		if (questionblock->GetState() == QUESTION_BLOCK_STATE_ITEM)
+		/*if (questionblock->GetState() == QUESTION_BLOCK_STATE_ITEM)
 		{
 			questionblock->SetState(QUESTION_BLOCK_STATE_MOVEUP);
-		}
+		}*/
 	}
 	
 }
