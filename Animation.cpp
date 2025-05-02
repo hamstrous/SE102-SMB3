@@ -16,6 +16,18 @@ void CAnimation::Add(int spriteId, DWORD time)
 
 void CAnimation::Render(float x, float y)
 {
+	if (type == 0)
+		NormalRender(x, y);
+	else if (type == 1)
+		VibratingRender(x, y);
+	else if (type == 2)
+		FlickeringRender(x, y);
+	else
+		NormalRender(x, y);
+}
+
+void CAnimation::NormalRender(float x, float y)
+{
 	ULONGLONG now = GetTickCount64();
 	if (currentFrame == -1)
 	{
@@ -37,5 +49,60 @@ void CAnimation::Render(float x, float y)
 
 	}
 	frames[currentFrame]->GetSprite()->Draw(x, y);
+}
+
+void CAnimation::VibratingRender(float x, float y)
+{
+	ULONGLONG now = GetTickCount64();
+	if (currentFrame == -1)
+	{
+		currentFrame = 0;
+		lastFrameTime = now;
+	}
+	else
+	{
+		DWORD t = frames[currentFrame]->GetTime();
+		if (now - lastFrameTime > t)
+		{
+			currentFrame++;
+			lastFrameTime = now;
+			if (currentFrame == frames.size()) currentFrame = 0;
+		}
+
+	}
+	int offsetX = currentFrame % 2 == 0 ? 1 : -1;
+	frames[currentFrame]->GetSprite()->Draw(x + offsetX * VIBRATING_SPEED, y);
+}
+
+void CAnimation::FlickeringRender(float x, float y)
+{
+	ULONGLONG now = GetTickCount64();
+	if (currentFrame == -1)
+	{
+		currentFrame = 0;
+		lastFrameTime = now;
+	}
+	else
+	{
+		DWORD t = frames[currentFrame]->GetTime();
+		if (now - lastFrameTime > t)
+		{
+			if (flickering) {
+				flickering = false;
+				currentFrame++;
+				lastFrameTime = now;
+				if (currentFrame == frames.size()) {
+					done = 1;
+					currentFrame = 0;
+				}
+			}
+			else {
+				flickering = true;
+			}
+
+		}
+
+	}
+	if (!flickering) frames[currentFrame]->GetSprite()->Draw(x, y);
 }
 

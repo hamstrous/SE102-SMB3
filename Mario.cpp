@@ -415,6 +415,14 @@ void CMario::Render()
 		GetAniId();
 	}
 
+	if(untouchable)
+	{
+		animations->Get(currentAnimation)->SetType(2);
+	}
+	else {
+		animations->Get(currentAnimation)->SetType(0);
+	}
+
 	animations->Get(currentAnimation)->Render(x, y);
 
 	//RenderBoundingBox();

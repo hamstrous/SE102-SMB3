@@ -131,7 +131,6 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationFrame.h" />
     <ClInclude Include="Animations.h" />
-    <ClInclude Include="AnimationVibrating.h" />
     <ClInclude Include="AssetIDs.h" />
     <ClInclude Include="BackgroundColor.h" />
     <ClInclude Include="BaseBrick.h" />
@@ -179,7 +178,6 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Animations.cpp" />
-    <ClCompile Include="AnimationVibrating.cpp" />
     <ClCompile Include="BackgroundColor.cpp" />
     <ClCompile Include="BaseBrick.cpp" />
     <ClCompile Include="Brick.cpp" />
