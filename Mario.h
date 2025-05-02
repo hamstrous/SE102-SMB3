@@ -343,7 +343,7 @@ public:
 	void TailAttackInit();
 	void TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
-	void HoldTurn();
+	void HoldTurn(int dir);
 	void KickedShell();
 
 	void SpecialPressed();

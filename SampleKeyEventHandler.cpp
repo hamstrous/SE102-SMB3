@@ -40,8 +40,10 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		//Reload();
 		break;
 	case DIK_LEFT:
+		mario->HoldTurn(-1);
+		break;
 	case DIK_RIGHT:
-		mario->HoldTurn();
+		mario->HoldTurn(1);
 		break;
 	}
 }

@@ -303,10 +303,11 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects);
 }
 
-void CMario::HoldTurn()
+void CMario::HoldTurn(int dir)
 {
 	if (holdingShell == NULL) return;
-	AssignCurrentAnimation(level,MarioAnimationType::HOLD_FRONT);
+	if (nx != dir)
+		AssignCurrentAnimation(level,MarioAnimationType::HOLD_FRONT);
 }
 
 //Change animaion when mario kick the shell
