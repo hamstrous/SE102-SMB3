@@ -26,7 +26,10 @@
 #include "Smoke.h"
 #include "SampleKeyEventHandler.h"
 #include "BackgroundColor.h"
-#include "Unbreakablebrick.h"
+#include "UnbreakableBrick.h"
+#include "GenericPlatform.h"
+#include "PowerUp.h"
+#include "Score.h"
 
 
 using namespace std;
@@ -366,24 +369,46 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {	
-	//render objects except ...
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		if (dynamic_cast<CFireball*>(objects[i]) == nullptr || dynamic_cast<CLeaf*>(objects[i]) == nullptr
-			|| dynamic_cast<CScore*>(objects[i]) == nullptr )
-		{
-			objects[i]->Render();
-		}
+
+	for (auto i : objects) {
+		if (dynamic_cast<CBackgroundColor*>(i))
+			backgroundRenderObjects.push_back(i);
+
+		if(dynamic_cast<CGenericPlatform*>(i)
+			|| dynamic_cast<CMountain*>(i))
+			firstRenderObjects.push_back(i);
+
+		if(dynamic_cast<CCharacter*>(i)
+			|| dynamic_cast<CCoin*>(i)
+			|| dynamic_cast<CMushroom*>(i))
+			secondRenderObjects.push_back(i);
+
+		if (dynamic_cast<CFloor*>(i)
+			|| dynamic_cast<CBaseBrick*>(i)
+			|| dynamic_cast<CPipe*>(i))
+			thirdRenderObjects.push_back(i);
+
+		if (dynamic_cast<CFireball*>(i)
+			|| dynamic_cast<CScore*>(i)
+			|| dynamic_cast<CLeaf*>(i))
+			projectileRenderObjects.push_back(i);
 	}
-	//render ... to the top
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		if (dynamic_cast<CFireball*>(objects[i]) != nullptr || dynamic_cast<CLeaf*>(objects[i]) != nullptr
-			|| dynamic_cast<CScore*>(objects[i]) != nullptr)
-		{
-			objects[i]->Render();
-		}
-	}
+
+	for(auto i : backgroundRenderObjects)
+		i->Render();
+	for (auto i : firstRenderObjects)
+		i->Render();
+	for (auto i : secondRenderObjects)
+		i->Render();
+	for (auto i : thirdRenderObjects)
+		i->Render();
+	for (auto i : projectileRenderObjects)
+		i->Render();
+	backgroundRenderObjects.clear();
+	firstRenderObjects.clear();
+	secondRenderObjects.clear();
+	thirdRenderObjects.clear();
+	projectileRenderObjects.clear();
 }
 
 /*

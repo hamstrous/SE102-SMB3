@@ -18,6 +18,11 @@ protected:
 	CCamera* camera;					
 
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> backgroundRenderObjects;
+	vector<LPGAMEOBJECT> firstRenderObjects; // background
+	vector<LPGAMEOBJECT> secondRenderObjects; //
+	vector<LPGAMEOBJECT> thirdRenderObjects;
+	vector<LPGAMEOBJECT> projectileRenderObjects;
 
 	vector<pair<CGameObject*, int>> addobj;
 	void _ParseSection_SPRITES(string line);

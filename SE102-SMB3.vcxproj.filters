@@ -40,10 +40,11 @@
     <ClCompile Include="GenericPlatform.cpp" />
     <ClCompile Include="Mountain.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Unbreakablebrick.cpp" />
+    <ClCompile Include="UnbreakableBrick.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="BaseBrick.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -89,9 +90,10 @@
     <ClInclude Include="GenericPlatform.h" />
     <ClInclude Include="Mountain.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="Unbreakablebrick.h" />
+    <ClInclude Include="UnbreakableBrick.h" />
     <ClInclude Include="BaseBrick.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="PowerUp.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
