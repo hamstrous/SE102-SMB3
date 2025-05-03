@@ -84,6 +84,7 @@ void CFont::FontToSprite(int x, int y, string str)
 
 void CFont::FontToSprite(int x, int y, int number)
 {
+    if (number < 0) number = 0;
     std::string str = std::to_string(number);
     FontToSprite(x, y, str);
 }

@@ -2,6 +2,7 @@
 
 #include "KeyEventHandler.h"
 #include "Camera.h"
+#include "HUD.h"
 
 /*
 *  Abstract class for a game scene
@@ -12,6 +13,7 @@ protected:
 	LPKEYEVENTHANDLER key_handler;
 	int id;
 	LPCWSTR sceneFilePath;
+	CHUD* hud;
 
 public: 
 	CScene(int id, LPCWSTR filePath)
@@ -19,6 +21,7 @@ public:
 		this->id = id;
 		this->sceneFilePath = filePath;
 		this->key_handler = NULL;
+		this->hud = NULL;
 	}
 
 	LPKEYEVENTHANDLER GetKeyEventHandler() { return key_handler; }

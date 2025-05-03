@@ -39,6 +39,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 {
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
+	hud = new CHUD();
 }
 
 
@@ -483,12 +484,12 @@ void CPlayScene::Render()
 	for (auto i : projectileRenderObjects)
 		i->Render();
 
-	CFont::GetInstance()->FontToSprite(40, 4, "Score");
 	backgroundRenderObjects.clear();
 	firstRenderObjects.clear();
 	secondRenderObjects.clear();
 	thirdRenderObjects.clear();
 	projectileRenderObjects.clear();
+	hud->Render();
 }
 
 /*
