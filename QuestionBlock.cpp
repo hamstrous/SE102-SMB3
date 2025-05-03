@@ -22,6 +22,7 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy = 0;
 	}
 	y += vy * dt;
+
 }
 
 void CQuestionBlock::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -66,7 +67,7 @@ void CQuestionBlock::SetState(int state)
 		if (type == ITEM_RED_MUSHROOM && mario->GetLevel() == MarioLevel::SMALL)
 		{	
 			bool dir = (x > marioX) ? true : false;
-			int type = (mario->GetLevel() == MarioLevel::BIG) ? ITEM_GREEN_MUSHROOM : ITEM_RED_MUSHROOM;
+			int type = (mario->GetLevel() >= MarioLevel::BIG) ? ITEM_GREEN_MUSHROOM : ITEM_RED_MUSHROOM;
 			CMushroom* mushroom = new CMushroom(x, y - DISTANCE_SPAWN, type, dir);
 			mushroom->SetState(MUSHROOM_STATE_UP);
 			scene->AddObject(mushroom);
