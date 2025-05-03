@@ -22,6 +22,7 @@
 #define ID_ANI_MUSHROOM_WALKING 8400
 #define ID_ANI_MUSHROOM_1UP_WALKING 8500
 
+
 #define TYPE_NORMAL 2
 #define TYPE_LEVELUP 3
 class CMushroom : public CPowerUp

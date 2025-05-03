@@ -48,18 +48,7 @@ void CKoopaGreen::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
 		if (state == KOOPA_STATE_WALKING) {
 			float xx, yy;
 			player->GetPosition(xx, yy);
-			/*if (xx < x) {
-				vx = KOOPA_FLYING_SPEED_X;
-			}
-			else {
-				vx = -KOOPA_FLYING_SPEED_X;
-			}*/
 			ShellHit(nx);
-			//vy = -KOOPA_STATE_FLYING_UP;
-			//DebugOut(L"vy cua hit die vy: %f\n", vy);
-			////hit = true;
-			//hasWing = false;
-			//delete_time = GetTickCount64();
 		}
 
 	}

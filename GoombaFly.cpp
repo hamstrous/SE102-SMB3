@@ -25,6 +25,21 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isDeleted = true;
 		return;
 	}
+	if (state == GOOMBAFLY_STATE_WALKING && (GetTickCount64() - walking_start >= WALKING_TIME) && hasWing)
+	{
+		SetState(GOOMBAFLY_STATE_SMALL_JUMP);
+		walking_start = -1;
+	}
+	if (state == GOOMBAFLY_STATE_SMALL_JUMP && (GetTickCount64() - small_jump_start >= SMALL_JUMP_TIME) && hasWing)
+	{	
+		SetState(GOOMBAFLY_STATE_BIG_JUMP);
+		small_jump_start = -1;
+	}
+	if (state == GOOMBAFLY_STATE_BIG_JUMP && (GetTickCount64() - big_jump_start >= BIG_JUMP_TIME) && hasWing)
+	{
+		SetState(GOOMBAFLY_STATE_WALKING);
+		big_jump_start = -1;
+	}
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -33,10 +48,20 @@ void CGoombaFly::Render()
 {
 	if (GetIsPause()) return;
 	int aniId = ID_ANI_GOOMBAFLY_WALKING;
-	if (hasWing) 
+	if (hasWing && state == GOOMBAFLY_STATE_WALKING) 
 	{
 		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_WALKING)->Render(x - 6, y - 6);
 		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_WALKING)->Render(x + 6, y - 6);
+	}
+	if (hasWing && state == GOOMBAFLY_STATE_SMALL_JUMP)
+	{
+		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_SMALL_JUMP)->Render(x - 6, y - 8);
+		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_SMALL_JUMP)->Render(x + 6, y - 8);
+	}
+	if (hasWing && state == GOOMBAFLY_STATE_BIG_JUMP)
+	{
+		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_BIG_JUMP)->Render(x - 6, y - 8);
+		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_BIG_JUMP)->Render(x + 6, y - 8);
 	}
 	if (state == GOOMBAFLY_STATE_DIE)
 	{
@@ -68,12 +93,17 @@ void CGoombaFly::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<CGoomba*>(e->obj)) return;
 	if (e->ny != 0)
 	{
-		vy = 0;
+		if (e->ny == -1 && hasWing) {
+			vy = -GOOMBA_SMALL_JUMP_SPEED;
+			ay = GOOMBA_JUMP_GRAVITY;
+		}
+		else vy = 0;
 	}
 	else if (e->nx != 0)
 	{
 		vx = -vx;
 	}
+
 }
 
 CGoombaFly::CGoombaFly(float x, float y) : CCharacter(x, y)
@@ -83,6 +113,7 @@ CGoombaFly::CGoombaFly(float x, float y) : CCharacter(x, y)
 	tailhit = false;
 	die_start = -1;
 	hasWing = true;
+	vx = -GOOMBA_WALKING_SPEED;
 	SetState(GOOMBAFLY_STATE_WALKING);
 }
 
@@ -101,7 +132,15 @@ void CGoombaFly::SetState(int state)
 		ay = 0;
 		break;
 	case GOOMBAFLY_STATE_WALKING:
-		vx = -GOOMBA_WALKING_SPEED;
+		ay = GOOMBA_GRAVITY;
+		walking_start = GetTickCount64();
+		break;
+	case GOOMBAFLY_STATE_SMALL_JUMP:
+		small_jump_start = GetTickCount64();
+		break;
+	case GOOMBAFLY_STATE_BIG_JUMP:
+		big_jump_start = GetTickCount64();
+		vy = -GOOMBA_FLYING_SPEED;
 		break;
 	case GOOMBAFLY_STATE_DIE_UP:
 		die_start = GetTickCount64();
