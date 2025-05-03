@@ -68,7 +68,7 @@ public:
 	virtual void SetState(int state);
 	virtual void Stomped();
 	virtual void ShellHit(int shellX);
-	virtual void TailHit() {};
+	virtual void TailHit();
 	virtual void BlockHit() {};
 };
 

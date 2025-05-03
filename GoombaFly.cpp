@@ -2,7 +2,7 @@
 #include "Goomba.h"
 void CGoombaFly::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == GOOMBA_STATE_DIE || state == GOOMBA_STATE_DIE_UP)
+	if (state == GOOMBA_STATE_DIE || state == GOOMBAFLY_STATE_DIE_UP)
 	{
 		left = top = right = bottom = 0;
 	}
@@ -74,11 +74,11 @@ void CGoombaFly::Render()
 	}
 	if (state == GOOMBAFLY_STATE_DIE_UP && dir > 0)
 	{
-		aniId = ID_ANI_GOOMBAFLY_DIE + 1;
+		aniId = ID_ANI_GOOMBAFLY_DIE_UP_LEFT;
 	}
 	if (state == GOOMBAFLY_STATE_DIE_UP && dir < 0)
 	{
-		aniId = ID_ANI_GOOMBAFLY_DIE + 2;
+		aniId = ID_ANI_GOOMBAFLY_DIE_UP_RIGHT;
 	}
 	if(!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
@@ -155,8 +155,8 @@ void CGoombaFly::SetState(int state)
 		break;
 	case GOOMBAFLY_STATE_DIE_UP:
 		die_start = GetTickCount64();
-		/*if (tailhit) vy = -GOOMBAFLY_TAILHIT_SPEED_Y;
-		else vy = -GOOMBAFLY_FLYING_SPEED;*/
+		if (tailhit) vy = -GOOMBA_TAILHIT_SPEED_Y;
+		else vy = -GOOMBA_FLYING_SPEED;
 		break;
 	}
 	CGameObject::SetState(state);
@@ -170,4 +170,36 @@ void CGoombaFly::Stomped()
 
 void CGoombaFly::ShellHit(int shellX)
 {
+	if (shellX == -1)
+	{
+		vx = GOOMBA_FLYING_SPEED_X;
+		dir = -1;
+	}
+	else if (shellX == 1)
+	{
+		dir = 1;
+		vx = -GOOMBA_FLYING_SPEED_X;
+	}
+	else if (shellX < x)
+	{
+		dir = -1;
+		vx = GOOMBA_FLYING_SPEED_X;
+	}
+	else if (shellX > x)
+	{
+		dir = 1;
+		vx = -GOOMBA_FLYING_SPEED_X;
+	}
+	else
+	{
+		dir = 0;
+		vx = 0;
+	}
+	SetState(GOOMBAFLY_STATE_DIE_UP);
+}
+
+void CGoombaFly::TailHit()
+{
+	tailhit = true;
+	SetState(GOOMBAFLY_STATE_DIE_UP);
 }
