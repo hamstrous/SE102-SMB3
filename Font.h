@@ -1,16 +1,19 @@
 #pragma once
-#include "GameObject.h"
-#include "Sprite.h"
 #include <string>
-
+#include <unordered_map>
 using namespace std;
 
-class CFont : public CGameObject
+#define FONT_SIZE 8
+
+class CFont
 {
-	static const unordered_map<char, int> spriteIdMap;
+	static CFont* __instance;
+	static const unordered_map<char, int> charSpriteIdMap;
+	static const unordered_map<int, int> intSpriteIdMap;
 public:
-	CFont();
-	void FontToSprite(string str);
-	void FontToSprite(int number);
+	CFont() {};
+	void FontToSprite(int x, int y, string str);
+	void FontToSprite(int x, int y, int number);
+	static CFont* GetInstance();
 };
 

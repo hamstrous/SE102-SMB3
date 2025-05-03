@@ -1,7 +1,11 @@
 #include "Font.h"
+#include "Sprite.h"
+#include "Sprites.h"
+#include "debug.h"
+#include "Utils.h"
 #include <unordered_map>
 
-const std::unordered_map<char, int> CFont::spriteIdMap = {
+const std::unordered_map<char, int> CFont::charSpriteIdMap = {
     {'0', 8000},
     {'1', 8001},
     {'2', 8002},
@@ -40,10 +44,54 @@ const std::unordered_map<char, int> CFont::spriteIdMap = {
     {'Z', 8035}
 };
 
-void CFont::FontToSprite(string str)
+const std::unordered_map<int, int> CFont::intSpriteIdMap = {
+    {0, 8000},
+    {1, 8001},
+    {2, 8002},
+    {3, 8003},
+    {4, 8004},
+    {5, 8005},
+    {6, 8006},
+    {7, 8007},
+    {8, 8008},
+    {9, 8009}
+};
+
+void CFont::FontToSprite(int x, int y, string str)
 {
+    ToUpperCase(str);
+
+    int strLength = str.size();
+    for (int i = 0; i < strLength; i++)
+    {
+        char c = str[i];
+        auto it = charSpriteIdMap.find(c);
+        if (it != charSpriteIdMap.end())
+        {
+            int spriteId = it->second;
+            // Adjust the x position for right anchor: start from the rightmost edge
+            int posX = x - (strLength - i - 1) * FONT_SIZE;
+            CSprites::GetInstance()->Get(spriteId)->Draw(posX, y);
+        }
+        else
+        {
+            // Handle unknown character
+            DebugOutTitle(L"[ERROR] CFont::FontToSprite: Unknown character %c\n", c);
+        }
+    }
 }
 
-void CFont::FontToSprite(int number)
+
+void CFont::FontToSprite(int x, int y, int number)
 {
+    std::string str = std::to_string(number);
+    FontToSprite(x, y, str);
 }
+
+CFont* CFont::GetInstance()
+{
+    if (__instance == NULL) __instance = new CFont();
+    return __instance;
+}
+
+CFont* CFont::__instance = NULL;

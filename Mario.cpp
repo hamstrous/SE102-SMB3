@@ -14,6 +14,7 @@
 #include "QuestionBlock.h"
 #include "Mushroom.h"
 #include "Leaf.h"
+#include "Font.h"
 
 
 unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animationMap = {
@@ -415,6 +416,8 @@ void CMario::GetAniId()
 		currentAnimation = animationMap[level][MarioAnimationType::IDLE_RIGHT];
 	}
 }
+
+float num = 0;
 
 void CMario::Render()
 {

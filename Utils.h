@@ -19,3 +19,5 @@ wstring ToWSTR(string st);
 LPCWSTR ToLPCWSTR(string st);
 
 void Clamp(float& x, float min, float max);
+
+void ToUpperCase(std::string& str);

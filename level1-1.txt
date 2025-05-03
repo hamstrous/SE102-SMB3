@@ -11,6 +11,7 @@ koopa.txt
 koopa-red.txt
 koopa-green.txt
 cloud.txt
+font.txt
 
 #0 : mario
 #1 : brick
