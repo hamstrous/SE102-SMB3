@@ -42,6 +42,10 @@ std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> anim
 			{MarioAnimationType::HOLD_FRONT, 1020},
 			{MarioAnimationType::JUMP_HOLD_RIGHT, 1021},
 			{MarioAnimationType::JUMP_HOLD_LEFT, 1022},
+			{MarioAnimationType::GROW_RIGHT, 1023},
+			{MarioAnimationType::GROW_LEFT, 1024},
+			{MarioAnimationType::SHRINK_RIGHT, 1025},
+			{MarioAnimationType::SHRINK_LEFT, 1026},
 			{MarioAnimationType::DIE, 999}
 		}
 	},
@@ -104,8 +108,8 @@ std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> anim
 			{MarioAnimationType::HOLD_FRONT, 2654},
 			{MarioAnimationType::JUMP_HOLD_RIGHT, 2655},
 			{MarioAnimationType::JUMP_HOLD_LEFT, 2656},
-			{MarioAnimationType::GROW_RIGHT, 2657},
-			{MarioAnimationType::GROW_LEFT, 2658},
+			{MarioAnimationType::SHRINK_RIGHT, 1023},
+			{MarioAnimationType::SHRINK_LEFT, 1024},
 			{MarioAnimationType::DIE, 999}
 		}
 	}
@@ -424,7 +428,11 @@ void CMario::Render()
 
 	if(untouchable)
 	{
-		animations->Get(currentAnimation)->SetType(2);
+		// if stopping animation then flicker and stopping 
+		if(animations->Get(currentAnimation)->GetType() == 3) 
+			animations->Get(currentAnimation)->SetType(4);
+		else 
+			animations->Get(currentAnimation)->SetType(2);
 	}
 	else {
 		animations->Get(currentAnimation)->ResetType();
@@ -597,9 +605,12 @@ void CMario::SetLevel(MarioLevel l)
 	{
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 	}
-	if(level == MarioLevel::SMALL && l == MarioLevel::BIG)
+	if((int)l - (int)level == 1)
 	{
 		AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::GROW_RIGHT : MarioAnimationType::GROW_LEFT);
+	}else if((int)l - (int)level == -1)
+	{
+		AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::SHRINK_RIGHT : MarioAnimationType::SHRINK_LEFT);
 	}
 	level = l;
 }

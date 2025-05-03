@@ -32,6 +32,8 @@ void CAnimation::Render(float x, float y, int mode)
 		FlickeringRender(x, y);
 	else if (type == 3)
 		StoppingRender(x, y);
+	else if (type == 4)
+		StoppingFlickeringRender(x, y);
 	else
 		NormalRender(x, y);
 }
@@ -89,6 +91,39 @@ void CAnimation::FlickeringRender(float x, float y)
 	ULONGLONG now = GetTickCount64();
 	if (currentFrame == -1)
 	{
+		currentFrame = 0;
+		lastFrameTime = now;
+	}
+	else
+	{
+		DWORD t = frames[currentFrame]->GetTime();
+		if (now - lastFrameTime > t)
+		{
+			if (flickering) {
+				flickering = false;
+				currentFrame++;
+				lastFrameTime = now;
+				if (currentFrame == frames.size()) {
+					done = 1;
+					currentFrame = 0;
+				}
+			}
+			else {
+				flickering = true;
+			}
+
+		}
+
+	}
+	if (!flickering) frames[currentFrame]->GetSprite()->Draw(x, y);
+}
+
+void CAnimation::StoppingFlickeringRender(float x, float y)
+{
+	ULONGLONG now = GetTickCount64();
+	if (currentFrame == -1)
+	{
+		dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->SetIsStop(FullTime());
 		currentFrame = 0;
 		lastFrameTime = now;
 	}
