@@ -2,7 +2,7 @@
 
 #include "Game.h"
 
-CSprite::CSprite(int id, int left, int top, int right, int bottom, LPTEXTURE tex)
+CSprite::CSprite(int id, int left, int top, int right, int bottom, LPTEXTURE tex, bool onScreen)
 {
 	this->id = id;
 	this->left = left;
@@ -10,6 +10,7 @@ CSprite::CSprite(int id, int left, int top, int right, int bottom, LPTEXTURE tex
 	this->right = right;
 	this->bottom = bottom;
 	this->texture = tex;
+	this->onScreen = onScreen;
 
 	float texWidth = (float)tex->getWidth();
 	float texHeight = (float)tex->getHeight();
@@ -34,6 +35,14 @@ CSprite::CSprite(int id, int left, int top, int right, int bottom, LPTEXTURE tex
 
 void CSprite::Draw(float x, float y)
 {
+	if(onScreen)
+		DrawOnScreen(x, y);
+	else
+		DrawOnCamera(x, y);
+}
+
+void CSprite::DrawOnCamera(float x, float y)
+{
 	CGame* g = CGame::GetInstance();
 	float cx, cy;
 	g->GetCurrentScene()->GetCamera()->GetPosition(cx, cy);
@@ -42,11 +51,26 @@ void CSprite::Draw(float x, float y)
 	cy = (FLOAT)floor(cy);
 
 	D3DXMATRIX matTranslation;
-	
+
 	x = (FLOAT)floor(x);
 	y = (FLOAT)floor(y);
 
 	D3DXMatrixTranslation(&matTranslation, x - cx, g->GetBackBufferHeight() - y + cy, 0.1f);
+
+	this->sprite.matWorld = (this->matScaling * matTranslation);
+
+	g->GetSpriteHandler()->DrawSpritesImmediate(&sprite, 1, 0, 0);
+}
+
+void CSprite::DrawOnScreen(float x, float y)
+{
+	CGame* g = CGame::GetInstance();
+	D3DXMATRIX matTranslation;
+
+	x = (FLOAT)floor(x);
+	y = (FLOAT)floor(y);
+
+	D3DXMatrixTranslation(&matTranslation, x, g->GetBackBufferHeight() - y, 0.1f);
 
 	this->sprite.matWorld = (this->matScaling * matTranslation);
 

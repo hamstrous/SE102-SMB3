@@ -20,6 +20,7 @@ class CSprites
 
 public:
 	void Add(int id, int left, int top, int right, int bottom, LPTEXTURE tex);
+	void AddScreen(int id, int left, int top, int right, int bottom, LPTEXTURE tex);
 	LPSPRITE Get(int id);
 	void Clear();
 

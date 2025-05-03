@@ -16,6 +16,12 @@ void CSprites::Add(int id, int left, int top, int right, int bottom, LPTEXTURE t
 	sprites[id] = s;
 }
 
+void CSprites::AddScreen(int id, int left, int top, int right, int bottom, LPTEXTURE tex)
+{
+	LPSPRITE s = new CSprite(id, left, top, right, bottom, tex, true);
+	sprites[id] = s;
+}
+
 LPSPRITE CSprites::Get(int id)
 {
 	return sprites[id];
