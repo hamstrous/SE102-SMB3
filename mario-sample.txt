@@ -25,6 +25,7 @@ height	820
 50	textures\background.png
 60	textures\mario5.png
 70	textures\enemies3.png
+80	textures\hud2.png
 25	textures\misc2.png
 
 

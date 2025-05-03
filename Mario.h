@@ -73,7 +73,6 @@ namespace std {
 	};
 }
 
-extern std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
@@ -128,6 +127,7 @@ extern std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int
 class CMario : public CCharacter
 {
 protected:
+	static unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;
 	BOOLEAN isSitting;
 	MarioLevel level;
 	int untouchable;

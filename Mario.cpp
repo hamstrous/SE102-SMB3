@@ -16,7 +16,7 @@
 #include "Leaf.h"
 
 
-std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap = {
+unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animationMap = {
 	{
 		MarioLevel::BIG, {
 			{MarioAnimationType::IDLE_RIGHT, 400},
