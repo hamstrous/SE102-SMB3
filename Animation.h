@@ -39,10 +39,12 @@ public:
 	virtual void NormalRender(float x, float y);
 	virtual void VibratingRender(float x, float y);
 	virtual void FlickeringRender(float x, float y);
+	virtual void StoppingFlickeringRender(float x, float y);
 	virtual void StoppingRender(float x, float y);
 	virtual void StillRender(float x, float y);
 	virtual void NoRender(float x, float y) {};
 	void SetType(int type) { this->type = type; }
+	int GetType() { return type; }
 	void ResetType() { type = initType; }
 	bool IsDone() { return done; }
 	void Reset() { currentFrame = -1; done = false; }

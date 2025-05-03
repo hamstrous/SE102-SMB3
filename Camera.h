@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-#define CAMERA_SPEED 0.5f
+#define CAMERA_SPEED 2.0f
 #define FIXED_BOX_SIZE 20.0f
 class CMario;
 
