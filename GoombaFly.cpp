@@ -30,6 +30,11 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(GOOMBAFLY_STATE_SMALL_JUMP);
 		walking_start = -1;
 	}
+	if (state == GOOMBAFLY_STATE_SMALL_JUMP && (GetTickCount64() - small_jump_start >= SMALL_JUMP_TIME) && !hasWing)
+	{
+		SetState(GOOMBAFLY_STATE_WALKING);
+		walking_start = -1;
+	}
 	if (state == GOOMBAFLY_STATE_SMALL_JUMP && (GetTickCount64() - small_jump_start >= SMALL_JUMP_TIME) && hasWing)
 	{	
 		SetState(GOOMBAFLY_STATE_BIG_JUMP);
@@ -97,13 +102,14 @@ void CGoombaFly::OnCollisionWith(LPCOLLISIONEVENT e)
 		{
 			if (e->ny == -1 && hasWing) {
 				vy = -GOOMBA_SMALL_JUMP_SPEED;
-				ay = GOOMBA_JUMP_GRAVITY;
+				
 			}
 		}
 		else vy = 0;
 	}
 	else if (e->nx != 0)
-	{
+	{	
+		DebugOut(L"[INFO] GOOMBAFLY REFLECT VX\n");
 		vx = -vx;
 	}
 
@@ -136,9 +142,11 @@ void CGoombaFly::SetState(int state)
 		break;
 	case GOOMBAFLY_STATE_WALKING:
 		ay = GOOMBA_GRAVITY;
+		vy = 0;
 		walking_start = GetTickCount64();
 		break;
 	case GOOMBAFLY_STATE_SMALL_JUMP:
+		ay = GOOMBA_JUMP_GRAVITY;
 		small_jump_start = GetTickCount64();
 		break;
 	case GOOMBAFLY_STATE_BIG_JUMP:
