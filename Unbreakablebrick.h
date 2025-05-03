@@ -1,8 +1,9 @@
 #pragma once
 #include "GameObject.h"
+#include "BaseBrick.h"
 #define BRICK_BBOX_HEIGHT 16
 #define BRICK_BBOX_WIDTH 10
-class CUnbreakableBrick : public CGameObject
+class CUnbreakableBrick : public CBaseBrick
 {
 	int width;				// Unit: cell 
 	int height;				// Unit: cell 
@@ -11,7 +12,7 @@ class CUnbreakableBrick : public CGameObject
 public:
 	int IsCollidable() { return 1; }
 
-	CUnbreakableBrick(float x, float y, int type) : CGameObject(x, y) {
+	CUnbreakableBrick(float x, float y, int type) : CBaseBrick(x, y) {
 		this->type = type;
 	}
 	void GetBoundingBox(float& l, float& t, float& r, float& b) {
