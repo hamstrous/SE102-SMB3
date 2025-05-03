@@ -1,5 +1,7 @@
 #include "GoombaFly.h"
 #include "Goomba.h"
+#include "PlayScene.h"
+#include "Mario.h"
 void CGoombaFly::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (state == GOOMBA_STATE_DIE || state == GOOMBAFLY_STATE_DIE_UP)
@@ -26,8 +28,14 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	}
 	if (state == GOOMBAFLY_STATE_WALKING && (GetTickCount64() - walking_start >= WALKING_TIME) && hasWing)
-	{
-		SetState(GOOMBAFLY_STATE_SMALL_JUMP);
+	{	
+		if (GetTickCount64() - toward_mario_start >= TOWARD_MARIO_TIME)
+		{
+			toward_mario_start = -1;
+			TowardMario(GOOMBA_WALKING_SPEED);
+			SetState(GOOMBAFLY_STATE_SMALL_JUMP);
+			start_small_jump = GetTickCount64();
+		}
 		walking_start = -1;
 	}
 	if (state == GOOMBAFLY_STATE_SMALL_JUMP && (GetTickCount64() - small_jump_start >= SMALL_JUMP_TIME) && !hasWing)
@@ -38,6 +46,7 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == GOOMBAFLY_STATE_SMALL_JUMP && (GetTickCount64() - small_jump_start >= SMALL_JUMP_TIME) && hasWing)
 	{	
 		SetState(GOOMBAFLY_STATE_BIG_JUMP);
+		toward_mario_start = GetTickCount64();
 		small_jump_start = -1;
 	}
 	if (state == GOOMBAFLY_STATE_BIG_JUMP && (GetTickCount64() - big_jump_start >= BIG_JUMP_TIME) && hasWing)
@@ -54,7 +63,7 @@ void CGoombaFly::Render()
 	if (GetIsPause()) return;
 	int aniId = ID_ANI_GOOMBAFLY_WALKING;
 	if (hasWing && state == GOOMBAFLY_STATE_WALKING) 
-	{
+	{	
 		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_WALKING)->Render(x - 6, y - 6);
 		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_WALKING)->Render(x + 6, y - 6);
 	}
@@ -67,6 +76,7 @@ void CGoombaFly::Render()
 	{
 		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_BIG_JUMP)->Render(x - 6, y - 8);
 		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_BIG_JUMP)->Render(x + 6, y - 8);
+		
 	}
 	if (state == GOOMBAFLY_STATE_DIE)
 	{
@@ -98,11 +108,11 @@ void CGoombaFly::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<CGoomba*>(e->obj)) return;
 	if (e->ny != 0)
 	{
-		if (state == GOOMBAFLY_STATE_SMALL_JUMP) 
-		{
+		if (state == GOOMBAFLY_STATE_SMALL_JUMP && GetTickCount64() - start_small_jump >= 200 ) 
+		{	
+			start_small_jump = -1;
 			if (e->ny == -1 && hasWing) {
 				vy = -GOOMBA_SMALL_JUMP_SPEED;
-				
 			}
 		}
 		else vy = 0;
@@ -122,7 +132,8 @@ CGoombaFly::CGoombaFly(float x, float y) : CCharacter(x, y)
 	tailhit = false;
 	die_start = -1;
 	hasWing = true;
-	vx = -GOOMBA_WALKING_SPEED;
+	//vx = -GOOMBA_WALKING_SPEED;
+	TowardMario(GOOMBA_WALKING_SPEED);
 	SetState(GOOMBAFLY_STATE_WALKING);
 }
 
@@ -144,6 +155,8 @@ void CGoombaFly::SetState(int state)
 		ay = GOOMBA_GRAVITY;
 		vy = 0;
 		walking_start = GetTickCount64();
+		
+		//TowardMario();
 		break;
 	case GOOMBAFLY_STATE_SMALL_JUMP:
 		ay = GOOMBA_JUMP_GRAVITY;
@@ -202,4 +215,18 @@ void CGoombaFly::TailHit()
 {
 	tailhit = true;
 	SetState(GOOMBAFLY_STATE_DIE_UP);
+}
+
+void CGoombaFly::TowardMario(float speed, float awaymario)
+{
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	float mario_x = 0, mario_y = 0;
+	CMario* mario = (CMario*)scene->GetPlayer();
+	if (mario != NULL) mario->GetPosition(mario_x, mario_y);
+	if (mario_x <= x) {
+		vx = -speed * awaymario;
+	}
+	else {
+		vx = speed * awaymario;
+	}
 }

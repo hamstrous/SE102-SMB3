@@ -35,10 +35,10 @@
 #define ID_ANI_RIGHT_WING_BIG_JUMP 5205
 #define ID_ANI_LEFT_WING_BIG_JUMP 5204
 
-#define WALKING_TIME 800
+#define WALKING_TIME 600
 #define SMALL_JUMP_TIME 800
 #define BIG_JUMP_TIME 500
-
+#define TOWARD_MARIO_TIME 300
 class CGoombaFly : public CCharacter
 {
 protected:
@@ -52,6 +52,8 @@ protected:
 	ULONGLONG walking_start;
 	ULONGLONG small_jump_start;
 	ULONGLONG big_jump_start;
+	ULONGLONG toward_mario_start;
+	ULONGLONG start_small_jump;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
@@ -70,5 +72,6 @@ public:
 	virtual void ShellHit(int shellX);
 	virtual void TailHit();
 	virtual void BlockHit() {};
+	void TowardMario(float speed, float awayMario = 1);
 };
 

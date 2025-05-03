@@ -208,6 +208,10 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		character->Stomped();
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
 	}
+	else if (e->ny > 0)
+	{
+		character->Touched();
+	}
 	else
 	{
 		if (character->CanHold() && canHold)
