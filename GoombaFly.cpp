@@ -93,9 +93,12 @@ void CGoombaFly::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<CGoomba*>(e->obj)) return;
 	if (e->ny != 0)
 	{
-		if (e->ny == -1 && hasWing) {
-			vy = -GOOMBA_SMALL_JUMP_SPEED;
-			ay = GOOMBA_JUMP_GRAVITY;
+		if (state == GOOMBAFLY_STATE_SMALL_JUMP) 
+		{
+			if (e->ny == -1 && hasWing) {
+				vy = -GOOMBA_SMALL_JUMP_SPEED;
+				ay = GOOMBA_JUMP_GRAVITY;
+			}
 		}
 		else vy = 0;
 	}
