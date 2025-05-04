@@ -45,7 +45,7 @@ void CHUD::Render()
 	int pmeter = gameData->pmeter;
 
 	int score = gameData->score;
-	font->FontToSprite(hx + SCORE_X_OFFSET, hy + SCORE_Y_OFFSET, score);
+	font->FontToSprite(hx + SCORE_X_OFFSET, hy + SCORE_Y_OFFSET, score, 7);
 
 	int worldName = gameData->worldName;
 

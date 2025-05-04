@@ -14,6 +14,7 @@ public:
 	CFont() {};
 	void FontToSprite(int x, int y, string str);
 	void FontToSprite(int x, int y, int number);
+	void FontToSprite(int x, int y, int number, int length);
 	static CFont* GetInstance();
 };
 

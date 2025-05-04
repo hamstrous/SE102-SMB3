@@ -89,6 +89,16 @@ void CFont::FontToSprite(int x, int y, int number)
     FontToSprite(x, y, str);
 }
 
+void CFont::FontToSprite(int x, int y, int number, int length)
+{
+    if (number < 0) number = 0;
+	std::string str = std::to_string(number);
+	int strLength = length - str.size();
+    if(strLength < 0) strLength = 0; // Prevent negative length
+	while(strLength--) str = '0' + str;
+	FontToSprite(x, y, str);
+}
+
 CFont* CFont::GetInstance()
 {
     if (__instance == NULL) __instance = new CFont();
