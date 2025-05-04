@@ -137,7 +137,8 @@ namespace std {
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 
-const int MARIO_JUMP_SPEED[4] = { 0.21, 0.2175, 0.225, 024 };
+const float MARIO_JUMP_SPEED[4] = { 0.21f, 0.2175f, 0.225f, 0.24f };
+const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
 
 class CMario : public CCharacter
 {

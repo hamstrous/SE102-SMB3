@@ -490,10 +490,14 @@ void CMario::SetState(int state)
 		if (isSitting) break;
 		if (isOnPlatform)
 		{
-			if (abs(this->vx) == MARIO_RUNNING_SPEED)
-				vy = -MARIO_JUMP_RUN_SPEED_Y;
-			else
-				vy = -MARIO_JUMP_SPEED_Y;
+			vy = 0;
+			for (int i = 0; i < 3; i++) {
+				if (vx < MARIO_JUMP_SPEED_CHECK_X[i]) {
+					vy = -MARIO_JUMP_SPEED[i];
+					break;
+				}
+			}
+			if (vy == 0) vy = -MARIO_JUMP_SPEED[3];
 		}
 		break;
 
