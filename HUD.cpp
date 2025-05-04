@@ -33,7 +33,6 @@ void CHUD::Render()
 	CSprites* sprites = CSprites::GetInstance();
 	CGame* game = CGame::GetInstance();
 	CFont* font = CFont::GetInstance();
-	DebugOutTitle(L"HUD Render");
 
 	float hx = game->GetBackBufferWidth() / 2;
 	float hy = game->GetBackBufferHeight() - HUD_SIZE_Y/2;

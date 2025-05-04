@@ -75,16 +75,27 @@ namespace std {
 
 
 #define MARIO_WALKING_SPEED		0.1f
-#define MARIO_RUNNING_SPEED		0.2f
+#define MARIO_RUNNING_SPEED		0.24f
 #define MARIO_SHELL_TURNING_SPEED		0.3f
 
-#define MARIO_ACCEL_WALK_X	0.0005f
+#define MARIO_ACCEL_WALK_X	0.005625f
 #define MARIO_ACCEL_RUN_X	0.0007f
+
+#define MARIO_ACCEL_NORMAL_X	0.000196875f
+#define MARIO_ACCEL_SKID_X	0.00045f
+#define MARIO_SMALL_ACCEL_FRIC_X	0.000140625f
+#define MARIO_BIG_ACCEL_FRIC_X	0.000196875f
+
+#define MARIO_RUN_MAX_SPEED_X	0.15f
+#define MARIO_RUN_P_MAX_SPEED_X	0.21f
+#define MARIO_WALK_TOP_SPEED_X	0.09f
 
 #define MARIO_JUMP_SPEED_Y		0.5f
 #define MARIO_JUMP_RUN_SPEED_Y	0.6f
 
 #define MARIO_GRAVITY			0.002f
+#define MARIO_GRAVITY_SLOW			0.000225f
+#define MARIO_GRAVITY_FAST			0.001125f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
@@ -124,6 +135,8 @@ namespace std {
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 
+const int MARIO_JUMP_SPEED[4] = { 0.21, 0.2175, 0.225, 024 };
+
 class CMario : public CCharacter
 {
 protected:
@@ -135,6 +148,8 @@ protected:
 	BOOLEAN isOnPlatform;
 	int coin;
 	CKoopa* holdingShell;
+	int dirInput = 0; // 1: right, -1: left
+
 
 	// timers for animations
 	int attackTimer = 0; 
@@ -188,6 +203,8 @@ public:
 	void Render();
 	void SetState(int state);
 
+	void Acceleration();
+
 	int IsCollidable()
 	{
 		return (state != MARIO_STATE_DIE);
@@ -229,4 +246,5 @@ public:
 	void JumpPressed();
 
 	MarioLevel GetLevel() { return level; }
+	bool IsBig() { return level >= MarioLevel::BIG; }
 };

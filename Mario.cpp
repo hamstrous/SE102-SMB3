@@ -474,12 +474,14 @@ void CMario::SetState(int state)
 		maxVx = MARIO_WALKING_SPEED;
 		ax = MARIO_ACCEL_WALK_X;
 		nx = 1;
+		dirInput = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
 		if (isSitting) break;
 		maxVx = -MARIO_WALKING_SPEED;
 		ax = -MARIO_ACCEL_WALK_X;
 		nx = -1;
+		dirInput = -1;
 		break;
 	case MARIO_STATE_JUMP:
 		if (isSitting) break;
@@ -518,6 +520,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_IDLE:
 		ax = 0.0f;
 		vx = 0.0f;
+		dirInput = 0;
 		break;
 
 	case MARIO_STATE_DIE:
@@ -528,6 +531,46 @@ void CMario::SetState(int state)
 	}
 
 	CGameObject::SetState(state);
+}
+
+void CMario::Acceleration()
+{
+	if (dirInput == 0) {
+		if (isOnPlatform) {
+			if (vx < 0) {
+				vx += IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X;
+				if (vx > 0) {
+					vx = 0;
+				}
+			}
+			else if (vx > 0) {
+				vx -= IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X;;
+				if (vx < 0) {
+					vx = 0;
+				}
+			}
+		}
+		else {
+			const float absVx = abs(vx);
+			if (
+				(vx > 0 && dirInput < 0) ||
+				(vx < 0 && dirInput > 0)
+				) 
+			{
+				// Skidding (turning around)
+				vx += dirInput * MARIO_ACCEL_SKID_X;
+			}
+			else if (absVx < abs(maxVx)) {
+				// Normal acceleration
+				vx += dirInput * MARIO_ACCEL_WALK_X;
+			}
+			else if (absVx > abs(maxVx)) {
+				if (isOnPlatform) {
+					vx -= dirInput * (IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X);
+				}
+			}
+		}
+	}
 }
 
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
