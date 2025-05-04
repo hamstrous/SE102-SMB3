@@ -12,12 +12,16 @@
 #define ID_ANI_KOOPA_WALKING_RIGHT 20101
 #define ID_ANI_KOOPA_SHELL_IDLE 20102
 #define ID_ANI_KOOPA_SHELL_MOVING 20103
+#define ID_ANI_KOOPA_SHELL_MOVING_TAILHIT	201011
 #define ID_ANI_KOOPA_SHELL_VIBRATING 20104
 #define ID_ANI_KOOPA_SHELL_VIBRATING_LEG 20105
 #define ID_ANI_KOOPA_WING_LEFT 20106
 #define ID_ANI_KOOPA_WING_RIGHT 20107
 
 #define ID_ANI_KOOPA_DIE_UP 20108
+#define ID_ANI_KOOPA_SHELLHIT_VIBRATING	20109
+#define ID_ANI_KOOPA_SHELLHIT_VIBRATING_LEG	201010
+
 class CKoopaGreen : public CKoopa
 {
 protected:
@@ -26,7 +30,7 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	virtual void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
 	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
-
+	
 	virtual void Render();
 
 public:
@@ -49,7 +53,7 @@ public:
 	virtual void TailHit(float x);
 	virtual void BlockHit() {};
 	virtual void Touched();
-	virtual bool CanHold() { return state == KOOPA_STATE_SHELL_IDLE; };
+	virtual bool CanHold() { return state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_TAILHIT; };
 	void HeldDie();
 	void ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
