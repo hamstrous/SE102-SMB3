@@ -73,19 +73,31 @@ namespace std {
 	};
 }
 
-extern std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;
+#define FRAME_RATE (1000/60)
 
 #define MARIO_WALKING_SPEED		0.1f
-#define MARIO_RUNNING_SPEED		0.2f
+#define MARIO_RUNNING_SPEED		0.24f
 #define MARIO_SHELL_TURNING_SPEED		0.3f
 
-#define MARIO_ACCEL_WALK_X	0.0005f
+#define MARIO_ACCEL_WALK_X	0.005625f
 #define MARIO_ACCEL_RUN_X	0.0007f
 
-#define MARIO_JUMP_SPEED_Y		0.5f
-#define MARIO_JUMP_RUN_SPEED_Y	0.6f
+#define MARIO_ACCEL_NORMAL_X	0.000196875f
+#define MARIO_ACCEL_SKID_X	0.00045f
+#define MARIO_SMALL_ACCEL_FRIC_X	0.000140625f
+#define MARIO_BIG_ACCEL_FRIC_X	0.000196875f
+
+#define MARIO_RUN_MAX_SPEED_X	0.15f
+#define MARIO_RUN_P_MAX_SPEED_X	0.21f
+#define MARIO_WALK_MAX_SPEED_X	0.09f
+
+#define MARIO_JUMP_SPEED_Y		0.21f
+#define MARIO_JUMP_RUN_SPEED_Y	0.225f
 
 #define MARIO_GRAVITY			0.002f
+#define MARIO_GRAVITY_SLOW			0.000225f
+#define MARIO_GRAVITY_FAST			0.001125f
+#define MARIO_MAX_FALL_SPEED_Y			0.24f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
@@ -125,9 +137,13 @@ extern std::unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 
+const float MARIO_JUMP_SPEED[4] = { 0.21f, 0.2175f, 0.225f, 0.24f };
+const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
+
 class CMario : public CCharacter
 {
 protected:
+	static unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;
 	BOOLEAN isSitting;
 	MarioLevel level;
 	int untouchable;
@@ -135,6 +151,9 @@ protected:
 	BOOLEAN isOnPlatform;
 	int coin;
 	CKoopa* holdingShell;
+	int dirInput = 0; // 1: right, -1: left
+	int jumpInput = 0; // 1: jump, 0: no jump
+	int runInput = 0; // 1: run, 0: no run
 
 	// timers for animations
 	int attackTimer = 0; 
@@ -188,6 +207,8 @@ public:
 	void Render();
 	void SetState(int state);
 
+	void Acceleration(DWORD dt);
+
 	int IsCollidable()
 	{
 		return (state != MARIO_STATE_DIE);
@@ -229,4 +250,92 @@ public:
 	void JumpPressed();
 
 	MarioLevel GetLevel() { return level; }
+	bool IsBig() { return level >= MarioLevel::BIG; }
+
+	void SetJumpInput(int jump) { this->jumpInput = jump; }
+	void SetRunInput(int run) { this->runInput = run; }
+	void SetDirInput(int dir) { this->dirInput = dir; }
 };
+
+//GROUND PHYSICS
+//
+//Flat Ground Physics
+//
+//px / f
+//Max velocity(walking) - 1.5
+//Max velocity(running) - 2.5
+//Max velocity(sprinting) - 3.5
+//End - of - level walk speed - 1.25
+//Airship cutscene walk speed - 2
+//
+//px / f ^ 2
+//Walk / run / sprint acceleration - 0.0546875
+//Stop Deceleration(normal) - 0.0546875
+//Stop Deceleration(ice) - 0.01171875
+//Skid Deceleration(normal) - 0.125
+//Skid Deceleration(ice) - 0.046875
+//
+//Sloped Ground Physics
+//
+//px / f
+//Uphill maximum walk speed - 0.8125
+//Uphill maximum run speed - 1.375
+//Sliding max speed - 3.9375
+//
+//px / f ^ 2
+//Added downhill speed(26 deg) - 0.125
+//Added downhill speed(45 deg) - 0.1875
+//Sliding accel / decel(26 deg) - 0.0625
+//Sliding accel / decel(45 deg) - 0.125
+//
+//MIDAIR PHYSICS
+//
+//If Small, Big, Fiery or Hammer Mario :
+//-Releasing B and /or Left / Right has no effect on your speed.
+//- Holding the direction of motion accelerates you at a rate of 0.0546875 px / f ^ 2 (up to 1.5, 2.5, or 3.5 px / f)
+//- Holding the direction opposite motion decelerates you at a rate of 0.125 px / f ^ 2
+//
+//If Raccoon or Tanooki Mario and NOT in flight mode,
+//-Releasing Left / Right decelerates you at a rate of about 0.0625 px / f ^ 2 until you reach a speed of 1.4375 px / f
+//- Holding the direction of motion accelerates you at a rate of 0.0546875 px / f ^ 2 (up to 1.5 or 2.5 px / f)
+//- Holding the direction opposite motion decelerates you at a rate of 0.1875 px / f ^ 2
+//
+//If Raccoon or Tanooki Mario and in flight mode,
+//-Even when holding B and the direction of flight, you will decelerate at a rate of 0.015625 px / f ^ 2 until you reach a speed of 1.4375 px / f
+//- Releasing Left / Right decelerates you at a rate of 0.0625 px / f ^ 2 until you reach a speed of 1.4375 px / f
+//- Holding the direction of motion accelerates you at a rate of 0.0546875 px / f ^ 2 (up to 1.4375 px / f)
+//- Holding the direction opposite motion decelerates you at a rate of 0.1875 px / f ^ 2
+//
+//JUMP PHYSICS
+//
+//px / f
+//Jump, X Velocity < 1 px / f(-Y)  3.4375
+//	Jump, X Velocity > 1 px / f(-Y)  3.5625
+//	Jump, X Velocity > 2 px / f(-Y)  3.6875
+//	Jump, X Velocity > 3 px / f(-Y)  3.9375
+//	Enemy Stomp Speed(-Y)          4
+//	Weak Enemy Stomp(-Y)           3
+//	Maximum Downward Speed(+Y)     4.3125
+//	Raccoon Flying(-Y)             1.5
+//	Raccoon Slowed Descent(+Y)     1
+//
+//	px / f ^ 2
+//	Jump Gravity
+//	(A held, Y Vel < -2 px / f)     0.0625
+//	(Y Vel > -2 px / f)             0.3125
+//
+//	SWIMMING PHYSICS
+//
+//	px / f
+//	Underwater max walk speed       1
+//	Maximum underwater Y - speed(+Y) 2
+//	Max swimming speed              3
+//	Jump out of water init vel(-Y) 3.1875
+//
+//	px / f ^ 2
+//	Y Acceleration(moving up)      0.0625
+//	Y Acceleration(moving down)    0.03125
+//	Y Acceleration(at surface, +Y) 0.046875
+//	X Acceleration(get to speed)   0.0234375
+//	X Acceleration(no direction)   0.0078125
+//	X Acceleration(turning around) 0.03125

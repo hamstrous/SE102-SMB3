@@ -25,8 +25,8 @@ void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	float mvx, mvy;
 	GetMario()->GetSpeed(mvx, mvy);
-	x += moveX * CAMERA_SPEED;
-	y += moveY * CAMERA_SPEED;
+	x += moveX * CAMERA_SPEED * dt;
+	y += moveY * CAMERA_SPEED * dt;
 	Clamp(x, 0, levelWidth - screenWidth);
 	Clamp(y, 0, levelHeight - screenHeight);
 }

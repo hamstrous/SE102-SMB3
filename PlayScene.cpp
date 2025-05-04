@@ -30,6 +30,7 @@
 #include "GenericPlatform.h"
 #include "PowerUp.h"
 #include "Score.h"
+#include "Font.h"
 
 using namespace std;
 
@@ -38,6 +39,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 {
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
+	hud = new CHUD();
 }
 
 
@@ -47,6 +49,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 
 #define ASSETS_SECTION_UNKNOWN -1
 #define ASSETS_SECTION_SPRITES 1
+#define ASSETS_SECTION_SPRITES_SCREEN 7
 #define ASSETS_SECTION_ANIMATIONS 2
 #define ASSETS_SECTION_ANIMATIONS_VIBRATING 3
 #define ASSETS_SECTION_ANIMATIONS_FLICKERING 4
@@ -75,6 +78,29 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	}
 
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
+}
+
+void CPlayScene::_ParseSection_SPRITES_SCREEN(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 6) return; // skip invalid lines
+
+	int ID = atoi(tokens[0].c_str());
+	int l = atoi(tokens[1].c_str());
+	int t = atoi(tokens[2].c_str());
+	int r = atoi(tokens[3].c_str());
+	int b = atoi(tokens[4].c_str());
+	int texID = atoi(tokens[5].c_str());
+
+	LPTEXTURE tex = CTextures::GetInstance()->Get(texID);
+	if (tex == NULL)
+	{
+		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
+		return;
+	}
+
+	CSprites::GetInstance()->AddScreen(ID, l, t, r, b, tex);
 }
 
 void CPlayScene::_ParseSection_ASSETS(string line)
@@ -327,6 +353,7 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		if (line[0] == '#') continue;	// skip comment lines	
 
 		if (line == "[SPRITES]") { section = ASSETS_SECTION_SPRITES; continue; };
+		if (line == "[SPRITES_SCREEN]") { section = ASSETS_SECTION_SPRITES_SCREEN; continue; };
 		if (line == "[ANIMATIONS]") { section = ASSETS_SECTION_ANIMATIONS; continue; };
 		// many types of animation
 		if (line == "[ANIMATIONS_VIBRATION]") { section = ASSETS_SECTION_ANIMATIONS_VIBRATING; continue; };
@@ -340,6 +367,7 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		switch (section)
 		{
 		case ASSETS_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case ASSETS_SECTION_SPRITES_SCREEN: _ParseSection_SPRITES_SCREEN(line); break;
 		case ASSETS_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case ASSETS_SECTION_ANIMATIONS_VIBRATING: _ParseSection_ANIMATIONS_VIBRATING(line); break;
 		case ASSETS_SECTION_ANIMATIONS_FLICKERING: _ParseSection_ANIMATIONS_STOPPING(line); break;
@@ -455,11 +483,13 @@ void CPlayScene::Render()
 		i->Render();
 	for (auto i : projectileRenderObjects)
 		i->Render();
+
 	backgroundRenderObjects.clear();
 	firstRenderObjects.clear();
 	secondRenderObjects.clear();
 	thirdRenderObjects.clear();
 	projectileRenderObjects.clear();
+	hud->Render();
 }
 
 /*

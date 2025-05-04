@@ -29,6 +29,7 @@ protected:
 
 	vector<pair<CGameObject*, int>> addobj;
 	void _ParseSection_SPRITES(string line);
+	void _ParseSection_SPRITES_SCREEN(string line);
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATIONS_VIBRATING(string line);
 	void _ParseSection_ANIMATIONS_FLICKERING(string line);

@@ -1,4 +1,6 @@
 #include <Windows.h>
+#include <algorithm>
+#include <cctype>
 
 #include "Utils.h"
 
@@ -58,4 +60,9 @@ void Clamp(float& x, float min, float max)
 		x = min;
 	if (x > max)
 		x = max;
+}
+
+void ToUpperCase(std::string& str)
+{
+	std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) { return std::toupper(c); });
 }
