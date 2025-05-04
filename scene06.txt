@@ -12,6 +12,8 @@ number.txt
 background.txt
 koopa-green.txt
 koopa-red.txt
+font.txt
+hud.txt
 #
 
 [OBJECTS]

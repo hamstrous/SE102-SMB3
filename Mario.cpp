@@ -545,8 +545,6 @@ void CMario::Acceleration(DWORD dt)
 {
 	const float topSpeed = runInput == 1 ? MARIO_RUN_MAX_SPEED_X : MARIO_WALK_MAX_SPEED_X;
 
-	DebugOutTitle(L"run %d", runInput);
-
 	if (dirInput == 0) {
 		if (isOnPlatform) {
 			if (vx < 0) {
