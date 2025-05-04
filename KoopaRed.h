@@ -52,7 +52,7 @@ public:
 	virtual void Held();
 	virtual void Release(bool dead); //Mario releases the shell
 	virtual void ShellHit(int shellX);
-	virtual void TailHit() {};
+	virtual void TailHit(float x);
 	virtual void BlockHit() {};
 	virtual void Touched();
 	virtual bool CanHold() { return state == KOOPA_STATE_SHELL_IDLE; };

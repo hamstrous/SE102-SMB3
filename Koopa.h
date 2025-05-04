@@ -33,13 +33,18 @@
 #define KOOPA_STATE_SHELL_HELD 500
 #define KOOPA_STATE_FLYING 600
 
+
 //get hit by shell, tail
 #define KOOPA_STATE_SHELL_HIT 700
+#define KOOPA_STATE_TAILHIT 750
 #define KOOPA_STATE_FLYING_UP 0.3f
 
 #define KOOPA_FLYING_SPEED_X 0.1f
+#define KOOPA_FLYING_GRAVITY_Y 0.0001f //for shellheld release in sky
 
 #define KOOPA_BOUNCE_SPEED 0.5f
+
+#define KOOPA_TAILHIT_SPEED_Y 0.5f
 
 #define KOOPA_STATE_DIE_UP_ANI 800
 #define KOOPA_STATE_DIE_UP 900
@@ -90,7 +95,7 @@ public:
 	virtual void Held() = 0;
 	virtual void Release(bool dead) = 0; //Mario releases the shell
 	virtual void ShellHit(int shellX) = 0;
-	virtual void TailHit() = 0;
+	virtual void TailHit(float x) = 0;
 	virtual void BlockHit() = 0;
 	virtual void Touched() = 0;
 	virtual bool CanHold() { return state == KOOPA_STATE_SHELL_IDLE; };

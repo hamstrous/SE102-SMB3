@@ -1,5 +1,6 @@
 #include "Mushroom.h"
 #include "QuestionBlock.h"
+#include "BaseBrick.h"
 void CMushroom::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 		left = x - MUSHROOM_BBOX_WIDTH / 2;
@@ -59,16 +60,19 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0)
 	{
 		if (e->ny < 0) 
-		{
+		{	
+			
 			if (dynamic_cast<CQuestionBlock*>(e->obj))
-			{
+			{	
+				
 				CQuestionBlock* qb = dynamic_cast<CQuestionBlock*>(e->obj);
-				if (qb->GetState() == QUESTION_BLOCK_STATE_MOVEUP && x >= qbX)
-				{
+				if (qb->getUp() && x >= qbX)
+				{	
+					DebugOut(L"[INFO] MUSHROOM REFLECT VY\n");
 					SetState(MUSHROOM_STATE_BOUNCING);
 					return;
 				}
-				else if (qb->GetState() == QUESTION_BLOCK_STATE_MOVEUP && x < qbX)
+				else if (qb->getUp() && x < qbX)
 				{
 					SetState(MUSHROOM_STATE_BOUNCING_REVERSE);
 					return;

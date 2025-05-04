@@ -22,7 +22,7 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 	if (((state == GOOMBAFLY_STATE_DIE) || (state == GOOMBAFLY_STATE_DIE_UP))
-		&& (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
+		&& (GetTickCount64() - die_start > GOOMBAFLY_DIE_TIMEOUT))
 	{
 		isDeleted = true;
 		return;
@@ -167,6 +167,7 @@ void CGoombaFly::SetState(int state)
 		vy = -GOOMBA_FLYING_SPEED;
 		break;
 	case GOOMBAFLY_STATE_DIE_UP:
+		ay = GOOMBA_GRAVITY;
 		die_start = GetTickCount64();
 		if (tailhit) vy = -GOOMBA_TAILHIT_SPEED_Y;
 		else vy = -GOOMBA_FLYING_SPEED;
@@ -182,7 +183,8 @@ void CGoombaFly::Stomped()
 }
 
 void CGoombaFly::ShellHit(int shellX)
-{
+{	
+
 	if (shellX == -1)
 	{
 		vx = GOOMBA_FLYING_SPEED_X;
@@ -211,7 +213,7 @@ void CGoombaFly::ShellHit(int shellX)
 	SetState(GOOMBAFLY_STATE_DIE_UP);
 }
 
-void CGoombaFly::TailHit()
+void CGoombaFly::TailHit(float x)
 {
 	tailhit = true;
 	SetState(GOOMBAFLY_STATE_DIE_UP);

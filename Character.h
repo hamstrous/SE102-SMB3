@@ -27,7 +27,7 @@ public:
 	virtual void ShellHeldHit(int shellX) { //isDeleted = true;
 		ShellHit(shellX);
 	}; //hit while the shell is held
-	virtual void TailHit() = 0;
+	virtual void TailHit(float x) = 0;
 	virtual void BlockHit() = 0;
 	virtual void Touched();
 	virtual bool CanHold() { return false; };

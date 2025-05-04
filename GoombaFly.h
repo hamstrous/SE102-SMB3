@@ -13,7 +13,7 @@
 #define GOOMBA_BBOX_HEIGHT 14
 #define GOOMBA_BBOX_HEIGHT_DIE 7
 
-#define GOOMBA_DIE_TIMEOUT 500
+#define GOOMBAFLY_DIE_TIMEOUT 900
 
 
 #define GOOMBAFLY_STATE_WALKING 100
@@ -70,7 +70,7 @@ public:
 	virtual void SetState(int state);
 	virtual void Stomped();
 	virtual void ShellHit(int shellX);
-	virtual void TailHit();
+	virtual void TailHit(float x);
 	virtual void BlockHit() {};
 	void TowardMario(float speed, float awayMario = 1);
 };

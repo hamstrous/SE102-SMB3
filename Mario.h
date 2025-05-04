@@ -209,7 +209,7 @@ public:
 	void Attacked();
 	virtual void Stomped() {};
 	virtual void ShellHit(int shellX) {};
-	virtual void TailHit() {};
+	virtual void TailHit(float x) {};
 	virtual void BlockHit() {};
 
 	void ResetCurrentAnimation() {

@@ -24,10 +24,13 @@ void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithQuestionBlock(e);
 		return;
 	}
+
 	if (!e->obj->IsBlocking()) return;
 
 	if (e->ny != 0)
-	{
+	{	
+		if (state == KOOPA_STATE_TAILHIT) 
+			vx = 0;
 		if (e->ny == -1 && hasWing) {
 			vy = -KOOPA_FLYING_BOOST;
 		}
@@ -88,9 +91,15 @@ void CKoopaGreen::SetState(int state)
 		isIdle = true;
 		break;
 	case KOOPA_STATE_WALKING:
+		ay = KOOPA_GRAVITY;
 		isIdle = false;
 		Release(false); //call to make sure shell is released (mario not holding)
 		if (this->state == KOOPA_STATE_SHELL_IDLE) {
+			y = (y + KOOPA_BBOX_HEIGHT_SHELL / 2) - KOOPA_BBOX_HEIGHT / 2; // when start walking, move up to normal y so dont drop through floor
+			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
+			break;
+		}
+		if (this->state == KOOPA_STATE_TAILHIT) {
 			y = (y + KOOPA_BBOX_HEIGHT_SHELL / 2) - KOOPA_BBOX_HEIGHT / 2; // when start walking, move up to normal y so dont drop through floor
 			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
 			break;
@@ -99,6 +108,7 @@ void CKoopaGreen::SetState(int state)
 		// when start walking, walk toward mario
 		break;
 	case KOOPA_STATE_SHELL_MOVING:
+		//ay = KOOPA_FLYING_GRAVITY_Y;
 		isIdle = false;
 		InitHorizontalSpeedBasedOnMario(KOOPA_SHELL_SPEED); // when kicked, move away from mario
 		break;
@@ -114,6 +124,11 @@ void CKoopaGreen::SetState(int state)
 		isDeleted = true;
 		Release(true);
 		break;
+	case KOOPA_STATE_TAILHIT:
+		if (this->state == KOOPA_STATE_WALKING) y = (y + KOOPA_BBOX_HEIGHT / 2) - KOOPA_BBOX_HEIGHT_SHELL / 2;
+		shell_start = GetTickCount64();
+		isIdle = true;
+		break;
 	case KOOPA_STATE_DIE_UP:
 		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
@@ -126,6 +141,7 @@ void CKoopaGreen::SetState(int state)
 		hasWing = false;
 		delete_time = GetTickCount64();
 		break;
+	
 	}
 	CGameObject::SetState(state);
 
@@ -185,6 +201,15 @@ void CKoopaGreen::Render()
 		break;
 	case KOOPA_STATE_DIE_UP:
 		aniId = ID_ANI_KOOPA_DIE_UP;
+		break;
+	case KOOPA_STATE_TAILHIT:
+		if (isIdle && shellTime > KOOPA_SHELL_COOLDOWN_VIBRATION && shellTime <= KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+			aniId = ID_ANI_KOOPA_SHELL_VIBRATING;
+		}
+		else if (isIdle && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+			aniId = ID_ANI_KOOPA_SHELL_VIBRATING_LEG;
+		}
+		else aniId = ID_ANI_KOOPA_DIE_UP;
 		break;
 	default:
 		aniId = ID_ANI_KOOPA_WALKING_LEFT;
@@ -328,6 +353,17 @@ void CKoopaGreen::ShellHit(int shellX)
 	hit = true;
 	hasWing = false;
 	delete_time = GetTickCount64();
+}
+
+void CKoopaGreen::TailHit(float x)
+{
+	SetState(KOOPA_STATE_TAILHIT);
+	if (x < this->x) vx = KOOPA_FLYING_SPEED_X;
+	else if (x > this->x) vx = -KOOPA_FLYING_SPEED_X;
+	vy = -KOOPA_TAILHIT_SPEED_Y;
+	hasWing = false;
+	
+	//delete_time = GetTickCount64();
 }
 
 void CKoopaGreen::Touched()
