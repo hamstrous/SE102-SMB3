@@ -483,7 +483,7 @@ bool CCollision::CheckTouchCharacterForShellHeldHit(float ml, float mt, float mr
 	}return isTouching;
 }
 
-bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x)
 {
 	bool isTouching = false;
 	if (coObjects->size() > 0)
@@ -513,7 +513,7 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 					isTouching = true;
 					if (CCharacter* character = dynamic_cast<CCharacter*>(obj))
 					{
-						character->ShellHeldHit((ml + mr) / 2);
+						character->TailHit(x);
 					}
 					else if (CBaseBrick* brick = dynamic_cast<CBaseBrick*>(obj))
 					{

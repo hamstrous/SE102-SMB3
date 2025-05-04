@@ -208,6 +208,10 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		character->Stomped();
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
 	}
+	else if (e->ny > 0)
+	{
+		character->Touched();
+	}
 	else
 	{
 		if (character->CanHold() && canHold)
@@ -309,8 +313,8 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float l1, t1, r1, b1;
 	float l2, t2, r2, b2;
 	GetTailHitBox(l1, t1, r1, b1, l2, t2, r2, b2);
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, vx, vy, dt, coObjects);
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects);
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, vx, vy, dt, coObjects, x);
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects, x);
 }
 
 void CMario::HoldTurn(int dir)

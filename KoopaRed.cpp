@@ -70,12 +70,7 @@ void CKoopaRed::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
 				else {
 					vx = -KOOPA_FLYING_SPEED_X;
 				}
-				//ShellHit(nx);
 				vy = -KOOPA_BOUNCE_SPEED;
-				//DebugOut(L"vy cua hit die vy: %f\n", vy);
-				////hit = true;
-				//hasWing = false;
-				//delete_time = GetTickCount64();
 			}
 		
 	}
@@ -286,7 +281,7 @@ void CKoopaRed::GetBoundingBox(float& left, float& top, float& right, float& bot
 		right = left + KOOPA_BBOX_WIDTH;
 		bottom = top + KOOPA_BBOX_HEIGHT_SHELL;
 	}
-	if (hit)
+	if (state == KOOPA_STATE_DIE)
 		left = top = right = bottom = 0;
 }
 
@@ -404,6 +399,10 @@ void CKoopaRed::ShellHit(int shellX)
 	hit = true;
 	hasWing = false;
 	delete_time = GetTickCount64();
+}
+
+void CKoopaRed::TailHit(float x)
+{
 }
 
 void CKoopaRed::Touched()

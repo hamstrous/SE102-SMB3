@@ -244,7 +244,7 @@ void CPlant::ShellHit(int shellX)
 	SetState(STATE_PRIRANHA_SHELL_HIT);
 }
 
-void CPlant::TailHit()
+void CPlant::TailHit(float x)
 {
 	SetState(STATE_PRIRANHA_SHELL_HIT);
 }
