@@ -26,6 +26,8 @@ enum class MarioAnimationType {
 	WALKING_LEFT,
 	RUNNING_RIGHT,
 	RUNNING_LEFT,
+	SPRINTING_RIGHT,
+	SPRINTING_LEFT,
 	JUMP_WALK_RIGHT,
 	JUMP_WALK_LEFT,
 	JUMP_RUN_RIGHT,
@@ -40,6 +42,10 @@ enum class MarioAnimationType {
 	IDLE_HOLD_LEFT,
 	WALK_HOLD_RIGHT,
 	WALK_HOLD_LEFT,
+	RUN_HOLD_RIGHT,
+	RUN_HOLD_LEFT,
+	SPRINT_HOLD_RIGHT,
+	SPRINT_HOLD_LEFT,
 	HOLD_FRONT,
 	JUMP_HOLD_RIGHT,
 	JUMP_HOLD_LEFT,
@@ -89,7 +95,7 @@ namespace std {
 #define MARIO_BIG_ACCEL_FRIC_X	0.000196875f
 
 #define MARIO_RUN_MAX_SPEED_X	0.15f
-#define MARIO_RUN_P_MAX_SPEED_X	0.21f
+#define MARIO_SPRINT_MAX_SPEED_X	0.21f
 #define MARIO_WALK_MAX_SPEED_X	0.09f
 
 #define MARIO_JUMP_SPEED_Y		0.20625f
@@ -260,10 +266,16 @@ public:
 
 	MarioLevel GetLevel() { return level; }
 	bool IsBig() { return level >= MarioLevel::BIG; }
+	bool IsRaccoon() { return level == MarioLevel::RACCOON; }
+	bool IsOnPlatform() { return isOnPlatform; }
 
 	void SetJumpInput(int jump) { this->jumpInput = jump; }
+
 	void SetRunInput(int run) { this->runInput = run; }
+	int GetRunInput() { return runInput; }
+
 	void SetDirInput(int dir) { this->dirInput = dir; }
+	int GetDirInput() { return dirInput; }
 };
 
 //GROUND PHYSICS

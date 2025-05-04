@@ -1,6 +1,7 @@
 #include "HUD.h"
 #include "Sprites.h"
 #include "Game.h"
+#include "Animations.h"
 #include "debug.h"
 #include "Font.h"
 
@@ -22,6 +23,11 @@
 #define COIN_X_OFFSET		28
 #define COIN_Y_OFFSET		-4
 
+#define PMETER_X_OFFSET		-60
+#define PMETER_Y_OFFSET		-3
+
+
+
 CHUD::CHUD()
 {
 	gameData = CGameData::GetInstance();
@@ -31,6 +37,7 @@ CHUD::CHUD()
 void CHUD::Render()
 {
 	CSprites* sprites = CSprites::GetInstance();
+	CAnimations* animations = CAnimations::GetInstance();
 	CGame* game = CGame::GetInstance();
 	CFont* font = CFont::GetInstance();
 
@@ -43,9 +50,15 @@ void CHUD::Render()
 
 	int pmeter = gameData->pmeter;
 
+	for(int i = 1; i <= pmeter; i++)
+	{
+		if (i < 7) sprites->Get(ID_SPRITE_ARROW_CHARGED)->Draw(hx + PMETER_X_OFFSET + FONT_SIZE * (i - 1), hy + PMETER_Y_OFFSET);
+		else animations->Get(ID_ANIMATION_P_CHARGED)->Render(hx + PMETER_X_OFFSET + FONT_SIZE * (i - 1) + 5, hy + PMETER_Y_OFFSET);
+	}
+
 	int score = gameData->score;
 	font->FontToSprite(hx + SCORE_X_OFFSET, hy + SCORE_Y_OFFSET, score, 7);
-
+	// 71 125 131 128
 	int worldName = gameData->worldName;
 
 	int countDown = gameData->GetRemainingTime();

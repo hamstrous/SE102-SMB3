@@ -75,6 +75,8 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::JUMP_HOLD_LEFT, 1656},
 			{MarioAnimationType::GROW_RIGHT, 1657},
 			{MarioAnimationType::GROW_LEFT, 1658},
+			{MarioAnimationType::RUN_HOLD_RIGHT, 1652},
+			{MarioAnimationType::RUN_HOLD_LEFT, 1653},
 			{MarioAnimationType::DIE, 999}
 		}
 	},
@@ -330,11 +332,11 @@ void CMario::JumpPressed()
 {
 	SetState(MARIO_STATE_JUMP);
 	if (!isOnPlatform && level == MarioLevel::RACCOON) {
-		if (!glideTimer->IsRunning() && abs(ax) != abs(MARIO_ACCEL_RUN_X)) {
+		if (abs(vx) < MARIO_RUN_MAX_SPEED_X) {
 			glideTimer->Start();
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_GLIDE_RIGHT : MarioAnimationType::TAIL_JUMP_GLIDE_LEFT);
 			vy = MARIO_RACCOON_GLIDE_SPEED;
-		}else if (!flyTimer->IsRunning() && abs(ax) == abs(MARIO_ACCEL_RUN_X)) {
+		}else{
 			flyTimer->Start();
 			vy = -MARIO_RACCOON_FLY_SPEED;
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_FLY_RIGHT : MarioAnimationType::TAIL_JUMP_FLY_LEFT);
@@ -492,7 +494,7 @@ void CMario::SetState(int state)
 
 	case MARIO_STATE_RELEASE_JUMP:
 		jumpInput = 0;
-		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
+		//if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
 		break;
 
 	case MARIO_STATE_SIT:
@@ -500,7 +502,7 @@ void CMario::SetState(int state)
 		{
 			state = MARIO_STATE_IDLE;
 			isSitting = true;
-			vx = 0; vy = 0.0f;
+			vy = 0.0f;
 			y +=MARIO_SIT_HEIGHT_ADJUST;
 		}
 		break;
@@ -516,7 +518,6 @@ void CMario::SetState(int state)
 
 	case MARIO_STATE_IDLE:
 		ax = 0.0f;
-		vx = 0.0f;
 		dirInput = 0;
 		break;
 
@@ -530,13 +531,23 @@ void CMario::SetState(int state)
 	CGameObject::SetState(state);
 }
 
+float minY = 1000000;
 void CMario::Acceleration(DWORD dt)
 {
 	const float topSpeed = runInput == 1 ? MARIO_RUN_MAX_SPEED_X : MARIO_WALK_MAX_SPEED_X;
+
+	//if(vy < 0) minY  = min(minY, y);
+	DebugOutTitle(L"vx: %f", vx);
 	if (state == MARIO_STATE_DIE) {
-		vy += MARIO_GRAVITY_SLOW * dt;
+		if (vy < -0.12) {
+			vy += MARIO_GRAVITY_SLOW * dt;
+		}
+		else {
+			vy += MARIO_GRAVITY_FAST * dt;  // Normal gravity
+		}
 		return;
 	}
+
 	if (dirInput == 0) {
 		if (isOnPlatform) {
 			if (vx < 0) {
@@ -568,9 +579,10 @@ void CMario::Acceleration(DWORD dt)
 			vx += dirInput * MARIO_ACCEL_NORMAL_X * dt;
 		}
 		else if (absVx > abs(topSpeed)) {
-			if (isOnPlatform) {
+			vx = topSpeed * dirInput;
+			/*if (isOnPlatform) {
 				vx -= dirInput * (IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X) * dt;
-			}
+			}*/
 		}
 	}
 

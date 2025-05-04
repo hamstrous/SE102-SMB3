@@ -23,6 +23,7 @@
 // Charged Arrow & P
 #define ID_SPRITE_ARROW_CHARGED           8056
 #define ID_SPRITE_P_CHARGED               8057
+#define ID_ANIMATION_P_CHARGED	1111111
 
 // Course Clear
 #define ID_SPRITE_COURSE_CLEAR            8058

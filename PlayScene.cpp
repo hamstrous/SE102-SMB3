@@ -442,6 +442,8 @@ void CPlayScene::Update(DWORD dt)
 		objects.insert(objects.begin() + addobj[i].second, addobj[i].first);
 	}
 
+	CGameData::GetInstance()->Update(dt);
+
 	addobj.clear();
 }
 
