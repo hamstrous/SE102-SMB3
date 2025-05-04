@@ -59,11 +59,13 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	{
 	case DIK_S:
 		mario->SetState(MARIO_STATE_RELEASE_JUMP);
+		mario->SetJumpInput(0);
 		break;
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
 	case DIK_A:
 		mario->SetCanHold(false);
+		mario->SetRunInput(0);
 		break;
 	}
 }
@@ -76,6 +78,7 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	if(mario == NULL) return;
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
+		mario->SetDirInput(1);
 		if (game->IsKeyDown(DIK_A)) {
 			mario->SetState(MARIO_STATE_RUNNING_RIGHT);
 		}
@@ -84,12 +87,15 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	}
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
+		mario->SetDirInput(-1);
 		if (game->IsKeyDown(DIK_A))
 			mario->SetState(MARIO_STATE_RUNNING_LEFT);
 		else
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
 	}
-	else
+	else {
 		mario->SetState(MARIO_STATE_IDLE);
+		mario->SetDirInput(0);
+	}
 	
 }

@@ -120,10 +120,11 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	vy += ay * dt;
+	Acceleration(dt);
+	/*vy += ay * dt;
 	vx += ax * dt;
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
-	if (vy > 0 && abs(vy) > abs(maxVy)) vy = maxVy;
+	if (vy > 0 && abs(vy) > abs(maxVy)) vy = maxVy;*/
 	//DebugOutTitle(L"vx: %f, vy: %f\n", vx, vy);
 
 	// reset untouchable timer if untouchable time has passed
@@ -329,6 +330,7 @@ void CMario::KickedShell()
 
 void CMario::SpecialPressed()
 {
+	SetRunInput(1);
 	if (level == MarioLevel::RACCOON) {
 		if (attackTimer <= 0) TailAttackInit();
 	}
@@ -348,7 +350,8 @@ void CMario::JumpPressed()
 			vy = -MARIO_JUMP_SPEED_Y;
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_FLY_RIGHT : MarioAnimationType::TAIL_JUMP_FLY_LEFT);
 		}
-	}
+	}else(SetJumpInput(1));
+	
 }
 
 void CMario::GetAniId()
@@ -495,6 +498,7 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_RELEASE_JUMP:
+		jumpInput = 0;
 		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
 		break;
 
@@ -533,44 +537,59 @@ void CMario::SetState(int state)
 	CGameObject::SetState(state);
 }
 
-void CMario::Acceleration()
+void CMario::Acceleration(DWORD dt)
 {
+	const float topSpeed = runInput == 1 ? MARIO_RUN_MAX_SPEED_X : MARIO_WALK_MAX_SPEED_X;
+
+	DebugOutTitle(L"run %d", runInput);
+
 	if (dirInput == 0) {
 		if (isOnPlatform) {
 			if (vx < 0) {
-				vx += IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X;
+				vx += (IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X) * dt;
 				if (vx > 0) {
 					vx = 0;
 				}
 			}
 			else if (vx > 0) {
-				vx -= IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X;;
+				vx -= (IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X) * dt;
 				if (vx < 0) {
 					vx = 0;
 				}
 			}
 		}
-		else {
-			const float absVx = abs(vx);
-			if (
-				(vx > 0 && dirInput < 0) ||
-				(vx < 0 && dirInput > 0)
-				) 
-			{
-				// Skidding (turning around)
-				vx += dirInput * MARIO_ACCEL_SKID_X;
-			}
-			else if (absVx < abs(maxVx)) {
-				// Normal acceleration
-				vx += dirInput * MARIO_ACCEL_WALK_X;
-			}
-			else if (absVx > abs(maxVx)) {
-				if (isOnPlatform) {
-					vx -= dirInput * (IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X);
-				}
+	}
+	else {
+		const float absVx = abs(vx);
+		if (
+			(vx > 0 && dirInput < 0) ||
+			(vx < 0 && dirInput > 0)
+			)
+		{
+			// Skidding (turning around)
+			vx += dirInput * MARIO_ACCEL_SKID_X * dt;
+		}
+		else if (absVx < abs(topSpeed)) {
+			// Normal acceleration
+			vx += dirInput * MARIO_ACCEL_NORMAL_X * dt;
+		}
+		else if (absVx > abs(topSpeed)) {
+			if (isOnPlatform) {
+				vx -= dirInput * (IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X) * dt;
 			}
 		}
 	}
+
+	
+	if (vy < -0.12 && jumpInput == 1) {
+		vy += MARIO_GRAVITY_SLOW * dt;
+	}
+	else {
+		vy += MARIO_GRAVITY_FAST * dt;  // Normal gravity
+	}
+
+	vy = min(vy, MARIO_MAX_FALL_SPEED_Y);
+
 }
 
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)

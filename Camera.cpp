@@ -23,8 +23,6 @@ void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	int moveX, moveY;
 	IsMarioOutsideOfCameraFixedBox(moveX, moveY);
 
-	DebugOutTitle(L"DT: %d", dt);
-
 	float mvx, mvy;
 	GetMario()->GetSpeed(mvx, mvy);
 	x += moveX * CAMERA_SPEED * dt;
