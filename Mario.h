@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "BaseBrick.h"
 #include "Character.h"
+#include "Timer.h"
 class CKoopa; // Forward declaration, stop circular dependency if include "Koopa.h"
 
 #include "Animation.h"
@@ -99,7 +100,11 @@ namespace std {
 #define MARIO_GRAVITY_FAST			0.001125f
 #define MARIO_MAX_FALL_SPEED_Y			0.24f
 
-#define MARIO_JUMP_DEFLECT_SPEED  0.4f
+#define MARIO_JUMP_DEFLECT_SPEED  0.24f
+#define MARIO_JUMP_WEAK_DEFLECT_SPEED  0.18f
+
+#define MARIO_RACCOON_FLY_SPEED  0.09f
+#define MARIO_RACCOON_GLIDE_SPEED  0.06f
 
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
@@ -132,12 +137,12 @@ namespace std {
 
 // time = animation time (sum of all frame duration)
 #define ATTACK_TIME	400
-#define GLIDE_TIME	300
-#define FLY_TIME	300
+#define GLIDE_TIME	267
+#define FLY_TIME	267
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 
-const float MARIO_JUMP_SPEED[4] = { 0.21f, 0.2175f, 0.225f, 0.24f };
+const float MARIO_JUMP_SPEED[4] = { 0.20625f, 0.21375f, 0.22125f, 0.23625f };
 const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
 
 class CMario : public CCharacter
@@ -156,9 +161,7 @@ protected:
 	int runInput = 0; // 1: run, 0: no run
 
 	// timers for animations
-	int attackTimer = 0; 
-	int glideTimer = 0; 
-	int flyTimer = 0; 
+	CTimer *attackTimer, *glideTimer, *flyTimer;
 
 	int currentAnimation = -1;
 
@@ -189,6 +192,12 @@ public:
 	bool canHold = false;
 	CMario(float x, float y) : CCharacter(x, y)
 	{
+		glideTimer = new CTimer();
+		flyTimer = new CTimer();
+		attackTimer = new CTimer();
+		glideTimer->SetTimeSpan(GLIDE_TIME);
+		flyTimer->SetTimeSpan(FLY_TIME);
+		attackTimer->SetTimeSpan(ATTACK_TIME);
 		isSitting = false;
 		maxVx = 0.0f;
 		maxVy = 0.3f;
@@ -310,8 +319,8 @@ public:
 //
 //px / f
 //Jump, X Velocity < 1 px / f(-Y)  3.4375
-//	Jump, X Velocity > 1 px / f(-Y)  3.5625
-//	Jump, X Velocity > 2 px / f(-Y)  3.6875
+//	Jump, X Velocity > 1 px / f(-Y)  3.5625 
+//	Jump, X Velocity > 2 px / f(-Y)  3.6875 
 //	Jump, X Velocity > 3 px / f(-Y)  3.9375
 //	Enemy Stomp Speed(-Y)          4
 //	Weak Enemy Stomp(-Y)           3

@@ -140,26 +140,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	//Attack
-	if (attackTimer > 0)
+	if (attackTimer->IsRunning())
 	{
-		attackTimer -= dt;
 		TailAttack(dt, coObjects);
 	}
-
-	if (glideTimer > 0) {
-		glideTimer -= dt;
-	}
-	else {
-		ay = MARIO_GRAVITY;
-	}
-
-	if (flyTimer > 0) {
-		flyTimer -= dt;
-	}
-	else {
-		//ay = MARIO_GRAVITY;
-	}
-	
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -208,7 +192,9 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 	if (e->ny < 0)
 	{
 		character->Stomped();
-		vy = -MARIO_JUMP_DEFLECT_SPEED;
+		if (CGame::GetInstance()->IsKeyDown(DIK_S)) SetJumpInput(1);
+		if (jumpInput == 1) vy = -MARIO_JUMP_DEFLECT_SPEED;
+		else vy = -MARIO_JUMP_WEAK_DEFLECT_SPEED;
 	}
 	else if (e->ny > 0)
 	{
@@ -305,13 +291,13 @@ void CMario::Attacked() {
 
 void CMario::TailAttackInit()
 {
-	attackTimer = ATTACK_TIME;
+	attackTimer->Start();
 	AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_ATTACK_RIGHT : MarioAnimationType::TAIL_ATTACK_LEFT);
 }
 
 void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if(attackTimer <= 0) return;
+	if(!attackTimer->IsRunning()) return;
 	float l1, t1, r1, b1;
 	float l2, t2, r2, b2;
 	GetTailHitBox(l1, t1, r1, b1, l2, t2, r2, b2);
@@ -336,7 +322,7 @@ void CMario::SpecialPressed()
 {
 	SetRunInput(1);
 	if (level == MarioLevel::RACCOON) {
-		if (attackTimer <= 0) TailAttackInit();
+		if (!attackTimer->IsRunning()) TailAttackInit();
 	}
 }
 
@@ -344,14 +330,13 @@ void CMario::JumpPressed()
 {
 	SetState(MARIO_STATE_JUMP);
 	if (!isOnPlatform && level == MarioLevel::RACCOON) {
-		if (glideTimer <= 0 && abs(ax) != abs(MARIO_ACCEL_RUN_X)) {
-			glideTimer = GLIDE_TIME;
+		if (!glideTimer->IsRunning() && abs(ax) != abs(MARIO_ACCEL_RUN_X)) {
+			glideTimer->Start();
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_GLIDE_RIGHT : MarioAnimationType::TAIL_JUMP_GLIDE_LEFT);
-			ay /= 10;
-			vy = 0;
-		}else if (flyTimer <= 0 && abs(ax) == abs(MARIO_ACCEL_RUN_X)) {
-			flyTimer = FLY_TIME;
-			vy = -MARIO_JUMP_SPEED_Y;
+			vy = MARIO_RACCOON_GLIDE_SPEED;
+		}else if (!flyTimer->IsRunning() && abs(ax) == abs(MARIO_ACCEL_RUN_X)) {
+			flyTimer->Start();
+			vy = -MARIO_RACCOON_FLY_SPEED;
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_FLY_RIGHT : MarioAnimationType::TAIL_JUMP_FLY_LEFT);
 		}
 	}else(SetJumpInput(1));
@@ -586,8 +571,10 @@ void CMario::Acceleration(DWORD dt)
 		}
 	}
 
-	
-	if (vy < -0.12 && jumpInput == 1) {
+	if(glideTimer->IsRunning() || flyTimer->IsRunning())
+	{
+
+	}else if (vy < -0.12 && jumpInput == 1) {
 		vy += MARIO_GRAVITY_SLOW * dt;
 	}
 	else {
