@@ -92,7 +92,7 @@ namespace std {
 #define MARIO_RUN_P_MAX_SPEED_X	0.21f
 #define MARIO_WALK_MAX_SPEED_X	0.09f
 
-#define MARIO_JUMP_SPEED_Y		0.21f
+#define MARIO_JUMP_SPEED_Y		0.20625f
 #define MARIO_JUMP_RUN_SPEED_Y	0.225f
 
 #define MARIO_GRAVITY			0.002f

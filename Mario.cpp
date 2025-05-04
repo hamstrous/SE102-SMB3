@@ -521,7 +521,7 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_DIE:
-		vy = -MARIO_JUMP_DEFLECT_SPEED;
+		vy = -MARIO_JUMP_SPEED_Y;
 		vx = 0;
 		ax = 0;
 		break;
@@ -533,7 +533,10 @@ void CMario::SetState(int state)
 void CMario::Acceleration(DWORD dt)
 {
 	const float topSpeed = runInput == 1 ? MARIO_RUN_MAX_SPEED_X : MARIO_WALK_MAX_SPEED_X;
-
+	if (state == MARIO_STATE_DIE) {
+		vy += MARIO_GRAVITY_SLOW * dt;
+		return;
+	}
 	if (dirInput == 0) {
 		if (isOnPlatform) {
 			if (vx < 0) {
