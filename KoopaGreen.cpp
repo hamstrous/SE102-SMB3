@@ -20,7 +20,7 @@ void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCharacter(e);
 		return;
 	}
-	if (dynamic_cast<CQuestionBlock*>(e->obj)) {
+	if (dynamic_cast<CQuestionBlock*>(e->obj) && e->nx != 0) {
 		OnCollisionWithQuestionBlock(e);
 		return;
 	}
@@ -73,7 +73,7 @@ void CKoopaGreen::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
 		}
 	}
 	if (questionblock->GetState() != QUESTION_BLOCK_STATE_UNBOX) {
-		if (state == KOOPA_STATE_SHELL_MOVING) {
+		if (state == KOOPA_STATE_SHELL_MOVING || state == KOOPA_STATE_SHELL_MOVING_TAILHIT) {
 			questionblock->SetState(QUESTION_BLOCK_STATE_MOVEUP);
 		}
 	}
@@ -81,7 +81,7 @@ void CKoopaGreen::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
 
 void CKoopaGreen::SetState(int state)
 {
-	if (this->state == KOOPA_STATE_SHELL_HELD) {
+	if (this->state == KOOPA_STATE_SHELL_HELD || this->state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		ay = KOOPA_GRAVITY;
 	}
 	else if (this->state == KOOPA_STATE_FLYING) {
@@ -129,6 +129,11 @@ void CKoopaGreen::SetState(int state)
 		vy = 0;
 		ay = 0;
 		break;
+	case KOOPA_STATE_SHELL_HELD_TAILHIT:
+		vx = 0;
+		vy = 0;
+		ay = 0;
+		break;
 	case KOOPA_STATE_FLYING:
 		InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
 		break;
@@ -155,6 +160,7 @@ void CKoopaGreen::SetState(int state)
 		break;
 	
 	}
+	DebugOut(L"[INFO] Koopa state: %d\n", state);
 	CGameObject::SetState(state);
 
 }
@@ -235,7 +241,6 @@ void CKoopaGreen::Render()
 	if (hasWing && nx == 1) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 3, y - 3);
 	else if (hasWing && nx == -1) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 3, y - 3);
 	RenderBoundingBox();
-	DebugOut(L"[INFO] KoopaGreen:state: " , state);
 }
 
 void CKoopaGreen::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -255,6 +260,8 @@ void CKoopaGreen::GetBoundingBox(float& left, float& top, float& right, float& b
 	}
 	if (hit)
 		left = top = right = bottom = 0;
+	DebugOut(L"[INFO] GetBoundingBox - State: %d, BoundingBox: [%f, %f, %f, %f]\n", state, left, top, right, bottom);
+
 }
 
 void CKoopaGreen::OnNoCollision(DWORD dt)
@@ -275,7 +282,7 @@ void CKoopaGreen::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		}
 		character->ShellHit(e->nx);
 	}
-	else if (state == KOOPA_STATE_SHELL_HELD) {
+	else if (state == KOOPA_STATE_SHELL_HELD || state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		HeldDie();
 		character->ShellHit(e->nx);
 	}
@@ -311,10 +318,10 @@ void CKoopaGreen::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		Walking(dt, coObjects);
 	if (vx > 0) nx = 1;
 	else if (vx < 0) nx = -1;
-	if (state == KOOPA_STATE_SHELL_HELD) {
+	if (state == KOOPA_STATE_SHELL_HELD || state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		ShellHeldTouch(dt, coObjects);
 	}
-	if (state == KOOPA_STATE_DIE_UP_ANI || state == KOOPA_STATE_DIE_UP) {
+	if (state == KOOPA_STATE_DIE_UP_ANI ) {
 		if (GetTickCount64() - delete_time > KOOPA_TIME_DELETE) {
 			isDeleted = true;
 		}
@@ -325,8 +332,12 @@ void CKoopaGreen::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CKoopaGreen::Kicked()
 {
 	// Only when in shell state can Koopa be kicked by Mario
-	if (state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_SHELL_HELD) SetState(KOOPA_STATE_SHELL_MOVING);
-	else if (state == KOOPA_STATE_TAILHIT || state == KOOPA_STATE_SHELL_HELD_TAILHIT) SetState(KOOPA_STATE_SHELL_MOVING_TAILHIT);
+	if (state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_SHELL_HELD) {
+		SetState(KOOPA_STATE_SHELL_MOVING);
+	}
+	if (state == KOOPA_STATE_TAILHIT || state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
+		SetState(KOOPA_STATE_SHELL_MOVING_TAILHIT);
+	}
 }
 
 void CKoopaGreen::Stomped()
@@ -356,16 +367,21 @@ void CKoopaGreen::Held()
 
 void CKoopaGreen::Release(bool dead = false)
 {
-	if (state == KOOPA_STATE_SHELL_HELD) {
+	if (state == KOOPA_STATE_SHELL_HELD || state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
-		if (!dead) vy = -0.3f;
+		if (!dead)
+		{
+			vy = -0.3f;
+		}
 		player->Drop();
+		/*DebugOut(L"[INFO] KoopaGreen::Release: Mario released Koopa\n", state);*/
 	}
 }
 
 void CKoopaGreen::ShellHit(int shellX)
-{
+{	
+	/*if (state == KOOPA_STATE_SHELL_HELD_TAILHIT) return;*/
 	SetState(KOOPA_STATE_DIE_UP_ANI);
 	if (shellX == -1) vx = KOOPA_FLYING_SPEED_X;
 	else if (shellX == 1) vx = -KOOPA_FLYING_SPEED_X;
@@ -392,7 +408,7 @@ void CKoopaGreen::Touched()
 {
 	CPlayScene* scene = (CPlayScene*)(CGame::GetInstance()->GetCurrentScene());
 	CMario* mario = dynamic_cast<CMario*>(scene->GetPlayer());
-	if (state != KOOPA_STATE_SHELL_IDLE && state != KOOPA_STATE_SHELL_HELD && state != KOOPA_STATE_TAILHIT) {
+	if (state != KOOPA_STATE_SHELL_IDLE && state != KOOPA_STATE_SHELL_HELD && state != KOOPA_STATE_TAILHIT && state != KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		mario->Attacked();
 	}
 	else if (state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_TAILHIT) {
@@ -421,6 +437,17 @@ void CKoopaGreen::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == KOOPA_STATE_SHELL_HELD || state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
+		DebugOut(L"[INFO] KoopaGreen::ShellHeldTouch - Checking collision, State: %d, BoundingBox: [%f, %f, %f, %f]\n",
+			state, ml, mt, mr, mb);
+
+		for (LPGAMEOBJECT obj : *coObjects) {
+			float ol, ot, or_, ob;
+			obj->GetBoundingBox(ol, ot, or_, ob);
+
+			if (ml < or_ && mr > ol && mt < ob && mb > ot) {
+				DebugOut(L"[INFO] KoopaGreen::ShellHeldTouch - Colliding with object:\n");
+			}
+		}
 		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
 			SetState(KOOPA_STATE_DIE_UP);
 		}

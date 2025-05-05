@@ -67,7 +67,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 
 void CGoomba::Render()
-{
+{	
+	if (GetIsPause()) return;
 	int aniId = ID_ANI_GOOMBA_WALKING;
 	if (state == GOOMBA_STATE_DIE) 
 	{
@@ -81,7 +82,8 @@ void CGoomba::Render()
 	{
 		aniId = ID_ANI_GOOMBA_DIE + 2;
 	}
-	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
+	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	//RenderBoundingBox();
 }
 
