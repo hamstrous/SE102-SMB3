@@ -147,10 +147,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable = 0;
 	}
 
-	pointsTouched.clear();
-
 	// for mario has to be called first so process can call OnCollision
-	CCollision::GetInstance()->ProcessForMario(this, &points, dt, coObjects, &pointsTouched);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
@@ -172,11 +169,31 @@ void CMario::OnNoCollision(DWORD dt)
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if(pointsTouched[0]) DebugOutTitle(L"Points");
+	float objx, objy;
+	e->obj->GetPosition(objx, objy);
 	if (e->obj->IsBlocking()) {
+		pointsTouched.clear();
+		vector<LPGAMEOBJECT> coObjects;
+		GetCollidableObjects(&coObjects);
+		SetPointsPosition();
+		CCollision::GetInstance()->ProcessForMario(this, &points, &coObjects, &pointsTouched);
 		if (e->ny != 0)
 		{
-			vy = 0;
+			if (vy < 0) {
+				if (pointsTouched[0]) {
+					DebugOut(L"TOUCH\n");
+				}
+				else {
+					DebugOut(L"NOTOUCH\n");
+					float px, py;
+					points[0]->GetPosition(px, py);
+					DebugOut(L"POINTS: %f, %f\n", px, py);
+					DebugOut(L"Mario: %f, %f\n", x, y);
+				}
+
+				if (pointsTouched[0]) vy = 0;
+				else x += (x > objx) ? 4 : -4;
+			}else vy = 0;
 			if (e->ny < 0) {
 				isOnPlatform = true;
 				if (glideTimer->IsRunning()) {
@@ -367,13 +384,15 @@ bool CMario::IsPMeterFull()
 	return gameData->IsPMeterFull();
 }
 
+#define POINTS_OFFSET 1.0f
+
 void CMario::SetPointsPosition()
 {
 	if (!IsBig() || isSitting) {
 
 	}
 	else {
-		points[0]->SetPosition(x, y - BRICK_BBOX_HEIGHT / 2);
+		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2 - POINTS_OFFSET);
 	}
 }
 

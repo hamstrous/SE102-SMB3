@@ -247,7 +247,7 @@ public:
 		return (state != MARIO_STATE_DIE);
 	}
 
-	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable == 0); }
+	int IsBlocking() { return false; }
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);

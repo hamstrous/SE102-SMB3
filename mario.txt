@@ -1,6 +1,6 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
-#############  BIG ###############
+############# BIG ###############
 
 #HALF BIG RIGHT
 11124	30	175	43	196	60

@@ -235,7 +235,7 @@ void CKoopaGreen::Render()
 	if (hasWing && nx == 1) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 3, y - 3);
 	else if (hasWing && nx == -1) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 3, y - 3);
 	RenderBoundingBox();
-	DebugOut(L"[INFO] KoopaGreen:state: " , state);
+	//DebugOut(L"[INFO] KoopaGreen:state: " , state);
 }
 
 void CKoopaGreen::GetBoundingBox(float& left, float& top, float& right, float& bottom)
