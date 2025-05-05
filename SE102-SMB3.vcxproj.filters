@@ -48,6 +48,7 @@
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameData.cpp" />
+    <ClCompile Include="Point.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameData.h" />
+    <ClInclude Include="Point.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

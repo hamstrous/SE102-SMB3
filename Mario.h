@@ -5,6 +5,7 @@
 #include "BaseBrick.h"
 #include "Character.h"
 #include "Timer.h"
+#include "Point.h"
 class CKoopa; // Forward declaration, stop circular dependency if include "Koopa.h"
 
 #include "Animation.h"
@@ -168,6 +169,8 @@ protected:
 	BOOLEAN isOnPlatform;
 	int coin;
 	CKoopa* holdingShell;
+	vector<CGameObject*> points;
+	vector<bool> pointsTouched;
 
 	// mario vx speed at jump point, for midair physics
 	float jumpVx = 0;
@@ -227,6 +230,11 @@ public:
 		canHold = false;
 
 		holdingShell = NULL;
+
+		points.resize(7); // top, upleft, downleft, leftdown, rightdowwm, downright, upright
+		for (int i = 0; i < 7; i++) {
+			points[i] = new CPoint(0, 0);
+		}
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();

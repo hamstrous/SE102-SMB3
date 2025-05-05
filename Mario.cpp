@@ -138,13 +138,7 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	DebugOutTitle(L"isonplatform %d", isOnPlatform);
 	Acceleration(dt);
-	/*vy += ay * dt;
-	vx += ax * dt;
-	if (abs(vx) > abs(maxVx)) vx = maxVx;
-	if (vy > 0 && abs(vy) > abs(maxVy)) vy = maxVy;*/
-	//DebugOutTitle(L"vx: %f, vy: %f\n", vx, vy);
 
 	// reset untouchable timer if untouchable time has passed
 	if ( GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME) 
@@ -153,6 +147,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable = 0;
 	}
 
+	pointsTouched.clear();
+
+	// for mario has to be called first so process can call OnCollision
+	CCollision::GetInstance()->ProcessForMario(this, &points, dt, coObjects, &pointsTouched);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
@@ -174,23 +172,24 @@ void CMario::OnNoCollision(DWORD dt)
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (e->ny != 0 && e->obj->IsBlocking())
-	{
-		vy = 0;
-		if (e->ny < 0) {
-			isOnPlatform = true;
-			if (glideTimer->IsRunning()) {
-				glideTimer->Reset();
-				SkipCurrentAnimation();
+	if (e->obj->IsBlocking()) {
+		if (e->ny != 0)
+		{
+			vy = 0;
+			if (e->ny < 0) {
+				isOnPlatform = true;
+				if (glideTimer->IsRunning()) {
+					glideTimer->Reset();
+					SkipCurrentAnimation();
+				}
 			}
 		}
-	}
-	else
-		if (e->nx != 0 && e->obj->IsBlocking())
+		else if (e->nx != 0)
 		{
 			vx = 0;
 		}
-	
+
+	}
 	if (dynamic_cast<CCharacter*>(e->obj))
 		OnCollisionWithCharacter(e);
 	else if (dynamic_cast<CBaseBrick*>(e->obj))

@@ -383,6 +383,44 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
+// the start of mario seperate collision check (enemy, item touch, collsion point check)
+void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* points, DWORD dt, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouched)
+{
+	for (auto i : *points) {
+		LPGAMEOBJECT point = i;
+		bool touched = false;
+		for(auto obj : *coObjects)
+		{
+			if (obj->IsBlocking())
+			{
+				float sl, st, sr, sb;
+				obj->GetBoundingBox(sl, st, sr, sb);
+				float ml, mt, mr, mb;
+				point->GetBoundingBox(ml, mt, mr, mb);
+
+				float svx, svy;
+				obj->GetSpeed(svx, svy);
+				float sdx = svx * dt;
+				float sdy = svy * dt;
+				
+				float mvx, mvy;
+				point->GetSpeed(mvx, mvy);
+				float mdx = mvx * dt;
+				float mdy = mvy * dt;
+
+
+				if (IsColliding(ml + mdx, mt + mdy, mr + mdx, mb + mdy, sl + sdx, st + sdy, sr + sdx, sb + sdy))
+				{
+					pointsTouched->push_back(true);
+					touched = true;
+					break;
+				}
+			}
+		}
+		if(!touched) pointsTouched->push_back(false);
+	}
+}
+
 // 2: still touch, 1: touch then not touch, 0: not touch
 int CCollision::CheckStillTouchSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
