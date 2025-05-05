@@ -172,6 +172,7 @@ void CMario::OnNoCollision(DWORD dt)
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if(pointsTouched[0]) DebugOutTitle(L"Points");
 	if (e->obj->IsBlocking()) {
 		if (e->ny != 0)
 		{
@@ -366,6 +367,16 @@ bool CMario::IsPMeterFull()
 	return gameData->IsPMeterFull();
 }
 
+void CMario::SetPointsPosition()
+{
+	if (!IsBig() || isSitting) {
+
+	}
+	else {
+		points[0]->SetPosition(x, y - BRICK_BBOX_HEIGHT / 2);
+	}
+}
+
 void CMario::GetAniId()
 {
 	if (state == MARIO_STATE_DIE)
@@ -475,9 +486,12 @@ void CMario::Render()
 		animations->Get(currentAnimation)->ResetType();
 	}
 	
-	animations->Get(currentAnimation)->Render(x, y);
+	float offsetX = 0, offsetY = 0;
+	if (IsRaccoon()) offsetX = (nx > 0) ? -4 : 4;
 
-	//RenderBoundingBox();
+	animations->Get(currentAnimation)->Render(x + offsetX, y);
+
+	RenderBoundingBox();
 	
 	//DebugOutTitle(L"Coins: %d", coin);
 }

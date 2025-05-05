@@ -301,6 +301,8 @@ public:
 
 	void SetDirInput(int dir) { this->dirInput = dir; }
 	int GetDirInput() { return dirInput; }
+
+	void SetPointsPosition();
 };
 
 //GROUND PHYSICS
