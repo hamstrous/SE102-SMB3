@@ -1,10 +1,13 @@
 #include "Coin.h"
 
 void CCoin::Render()
-{
+{	
+	if (GetIsPause()) return;
 	CAnimations* animations = CAnimations::GetInstance();
 	if (!isDeleted)
 		animations->Get(ID_ANI_COIN)->Render(x, y);
+	if (!GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_COIN)->Render(x, y);
+	else CAnimations::GetInstance()->Get(ID_ANI_COIN)->Render(x, y, 1);
 	//RenderBoundingBox();
 }
 

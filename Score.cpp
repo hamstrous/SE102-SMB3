@@ -1,7 +1,8 @@
 #include "Score.h"
 
 void CScore::Render()
-{
+{	
+	if (GetIsPause()) return;
 	int aniId = ID_ANI_SCORE_100;
 	switch (score)
 	{
@@ -33,6 +34,8 @@ void CScore::Render()
 		break;
 	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	//if(!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	//else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	//RenderBoundingBox();
 }
 

@@ -27,7 +27,7 @@
 #define ITEM_RED_MUSHROOM 2
 #define ITEM_GREEN_MUSHROOM 3
 
-#define TIME_UP 150
+#define TIME_UP 80
 class CQuestionBlock : public CBaseBrick
 {	
 private:

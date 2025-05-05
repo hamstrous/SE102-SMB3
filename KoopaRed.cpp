@@ -197,7 +197,8 @@ void CKoopaRed::SetState(int state)
 }
 
 void CKoopaRed::Render()
-{
+{	
+	if (GetIsPause()) return;
 	float shellTime = GetTickCount64() - shell_start;
 	int aniId = 0;
 	switch (state) {
@@ -239,10 +240,11 @@ void CKoopaRed::Render()
 		aniId = ID_ANI_KOOPA_WALKING_LEFT;
 		break;
 	}
-	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	if (hasWing && nx == 1) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 3, y - 3);
-	else if (hasWing && nx == -1) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 3, y - 3);
-	RenderBoundingBox();
+	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
+	if (hasWing && nx == 1 && !GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 8);
+	else if (hasWing && nx == -1 && !GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 8);
+	//RenderBoundingBox();
 }
 
 CKoopaRed::CKoopaRed(float x, float y, bool hasWing) : CKoopa(x, y)

@@ -170,7 +170,7 @@ void CMario::OnNoCollision(DWORD dt)
 }
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
-{
+{	
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
