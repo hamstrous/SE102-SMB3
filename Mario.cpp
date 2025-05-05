@@ -138,6 +138,7 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	DebugOutTitle(L"isonplatform %d", isOnPlatform);
 	Acceleration(dt);
 	/*vy += ay * dt;
 	vx += ax * dt;
@@ -176,7 +177,13 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
-		if (e->ny < 0) isOnPlatform = true;
+		if (e->ny < 0) {
+			isOnPlatform = true;
+			if (glideTimer->IsRunning()) {
+				glideTimer->Reset();
+				SkipCurrentAnimation();
+			}
+		}
 	}
 	else
 		if (e->nx != 0 && e->obj->IsBlocking())
@@ -323,13 +330,6 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects, x);
 }
 
-void CMario::HoldTurn(int dir)
-{
-	if (holdingShell == NULL) return;
-	if (nx != dir)
-		AssignCurrentAnimation(level,MarioAnimationType::HOLD_FRONT);
-}
-
 //Change animaion when mario kick the shell
 void CMario::KickedShell()
 {
@@ -348,11 +348,11 @@ void CMario::JumpPressed()
 {
 	SetState(MARIO_STATE_JUMP);
 	if (!isOnPlatform && level == MarioLevel::RACCOON) {
-		if (!IsPMeterFull()) {
+		if (!IsPMeterFull() && vy >= 0) {
 			glideTimer->Start();
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_GLIDE_RIGHT : MarioAnimationType::TAIL_JUMP_GLIDE_LEFT);
 			vy = MARIO_RACCOON_GLIDE_SPEED;
-		}else{
+		}else if(IsPMeterFull()){
 			flyTimer->Start();
 			vy = -MARIO_RACCOON_FLY_SPEED;
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_FLY_RIGHT : MarioAnimationType::TAIL_JUMP_FLY_LEFT);
@@ -378,15 +378,26 @@ void CMario::GetAniId()
 	if (holdingShell != NULL) {
 		if (!isOnPlatform) {
 			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_HOLD_RIGHT : MarioAnimationType::JUMP_HOLD_LEFT];
+			return;
 		}
-		else if (vx == 0) {
+
+		if (vx < 0 && ax > 0 || vx > 0 && ax < 0) {
+			currentAnimation = animationMap[level][MarioAnimationType::HOLD_FRONT];
+			return;
+		}
+
+		if (vx == 0) {
 			currentAnimation = animationMap[level][nx > 0 ? MarioAnimationType::IDLE_HOLD_RIGHT : MarioAnimationType::IDLE_HOLD_LEFT];
 		}
 		else if (vx > 0) {
-			currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_RIGHT];
+			if(vx <= MARIO_WALK_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_RIGHT];
+			else if (vx <= MARIO_RUN_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::RUN_HOLD_RIGHT];
+			else if (vx <= MARIO_SPRINT_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::SPRINT_HOLD_RIGHT];
 		}
 		else { // vx < 0
-			currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_LEFT];
+			if (abs(vx) <= MARIO_WALK_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_LEFT];
+			else if (abs(vx) <= MARIO_RUN_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::RUN_HOLD_LEFT];
+			else if (abs(vx) <= MARIO_SPRINT_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::SPRINT_HOLD_LEFT];
 		}
 		return;
 	}
@@ -565,6 +576,8 @@ void CMario::SetState(int state)
 float minY = 1000000;
 void CMario::Acceleration(DWORD dt)
 {
+	CGameData* gameData = CGameData::GetInstance();
+
 	float topSpeed = 0;
 
 	if (IsPMeterFull()) topSpeed = MARIO_SPRINT_MAX_SPEED_X;
@@ -572,7 +585,7 @@ void CMario::Acceleration(DWORD dt)
 	else topSpeed = MARIO_WALK_MAX_SPEED_X;
 
 	//if(vy < 0) minY  = min(minY, y);
-	DebugOutTitle(L"vx: %f", vx);
+	//DebugOutTitle(L"vx: %f", vx);
 	if (state == MARIO_STATE_DIE) {
 		if (vy < -0.12) {
 			vy += MARIO_GRAVITY_SLOW * dt;
@@ -596,6 +609,11 @@ void CMario::Acceleration(DWORD dt)
 				if (vx < 0) {
 					vx = 0;
 				}
+			}
+		}
+		else if (IsRaccoon()) {
+			if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
+				vx += (vx > 0 ? -MARIO_RACCOON_MIDAIR_DECEL : MARIO_RACCOON_MIDAIR_DECEL) * dt;
 			}
 		}
 	}
@@ -623,18 +641,53 @@ void CMario::Acceleration(DWORD dt)
 		}
 		else {
 			if (!IsPMeterFull()) {
-				if(abs(jumpVx) < MARIO_WALK_MAX_SPEED_X) topSpeed = MARIO_WALK_MAX_SPEED_X;
+				if(abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X) topSpeed = MARIO_WALK_MAX_SPEED_X;
 				else topSpeed = MARIO_RUN_MAX_SPEED_X;
 			}else topSpeed = MARIO_SPRINT_MAX_SPEED_X;
+			if (!IsRaccoon()) {
+				if ((vx > 0 && dirInput < 0) || (vx < 0 && dirInput > 0)) {
+					vx += dirInput * MARIO_DECEL_MIDAIR_X * dt;
+				}
+				else if (absVx < abs(topSpeed)) {
+					vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+				}
+				else if (absVx > abs(topSpeed)) {
+					vx = topSpeed * dirInput;
+				}
+			}
+			else {
+				const float NEW_MARIO_RACCOON_MIDAIR_DECEL = 0.00005625f;
+				const float NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE = 0.000675f; //0030
+				if (gameData->IsFlightMode()) {
+					if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
+						vx += (vx > 0 ? -NEW_MARIO_RACCOON_MIDAIR_DECEL : NEW_MARIO_RACCOON_MIDAIR_DECEL) * dt;
+					}
+					
+					if (vx < 0 && dirInput> 0 || vx > 0 && dirInput < 0) {
+						vx += dirInput * NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE * dt;
+					}
+					else {
+						vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+					}
+					
+					if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
+						vx = MARIO_RACCOON_MIDAIR_SPEED_LIMIT * dirInput;
+					}
+					
+				}
+				else {
+					if (vx < 0 && dirInput> 0 || vx > 0 && dirInput < 0) {
+						vx += dirInput * NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE * dt;
+					}
+					else {
+						vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+					}
 
-			if((vx > 0 && dirInput < 0) || (vx < 0 && dirInput > 0)) {
-				vx += dirInput * MARIO_DEACCEL_MIDAIR_X * dt;
-			}
-			else if (absVx < abs(topSpeed)) {
-				vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
-			}
-			else if (absVx > abs(topSpeed)) {
-				vx = topSpeed * dirInput;
+					if (abs(vx) > topSpeed) {
+						vx = topSpeed * dirInput;
+
+					}
+				}
 			}
 		}
 	}

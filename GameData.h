@@ -80,6 +80,11 @@ public:
 		return pmeter == 7;
 	}
 
+	bool IsFlightMode()
+	{
+		return flightMode;
+	}
+
 	static CGameData* GetInstance();
 };
 

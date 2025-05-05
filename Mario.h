@@ -95,7 +95,10 @@ namespace std {
 #define MARIO_BIG_ACCEL_FRIC_X	0.000196875f
 
 #define MARIO_ACCEL_MIDAIR_X	0.00021094f
-#define MARIO_DEACCEL_MIDAIR_X	0.00045f
+#define MARIO_DECEL_MIDAIR_X	0.00045f
+
+#define MARIO_RACCOON_MIDAIR_SPEED_LIMIT 0.08625f
+#define MARIO_RACCOON_MIDAIR_DECEL 0.000225f
 
 #define MARIO_RUN_MAX_SPEED_X	0.15f
 #define MARIO_SPRINT_MAX_SPEED_X	0.21f
@@ -262,10 +265,15 @@ public:
 	
 	}
 
+	void SkipCurrentAnimation() {
+		if(currentAnimation > 0) {
+			CAnimations::GetInstance()->Get(currentAnimation)->Skip();
+		}
+	}
+
 	void TailAttackInit();
 	void TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
-	void HoldTurn(int dir);
 	void KickedShell();
 
 	void SpecialPressed();
