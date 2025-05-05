@@ -3,9 +3,6 @@
 #include "PlayScene.h"
 #include "Mario.h"
 
-//accel_big_fric * 1000/MAX_FRAME_RATE = 0.00334679f
-#define SPEED_OFFSET		0.0035f
-
 CGameData* CGameData::__instance = NULL;
 
 void CGameData::Update(DWORD dt)

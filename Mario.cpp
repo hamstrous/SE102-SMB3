@@ -26,10 +26,12 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::WALKING_LEFT, 501},
 			{MarioAnimationType::RUNNING_RIGHT, 600},
 			{MarioAnimationType::RUNNING_LEFT, 601},
-			{MarioAnimationType::JUMP_WALK_RIGHT, 700},
-			{MarioAnimationType::JUMP_WALK_LEFT, 701},
-			{MarioAnimationType::JUMP_RUN_RIGHT, 800},
-			{MarioAnimationType::JUMP_RUN_LEFT, 801},
+			{MarioAnimationType::SPRINTING_RIGHT, 1302}, //fix
+			{MarioAnimationType::SPRINTING_LEFT, 1303},
+			{MarioAnimationType::JUMP_RIGHT, 700},
+			{MarioAnimationType::JUMP_LEFT, 701},
+			{MarioAnimationType::JUMP_SPRINT_RIGHT, 800},
+			{MarioAnimationType::JUMP_SPRINT_LEFT, 801},
 			{MarioAnimationType::SIT_RIGHT, 900},
 			{MarioAnimationType::SIT_LEFT, 901},
 			{MarioAnimationType::BRACE_RIGHT, 1001},
@@ -47,6 +49,10 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::GROW_LEFT, 1024},
 			{MarioAnimationType::SHRINK_RIGHT, 1025},
 			{MarioAnimationType::SHRINK_LEFT, 1026},
+			{MarioAnimationType::RUN_HOLD_RIGHT, 1652}, //fix
+			{MarioAnimationType::RUN_HOLD_LEFT, 1653},
+			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1653}, //fix
+			{MarioAnimationType::SPRINT_HOLD_LEFT, 1653},
 			{MarioAnimationType::DIE, 999}
 		}
 	},
@@ -58,12 +64,14 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::WALKING_LEFT, 1201},
 			{MarioAnimationType::RUNNING_RIGHT, 1300},
 			{MarioAnimationType::RUNNING_LEFT, 1301},
+			{MarioAnimationType::SPRINTING_RIGHT, 1302},
+			{MarioAnimationType::SPRINTING_LEFT, 1303},
 			{MarioAnimationType::BRACE_RIGHT, 1401},
 			{MarioAnimationType::BRACE_LEFT, 1400},
-			{MarioAnimationType::JUMP_WALK_RIGHT, 1500},
-			{MarioAnimationType::JUMP_WALK_LEFT, 1501},
-			{MarioAnimationType::JUMP_RUN_RIGHT, 1600},
-			{MarioAnimationType::JUMP_RUN_LEFT, 1601},
+			{MarioAnimationType::JUMP_RIGHT, 1500},
+			{MarioAnimationType::JUMP_LEFT, 1501},
+			{MarioAnimationType::JUMP_SPRINT_RIGHT, 1600},
+			{MarioAnimationType::JUMP_SPRINT_LEFT, 1601},
 			{MarioAnimationType::KICK_RIGHT, 1610},
 			{MarioAnimationType::KICK_LEFT, 1611},
 			{MarioAnimationType::IDLE_HOLD_RIGHT, 1650},
@@ -75,8 +83,10 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::JUMP_HOLD_LEFT, 1656},
 			{MarioAnimationType::GROW_RIGHT, 1657},
 			{MarioAnimationType::GROW_LEFT, 1658},
-			{MarioAnimationType::RUN_HOLD_RIGHT, 1652},
+			{MarioAnimationType::RUN_HOLD_RIGHT, 1652}, //fix
 			{MarioAnimationType::RUN_HOLD_LEFT, 1653},
+			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1653}, //fix
+			{MarioAnimationType::SPRINT_HOLD_LEFT, 1653},
 			{MarioAnimationType::DIE, 999}
 		}
 	},
@@ -88,12 +98,14 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::WALKING_LEFT, 1801},
 			{MarioAnimationType::RUNNING_RIGHT, 1900},
 			{MarioAnimationType::RUNNING_LEFT, 1901},
+			{MarioAnimationType::SPRINTING_RIGHT, 1302}, //fix
+			{MarioAnimationType::SPRINTING_LEFT, 1303},
 			{MarioAnimationType::BRACE_RIGHT, 2001},
 			{MarioAnimationType::BRACE_LEFT, 2000},
-			{MarioAnimationType::JUMP_WALK_RIGHT, 2100},
-			{MarioAnimationType::JUMP_WALK_LEFT, 2101},
-			{MarioAnimationType::JUMP_RUN_RIGHT, 2200},
-			{MarioAnimationType::JUMP_RUN_LEFT, 2201},
+			{MarioAnimationType::JUMP_RIGHT, 2100},
+			{MarioAnimationType::JUMP_LEFT, 2101},
+			{MarioAnimationType::JUMP_SPRINT_RIGHT, 2200},
+			{MarioAnimationType::JUMP_SPRINT_LEFT, 2201},
 			{MarioAnimationType::SIT_RIGHT, 2300},
 			{MarioAnimationType::SIT_LEFT, 2301},
 			{MarioAnimationType::TAIL_ATTACK_RIGHT, 2400},
@@ -113,6 +125,10 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::JUMP_HOLD_LEFT, 2656},
 			{MarioAnimationType::SHRINK_RIGHT, 1023},
 			{MarioAnimationType::SHRINK_LEFT, 1024},
+			{MarioAnimationType::RUN_HOLD_RIGHT, 1652}, //fix
+			{MarioAnimationType::RUN_HOLD_LEFT, 1653},
+			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1653}, //fix
+			{MarioAnimationType::SPRINT_HOLD_LEFT, 1653},
 			{MarioAnimationType::DIE, 999}
 		}
 	}
@@ -376,11 +392,12 @@ void CMario::GetAniId()
 	}
 
 	if (!isOnPlatform) {
-		if (abs(ax) == MARIO_ACCEL_RUN_X) {
-			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_RUN_RIGHT : MarioAnimationType::JUMP_RUN_LEFT];
+		if (abs(vx) > MARIO_RUN_MAX_SPEED_X) {
+			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_SPRINT_RIGHT : MarioAnimationType::JUMP_SPRINT_LEFT];
 		}
 		else {
-			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_WALK_RIGHT : MarioAnimationType::JUMP_WALK_LEFT];
+			// run and walk
+			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_RIGHT : MarioAnimationType::JUMP_LEFT];
 		}
 	}
 	else if (isSitting) {
@@ -393,22 +410,29 @@ void CMario::GetAniId()
 		if (ax < 0) {
 			currentAnimation = animationMap[level][MarioAnimationType::BRACE_RIGHT];
 		}
-		else if (ax == MARIO_ACCEL_RUN_X) {
-			currentAnimation = animationMap[level][MarioAnimationType::RUNNING_RIGHT];
-		}
-		else if (ax == MARIO_ACCEL_WALK_X) {
+		else if (vx <= MARIO_WALK_MAX_SPEED_X) {
 			currentAnimation = animationMap[level][MarioAnimationType::WALKING_RIGHT];
 		}
+		else if (vx <= MARIO_RUN_MAX_SPEED_X) {
+			currentAnimation = animationMap[level][MarioAnimationType::RUNNING_RIGHT];
+		}
+		else {
+			currentAnimation = animationMap[level][MarioAnimationType::SPRINTING_RIGHT];
+		}
+		
 	}
 	else { // vx < 0
 		if (ax > 0) {
 			currentAnimation = animationMap[level][MarioAnimationType::BRACE_LEFT];
 		}
-		else if (ax == -MARIO_ACCEL_RUN_X) {
+		else if (abs(vx) <= MARIO_WALK_MAX_SPEED_X) {
+			currentAnimation = animationMap[level][MarioAnimationType::WALKING_LEFT];
+		}
+		else if (abs(vx) <= MARIO_RUN_MAX_SPEED_X) {
 			currentAnimation = animationMap[level][MarioAnimationType::RUNNING_LEFT];
 		}
-		else if (ax == -MARIO_ACCEL_WALK_X) {
-			currentAnimation = animationMap[level][MarioAnimationType::WALKING_LEFT];
+		else {
+			currentAnimation = animationMap[level][MarioAnimationType::SPRINTING_LEFT];
 		}
 	}
 
