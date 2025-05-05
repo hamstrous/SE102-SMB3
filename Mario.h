@@ -278,6 +278,7 @@ public:
 	bool IsPMeterFull();
 
 	void SetJumpInput(int jump) { this->jumpInput = jump; }
+	int GetJumpInput() { return jumpInput; }
 
 	void SetRunInput(int run) { this->runInput = run; }
 	int GetRunInput() { return runInput; }

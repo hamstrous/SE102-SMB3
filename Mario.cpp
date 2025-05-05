@@ -332,7 +332,7 @@ void CMario::JumpPressed()
 {
 	SetState(MARIO_STATE_JUMP);
 	if (!isOnPlatform && level == MarioLevel::RACCOON) {
-		if (abs(vx) < MARIO_RUN_MAX_SPEED_X) {
+		if (!IsPMeterFull()) {
 			glideTimer->Start();
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_GLIDE_RIGHT : MarioAnimationType::TAIL_JUMP_GLIDE_LEFT);
 			vy = MARIO_RACCOON_GLIDE_SPEED;

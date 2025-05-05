@@ -21,7 +21,7 @@ void CGameData::Update(DWORD dt)
 		if (ptimer == f8) {
 			if (abs(mvx) >= MARIO_RUN_MAX_SPEED_X && mario->IsOnPlatform()) {
 				pmeter++;
-				if (pmeter == 7) ptimer = f16; 
+				if (pmeter == 7) ptimer = f16;
 				ptimer->Start();
 			}
 			else {
@@ -53,10 +53,19 @@ void CGameData::Update(DWORD dt)
 		}
 	}
 	else {
-		if (mario->IsRaccoon()) {
-
+		if (mario->IsRaccoon() && (mario->GetJumpInput() == 1 || flightMode)) {
+			flightMode = true;
+			if (ptimer == f255) {
+				if (!ptimer->IsRunning()) {
+					ptimer = f8;
+					pmeter = 0;
+					ptimer->Reset();
+					flightMode = false;
+				}
+			}else ptimer = f255, ptimer->Start();
 		}
 		else {
+			flightMode = false;
 			if (!mario->IsOnPlatform()) ptimer = f255, ptimer->Start();
 			if (ptimer == f16) {
 				if (ptimer->IsRunning()) {

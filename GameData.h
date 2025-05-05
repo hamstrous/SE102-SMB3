@@ -25,6 +25,7 @@ public:
 	CTimer* f255;
 	CTimer* ptimer;
 	int worldName;
+	bool flightMode = 0;
 	vector<int> cards;
 	MarioLevel marioLevel;
 
