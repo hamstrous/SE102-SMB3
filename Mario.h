@@ -94,6 +94,9 @@ namespace std {
 #define MARIO_SMALL_ACCEL_FRIC_X	0.000140625f
 #define MARIO_BIG_ACCEL_FRIC_X	0.000196875f
 
+#define MARIO_ACCEL_MIDAIR_X	0.00021094f
+#define MARIO_DEACCEL_MIDAIR_X	0.00045f
+
 #define MARIO_RUN_MAX_SPEED_X	0.15f
 #define MARIO_SPRINT_MAX_SPEED_X	0.21f
 #define MARIO_WALK_MAX_SPEED_X	0.09f
@@ -162,6 +165,10 @@ protected:
 	BOOLEAN isOnPlatform;
 	int coin;
 	CKoopa* holdingShell;
+
+	// mario vx speed at jump point, for midair physics
+	float jumpVx = 0;
+
 	int dirInput = 0; // 1: right, -1: left
 	int jumpInput = 0; // 1: jump, 0: no jump
 	int runInput = 0; // 1: run, 0: no run
@@ -268,6 +275,7 @@ public:
 	bool IsBig() { return level >= MarioLevel::BIG; }
 	bool IsRaccoon() { return level == MarioLevel::RACCOON; }
 	bool IsOnPlatform() { return isOnPlatform; }
+	bool IsPMeterFull();
 
 	void SetJumpInput(int jump) { this->jumpInput = jump; }
 

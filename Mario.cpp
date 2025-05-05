@@ -345,6 +345,12 @@ void CMario::JumpPressed()
 	
 }
 
+bool CMario::IsPMeterFull()
+{
+	CGameData* gameData = CGameData::GetInstance();
+	return gameData->IsPMeterFull();
+}
+
 void CMario::GetAniId()
 {
 	if (state == MARIO_STATE_DIE)
@@ -483,12 +489,13 @@ void CMario::SetState(int state)
 		{
 			vy = 0;
 			for (int i = 0; i < 3; i++) {
-				if (vx < MARIO_JUMP_SPEED_CHECK_X[i]) {
+				if (abs(vx) < MARIO_JUMP_SPEED_CHECK_X[i]) {
 					vy = -MARIO_JUMP_SPEED[i];
 					break;
 				}
 			}
 			if (vy == 0) vy = -MARIO_JUMP_SPEED[3];
+			jumpVx = vx;
 		}
 		break;
 
@@ -534,7 +541,11 @@ void CMario::SetState(int state)
 float minY = 1000000;
 void CMario::Acceleration(DWORD dt)
 {
-	const float topSpeed = runInput == 1 ? MARIO_RUN_MAX_SPEED_X : MARIO_WALK_MAX_SPEED_X;
+	float topSpeed = 0;
+
+	if (IsPMeterFull()) topSpeed = MARIO_SPRINT_MAX_SPEED_X;
+	else if (runInput == 1) topSpeed = MARIO_RUN_MAX_SPEED_X;
+	else topSpeed = MARIO_WALK_MAX_SPEED_X;
 
 	//if(vy < 0) minY  = min(minY, y);
 	DebugOutTitle(L"vx: %f", vx);
@@ -566,23 +577,41 @@ void CMario::Acceleration(DWORD dt)
 	}
 	else {
 		const float absVx = abs(vx);
-		if (
-			(vx > 0 && dirInput < 0) ||
-			(vx < 0 && dirInput > 0)
-			)
-		{
-			// Skidding (turning around)
-			vx += dirInput * MARIO_ACCEL_SKID_X * dt;
+		if (isOnPlatform) {
+			if (
+				(vx > 0 && dirInput < 0) ||
+				(vx < 0 && dirInput > 0)
+				)
+			{
+				// Skidding (turning around)
+				vx += dirInput * MARIO_ACCEL_SKID_X * dt;
+			}
+			else if (absVx < abs(topSpeed)) {
+				// Normal acceleration
+				vx += dirInput * MARIO_ACCEL_NORMAL_X * dt;
+				if(abs(vx) > topSpeed)	vx = topSpeed * dirInput;
+			}
+			else if (absVx > abs(topSpeed)) {
+				if (isOnPlatform) {
+					vx -= dirInput * (IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X) * dt;
+				}
+			}
 		}
-		else if (absVx < abs(topSpeed)) {
-			// Normal acceleration
-			vx += dirInput * MARIO_ACCEL_NORMAL_X * dt;
-		}
-		else if (absVx > abs(topSpeed)) {
-			vx = topSpeed * dirInput;
-			/*if (isOnPlatform) {
-				vx -= dirInput * (IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X) * dt;
-			}*/
+		else {
+			if (!IsPMeterFull()) {
+				if(abs(jumpVx) < MARIO_WALK_MAX_SPEED_X) topSpeed = MARIO_WALK_MAX_SPEED_X;
+				else topSpeed = MARIO_RUN_MAX_SPEED_X;
+			}else topSpeed = MARIO_SPRINT_MAX_SPEED_X;
+
+			if((vx > 0 && dirInput < 0) || (vx < 0 && dirInput > 0)) {
+				vx += dirInput * MARIO_DEACCEL_MIDAIR_X * dt;
+			}
+			else if (absVx < abs(topSpeed)) {
+				vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+			}
+			else if (absVx > abs(topSpeed)) {
+				vx = topSpeed * dirInput;
+			}
 		}
 	}
 
