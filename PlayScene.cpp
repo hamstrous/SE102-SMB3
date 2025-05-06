@@ -31,7 +31,7 @@
 #include "PowerUp.h"
 #include "Score.h"
 #include "Font.h"
-
+#include "GameFX.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -235,7 +235,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GOOMBAFLY: obj = new CGoombaFly(x, y); break;
 	case OBJECT_TYPE_KOOPA_RED: obj = new CKoopaRed(x, y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_KOOPA_GREEN: obj = new CKoopaGreen(x, y, atoi(tokens[3].c_str())); break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
+	case OBJECT_TYPE_BRICK: obj = new CBreakableBrick(x, y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_FIREBALL: obj = new CFireball(x, y); break;
 	case OBJECT_TYPE_SMOKE: obj = new CSmoke(x, y); break;
@@ -303,6 +303,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int spriteId_bot_right = atoi(tokens[9].c_str());
 		BOOLEAN isGoInside = atoi(tokens[10].c_str());
 		obj = new CPipe(x, y, cellWidth, cellHeight, height, spriteId_top_left, spriteId_top_right, spriteId_bot_left, spriteId_bot_right, isGoInside);
+		break;
 	}
 	case OBJECT_TYPE_MUSHROOM:
 	{
@@ -320,8 +321,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMountain(x, y, cell_width, cell_height, type, color);
 		break;
 	}
+	case OBJECT_TYPE_TAILHIT:
+	{
+		float type = atoi(tokens[3].c_str());
+		obj = new CGameFX(x, y, type);
+		break;
+	}
+		
 	
-	break;
 
 
 	default:
@@ -419,7 +426,21 @@ void CPlayScene::Update(DWORD dt)
 {
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
-	if (GetIsPause() || GetIsStop()) return;
+	//if (GetIsPause() || GetIsStop() ) return;
+
+	if (GetIsStop()) return;
+
+	if (GetIsPause())
+	{
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			if (dynamic_cast<CScore*>(objects[i]))
+			{
+				objects[i]->Update(dt, nullptr);
+			}
+		}
+		return; 
+	}
 
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 0; i < objects.size(); i++)
@@ -470,7 +491,9 @@ void CPlayScene::Render()
 
 		if (dynamic_cast<CFireball*>(i)
 			|| dynamic_cast<CScore*>(i)
-			|| dynamic_cast<CLeaf*>(i))
+			|| dynamic_cast<CLeaf*>(i)
+			|| dynamic_cast<CSmoke*>(i)
+			|| dynamic_cast<CGameFX*>(i))
 			projectileRenderObjects.push_back(i);
 	}
 

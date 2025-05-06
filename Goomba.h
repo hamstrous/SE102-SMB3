@@ -52,4 +52,5 @@ public:
 	virtual void ShellHit(int shellX);
 	virtual void TailHit(float x) {};
 	virtual void BlockHit() {};
+	virtual void TowardMario(float speed, float awayMario = 1);
 };

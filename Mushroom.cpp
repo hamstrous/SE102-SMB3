@@ -57,7 +57,7 @@ void CMushroom::OnNoCollision(DWORD dt)
 void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (!e->obj->IsBlocking()) return;
-	if (dynamic_cast<CMario*>(e->obj)) return;
+	//if (dynamic_cast<CMario*>(e->obj)) return;
 	float qbX, qbY;
 	e->obj->GetPosition(qbX, qbY);
 	if (e->ny != 0)

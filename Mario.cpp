@@ -240,7 +240,7 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 
 	// jump on top >> kill Koopa and deflect a bit 
 	if (e->ny < 0)
-	{
+	{	
 		character->Stomped();
 		if (CGame::GetInstance()->IsKeyDown(DIK_S)) SetJumpInput(1);
 		if (jumpInput == 1) vy = -MARIO_JUMP_DEFLECT_SPEED;
