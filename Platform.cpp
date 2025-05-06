@@ -61,4 +61,5 @@ int CPlatform::IsDirectionColliable(float nx, float ny)
 {	
 	if (blocking == 0) return 0;
 	if (blocking == 1) return 1;
+	return 0;
 }

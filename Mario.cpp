@@ -184,16 +184,22 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		PointsCheck();
 		if (e->ny != 0)
 		{
-			if (vy < 0) {
+			if (e->ny > 0) {
 				// head collide offset
 				if (pointsTouched[TOP]) vy = 0;
 				else y -= 1;
-			}else vy = 0;
-			if (e->ny < 0) {
-				isOnPlatform = true;
-				if (glideTimer->IsRunning()) {
-					glideTimer->Reset();
-					SkipCurrentAnimation();
+			}else if (e->ny < 0) {
+				if (!pointsTouched[DOWNRIGHT] && !pointsTouched[DOWNLEFT]) {
+					y += 1;
+					isOnPlatform = false;
+				}
+				else {
+					vy = 0;
+					isOnPlatform = true;
+					if (glideTimer->IsRunning()) {
+						glideTimer->Reset();
+						SkipCurrentAnimation();
+					}
 				}
 			}
 		}
@@ -384,14 +390,22 @@ bool CMario::IsPMeterFull()
 void CMario::SetPointsPosition()
 {
 	if (!IsBig() || isSitting) {
-
+		const float MARIO_SMALL_Y_OFFSET = 7.0f;
+		const float MARIO_SMALL_X_OFFSET = 4.0f;
+		points[0]->SetPosition(x, y - MARIO_SMALL_BBOX_HEIGHT / 2 - POINTS_OFFSET);
+		points[1]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2 - POINTS_OFFSET, y - MARIO_SMALL_Y_OFFSET);
+		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2 - POINTS_OFFSET, y + MARIO_SMALL_Y_OFFSET);
+		points[3]->SetPosition(x + MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2 + POINTS_OFFSET);
+		points[4]->SetPosition(x - MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2 + POINTS_OFFSET);
+		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2 + POINTS_OFFSET, y + MARIO_SMALL_Y_OFFSET);
+		points[6]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2 + POINTS_OFFSET, y - MARIO_SMALL_Y_OFFSET);
 	}
 	else {
 		const float MARIO_BIG_Y_OFFSET = 12.0f;
-		const float MARIO_BIG_X_OFFSET = 5.0f;
+		const float MARIO_BIG_X_OFFSET = 4.0f;
 		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2 - POINTS_OFFSET);
-		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 + POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
-		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 + POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
+		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 - POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
+		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 - POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
 		points[3]->SetPosition(x + MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
 		points[4]->SetPosition(x - MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
 		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 + POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
@@ -615,11 +629,17 @@ void CMario::PointsCheck()
 	GetCollidableObjects(&coObjects);
 	CCollision::GetInstance()->ProcessForMario(this, &points, &coObjects, &pointsTouched);
 
+	int dir = 0;
 	if (pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN]) {
-		x -= 1;
+		dir = -2;
 	}
 	else if (pointsTouched[LEFTUP] || pointsTouched[LEFTDOWN]) {
-		x += 1;
+		dir = 2;
+	}
+	x += dir;
+	if ((vx < 0 && dir > 0) || (vx > 0 && dir < 0)) {
+		vx = 0;
+		DebugOutTitle(L"vx: %f", vx);
 	}
 }
 
@@ -723,7 +743,6 @@ void CMario::Acceleration(DWORD dt)
 						}*/
 					}
 
-					DebugOutTitle(L"vx: %f", vx);
 				}
 				else {
 					if (vx < 0 && dirInput> 0 || vx > 0 && dirInput < 0) {
