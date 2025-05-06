@@ -231,7 +231,8 @@ public:
 
 		holdingShell = NULL;
 
-		points.resize(7); // top, upleft, downleft, leftdown, rightdowwm, downright, upright
+		pointsTouched.resize(7, false);
+		points.resize(7); // top, left, leftdown, downleft, dowmright, rightdown, rightup
 		for (int i = 0; i < 7; i++) {
 			points[i] = new CPoint(0, 0);
 		}
@@ -239,6 +240,8 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
+
+	void PointsCheck();
 
 	void Acceleration(DWORD dt);
 

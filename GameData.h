@@ -55,7 +55,8 @@ public:
 
 	int GetRemainingTime()
 	{
-		return 300 - (countDown->ElapsedTime() / 1000);
+		int time = 300 - (countDown->ElapsedTime()/1000);
+		return (time >= 0) ? time : 0;
 	}
 
 	void Update(DWORD dt);

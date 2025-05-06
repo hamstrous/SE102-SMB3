@@ -165,24 +165,29 @@ void CMario::OnNoCollision(DWORD dt)
 	x += vx * dt;
 	y += vy * dt;
 	isOnPlatform = false;
+	PointsCheck();
 }
+
+#define TOP 0
+#define RIGHTUP 1
+#define RIGHTDOWN 2
+#define DOWNRIGHT 3
+#define DOWNLEFT 4
+#define LEFTDOWN 5
+#define LEFTUP 6
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	float objx, objy;
 	e->obj->GetPosition(objx, objy);
 	if (e->obj->IsBlocking()) {
-		pointsTouched.clear();
-		vector<LPGAMEOBJECT> coObjects;
-		GetCollidableObjects(&coObjects);
-		SetPointsPosition();
-		CCollision::GetInstance()->ProcessForMario(this, &points, &coObjects, &pointsTouched);
+		PointsCheck();
 		if (e->ny != 0)
 		{
 			if (vy < 0) {
 				// head collide offset
-				if (pointsTouched[0]) vy = 0;
-				else x += (x > objx) ? 4 : -4;
+				if (pointsTouched[TOP]) vy = 0;
+				else y -= 1;
 			}else vy = 0;
 			if (e->ny < 0) {
 				isOnPlatform = true;
@@ -382,15 +387,15 @@ void CMario::SetPointsPosition()
 
 	}
 	else {
-		const float MARIO_BIG_Y_OFFSET = 15.0f;
+		const float MARIO_BIG_Y_OFFSET = 12.0f;
 		const float MARIO_BIG_X_OFFSET = 5.0f;
 		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2 - POINTS_OFFSET);
 		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 + POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
 		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 + POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
-		points[3]->SetPosition(x + MARIO_BIG_Y_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
-		points[4]->SetPosition(x - MARIO_BIG_Y_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
-		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 + POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
-		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 + POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
+		points[3]->SetPosition(x + MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
+		points[4]->SetPosition(x - MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
+		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 + POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
+		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 + POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
 	}
 }
 
@@ -601,6 +606,21 @@ void CMario::SetState(int state)
 	}
 
 	CGameObject::SetState(state);
+}
+
+void CMario::PointsCheck()
+{
+	SetPointsPosition();
+	vector<LPGAMEOBJECT> coObjects;
+	GetCollidableObjects(&coObjects);
+	CCollision::GetInstance()->ProcessForMario(this, &points, &coObjects, &pointsTouched);
+
+	if (pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN]) {
+		x -= 1;
+	}
+	else if (pointsTouched[LEFTUP] || pointsTouched[LEFTDOWN]) {
+		x += 1;
+	}
 }
 
 float minY = 1000000;

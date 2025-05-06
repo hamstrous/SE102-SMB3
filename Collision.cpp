@@ -384,6 +384,8 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 // the start of mario seperate collision check (enemy, item touch, collsion point check)
 void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouched)
 {
+	pointsTouched->clear();
+	int k = 0;
 	for (auto i : *points) {
 		LPGAMEOBJECT point = i;
 		bool touched = false;
@@ -405,7 +407,7 @@ void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* poin
 			}
 		}
 		if(!touched) pointsTouched->push_back(false);
-		return;
+		k++;
 	}
 }
 
