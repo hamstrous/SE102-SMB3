@@ -14,6 +14,7 @@ koopa-green.txt
 koopa-red.txt
 font.txt
 hud.txt
+effect.txt
 #
 
 [OBJECTS]
@@ -39,18 +40,18 @@ hud.txt
 #ENEMIES
 
 #KOOPARED
-#3	80	50	0
+3	80	50	0
 #3	120	50	1
 
 #KOOPAGREEN
-#14	30	50	0
+14	30	50	0
 #14	130	50	1
 
 
 #GOOMBAFLY
-#22	130	100
+22	130	100
 #GOOMBA
-#2	10	50
+2	10	50
 
 
 #QUESTIONBLOCK
@@ -87,7 +88,7 @@ hud.txt
 #for green fireplant (color = 10, type = 0, size = 0)
 8	348	156.5	10	0	0
 #for red fireplant ( color = 0, type = 0, size =1)
-8	158	152	0	0	1
+#8	158	152	0	0	1
 #for green plant (color = 10, type = 1, size = 0)
 #8	100	173	10	1	0
 
