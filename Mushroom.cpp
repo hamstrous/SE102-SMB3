@@ -38,11 +38,13 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 
 void CMushroom::Render()
-{
+{	
+	if (GetIsPause()) return;
 	int aniId = ID_ANI_MUSHROOM_WALKING;
 	if (type == TYPE_LEVELUP)
 		aniId = ID_ANI_MUSHROOM_1UP_WALKING;
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+
 	//RenderBoundingBox();
 }
 
@@ -55,6 +57,7 @@ void CMushroom::OnNoCollision(DWORD dt)
 void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (!e->obj->IsBlocking()) return;
+	if (dynamic_cast<CMario*>(e->obj)) return;
 	float qbX, qbY;
 	e->obj->GetPosition(qbX, qbY);
 	if (e->ny != 0)

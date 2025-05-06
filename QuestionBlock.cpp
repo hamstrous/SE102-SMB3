@@ -1,12 +1,17 @@
 #include "QuestionBlock.h"
 #include "Mushroom.h"
 void CQuestionBlock::Render()
-{
+{	
 	CAnimations* animations = CAnimations::GetInstance();
+
+	if (GetIsPause() && (state == QUESTION_BLOCK_STATE_MOVEUP || state == QUESTION_BLOCK_STATE_MOVEDOWN)) {
+		return; 
+	}
 	if (isUnbox)
 		animations->Get(ID_ANI_BLOCK_UNBOX)->Render(x, y);
 	else
 	animations->Get(ID_ANI_BLOCK_NORMAL)->Render(x, y);
+	
 	//RenderBoundingBox();
 }
 

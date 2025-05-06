@@ -178,7 +178,7 @@ protected:
 	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
 	void OnCollisionWithFireball(LPCOLLISIONEVENT e);
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
-  void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
+    void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
 	void GetAniId();
 	void AssignCurrentAnimation(MarioLevel level, MarioAnimationType type) {
 		//if not in list
