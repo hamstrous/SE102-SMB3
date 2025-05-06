@@ -59,9 +59,9 @@ hud.txt
 #15	64	120	3
 
 
-15	96	150	1
-15	80	150	2
-15	64	150	3
+15	96	120	1
+15	80	120	2
+15	64	120	3
 15	350	164	1
 #CLOUDDELETE
 #17	100	100
@@ -85,9 +85,9 @@ hud.txt
 
 #PLANT ( type, x, y, color, type, size)
 #for green fireplant (color = 10, type = 0, size = 0)
-#8	348	156.5	10	0	0
+8	348	156.5	10	0	0
 #for red fireplant ( color = 0, type = 0, size =1)
-#8	158	152	0	0	1
+8	158	152	0	0	1
 #for green plant (color = 10, type = 1, size = 0)
 #8	100	173	10	1	0
 

@@ -22,7 +22,7 @@ protected:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 
-	int IsCollidable() { return 1; };
+	int IsCollidable() { return 0; };
 	int IsBlocking() { return 0; }
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e) {};

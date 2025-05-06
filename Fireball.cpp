@@ -17,7 +17,11 @@ void CFireball::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 
 void CFireball::Render()
-{
+{	
+	if (GetIsPause()) {
+		time_start = GetTickCount64();
+		return;
+	}
 	int aniId = ID_ANI_FIREBALL;
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 }

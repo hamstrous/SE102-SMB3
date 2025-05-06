@@ -50,6 +50,7 @@
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="GameFXManager.cpp" />
+    <ClCompile Include="GameFX.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -104,6 +105,7 @@
     <ClInclude Include="GameData.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="GameFXManager.h" />
+    <ClInclude Include="GameFX.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
