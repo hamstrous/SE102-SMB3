@@ -187,7 +187,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 			if (e->ny > 0) {
 				// head collide offset
 				if (pointsTouched[TOP]) vy = 0;
-				else y -= 1;
+				else y -= 1; //let mario phase through block so side points can do it job of offseting
 			}else if (e->ny < 0) {
 				if (!pointsTouched[DOWNRIGHT] && !pointsTouched[DOWNLEFT]) {
 					y += 1;
@@ -234,6 +234,10 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 	// jump on top >> kill Koopa and deflect a bit 
 	if (e->ny < 0)
 	{	
+		if (dynamic_cast<CPlant*>(character)) {
+			character->Touched();
+			return;
+		}
 		character->Stomped();
 		if (CGame::GetInstance()->IsKeyDown(DIK_S)) SetJumpInput(1);
 		if (jumpInput == 1) vy = -MARIO_JUMP_DEFLECT_SPEED;
@@ -391,7 +395,7 @@ void CMario::SetPointsPosition()
 {
 	if (!IsBig() || isSitting) {
 		const float MARIO_SMALL_Y_OFFSET = 7.0f;
-		const float MARIO_SMALL_X_OFFSET = 4.0f;
+		const float MARIO_SMALL_X_OFFSET = 3.0f;
 		points[0]->SetPosition(x, y - MARIO_SMALL_BBOX_HEIGHT / 2 - POINTS_OFFSET);
 		points[1]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2 - POINTS_OFFSET, y - MARIO_SMALL_Y_OFFSET);
 		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2 - POINTS_OFFSET, y + MARIO_SMALL_Y_OFFSET);
@@ -624,6 +628,7 @@ void CMario::SetState(int state)
 
 void CMario::PointsCheck()
 {
+	if (state == MARIO_STATE_DIE) return;
 	SetPointsPosition();
 	vector<LPGAMEOBJECT> coObjects;
 	GetCollidableObjects(&coObjects);
@@ -639,11 +644,9 @@ void CMario::PointsCheck()
 	x += dir;
 	if ((vx < 0 && dir > 0) || (vx > 0 && dir < 0)) {
 		vx = 0;
-		DebugOutTitle(L"vx: %f", vx);
 	}
 }
 
-float minY = 1000000;
 void CMario::Acceleration(DWORD dt)
 {
 	CGameData* gameData = CGameData::GetInstance();

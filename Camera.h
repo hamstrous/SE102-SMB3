@@ -3,6 +3,7 @@
 
 #define CAMERA_SPEED 0.1f
 #define FIXED_BOX_SIZE 20.0f
+#define OUT_CAMERA 64.f
 class CMario;
 
 class CCamera : public CGameObject
@@ -18,5 +19,14 @@ public:
 	CCamera();
 	void Render() {};
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	bool IsOutOfCamera(LPGAMEOBJECT obj) {
+		float ox, oy;
+		obj->GetPosition(ox, oy);
+		if(ox < x - OUT_CAMERA || ox > x + screenWidth + OUT_CAMERA ||
+			oy < y - OUT_CAMERA || oy > y + screenHeight + OUT_CAMERA)
+			return true;
+		else
+			return false;
+	}
 };
 

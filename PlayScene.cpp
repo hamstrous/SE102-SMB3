@@ -339,7 +339,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	// General object setup
 	obj->SetPosition(x, y);
 
-
+	if (CGoomba * goomba = dynamic_cast<CGoomba*>(obj)) {
+		CCharacter* goombaCopy = goomba->Clone();
+		characterCopy[goomba] = goombaCopy;
+	}
 	objects.push_back(obj);
 }
 
@@ -442,15 +445,34 @@ void CPlayScene::Update(DWORD dt)
 		return; 
 	}
 
+	for(auto obj : objects) {
+		if(CCharacter* character = dynamic_cast<CCharacter*>(obj))
+		if(CGoomba* goomba = dynamic_cast<CGoomba*>(obj)){
+			if (IsObjectOutOfCamera(obj)) {
+				//when out of camera, go to sleep and put back at og pos
+				obj->SetSleep(true);
+				float nx, ny;
+				if (IsObjectOutOfCamera(characterCopy[character])) {
+					characterCopy[character]->GetPosition(nx, ny);
+					obj->SetPosition(nx, ny);
+				}else obj->SetPosition(-1, 3000); // put it out of camera
+			}
+			else if (obj->GetSleep()) {
+				obj->SetSleep(false);
+				goomba->Reset(characterCopy[dynamic_cast<CCharacter*>(obj)]);
+			}
+		}
+	}
+
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+		if(!objects[i]->GetSleep()) coObjects.push_back(objects[i]);
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		if (!objects[i]->GetSleep()) objects[i]->Update(dt, &coObjects);
 	}
 	camera->Update(dt, &coObjects);
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
@@ -472,6 +494,8 @@ void CPlayScene::Render()
 {	
 
 	for (auto i : objects) {
+		if (i->GetSleep()) continue;
+
 		if (dynamic_cast<CBackgroundColor*>(i))
 			backgroundRenderObjects.push_back(i);
 

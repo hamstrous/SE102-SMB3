@@ -179,6 +179,6 @@ void CAnimation::StoppingRender(float x, float y)
 
 void CAnimation::StillRender(float x, float y)
 {
-	frames[currentFrame]->GetSprite()->Draw(x, y);
+	frames[(currentFrame != -1 ? currentFrame : 0)]->GetSprite()->Draw(x, y);
 }
 
