@@ -6,6 +6,7 @@
 #include "BaseBrick.h"
 #include "GameFXManager.h"
 #include "debug.h"
+#include "Mario.h"
 
 #define BLOCK_PUSH_FACTOR 0.01f
 
@@ -511,7 +512,7 @@ bool CCollision::CheckTouchCharacterForShellHeldHit(float ml, float mt, float mr
 	}return isTouching;
 }
 
-bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x)
+bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, int nx)
 {
 	bool isTouching = false;
 	if (coObjects->size() > 0)
@@ -546,7 +547,8 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 
 					}
 					else if (CBaseBrick* brick = dynamic_cast<CBaseBrick*>(obj))
-					{
+					{	
+						
 						brick->SideHit();
 					}
 				}

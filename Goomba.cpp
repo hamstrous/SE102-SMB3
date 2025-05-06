@@ -165,7 +165,7 @@ void CGoomba::TailHit(float x)
 		vx = -GOOMBA_FLYING_SPEED_X;
 	}
 	tailhit = true;
-	SetState(GOOMBAFLY_STATE_DIE_UP);
+	SetState(GOOMBA_STATE_DIE_UP);
 }
 
 void CGoomba::TowardMario(float speed, float awayMario)
