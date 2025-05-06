@@ -1,6 +1,7 @@
 #include "Goomba.h"
 #include "Smoke.h"
 #include "PlayScene.h"
+#include "Mario.h"
 
 CGoomba::CGoomba(float x, float y):CCharacter(x, y)
 {
@@ -9,6 +10,7 @@ CGoomba::CGoomba(float x, float y):CCharacter(x, y)
 	die_start = -1;
 	tailhit = false;
 	SetState(GOOMBA_STATE_WALKING);
+	TowardMario(GOOMBA_WALKING_SPEED);
 }
 
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
@@ -147,3 +149,18 @@ void CGoomba::ShellHit(int shellX)
 	}
 	SetState(GOOMBA_STATE_DIE_UP);
 }
+
+void CGoomba::TowardMario(float speed, float awayMario)
+{
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	float mario_x = 0, mario_y = 0;
+	CMario* mario = (CMario*)scene->GetPlayer();
+	if (mario != NULL) mario->GetPosition(mario_x, mario_y);
+	if (mario_x <= x) {
+		vx = -speed * awayMario;
+	}
+	else {
+		vx = speed * awayMario;
+	}
+}
+

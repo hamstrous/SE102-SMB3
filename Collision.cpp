@@ -4,7 +4,7 @@
 #include "Mushroom.h"
 #include "Character.h"
 #include "BaseBrick.h"
-
+#include "GameFXManager.h"
 #include "debug.h"
 
 #define BLOCK_PUSH_FACTOR 0.01f
@@ -542,6 +542,8 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 					if (CCharacter* character = dynamic_cast<CCharacter*>(obj))
 					{
 						character->TailHit(x);
+						CGameFXManager::GetInstance()->AddGameFX((ml + mr) / 2, (mt + mb) / 2, 1);
+
 					}
 					else if (CBaseBrick* brick = dynamic_cast<CBaseBrick*>(obj))
 					{
