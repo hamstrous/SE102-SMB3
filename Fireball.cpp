@@ -22,8 +22,9 @@ void CFireball::Render()
 		time_start = GetTickCount64();
 		return;
 	}
-	int aniId = ID_ANI_FIREBALL;
-	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	int aniId = ID_ANI_FIREBALL; 
+	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 }
 
 void CFireball::OnNoCollision(DWORD dt)

@@ -470,7 +470,8 @@ void CPlayScene::Render()
 
 		if (dynamic_cast<CFireball*>(i)
 			|| dynamic_cast<CScore*>(i)
-			|| dynamic_cast<CLeaf*>(i))
+			|| dynamic_cast<CLeaf*>(i)
+			|| dynamic_cast<CSmoke*>(i))
 			projectileRenderObjects.push_back(i);
 	}
 
