@@ -1,6 +1,7 @@
 #include "Collision.h"
 #include "GameObject.h"
 #include "Mario.h"
+#include "Mushroom.h"
 #include "Character.h"
 #include "BaseBrick.h"
 
@@ -269,12 +270,21 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	{
 		Filter(objSrc, coEvents, colX, colY);
 
+		for(UINT i = 0; i < coEvents.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEvents[i];
+			if(dynamic_cast<CMario*>(objSrc) && dynamic_cast<CMushroom*>(objSrc))
+			{
+				//DebugOut(L"[INFO] Mario is colliding with object %d\n", e->obj->GetType());
+				e->obj->SetState(0);
+			}
+		}
+
 		float x, y, vx, vy, dx, dy;
 		objSrc->GetPosition(x, y);
 		objSrc->GetSpeed(vx, vy);
 		dx = vx * dt;
 		dy = vy * dt;
-
 		if (colX != NULL && colY != NULL) 
 		{
 			if (colY->t < colX->t)	// was collision on Y first ?
@@ -358,6 +368,7 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
 				objSrc->SetPosition(x, y);
 				objSrc->OnCollisionWith(colY);
+				goto SKIP;
 				return;
 			}
 			else // both colX & colY are NULL 
@@ -372,6 +383,7 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	//
 	// Scan all non-blocking collisions for further collision logic
 	//
+	SKIP:
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
 		LPCOLLISIONEVENT e = coEvents[i];
