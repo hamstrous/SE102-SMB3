@@ -49,6 +49,7 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="GameFXManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="GameFXManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

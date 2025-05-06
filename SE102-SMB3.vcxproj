@@ -147,6 +147,7 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameData.h" />
+    <ClInclude Include="GameFXManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GenericPlatform.h" />
     <ClInclude Include="Goomba.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameData.cpp" />
+    <ClCompile Include="GameFXManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GenericPlatform.cpp" />
     <ClCompile Include="Goomba.cpp" />

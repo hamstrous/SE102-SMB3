@@ -78,8 +78,10 @@ void CPlant::RenderBoundingBox()
 	CGame::GetInstance()->Draw(x - cx, yy - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
 }
 void CPlant::Render()
-{	
-	CAnimations::GetInstance()->Get(GetaniID())->Render(x, y);
+{
+	if (GetIsPause()) return;
+	if (!GetIsStop()) CAnimations::GetInstance()->Get(GetaniID())->Render(x, y);
+	else CAnimations::GetInstance()->Get(GetaniID())->Render(x, y, 1);
 	//RenderBoundingBox();
 }
 
