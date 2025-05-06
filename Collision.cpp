@@ -400,17 +400,6 @@ void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* poin
 				float ml, mt, mr, mb;
 				point->GetBoundingBox(ml, mt, mr, mb);
 
-				//float svx, svy;
-				//obj->GetSpeed(svx, svy);
-				//float sdx = svx * dt;
-				//float sdy = svy * dt;
-				//
-				//float mvx, mvy;
-				//point->GetSpeed(mvx, mvy);
-				//float mdx = mvx * dt;
-				//float mdy = mvy * dt;
-
-
 				if (IsColliding(ml, mt, mr, mb, sl, st, sr, sb))
 				{
 					pointsTouched->push_back(true);

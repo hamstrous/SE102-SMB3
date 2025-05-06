@@ -697,21 +697,21 @@ void CMario::Acceleration(DWORD dt)
 				const float NEW_MARIO_RACCOON_MIDAIR_DECEL = 0.00005625f;
 				const float NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE = 0.000675f; //0030
 				if (gameData->IsFlightMode()) {
-					if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
-						vx += (vx > 0 ? -NEW_MARIO_RACCOON_MIDAIR_DECEL : NEW_MARIO_RACCOON_MIDAIR_DECEL) * dt;
-					}
+					
 					
 					if (vx < 0 && dirInput> 0 || vx > 0 && dirInput < 0) {
 						vx += dirInput * NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE * dt;
 					}
 					else {
-						vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+						if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
+							vx += (vx > 0 ? -NEW_MARIO_RACCOON_MIDAIR_DECEL : NEW_MARIO_RACCOON_MIDAIR_DECEL) * dt;
+						}else vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+						/*if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
+							vx = MARIO_RACCOON_MIDAIR_SPEED_LIMIT * dirInput;
+						}*/
 					}
-					
-					if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
-						vx = MARIO_RACCOON_MIDAIR_SPEED_LIMIT * dirInput;
-					}
-					
+
+					DebugOutTitle(L"vx: %f", vx);
 				}
 				else {
 					if (vx < 0 && dirInput> 0 || vx > 0 && dirInput < 0) {

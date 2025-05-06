@@ -14,6 +14,7 @@ koopa-green.txt
 cloud.txt
 font.txt
 hud.txt
+number.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -33,6 +34,9 @@ hud.txt
 #QUESTIONBLOCK
 21	96	90	1
 
+15	96	120	1
+15	80	120	2
+15	64	120	3
 
 
 #BRICK

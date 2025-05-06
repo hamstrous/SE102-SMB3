@@ -20,43 +20,8 @@ CCamera::CCamera() : CGameObject(0, 0) {
 
 void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	int moveX, moveY;
-	IsMarioOutsideOfCameraFixedBox(moveX, moveY);
-
-	float mvx, mvy;
-	GetMario()->GetSpeed(mvx, mvy);
-	x += moveX * CAMERA_SPEED * dt;
-	y += moveY * CAMERA_SPEED * dt;
-	Clamp(x, 0, levelWidth - screenWidth);
-	Clamp(y, 0, levelHeight - screenHeight);
-}
-
-void CCamera::GetNewCameraPosBasedOnMario(float& cx, float& cy)
-{
-	float nx, ny;
 	CMario* mario = GetMario();
-	if(mario == NULL) 	{
-		cx = x;
-		cy = y;
-		return;
-	}
-	// Get the position of the Mario
-	mario->GetPosition(nx, ny);
-	// Get the position of the camera
-	nx -= screenWidth / 2;
-	ny -= screenHeight / 2;
-
-	//return value
-	cx = nx;
-	cy = ny;
-
-}
-
-void CCamera::IsMarioOutsideOfCameraFixedBox(int &moveX, int &moveY)
-{
-	moveX = moveY = 0;
-	CMario* mario = GetMario();
-	if(mario == NULL) return;	
+	if (mario == NULL) return;
 
 	float mx, my;
 	mario->GetPosition(mx, my);
@@ -68,8 +33,11 @@ void CCamera::IsMarioOutsideOfCameraFixedBox(int &moveX, int &moveY)
 	ct = y + screenHeight / 2 - FIXED_BOX_SIZE;
 	cb = y + screenHeight / 2 + FIXED_BOX_SIZE;
 
-	if (mx < cl) moveX = -1;
-	if (mx > cr) moveX = 1;
-	if (my < ct) moveY = -1;
-	if (my > cb) moveY = 1;
+	if (mx < cl) x -= cl - mx;
+	if (mx > cr) x += mx - cr;
+	if (my < ct) y -= ct - my;
+	if (my > cb) y += my - cb;
+
+	Clamp(x, 0, levelWidth - screenWidth);
+	Clamp(y, 0, levelHeight - screenHeight);
 }
