@@ -40,7 +40,8 @@ void CScore::Render()
 }
 
 void CScore::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
+{	
+	if (GetIsPause()) return;
 	y += vy * dt;
 	if (y < startY - SCORE_DISTANCE_UP && state == SCORE_STATE_UP)
 	{

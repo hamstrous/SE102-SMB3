@@ -15,6 +15,7 @@
 #include "Mushroom.h"
 #include "Leaf.h"
 #include "Font.h"
+#include "ScoreManager.h"
 
 
 unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animationMap = {
@@ -189,6 +190,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 				if (pointsTouched[TOP]) vy = 0;
 				else y -= 1;
 			}else if (e->ny < 0) {
+				count = 1;
 				if (!pointsTouched[DOWNRIGHT] && !pointsTouched[DOWNLEFT]) {
 					y += 1;
 					isOnPlatform = false;
@@ -230,11 +232,15 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 {
 	CCharacter* character = dynamic_cast<CCharacter*>(e->obj);
-
+	float characterX, characterY;
+	character->GetPosition(characterX, characterY);
 	// jump on top >> kill Koopa and deflect a bit 
 	if (e->ny < 0)
 	{	
 		character->Stomped();
+		CScoreManager::GetInstance()->AddScore(characterX, characterY, score[count - 1]);
+		count++;
+
 		if (CGame::GetInstance()->IsKeyDown(DIK_S)) SetJumpInput(1);
 		if (jumpInput == 1) vy = -MARIO_JUMP_DEFLECT_SPEED;
 		else vy = -MARIO_JUMP_WEAK_DEFLECT_SPEED;
