@@ -88,5 +88,7 @@ public:
 	bool CheckTouchCharacterForShellHeldHit(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool notMario);
 	bool CheckTouchCharacterForTailAttack(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x);
 
+	void SetPositionAndOnCollisionWith(LPGAMEOBJECT obj, float x, float y, LPCOLLISIONEVENT coEvent);
+
 	static CCollision* GetInstance();
 };

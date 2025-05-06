@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "BaseBrick.h"
 #define BRICK_BBOX_HEIGHT 16
-#define BRICK_BBOX_WIDTH 10
+#define BRICK_BBOX_WIDTH 16
 class CUnbreakableBrick : public CBaseBrick
 {
 	int width;				// Unit: cell 

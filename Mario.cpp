@@ -165,52 +165,45 @@ void CMario::OnNoCollision(DWORD dt)
 	x += vx * dt;
 	y += vy * dt;
 	isOnPlatform = false;
+	PointsCheck();
 }
+
+#define TOP 0
+#define RIGHTUP 1
+#define RIGHTDOWN 2
+#define DOWNRIGHT 3
+#define DOWNLEFT 4
+#define LEFTDOWN 5
+#define LEFTUP 6
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	float objx, objy;
 	e->obj->GetPosition(objx, objy);
 	if (e->obj->IsBlocking()) {
-		pointsTouched.clear();
-		vector<LPGAMEOBJECT> coObjects;
-		GetCollidableObjects(&coObjects);
-		SetPointsPosition();
-		CCollision::GetInstance()->ProcessForMario(this, &points, &coObjects, &pointsTouched);
+		PointsCheck();
 		if (e->ny != 0)
 		{
-			if (vy < 0) {
-				if (pointsTouched[0]) {
-					DebugOut(L"TOUCH\n");
+			if (e->ny > 0) {
+				// head collide offset
+				if (pointsTouched[TOP]) vy = 0;
+				else y -= 1;
+			}else if (e->ny < 0) {
+				if (!pointsTouched[DOWNRIGHT] && !pointsTouched[DOWNLEFT]) {
+					y += 1;
+					isOnPlatform = false;
 				}
 				else {
-					DebugOut(L"NOTOUCH\n");
-					float px, py;
-					points[0]->GetPosition(px, py);
-					DebugOut(L"POINTS: %f, %f\n", px, py);
-					DebugOut(L"Mario: %f, %f\n", x, y);
-				}
-
-				if (pointsTouched[0]) vy = 0;
-				else x += (x > objx) ? 4 : -4;
-			}else vy = 0;
-			if (e->ny < 0) {
-				isOnPlatform = true;
-				if (glideTimer->IsRunning()) {
-					glideTimer->Reset();
-					SkipCurrentAnimation();
+					vy = 0;
+					isOnPlatform = true;
+					if (glideTimer->IsRunning()) {
+						glideTimer->Reset();
+						SkipCurrentAnimation();
+					}
 				}
 			}
 		}
 		else if (e->nx != 0)
-//{	
-//	if (e->ny != 0 && e->obj->IsBlocking())
-//	{
-//		vy = 0;
-//		if (e->ny < 0) isOnPlatform = true;
-//	}
-//	else
-//		if (e->nx != 0 && e->obj->IsBlocking())
 		{
 			vx = 0;
 		}
@@ -351,8 +344,8 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float l1, t1, r1, b1;
 	float l2, t2, r2, b2;
 	GetTailHitBox(l1, t1, r1, b1, l2, t2, r2, b2);
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, vx, vy, dt, coObjects, x);
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects, x);
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, 0, 0, dt, coObjects, x);
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, 0, 0, dt, coObjects, x);
 }
 
 //Change animaion when mario kick the shell
@@ -392,15 +385,31 @@ bool CMario::IsPMeterFull()
 	return gameData->IsPMeterFull();
 }
 
-#define POINTS_OFFSET 1.0f
+#define POINTS_OFFSET 0.1f
 
 void CMario::SetPointsPosition()
 {
 	if (!IsBig() || isSitting) {
-
+		const float MARIO_SMALL_Y_OFFSET = 7.0f;
+		const float MARIO_SMALL_X_OFFSET = 4.0f;
+		points[0]->SetPosition(x, y - MARIO_SMALL_BBOX_HEIGHT / 2 - POINTS_OFFSET);
+		points[1]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2 - POINTS_OFFSET, y - MARIO_SMALL_Y_OFFSET);
+		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2 - POINTS_OFFSET, y + MARIO_SMALL_Y_OFFSET);
+		points[3]->SetPosition(x + MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2 + POINTS_OFFSET);
+		points[4]->SetPosition(x - MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2 + POINTS_OFFSET);
+		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2 + POINTS_OFFSET, y + MARIO_SMALL_Y_OFFSET);
+		points[6]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2 + POINTS_OFFSET, y - MARIO_SMALL_Y_OFFSET);
 	}
 	else {
+		const float MARIO_BIG_Y_OFFSET = 12.0f;
+		const float MARIO_BIG_X_OFFSET = 4.0f;
 		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2 - POINTS_OFFSET);
+		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 - POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
+		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 - POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
+		points[3]->SetPosition(x + MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
+		points[4]->SetPosition(x - MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
+		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 + POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
+		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 + POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
 	}
 }
 
@@ -613,6 +622,27 @@ void CMario::SetState(int state)
 	CGameObject::SetState(state);
 }
 
+void CMario::PointsCheck()
+{
+	SetPointsPosition();
+	vector<LPGAMEOBJECT> coObjects;
+	GetCollidableObjects(&coObjects);
+	CCollision::GetInstance()->ProcessForMario(this, &points, &coObjects, &pointsTouched);
+
+	int dir = 0;
+	if (pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN]) {
+		dir = -2;
+	}
+	else if (pointsTouched[LEFTUP] || pointsTouched[LEFTDOWN]) {
+		dir = 2;
+	}
+	x += dir;
+	if ((vx < 0 && dir > 0) || (vx > 0 && dir < 0)) {
+		vx = 0;
+		DebugOutTitle(L"vx: %f", vx);
+	}
+}
+
 float minY = 1000000;
 void CMario::Acceleration(DWORD dt)
 {
@@ -699,21 +729,20 @@ void CMario::Acceleration(DWORD dt)
 				const float NEW_MARIO_RACCOON_MIDAIR_DECEL = 0.00005625f;
 				const float NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE = 0.000675f; //0030
 				if (gameData->IsFlightMode()) {
-					if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
-						vx += (vx > 0 ? -NEW_MARIO_RACCOON_MIDAIR_DECEL : NEW_MARIO_RACCOON_MIDAIR_DECEL) * dt;
-					}
+					
 					
 					if (vx < 0 && dirInput> 0 || vx > 0 && dirInput < 0) {
 						vx += dirInput * NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE * dt;
 					}
 					else {
-						vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+						if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
+							vx += (vx > 0 ? -NEW_MARIO_RACCOON_MIDAIR_DECEL : NEW_MARIO_RACCOON_MIDAIR_DECEL) * dt;
+						}else vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+						/*if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
+							vx = MARIO_RACCOON_MIDAIR_SPEED_LIMIT * dirInput;
+						}*/
 					}
-					
-					if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
-						vx = MARIO_RACCOON_MIDAIR_SPEED_LIMIT * dirInput;
-					}
-					
+
 				}
 				else {
 					if (vx < 0 && dirInput> 0 || vx > 0 && dirInput < 0) {

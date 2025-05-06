@@ -18,9 +18,5 @@ public:
 	CCamera();
 	void Render() {};
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	void GetNewCameraPosBasedOnMario(float& x, float& y);
-
-	//Fix box is the zone where if mario still inside the camera does not move
-	void IsMarioOutsideOfCameraFixedBox(int &moveX, int &moveY);
 };
 

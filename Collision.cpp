@@ -1,6 +1,7 @@
 #include "Collision.h"
 #include "GameObject.h"
 #include "Mario.h"
+#include "Mushroom.h"
 #include "Character.h"
 #include "BaseBrick.h"
 #include "GameFXManager.h"
@@ -274,15 +275,12 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 		objSrc->GetSpeed(vx, vy);
 		dx = vx * dt;
 		dy = vy * dt;
-
 		if (colX != NULL && colY != NULL) 
 		{
 			if (colY->t < colX->t)	// was collision on Y first ?
 			{
 				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
-				objSrc->SetPosition(x, y);
-
-				objSrc->OnCollisionWith(colY);
+				SetPositionAndOnCollisionWith(objSrc, x, y, colY); // set position and call OnCollisionWith
 
 				//
 				// see if after correction on Y, is there still a collision on X ? 
@@ -303,19 +301,18 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 				if (colX_other != NULL)
 				{
 					x += colX_other->t * dx +colX_other->nx * BLOCK_PUSH_FACTOR;
-					objSrc->OnCollisionWith(colX_other);
+					SetPositionAndOnCollisionWith(objSrc, x, y, colX_other); // set position and call OnCollisionWith
 				}
 				else
 				{
 					x += dx;
+					objSrc->SetPosition(x, y);
 				}
 			}
 			else // collision on X first
 			{
 				x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
-				objSrc->SetPosition(x, y);
-
-				objSrc->OnCollisionWith(colX);
+				SetPositionAndOnCollisionWith(objSrc, x, y, colX); // set position and call OnCollisionWith
 
 				//
 				// see if after correction on X, is there still a collision on Y ? 
@@ -336,11 +333,12 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 				if (colY_other != NULL)
 				{
 					y += colY_other->t * dy + colY_other->ny * BLOCK_PUSH_FACTOR;
-					objSrc->OnCollisionWith(colY_other);
+					SetPositionAndOnCollisionWith(objSrc, x, y, colY_other); // set position and call 
 				}
 				else
 				{
 					y += dy;
+					objSrc->SetPosition(x, y);
 				}
 			}
 		}
@@ -349,24 +347,22 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 		{
 			x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
 			y += dy;
-			objSrc->OnCollisionWith(colX);
+			SetPositionAndOnCollisionWith(objSrc, x, y, colX); // set position and call OnCollisionWith
 		}
 		else 
 			if (colY != NULL)
 			{
 				x += dx;
 				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
-				objSrc->SetPosition(x, y);
-				objSrc->OnCollisionWith(colY);
-				return;
+				SetPositionAndOnCollisionWith(objSrc, x, y, colY); // set position and call OnCollisionWith
 			}
 			else // both colX & colY are NULL 
 			{
 				x += dx;
 				y += dy;
+				objSrc->SetPosition(x, y);
 			}
-
-		objSrc->SetPosition(x, y);
+		
 	}
 
 	//
@@ -388,6 +384,8 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 // the start of mario seperate collision check (enemy, item touch, collsion point check)
 void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouched)
 {
+	pointsTouched->clear();
+	int k = 0;
 	for (auto i : *points) {
 		LPGAMEOBJECT point = i;
 		bool touched = false;
@@ -400,17 +398,6 @@ void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* poin
 				float ml, mt, mr, mb;
 				point->GetBoundingBox(ml, mt, mr, mb);
 
-				//float svx, svy;
-				//obj->GetSpeed(svx, svy);
-				//float sdx = svx * dt;
-				//float sdy = svy * dt;
-				//
-				//float mvx, mvy;
-				//point->GetSpeed(mvx, mvy);
-				//float mdx = mvx * dt;
-				//float mdy = mvy * dt;
-
-
 				if (IsColliding(ml, mt, mr, mb, sl, st, sr, sb))
 				{
 					pointsTouched->push_back(true);
@@ -420,7 +407,7 @@ void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* poin
 			}
 		}
 		if(!touched) pointsTouched->push_back(false);
-		return;
+		k++;
 	}
 }
 
@@ -566,4 +553,10 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 			}
 		}
 	}return isTouching;
+}
+
+void CCollision::SetPositionAndOnCollisionWith(LPGAMEOBJECT obj, float x, float y, LPCOLLISIONEVENT coEvent)
+{
+	obj->SetPosition(x, y);
+	obj->OnCollisionWith(coEvent);
 }

@@ -140,16 +140,16 @@ namespace std {
 
 #define MARIO_BIG_BBOX_WIDTH  14
 #define MARIO_BIG_BBOX_HEIGHT 24
-#define MARIO_BIG_SITTING_BBOX_WIDTH  14
-#define MARIO_BIG_SITTING_BBOX_HEIGHT 16
+#define MARIO_BIG_SITTING_BBOX_WIDTH  13
+#define MARIO_BIG_SITTING_BBOX_HEIGHT 14
 
 #define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)
 
 #define MARIO_SMALL_BBOX_WIDTH  13
-#define MARIO_SMALL_BBOX_HEIGHT 12
+#define MARIO_SMALL_BBOX_HEIGHT 14
 
 // time = animation time (sum of all frame duration)
-#define ATTACK_TIME	400
+#define ATTACK_TIME	267
 #define GLIDE_TIME	267
 #define FLY_TIME	267
 
@@ -231,7 +231,8 @@ public:
 
 		holdingShell = NULL;
 
-		points.resize(7); // top, upleft, downleft, leftdown, rightdowwm, downright, upright
+		pointsTouched.resize(7, false);
+		points.resize(7); // top, left, leftdown, downleft, dowmright, rightdown, rightup
 		for (int i = 0; i < 7; i++) {
 			points[i] = new CPoint(0, 0);
 		}
@@ -239,6 +240,8 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
+
+	void PointsCheck();
 
 	void Acceleration(DWORD dt);
 
