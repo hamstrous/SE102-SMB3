@@ -333,8 +333,8 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float l1, t1, r1, b1;
 	float l2, t2, r2, b2;
 	GetTailHitBox(l1, t1, r1, b1, l2, t2, r2, b2);
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, vx, vy, dt, coObjects, x);
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects, x);
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, 0, 0, dt, coObjects, x);
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, 0, 0, dt, coObjects, x);
 }
 
 //Change animaion when mario kick the shell

@@ -270,16 +270,6 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	{
 		Filter(objSrc, coEvents, colX, colY);
 
-		for(UINT i = 0; i < coEvents.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEvents[i];
-			if(dynamic_cast<CMario*>(objSrc) && dynamic_cast<CMushroom*>(objSrc))
-			{
-				//DebugOut(L"[INFO] Mario is colliding with object %d\n", e->obj->GetType());
-				e->obj->SetState(0);
-			}
-		}
-
 		float x, y, vx, vy, dx, dy;
 		objSrc->GetPosition(x, y);
 		objSrc->GetSpeed(vx, vy);
@@ -290,9 +280,7 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 			if (colY->t < colX->t)	// was collision on Y first ?
 			{
 				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
-				objSrc->SetPosition(x, y);
-
-				objSrc->OnCollisionWith(colY);
+				SetPositionAndOnCollisionWith(objSrc, x, y, colY); // set position and call OnCollisionWith
 
 				//
 				// see if after correction on Y, is there still a collision on X ? 
@@ -313,19 +301,18 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 				if (colX_other != NULL)
 				{
 					x += colX_other->t * dx +colX_other->nx * BLOCK_PUSH_FACTOR;
-					objSrc->OnCollisionWith(colX_other);
+					SetPositionAndOnCollisionWith(objSrc, x, y, colX_other); // set position and call OnCollisionWith
 				}
 				else
 				{
 					x += dx;
+					objSrc->SetPosition(x, y);
 				}
 			}
 			else // collision on X first
 			{
 				x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
-				objSrc->SetPosition(x, y);
-
-				objSrc->OnCollisionWith(colX);
+				SetPositionAndOnCollisionWith(objSrc, x, y, colX); // set position and call OnCollisionWith
 
 				//
 				// see if after correction on X, is there still a collision on Y ? 
@@ -346,11 +333,12 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 				if (colY_other != NULL)
 				{
 					y += colY_other->t * dy + colY_other->ny * BLOCK_PUSH_FACTOR;
-					objSrc->OnCollisionWith(colY_other);
+					SetPositionAndOnCollisionWith(objSrc, x, y, colY_other); // set position and call 
 				}
 				else
 				{
 					y += dy;
+					objSrc->SetPosition(x, y);
 				}
 			}
 		}
@@ -359,31 +347,27 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 		{
 			x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
 			y += dy;
-			objSrc->OnCollisionWith(colX);
+			SetPositionAndOnCollisionWith(objSrc, x, y, colX); // set position and call OnCollisionWith
 		}
 		else 
 			if (colY != NULL)
 			{
 				x += dx;
 				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
-				objSrc->SetPosition(x, y);
-				objSrc->OnCollisionWith(colY);
-				goto SKIP;
-				return;
+				SetPositionAndOnCollisionWith(objSrc, x, y, colY); // set position and call OnCollisionWith
 			}
 			else // both colX & colY are NULL 
 			{
 				x += dx;
 				y += dy;
+				objSrc->SetPosition(x, y);
 			}
-
-		objSrc->SetPosition(x, y);
+		
 	}
 
 	//
 	// Scan all non-blocking collisions for further collision logic
 	//
-	SKIP:
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
 		LPCOLLISIONEVENT e = coEvents[i];
@@ -565,4 +549,10 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 			}
 		}
 	}return isTouching;
+}
+
+void CCollision::SetPositionAndOnCollisionWith(LPGAMEOBJECT obj, float x, float y, LPCOLLISIONEVENT coEvent)
+{
+	obj->SetPosition(x, y);
+	obj->OnCollisionWith(coEvent);
 }
