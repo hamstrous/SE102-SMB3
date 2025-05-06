@@ -180,17 +180,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (e->ny != 0)
 		{
 			if (vy < 0) {
-				if (pointsTouched[0]) {
-					DebugOut(L"TOUCH\n");
-				}
-				else {
-					DebugOut(L"NOTOUCH\n");
-					float px, py;
-					points[0]->GetPosition(px, py);
-					DebugOut(L"POINTS: %f, %f\n", px, py);
-					DebugOut(L"Mario: %f, %f\n", x, y);
-				}
-
+				// head collide offset
 				if (pointsTouched[0]) vy = 0;
 				else x += (x > objx) ? 4 : -4;
 			}else vy = 0;
@@ -392,7 +382,7 @@ bool CMario::IsPMeterFull()
 	return gameData->IsPMeterFull();
 }
 
-#define POINTS_OFFSET 1.0f
+#define POINTS_OFFSET 0.1f
 
 void CMario::SetPointsPosition()
 {
@@ -400,7 +390,15 @@ void CMario::SetPointsPosition()
 
 	}
 	else {
+		const float MARIO_BIG_Y_OFFSET = 15.0f;
+		const float MARIO_BIG_X_OFFSET = 5.0f;
 		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2 - POINTS_OFFSET);
+		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 + POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
+		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 + POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
+		points[3]->SetPosition(x + MARIO_BIG_Y_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
+		points[4]->SetPosition(x - MARIO_BIG_Y_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
+		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 + POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
+		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 + POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
 	}
 }
 
