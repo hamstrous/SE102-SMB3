@@ -5,6 +5,7 @@
 #include "BaseBrick.h"
 #include "Character.h"
 #include "Timer.h"
+#include "Point.h"
 class CKoopa; // Forward declaration, stop circular dependency if include "Koopa.h"
 
 #include "Animation.h"
@@ -28,10 +29,10 @@ enum class MarioAnimationType {
 	RUNNING_LEFT,
 	SPRINTING_RIGHT,
 	SPRINTING_LEFT,
-	JUMP_WALK_RIGHT,
-	JUMP_WALK_LEFT,
-	JUMP_RUN_RIGHT,
-	JUMP_RUN_LEFT,
+	JUMP_RIGHT,
+	JUMP_LEFT,
+	JUMP_SPRINT_RIGHT,
+	JUMP_SPRINT_LEFT,
 	SIT_RIGHT,
 	SIT_LEFT,
 	BRACE_RIGHT,
@@ -93,6 +94,12 @@ namespace std {
 #define MARIO_ACCEL_SKID_X	0.00045f
 #define MARIO_SMALL_ACCEL_FRIC_X	0.000140625f
 #define MARIO_BIG_ACCEL_FRIC_X	0.000196875f
+
+#define MARIO_ACCEL_MIDAIR_X	0.00021094f
+#define MARIO_DECEL_MIDAIR_X	0.00045f
+
+#define MARIO_RACCOON_MIDAIR_SPEED_LIMIT 0.08625f
+#define MARIO_RACCOON_MIDAIR_DECEL 0.000225f
 
 #define MARIO_RUN_MAX_SPEED_X	0.15f
 #define MARIO_SPRINT_MAX_SPEED_X	0.21f
@@ -162,6 +169,12 @@ protected:
 	BOOLEAN isOnPlatform;
 	int coin;
 	CKoopa* holdingShell;
+	vector<CGameObject*> points;
+	vector<bool> pointsTouched;
+
+	// mario vx speed at jump point, for midair physics
+	float jumpVx = 0;
+
 	int dirInput = 0; // 1: right, -1: left
 	int jumpInput = 0; // 1: jump, 0: no jump
 	int runInput = 0; // 1: run, 0: no run
@@ -217,6 +230,11 @@ public:
 		canHold = false;
 
 		holdingShell = NULL;
+
+		points.resize(7); // top, upleft, downleft, leftdown, rightdowwm, downright, upright
+		for (int i = 0; i < 7; i++) {
+			points[i] = new CPoint(0, 0);
+		}
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -229,7 +247,7 @@ public:
 		return (state != MARIO_STATE_DIE);
 	}
 
-	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable == 0); }
+	int IsBlocking() { return false; }
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
@@ -255,10 +273,15 @@ public:
 	
 	}
 
+	void SkipCurrentAnimation() {
+		if(currentAnimation > 0) {
+			CAnimations::GetInstance()->Get(currentAnimation)->Skip();
+		}
+	}
+
 	void TailAttackInit();
 	void TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
-	void HoldTurn(int dir);
 	void KickedShell();
 
 	void SpecialPressed();
@@ -268,14 +291,18 @@ public:
 	bool IsBig() { return level >= MarioLevel::BIG; }
 	bool IsRaccoon() { return level == MarioLevel::RACCOON; }
 	bool IsOnPlatform() { return isOnPlatform; }
+	bool IsPMeterFull();
 
 	void SetJumpInput(int jump) { this->jumpInput = jump; }
+	int GetJumpInput() { return jumpInput; }
 
 	void SetRunInput(int run) { this->runInput = run; }
 	int GetRunInput() { return runInput; }
 
 	void SetDirInput(int dir) { this->dirInput = dir; }
 	int GetDirInput() { return dirInput; }
+
+	void SetPointsPosition();
 };
 
 //GROUND PHYSICS

@@ -23,14 +23,14 @@ protected:
 	float x; 
 	float y;
 
-	float vx;
-	float vy;
+	float vx = 0;
+	float vy = 0;
 
 	int nx;	 
 
 	int state;
 
-	bool isDeleted; 
+	bool isDeleted = false; 
 
 public: 
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
@@ -62,6 +62,8 @@ public:
 	// Collision ON or OFF ? This can change depending on object's state. For example: die
 	//
 	virtual int IsCollidable() { return 0; };
+
+	void GetCollidableObjects(vector<LPGAMEOBJECT>* coObjects);
 
 	// When no collision has been detected (triggered by CCollision::Process)
 	virtual void OnNoCollision(DWORD dt) {};

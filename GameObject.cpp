@@ -40,6 +40,11 @@ void CGameObject::RenderBoundingBox()
 	CGame::GetInstance()->Draw(x - cx, y - cy, bbox, &rect, BBOX_ALPHA);
 }
 
+void CGameObject::GetCollidableObjects(vector<LPGAMEOBJECT>* coObjects)
+{
+	dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->GetCollidableObjects(coObjects);
+}
+
 CGameObject::~CGameObject()
 {
 

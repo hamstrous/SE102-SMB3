@@ -65,6 +65,14 @@ public:
 		stopTimer->SetTimeSpan(timeSpan);
 		stopTimer->Start();
 	}
+
+	void GetCollidableObjects(vector<LPGAMEOBJECT>* coObjects) {
+		for (auto i : objects)
+		{
+			if (i->IsCollidable() && !i->IsDeleted())
+				coObjects->push_back(i);
+		}
+	}
 };
 
 typedef CPlayScene* LPPLAYSCENE;

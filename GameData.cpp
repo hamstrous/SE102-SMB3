@@ -3,9 +3,6 @@
 #include "PlayScene.h"
 #include "Mario.h"
 
-//accel_big_fric * 1000/MAX_FRAME_RATE = 0.00334679f
-#define SPEED_OFFSET		0.0035f
-
 CGameData* CGameData::__instance = NULL;
 
 void CGameData::Update(DWORD dt)
@@ -21,7 +18,7 @@ void CGameData::Update(DWORD dt)
 		if (ptimer == f8) {
 			if (abs(mvx) >= MARIO_RUN_MAX_SPEED_X && mario->IsOnPlatform()) {
 				pmeter++;
-				if (pmeter == 7) ptimer = f16; 
+				if (pmeter == 7) ptimer = f16;
 				ptimer->Start();
 			}
 			else {
@@ -53,14 +50,23 @@ void CGameData::Update(DWORD dt)
 		}
 	}
 	else {
-		if (mario->IsRaccoon()) {
-
+		if (mario->IsRaccoon() && (mario->GetJumpInput() == 1 || flightMode)) {
+			flightMode = true;
+			if (ptimer == f255) {
+				if (!ptimer->IsRunning()) {
+					ptimer = f8;
+					pmeter = 0;
+					ptimer->Reset();
+					flightMode = false;
+				}
+			}else ptimer = f255, ptimer->Start();
 		}
 		else {
+			flightMode = false;
 			if (!mario->IsOnPlatform()) ptimer = f255, ptimer->Start();
 			if (ptimer == f16) {
 				if (ptimer->IsRunning()) {
-					if (abs(mvx) >= MARIO_RUN_MAX_SPEED_X) {
+					if (abs(mvx) >= MARIO_RUN_MAX_SPEED_X && mario->GetRunInput() == 1) {
 						ptimer->Start();
 					}
 				}
@@ -72,8 +78,13 @@ void CGameData::Update(DWORD dt)
 			}
 			else if (ptimer == f255) {
 				if (ptimer->IsRunning()) {
-					if (mario->IsOnPlatform()) {
+					if (mario->IsOnPlatform() && abs(mvx) >= MARIO_RUN_MAX_SPEED_X) {
 						ptimer = f16;
+						ptimer->Start();
+					}
+					else if (mario->IsOnPlatform()) {
+						pmeter--;
+						ptimer = f24;
 						ptimer->Start();
 					}
 				}

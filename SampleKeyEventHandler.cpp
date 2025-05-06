@@ -39,12 +39,6 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_R: // reset
 		//Reload();
 		break;
-	case DIK_LEFT:
-		mario->HoldTurn(-1);
-		break;
-	case DIK_RIGHT:
-		mario->HoldTurn(1);
-		break;
 	case DIK_W:
 		dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->SetIsPause();
 		break;

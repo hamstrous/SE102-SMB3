@@ -356,7 +356,9 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 			{
 				x += dx;
 				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
+				objSrc->SetPosition(x, y);
 				objSrc->OnCollisionWith(colY);
+				return;
 			}
 			else // both colX & colY are NULL 
 			{
@@ -381,6 +383,45 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
+
+// the start of mario seperate collision check (enemy, item touch, collsion point check)
+void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouched)
+{
+	for (auto i : *points) {
+		LPGAMEOBJECT point = i;
+		bool touched = false;
+		for(auto obj : *coObjects)
+		{
+			if (obj->IsBlocking())
+			{
+				float sl, st, sr, sb;
+				obj->GetBoundingBox(sl, st, sr, sb);
+				float ml, mt, mr, mb;
+				point->GetBoundingBox(ml, mt, mr, mb);
+
+				//float svx, svy;
+				//obj->GetSpeed(svx, svy);
+				//float sdx = svx * dt;
+				//float sdy = svy * dt;
+				//
+				//float mvx, mvy;
+				//point->GetSpeed(mvx, mvy);
+				//float mdx = mvx * dt;
+				//float mdy = mvy * dt;
+
+
+				if (IsColliding(ml, mt, mr, mb, sl, st, sr, sb))
+				{
+					pointsTouched->push_back(true);
+					touched = true;
+					break;
+				}
+			}
+		}
+		if(!touched) pointsTouched->push_back(false);
+		return;
+	}
 }
 
 // 2: still touch, 1: touch then not touch, 0: not touch

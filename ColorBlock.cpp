@@ -1,4 +1,6 @@
 #include "ColorBlock.h"
+#include "Textures.h"
+#include "Game.h"
 
 CColorBlock::CColorBlock(float x, float y, int width, int height, int color = 0) : CGenericPlatform(x,y)
 {
@@ -37,6 +39,3 @@ void CColorBlock::GetBoundingBox(float& l, float& t, float& r, float& b)
 	b = t + TILE_SIZE;
 }
 
-void CColorBlock::RenderBoundingBox()
-{
-}

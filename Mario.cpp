@@ -26,10 +26,12 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::WALKING_LEFT, 501},
 			{MarioAnimationType::RUNNING_RIGHT, 600},
 			{MarioAnimationType::RUNNING_LEFT, 601},
-			{MarioAnimationType::JUMP_WALK_RIGHT, 700},
-			{MarioAnimationType::JUMP_WALK_LEFT, 701},
-			{MarioAnimationType::JUMP_RUN_RIGHT, 800},
-			{MarioAnimationType::JUMP_RUN_LEFT, 801},
+			{MarioAnimationType::SPRINTING_RIGHT, 1302}, //fix
+			{MarioAnimationType::SPRINTING_LEFT, 1303},
+			{MarioAnimationType::JUMP_RIGHT, 700},
+			{MarioAnimationType::JUMP_LEFT, 701},
+			{MarioAnimationType::JUMP_SPRINT_RIGHT, 800},
+			{MarioAnimationType::JUMP_SPRINT_LEFT, 801},
 			{MarioAnimationType::SIT_RIGHT, 900},
 			{MarioAnimationType::SIT_LEFT, 901},
 			{MarioAnimationType::BRACE_RIGHT, 1001},
@@ -47,6 +49,10 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::GROW_LEFT, 1024},
 			{MarioAnimationType::SHRINK_RIGHT, 1025},
 			{MarioAnimationType::SHRINK_LEFT, 1026},
+			{MarioAnimationType::RUN_HOLD_RIGHT, 1652}, //fix
+			{MarioAnimationType::RUN_HOLD_LEFT, 1653},
+			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1653}, //fix
+			{MarioAnimationType::SPRINT_HOLD_LEFT, 1653},
 			{MarioAnimationType::DIE, 999}
 		}
 	},
@@ -58,12 +64,14 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::WALKING_LEFT, 1201},
 			{MarioAnimationType::RUNNING_RIGHT, 1300},
 			{MarioAnimationType::RUNNING_LEFT, 1301},
+			{MarioAnimationType::SPRINTING_RIGHT, 1302},
+			{MarioAnimationType::SPRINTING_LEFT, 1303},
 			{MarioAnimationType::BRACE_RIGHT, 1401},
 			{MarioAnimationType::BRACE_LEFT, 1400},
-			{MarioAnimationType::JUMP_WALK_RIGHT, 1500},
-			{MarioAnimationType::JUMP_WALK_LEFT, 1501},
-			{MarioAnimationType::JUMP_RUN_RIGHT, 1600},
-			{MarioAnimationType::JUMP_RUN_LEFT, 1601},
+			{MarioAnimationType::JUMP_RIGHT, 1500},
+			{MarioAnimationType::JUMP_LEFT, 1501},
+			{MarioAnimationType::JUMP_SPRINT_RIGHT, 1600},
+			{MarioAnimationType::JUMP_SPRINT_LEFT, 1601},
 			{MarioAnimationType::KICK_RIGHT, 1610},
 			{MarioAnimationType::KICK_LEFT, 1611},
 			{MarioAnimationType::IDLE_HOLD_RIGHT, 1650},
@@ -75,8 +83,10 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::JUMP_HOLD_LEFT, 1656},
 			{MarioAnimationType::GROW_RIGHT, 1657},
 			{MarioAnimationType::GROW_LEFT, 1658},
-			{MarioAnimationType::RUN_HOLD_RIGHT, 1652},
+			{MarioAnimationType::RUN_HOLD_RIGHT, 1652}, //fix
 			{MarioAnimationType::RUN_HOLD_LEFT, 1653},
+			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1653}, //fix
+			{MarioAnimationType::SPRINT_HOLD_LEFT, 1653},
 			{MarioAnimationType::DIE, 999}
 		}
 	},
@@ -88,12 +98,14 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::WALKING_LEFT, 1801},
 			{MarioAnimationType::RUNNING_RIGHT, 1900},
 			{MarioAnimationType::RUNNING_LEFT, 1901},
+			{MarioAnimationType::SPRINTING_RIGHT, 1302}, //fix
+			{MarioAnimationType::SPRINTING_LEFT, 1303},
 			{MarioAnimationType::BRACE_RIGHT, 2001},
 			{MarioAnimationType::BRACE_LEFT, 2000},
-			{MarioAnimationType::JUMP_WALK_RIGHT, 2100},
-			{MarioAnimationType::JUMP_WALK_LEFT, 2101},
-			{MarioAnimationType::JUMP_RUN_RIGHT, 2200},
-			{MarioAnimationType::JUMP_RUN_LEFT, 2201},
+			{MarioAnimationType::JUMP_RIGHT, 2100},
+			{MarioAnimationType::JUMP_LEFT, 2101},
+			{MarioAnimationType::JUMP_SPRINT_RIGHT, 2200},
+			{MarioAnimationType::JUMP_SPRINT_LEFT, 2201},
 			{MarioAnimationType::SIT_RIGHT, 2300},
 			{MarioAnimationType::SIT_LEFT, 2301},
 			{MarioAnimationType::TAIL_ATTACK_RIGHT, 2400},
@@ -113,6 +125,10 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::JUMP_HOLD_LEFT, 2656},
 			{MarioAnimationType::SHRINK_RIGHT, 1023},
 			{MarioAnimationType::SHRINK_LEFT, 1024},
+			{MarioAnimationType::RUN_HOLD_RIGHT, 1652}, //fix
+			{MarioAnimationType::RUN_HOLD_LEFT, 1653},
+			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1653}, //fix
+			{MarioAnimationType::SPRINT_HOLD_LEFT, 1653},
 			{MarioAnimationType::DIE, 999}
 		}
 	}
@@ -123,11 +139,6 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	Acceleration(dt);
-	/*vy += ay * dt;
-	vx += ax * dt;
-	if (abs(vx) > abs(maxVx)) vx = maxVx;
-	if (vy > 0 && abs(vy) > abs(maxVy)) vy = maxVy;*/
-	//DebugOutTitle(L"vx: %f, vy: %f\n", vx, vy);
 
 	// reset untouchable timer if untouchable time has passed
 	if ( GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME) 
@@ -136,6 +147,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable = 0;
 	}
 
+	// for mario has to be called first so process can call OnCollision
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
@@ -156,18 +168,54 @@ void CMario::OnNoCollision(DWORD dt)
 }
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
-{	
-	if (e->ny != 0 && e->obj->IsBlocking())
-	{
-		vy = 0;
-		if (e->ny < 0) isOnPlatform = true;
-	}
-	else
-		if (e->nx != 0 && e->obj->IsBlocking())
+{
+	float objx, objy;
+	e->obj->GetPosition(objx, objy);
+	if (e->obj->IsBlocking()) {
+		pointsTouched.clear();
+		vector<LPGAMEOBJECT> coObjects;
+		GetCollidableObjects(&coObjects);
+		SetPointsPosition();
+		CCollision::GetInstance()->ProcessForMario(this, &points, &coObjects, &pointsTouched);
+		if (e->ny != 0)
+		{
+			if (vy < 0) {
+				if (pointsTouched[0]) {
+					DebugOut(L"TOUCH\n");
+				}
+				else {
+					DebugOut(L"NOTOUCH\n");
+					float px, py;
+					points[0]->GetPosition(px, py);
+					DebugOut(L"POINTS: %f, %f\n", px, py);
+					DebugOut(L"Mario: %f, %f\n", x, y);
+				}
+
+				if (pointsTouched[0]) vy = 0;
+				else x += (x > objx) ? 4 : -4;
+			}else vy = 0;
+			if (e->ny < 0) {
+				isOnPlatform = true;
+				if (glideTimer->IsRunning()) {
+					glideTimer->Reset();
+					SkipCurrentAnimation();
+				}
+			}
+		}
+		else if (e->nx != 0)
+//{	
+//	if (e->ny != 0 && e->obj->IsBlocking())
+//	{
+//		vy = 0;
+//		if (e->ny < 0) isOnPlatform = true;
+//	}
+//	else
+//		if (e->nx != 0 && e->obj->IsBlocking())
 		{
 			vx = 0;
 		}
-	
+
+	}
 	if (dynamic_cast<CCharacter*>(e->obj))
 		OnCollisionWithCharacter(e);
 	else if (dynamic_cast<CBaseBrick*>(e->obj))
@@ -307,13 +355,6 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects, x);
 }
 
-void CMario::HoldTurn(int dir)
-{
-	if (holdingShell == NULL) return;
-	if (nx != dir)
-		AssignCurrentAnimation(level,MarioAnimationType::HOLD_FRONT);
-}
-
 //Change animaion when mario kick the shell
 void CMario::KickedShell()
 {
@@ -332,17 +373,35 @@ void CMario::JumpPressed()
 {
 	SetState(MARIO_STATE_JUMP);
 	if (!isOnPlatform && level == MarioLevel::RACCOON) {
-		if (abs(vx) < MARIO_RUN_MAX_SPEED_X) {
+		if (!IsPMeterFull() && vy >= 0) {
 			glideTimer->Start();
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_GLIDE_RIGHT : MarioAnimationType::TAIL_JUMP_GLIDE_LEFT);
 			vy = MARIO_RACCOON_GLIDE_SPEED;
-		}else{
+		}else if(IsPMeterFull()){
 			flyTimer->Start();
 			vy = -MARIO_RACCOON_FLY_SPEED;
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_FLY_RIGHT : MarioAnimationType::TAIL_JUMP_FLY_LEFT);
 		}
 	}else(SetJumpInput(1));
 	
+}
+
+bool CMario::IsPMeterFull()
+{
+	CGameData* gameData = CGameData::GetInstance();
+	return gameData->IsPMeterFull();
+}
+
+#define POINTS_OFFSET 1.0f
+
+void CMario::SetPointsPosition()
+{
+	if (!IsBig() || isSitting) {
+
+	}
+	else {
+		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2 - POINTS_OFFSET);
+	}
 }
 
 void CMario::GetAniId()
@@ -356,25 +415,37 @@ void CMario::GetAniId()
 	if (holdingShell != NULL) {
 		if (!isOnPlatform) {
 			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_HOLD_RIGHT : MarioAnimationType::JUMP_HOLD_LEFT];
+			return;
 		}
-		else if (vx == 0) {
+
+		if (vx < 0 && ax > 0 || vx > 0 && ax < 0) {
+			currentAnimation = animationMap[level][MarioAnimationType::HOLD_FRONT];
+			return;
+		}
+
+		if (vx == 0) {
 			currentAnimation = animationMap[level][nx > 0 ? MarioAnimationType::IDLE_HOLD_RIGHT : MarioAnimationType::IDLE_HOLD_LEFT];
 		}
 		else if (vx > 0) {
-			currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_RIGHT];
+			if(vx <= MARIO_WALK_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_RIGHT];
+			else if (vx <= MARIO_RUN_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::RUN_HOLD_RIGHT];
+			else if (vx <= MARIO_SPRINT_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::SPRINT_HOLD_RIGHT];
 		}
 		else { // vx < 0
-			currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_LEFT];
+			if (abs(vx) <= MARIO_WALK_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_LEFT];
+			else if (abs(vx) <= MARIO_RUN_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::RUN_HOLD_LEFT];
+			else if (abs(vx) <= MARIO_SPRINT_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::SPRINT_HOLD_LEFT];
 		}
 		return;
 	}
 
 	if (!isOnPlatform) {
-		if (abs(ax) == MARIO_ACCEL_RUN_X) {
-			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_RUN_RIGHT : MarioAnimationType::JUMP_RUN_LEFT];
+		if (abs(vx) > MARIO_RUN_MAX_SPEED_X) {
+			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_SPRINT_RIGHT : MarioAnimationType::JUMP_SPRINT_LEFT];
 		}
 		else {
-			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_WALK_RIGHT : MarioAnimationType::JUMP_WALK_LEFT];
+			// run and walk
+			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_RIGHT : MarioAnimationType::JUMP_LEFT];
 		}
 	}
 	else if (isSitting) {
@@ -387,22 +458,29 @@ void CMario::GetAniId()
 		if (ax < 0) {
 			currentAnimation = animationMap[level][MarioAnimationType::BRACE_RIGHT];
 		}
-		else if (ax == MARIO_ACCEL_RUN_X) {
-			currentAnimation = animationMap[level][MarioAnimationType::RUNNING_RIGHT];
-		}
-		else if (ax == MARIO_ACCEL_WALK_X) {
+		else if (vx <= MARIO_WALK_MAX_SPEED_X) {
 			currentAnimation = animationMap[level][MarioAnimationType::WALKING_RIGHT];
 		}
+		else if (vx <= MARIO_RUN_MAX_SPEED_X) {
+			currentAnimation = animationMap[level][MarioAnimationType::RUNNING_RIGHT];
+		}
+		else {
+			currentAnimation = animationMap[level][MarioAnimationType::SPRINTING_RIGHT];
+		}
+		
 	}
 	else { // vx < 0
 		if (ax > 0) {
 			currentAnimation = animationMap[level][MarioAnimationType::BRACE_LEFT];
 		}
-		else if (ax == -MARIO_ACCEL_RUN_X) {
+		else if (abs(vx) <= MARIO_WALK_MAX_SPEED_X) {
+			currentAnimation = animationMap[level][MarioAnimationType::WALKING_LEFT];
+		}
+		else if (abs(vx) <= MARIO_RUN_MAX_SPEED_X) {
 			currentAnimation = animationMap[level][MarioAnimationType::RUNNING_LEFT];
 		}
-		else if (ax == -MARIO_ACCEL_WALK_X) {
-			currentAnimation = animationMap[level][MarioAnimationType::WALKING_LEFT];
+		else {
+			currentAnimation = animationMap[level][MarioAnimationType::SPRINTING_LEFT];
 		}
 	}
 
@@ -435,9 +513,12 @@ void CMario::Render()
 		animations->Get(currentAnimation)->ResetType();
 	}
 	
-	animations->Get(currentAnimation)->Render(x, y);
+	float offsetX = 0, offsetY = 0;
+	if (IsRaccoon()) offsetX = (nx > 0) ? -4 : 4;
 
-	//RenderBoundingBox();
+	animations->Get(currentAnimation)->Render(x + offsetX, y);
+
+	RenderBoundingBox();
 	
 	//DebugOutTitle(L"Coins: %d", coin);
 }
@@ -483,12 +564,13 @@ void CMario::SetState(int state)
 		{
 			vy = 0;
 			for (int i = 0; i < 3; i++) {
-				if (vx < MARIO_JUMP_SPEED_CHECK_X[i]) {
+				if (abs(vx) < MARIO_JUMP_SPEED_CHECK_X[i]) {
 					vy = -MARIO_JUMP_SPEED[i];
 					break;
 				}
 			}
 			if (vy == 0) vy = -MARIO_JUMP_SPEED[3];
+			jumpVx = vx;
 		}
 		break;
 
@@ -534,10 +616,16 @@ void CMario::SetState(int state)
 float minY = 1000000;
 void CMario::Acceleration(DWORD dt)
 {
-	const float topSpeed = runInput == 1 ? MARIO_RUN_MAX_SPEED_X : MARIO_WALK_MAX_SPEED_X;
+	CGameData* gameData = CGameData::GetInstance();
+
+	float topSpeed = 0;
+
+	if (IsPMeterFull()) topSpeed = MARIO_SPRINT_MAX_SPEED_X;
+	else if (runInput == 1) topSpeed = MARIO_RUN_MAX_SPEED_X;
+	else topSpeed = MARIO_WALK_MAX_SPEED_X;
 
 	//if(vy < 0) minY  = min(minY, y);
-	DebugOutTitle(L"vx: %f", vx);
+	//DebugOutTitle(L"vx: %f", vx);
 	if (state == MARIO_STATE_DIE) {
 		if (vy < -0.12) {
 			vy += MARIO_GRAVITY_SLOW * dt;
@@ -563,26 +651,84 @@ void CMario::Acceleration(DWORD dt)
 				}
 			}
 		}
+		else if (IsRaccoon()) {
+			if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
+				vx += (vx > 0 ? -MARIO_RACCOON_MIDAIR_DECEL : MARIO_RACCOON_MIDAIR_DECEL) * dt;
+			}
+		}
 	}
 	else {
 		const float absVx = abs(vx);
-		if (
-			(vx > 0 && dirInput < 0) ||
-			(vx < 0 && dirInput > 0)
-			)
-		{
-			// Skidding (turning around)
-			vx += dirInput * MARIO_ACCEL_SKID_X * dt;
+		if (isOnPlatform) {
+			if (
+				(vx > 0 && dirInput < 0) ||
+				(vx < 0 && dirInput > 0)
+				)
+			{
+				// Skidding (turning around)
+				vx += dirInput * MARIO_ACCEL_SKID_X * dt;
+			}
+			else if (absVx < abs(topSpeed)) {
+				// Normal acceleration
+				vx += dirInput * MARIO_ACCEL_NORMAL_X * dt;
+				if(abs(vx) > topSpeed)	vx = topSpeed * dirInput;
+			}
+			else if (absVx > abs(topSpeed)) {
+				if (isOnPlatform) {
+					vx -= dirInput * (IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X) * dt;
+				}
+			}
 		}
-		else if (absVx < abs(topSpeed)) {
-			// Normal acceleration
-			vx += dirInput * MARIO_ACCEL_NORMAL_X * dt;
-		}
-		else if (absVx > abs(topSpeed)) {
-			vx = topSpeed * dirInput;
-			/*if (isOnPlatform) {
-				vx -= dirInput * (IsBig() ? MARIO_BIG_ACCEL_FRIC_X : MARIO_SMALL_ACCEL_FRIC_X) * dt;
-			}*/
+		else {
+			if (!IsPMeterFull()) {
+				if(abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X) topSpeed = MARIO_WALK_MAX_SPEED_X;
+				else topSpeed = MARIO_RUN_MAX_SPEED_X;
+			}else topSpeed = MARIO_SPRINT_MAX_SPEED_X;
+			if (!IsRaccoon()) {
+				if ((vx > 0 && dirInput < 0) || (vx < 0 && dirInput > 0)) {
+					vx += dirInput * MARIO_DECEL_MIDAIR_X * dt;
+				}
+				else if (absVx < abs(topSpeed)) {
+					vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+				}
+				else if (absVx > abs(topSpeed)) {
+					vx = topSpeed * dirInput;
+				}
+			}
+			else {
+				const float NEW_MARIO_RACCOON_MIDAIR_DECEL = 0.00005625f;
+				const float NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE = 0.000675f; //0030
+				if (gameData->IsFlightMode()) {
+					if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
+						vx += (vx > 0 ? -NEW_MARIO_RACCOON_MIDAIR_DECEL : NEW_MARIO_RACCOON_MIDAIR_DECEL) * dt;
+					}
+					
+					if (vx < 0 && dirInput> 0 || vx > 0 && dirInput < 0) {
+						vx += dirInput * NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE * dt;
+					}
+					else {
+						vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+					}
+					
+					if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
+						vx = MARIO_RACCOON_MIDAIR_SPEED_LIMIT * dirInput;
+					}
+					
+				}
+				else {
+					if (vx < 0 && dirInput> 0 || vx > 0 && dirInput < 0) {
+						vx += dirInput * NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE * dt;
+					}
+					else {
+						vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+					}
+
+					if (abs(vx) > topSpeed) {
+						vx = topSpeed * dirInput;
+
+					}
+				}
+			}
 		}
 	}
 

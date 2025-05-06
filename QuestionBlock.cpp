@@ -20,7 +20,7 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state != QUESTION_BLOCK_STATE_MOVEUP) up = false;
 
 	if (state == QUESTION_BLOCK_STATE_MOVEUP && GetTickCount64() - start_up >= TIME_UP) {
-		DebugOut(L"[INFO] Time up: %d\n", start_up);
+		//DebugOut(L"[INFO] Time up: %d\n", start_up);
 		SetState(QUESTION_BLOCK_STATE_MOVEDOWN);
 		start_up = -1;
 	}

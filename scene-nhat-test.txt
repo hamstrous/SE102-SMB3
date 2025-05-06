@@ -5,12 +5,15 @@ brick.txt
 coin.txt
 goomba.txt
 cloud.txt
+floor.txt
+background.txt
+color-block.txt
+koopa.txt
 koopa-red.txt
 koopa-green.txt
-color-block.txt
-floor.txt
 cloud.txt
-number.txt
+font.txt
+hud.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -24,23 +27,12 @@ number.txt
 19	0	40	1	10	0
 
 #COLOR BLOCK
-12	110	80	5	3	2
-12	200	120	5	3	1
-12	50	100	5	3	0
-
-#KOOPA
-3	40	40	0
-
-#GOOMBA
-2	100	40
-
 # MARIO
 0	20	10
 
 #QUESTIONBLOCK
-15	96	110	1
-15	80	110	4
-15	64	110	2
+21	96	90	1
+
 
 
 #BRICK

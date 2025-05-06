@@ -25,6 +25,7 @@ public:
 	CTimer* f255;
 	CTimer* ptimer;
 	int worldName;
+	bool flightMode = 0;
 	vector<int> cards;
 	MarioLevel marioLevel;
 
@@ -77,6 +78,11 @@ public:
 	bool IsPMeterFull()
 	{
 		return pmeter == 7;
+	}
+
+	bool IsFlightMode()
+	{
+		return flightMode;
 	}
 
 	static CGameData* GetInstance();
