@@ -9,8 +9,10 @@ void CQuestionBlock::Render()
 	}
 	if (isUnbox)
 		animations->Get(ID_ANI_BLOCK_UNBOX)->Render(x, y);
+	else if (type == ITEM_GREEN_MUSHROOM)
+	animations->Get(ID_ANI_BREAKABLEBRICK)->Render(x, y);
 	else
-	animations->Get(ID_ANI_BLOCK_NORMAL)->Render(x, y);
+		animations->Get(ID_ANI_BLOCK_NORMAL)->Render(x, y);
 	
 	//RenderBoundingBox();
 }

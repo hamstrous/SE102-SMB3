@@ -1,14 +1,16 @@
 #pragma once
 #include "GameObject.h"
 #include "BaseBrick.h"
+#include "GenericPlatform.h"
+
 #define BRICK_BBOX_HEIGHT 16
 #define BRICK_BBOX_WIDTH 16
 class CUnbreakableBrick : public CBaseBrick
 {
 	int width;				// Unit: cell 
 	int height;				// Unit: cell 
-	int type; //	type: 0:cloud, 1: wood, 2:blue
-	int brickSpriteId[3] = { 140001, 150001, 160001 };
+	int type; //	type: 0: wood, 1:blue
+	int brickSpriteId[2] = { 150001, 160001 };
 public:
 	int IsCollidable() { return 1; }
 

@@ -138,6 +138,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Cloud.h" />
+    <ClInclude Include="CloudPlatform.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="ColorBlock.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Cloud.cpp" />
+    <ClCompile Include="CloudPlatform.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="ColorBlock.cpp" />
