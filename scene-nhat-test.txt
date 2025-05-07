@@ -15,6 +15,8 @@ cloud.txt
 font.txt
 hud.txt
 number.txt
+effect.txt
+
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -28,6 +30,7 @@ number.txt
 #19	0	40	1	10	0
 
 #COLOR BLOCK
+12	150	152	5	2	0
 # MARIO
 0	20	10
 

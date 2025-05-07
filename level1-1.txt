@@ -14,6 +14,8 @@ cloud.txt
 font.txt
 hud.txt
 number.txt
+effect.txt
+
 
 #0 : mario
 #1 : brick
@@ -529,4 +531,4 @@ number.txt
 ########## ENEMY ##########
 2	231	407
 
-3	583	375	0
+14	583	375	0

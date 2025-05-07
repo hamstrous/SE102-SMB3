@@ -42,7 +42,7 @@ void CHUD::Render()
 	CFont* font = CFont::GetInstance();
 
 	float hx = game->GetBackBufferWidth() / 2;
-	float hy = game->GetBackBufferHeight() - HUD_SIZE_Y/2;
+	float hy = game->GetBackBufferHeight() - HUD_SIZE_Y;
 	sprites->Get(ID_SPRITE_HUD)->Draw(hx, hy);
 
 	int life = gameData->life;
