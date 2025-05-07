@@ -1,8 +1,9 @@
 #pragma once
 #include "GameObject.h"
+#include "BaseBrick.h"
 #include "AssetIDs.h"
 
-class CFloor : public CGameObject
+class CFloor : public CBaseBrick
 {
 protected:
     int width;				// Unit: cell 

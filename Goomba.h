@@ -53,4 +53,11 @@ public:
 	virtual void TailHit(float x);
 	virtual void BlockHit() {};
 	virtual void TowardMario(float speed, float awayMario = 1);
+
+	void Reset(const CCharacter* og) {
+		*this = *(const CGoomba*)og;
+	}
+
+	CCharacter* Clone() { return new CGoomba(*this); }
+
 };

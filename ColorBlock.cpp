@@ -36,6 +36,6 @@ void CColorBlock::GetBoundingBox(float& l, float& t, float& r, float& b)
 	l = x - TILE_SIZE / 2;
 	t = y - TILE_SIZE / 2;
 	r = l + this->width * TILE_SIZE;
-	b = t + TILE_SIZE;
+	b = t + 1;
 }
 

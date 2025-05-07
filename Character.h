@@ -10,6 +10,7 @@ protected:
 	float maxVy;
 	float minVx;
 	float minVy;
+	CCharacter* copy;
 	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e) = 0;
 public:
 	CCharacter(float x, float y) : CGameObject(x, y)
@@ -20,7 +21,18 @@ public:
 		maxVy = 0.0f;
 		minVx = 0.0f;
 		minVy = 0.0f;
+		copy = NULL;
 	}
+	~CCharacter() {
+		if (copy != NULL) {
+			delete copy;
+			copy = NULL;
+		}
+	}
+
+	// clone to make a copy so that we can reinit when enemy reenter the camera
+	virtual CCharacter* Clone() { return NULL; };
+	virtual void Reset(const CCharacter* og) {};
 
 	virtual void Stomped() = 0;
 	virtual void ShellHit(int shellX) = 0;
@@ -36,5 +48,6 @@ public:
 	virtual int IsBlocking() {
 		return 0;
 	}
+
 };
 

@@ -18,6 +18,7 @@ protected:
 	LPGAMEOBJECT player;					
 	CCamera* camera;					
 
+	unordered_map<CCharacter*, CCharacter*> characterCopy;
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> backgroundRenderObjects;
 	vector<LPGAMEOBJECT> firstRenderObjects; // background
@@ -72,6 +73,10 @@ public:
 			if (i->IsCollidable() && !i->IsDeleted())
 				coObjects->push_back(i);
 		}
+	}
+
+	bool IsObjectOutOfCamera(LPGAMEOBJECT obj) {
+		return camera->IsOutOfCamera(obj);
 	}
 };
 

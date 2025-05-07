@@ -262,8 +262,6 @@ void CKoopaGreen::GetBoundingBox(float& left, float& top, float& right, float& b
 	}
 	if (hit)
 		left = top = right = bottom = 0;
-	DebugOut(L"[INFO] GetBoundingBox - State: %d, BoundingBox: [%f, %f, %f, %f]\n", state, left, top, right, bottom);
-
 }
 
 void CKoopaGreen::OnNoCollision(DWORD dt)
