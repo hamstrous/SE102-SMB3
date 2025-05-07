@@ -14,6 +14,15 @@ class CKoopa; // Forward declaration, stop circular dependency if include "Koopa
 #include "debug.h"
 using namespace std;
 
+// point ids
+#define TOP 0
+#define RIGHTUP 1
+#define RIGHTDOWN 2
+#define DOWNRIGHT 3
+#define DOWNLEFT 4
+#define LEFTDOWN 5
+#define LEFTUP 6
+
 enum class MarioLevel {
 	SMALL,
 	BIG,

@@ -15,5 +15,6 @@ public:
 		l = r = x;
 		t = b = y;
 	};
+
 };
 

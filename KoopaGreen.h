@@ -43,6 +43,14 @@ public:
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
+	void Reset(const CCharacter* og) {
+		*this = *(const CKoopaGreen*)og;
+	}
+
+	CCharacter* Clone() {
+		return new CKoopaGreen(*this);
+	}
+
 
 	void InitHorizontalSpeedBasedOnMario(float speed, float awayMario = 1);
 	virtual void Kicked();

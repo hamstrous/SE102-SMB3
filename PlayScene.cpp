@@ -339,9 +339,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	// General object setup
 	obj->SetPosition(x, y);
 
-	if (CGoomba * goomba = dynamic_cast<CGoomba*>(obj)) {
-		CCharacter* goombaCopy = goomba->Clone();
-		characterCopy[goomba] = goombaCopy;
+	if (CCharacter* character = dynamic_cast<CCharacter*>(obj)) {
+		CCharacter* copy = character->Clone();
+		characterCopy[character] = copy;
 	}
 	objects.push_back(obj);
 }
@@ -446,8 +446,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	for(auto obj : objects) {
-		if(CCharacter* character = dynamic_cast<CCharacter*>(obj))
-		if(CGoomba* goomba = dynamic_cast<CGoomba*>(obj)){
+		if(CCharacter* character = dynamic_cast<CCharacter*>(obj)){
 			if (IsObjectOutOfCamera(obj)) {
 				//when out of camera, go to sleep and put back at og pos
 				obj->SetSleep(true);
@@ -459,7 +458,7 @@ void CPlayScene::Update(DWORD dt)
 			}
 			else if (obj->GetSleep()) {
 				obj->SetSleep(false);
-				goomba->Reset(characterCopy[dynamic_cast<CCharacter*>(obj)]);
+				character->Reset(characterCopy[dynamic_cast<CCharacter*>(obj)]);
 			}
 		}
 	}
@@ -581,6 +580,9 @@ void CPlayScene::PurgeDeletedObjects()
 		LPGAMEOBJECT o = *it;
 		if (o->IsDeleted())
 		{
+			// delete the cocy
+			if(dynamic_cast<CCharacter*>(o))
+				characterCopy.erase(dynamic_cast<CCharacter*>(o));
 			delete o;
 			*it = NULL;
 		}

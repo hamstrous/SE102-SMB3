@@ -1,6 +1,6 @@
 #include "Floor.h"
 
-CFloor::CFloor(float x, float y, int width, int height, int type) : CGameObject(x, y)
+CFloor::CFloor(float x, float y, int width, int height, int type) : CBaseBrick(x, y)
 {
 	this->width = width;
 	this->height = height;

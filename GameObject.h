@@ -20,6 +20,8 @@ class CGameObject
 {
 protected:
 
+	float ox = 0, oy = 0; // old x, y before entering blocking zone
+
 	float x; 
 	float y;
 
@@ -88,5 +90,15 @@ public:
 	
 	bool GetIsPause();
 	bool GetIsStop();
+
+	void SetOldPosition(float x, float y) {
+		ox = x;
+		oy = y;
+	};
+
+	void GetOldPosition(float &x, float &y) {
+		x = ox;
+		y = oy;
+	};
 
 };

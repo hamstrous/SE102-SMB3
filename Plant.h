@@ -57,6 +57,15 @@ public:
 	virtual void SetState(int state);
 	virtual void Stomped();
 
+	void Reset(const CCharacter* og) override {
+		*this = *(const CPlant*)og;
+	}
+
+	CCharacter* Clone() override {
+		return new CPlant(*this);
+	}
+
+
 	virtual void ShellHit(int shellX);
 	virtual void TailHit(float x);
 	virtual void BlockHit() {};

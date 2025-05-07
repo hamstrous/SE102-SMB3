@@ -46,6 +46,15 @@ public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
+	void Reset(const CCharacter* og) {
+		*this = *(const CKoopaRed*)og;
+	}
+
+	CCharacter* Clone() {
+		return new CKoopaRed(*this);
+	}
+
+
 	void InitHorizontalSpeedBasedOnMario(float speed, float awayMario = 1);
 	virtual void Kicked();
 	virtual void Stomped();

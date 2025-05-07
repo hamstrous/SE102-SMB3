@@ -4,6 +4,7 @@
 #include "Mushroom.h"
 #include "Character.h"
 #include "BaseBrick.h"
+#include "GenericPlatform.h"
 #include "GameFXManager.h"
 #include "debug.h"
 
@@ -386,10 +387,13 @@ void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* poin
 {
 	pointsTouched->clear();
 	int k = 0;
+	float ox, oy;
+	(*points)[DOWNLEFT]->GetOldPosition(ox, oy);
 	for (auto i : *points) {
 		LPGAMEOBJECT point = i;
 		bool touched = false;
-		for(auto obj : *coObjects)
+		
+		for (auto obj : *coObjects)
 		{
 			if (obj->IsBlocking())
 			{
@@ -397,6 +401,9 @@ void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* poin
 				obj->GetBoundingBox(sl, st, sr, sb);
 				float ml, mt, mr, mb;
 				point->GetBoundingBox(ml, mt, mr, mb);
+
+				if(k == LEFTUP || k == LEFTDOWN || k == RIGHTUP || k == RIGHTDOWN)
+					if(dynamic_cast<CGenericPlatform*>(obj) && oy > st) continue; // skip if moving up to platform
 
 				if (IsColliding(ml, mt, mr, mb, sl, st, sr, sb))
 				{

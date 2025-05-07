@@ -73,5 +73,14 @@ public:
 	virtual void TailHit(float x);
 	virtual void BlockHit() {};
 	void TowardMario(float speed, float awayMario = 1);
+
+	void Reset(const CCharacter* og) override {
+		*this = *(const CGoombaFly*)og;
+	}
+
+	CCharacter* Clone() override {
+		return new CGoombaFly(*this);
+	}
+
 };
 

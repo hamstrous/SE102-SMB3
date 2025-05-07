@@ -168,14 +168,6 @@ void CMario::OnNoCollision(DWORD dt)
 	PointsCheck();
 }
 
-#define TOP 0
-#define RIGHTUP 1
-#define RIGHTDOWN 2
-#define DOWNRIGHT 3
-#define DOWNLEFT 4
-#define LEFTDOWN 5
-#define LEFTUP 6
-
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	float objx, objy;
@@ -633,6 +625,13 @@ void CMario::PointsCheck()
 	vector<LPGAMEOBJECT> coObjects;
 	GetCollidableObjects(&coObjects);
 	CCollision::GetInstance()->ProcessForMario(this, &points, &coObjects, &pointsTouched);
+
+	for (int i = 0; i < 7; i++)
+	{
+		float px, py;
+		points[i]->GetPosition(px, py);
+		if(!pointsTouched[i]) points[i]->SetOldPosition(px, py);
+	}
 
 	int dir = 0;
 	if (pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN]) {
