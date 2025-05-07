@@ -48,6 +48,15 @@ public:
 
 	void Reset(const CCharacter* og) {
 		*this = *(const CKoopaRed*)og;
+		if (!hasWing) {
+			SetState(KOOPA_STATE_WALKING);
+			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED);
+		}
+		else {
+			nx = -1;
+			SetState(KOOPA_STATE_FLYING);
+		}
+
 	}
 
 	CCharacter* Clone() {
