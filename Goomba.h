@@ -56,6 +56,7 @@ public:
 
 	void Reset(const CCharacter* og) {
 		*this = *(const CGoomba*)og;
+		TowardMario(GOOMBA_WALKING_SPEED);
 	}
 
 	CCharacter* Clone() { return new CGoomba(*this); }

@@ -3,7 +3,7 @@
 
 #define CAMERA_SPEED 0.1f
 #define FIXED_BOX_SIZE 20.0f
-#define OUT_CAMERA 64.f
+#define OUT_CAMERA 32.f
 class CMario;
 
 class CCamera : public CGameObject

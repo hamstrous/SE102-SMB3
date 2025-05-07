@@ -12,7 +12,8 @@ CMario* CCamera::GetMario()
 }
 
 CCamera::CCamera() : CGameObject(0, 0) {
-	x = y = 0;
+	x = 0;
+	y = 240;
 	CGame* game = CGame::GetInstance();
 	screenHeight = game->GetBackBufferHeight();
 	screenWidth = game->GetBackBufferWidth();
@@ -35,9 +36,11 @@ void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (mx < cl) x -= cl - mx;
 	if (mx > cr) x += mx - cr;
-	if (my < ct) y -= ct - my;
 	if (my > cb) y += my - cb;
+	if (CGameData::GetInstance()->IsFlightMode()) {
+		if (my < ct) y -= ct - my;
+	}
 
 	Clamp(x, 0, levelWidth - screenWidth);
-	Clamp(y, 0, levelHeight - screenHeight);
+	Clamp(y, 0, 240);
 }

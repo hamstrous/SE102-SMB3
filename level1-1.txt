@@ -14,10 +14,10 @@ cloud.txt
 font.txt
 hud.txt
 pipe.txt
-Plant.txt
+plant.txt
 number.txt
 font.txt
-Fireball.txt
+fireball.txt
 effect.txt
 
 #0 : mario
@@ -590,7 +590,12 @@ effect.txt
 #MARIO
 0	50	100
 
-#[ENEMIES]
+########## ENEMY ##########
+#GOOMBA
+2	231	407
+
+#KOOPA
+14	583	375	0
 
 #PLANT
 8	367	395	0	0	1

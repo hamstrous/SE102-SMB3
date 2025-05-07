@@ -450,11 +450,14 @@ void CPlayScene::Update(DWORD dt)
 
 	for(auto obj : objects) {
 		if(CCharacter* character = dynamic_cast<CCharacter*>(obj)){
+			if(dynamic_cast<CMario*>(character)) {
+				continue;
+			}
 			if (IsObjectOutOfCamera(obj)) {
 				//when out of camera, go to sleep and put back at og pos
 				obj->SetSleep(true);
 				float nx, ny;
-				if (IsObjectOutOfCamera(characterCopy[character])) {
+				if (characterCopy.find(character) != characterCopy.end() && IsObjectOutOfCamera(characterCopy[character])) {
 					characterCopy[character]->GetPosition(nx, ny);
 					obj->SetPosition(nx, ny);
 				}else obj->SetPosition(-1, 3000); // put it out of camera
