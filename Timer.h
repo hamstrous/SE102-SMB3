@@ -15,6 +15,7 @@ public:
 	bool IsStarted() { return this->started; }
 	void Start();
 	bool IsRunning();
+	bool IsDone();
 	void Reset();
 	void Flip();
 	ULONGLONG ElapsedTime();

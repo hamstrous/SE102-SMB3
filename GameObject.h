@@ -84,6 +84,8 @@ public:
 	// Does this object collide with other object at certain direction ( like ColorBox )
 	virtual int IsDirectionColliable(float nx, float ny) { return 1; }
 
+	void Clear();
+
 	~CGameObject();
 
 	static bool IsDeleted(const LPGAMEOBJECT &o) { return o->isDeleted; }

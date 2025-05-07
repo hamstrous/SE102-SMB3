@@ -47,6 +47,8 @@ public:
 		cards.clear();
 	}
 
+	void OnDeath();
+
 	void NextLevel()
 	{
 		countDown->Reset();

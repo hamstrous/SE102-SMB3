@@ -5,6 +5,22 @@
 
 CGameData* CGameData::__instance = NULL;
 
+void CGameData::OnDeath()
+{
+	life--;
+	CGame* game = CGame::GetInstance();
+
+	if (life < 0) {
+		life = 0;
+		game->SwitchScene(-1);
+	}
+	else {
+		CGame* game = CGame::GetInstance();
+	}
+
+	pmeter = 0;
+}
+
 void CGameData::Update(DWORD dt)
 {
 	CGame* game = CGame::GetInstance();

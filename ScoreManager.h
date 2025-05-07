@@ -18,5 +18,7 @@ public:
 	static CScoreManager* GetInstance();
 
 	void AddScore(float x, float y, int type);
+
+	void Clear();
 };
 

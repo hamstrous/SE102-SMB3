@@ -112,6 +112,8 @@ public:
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
 	void Load(LPCWSTR gameFile);
 	void SwitchScene();
+	void SwitchScene(int sceneId);
+	void ResetCurrentScene();
 	void InitiateSwitchScene(int scene_id);
 
 	void _ParseSection_TEXTURES(string line);

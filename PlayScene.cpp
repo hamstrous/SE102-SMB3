@@ -496,14 +496,13 @@ void CPlayScene::Update(DWORD dt)
 
 	PurgeDeletedObjects();
 
-	for (int i = 0; i < addobj.size(); i++)
-	{
-		objects.insert(objects.begin() + addobj[i].second, addobj[i].first);
-	}
-
 	CGameData::GetInstance()->Update(dt);
 
-	addobj.clear();
+	if (deathTimer->IsDone()) {
+		CGame::GetInstance()->ResetCurrentScene();
+		deathTimer->Reset();
+	}
+
 }
 
 void CPlayScene::Render()
@@ -568,6 +567,15 @@ void CPlayScene::Clear()
 		delete (*it);
 	}
 	objects.clear();
+	for (auto i : characterCopy)
+	{
+		delete i.second;
+	}
+	characterCopy.clear();
+
+	delete camera;
+	camera = NULL;
+
 }
 
 /*
@@ -582,7 +590,21 @@ void CPlayScene::Unload()
 		delete objects[i];
 
 	objects.clear();
+
+	for (auto i : characterCopy)
+	{
+		if (i.second != NULL) delete i.second;
+	}
+	characterCopy.clear();
+
 	player = NULL;
+
+	deathTimer->Reset();
+	stopTimer->Reset();
+	pauseTimer->Reset();
+
+	delete camera;
+	camera = NULL;
 
 	DebugOut(L"[INFO] Scene %d unloaded! \n", id);
 }

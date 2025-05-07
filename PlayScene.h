@@ -10,6 +10,7 @@
 
 //#include "Koopas.h"
 
+#define DEATH_TIME	2000
 
 class CPlayScene: public CScene
 {
@@ -27,8 +28,8 @@ protected:
 	vector<LPGAMEOBJECT> projectileRenderObjects;
 
 	CTimer* pauseTimer = new CTimer(-1), * stopTimer = new CTimer();
+	CTimer* deathTimer = new CTimer(DEATH_TIME);
 
-	vector<pair<CGameObject*, int>> addobj;
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_SPRITES_SCREEN(string line);
 	void _ParseSection_ANIMATIONS(string line);
@@ -77,6 +78,10 @@ public:
 
 	bool IsObjectOutOfCamera(LPGAMEOBJECT obj) {
 		return camera->IsOutOfCamera(obj);
+	}
+
+	void OnPlayerDie() {
+		deathTimer->Start();
 	}
 };
 

@@ -49,7 +49,7 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e) {};
 
-	bool getIsFired() { return isFired; }
+	bool GetIsFired() { return isFired; }
 	void ShootFireball();
 	int GetaniID();
 public:

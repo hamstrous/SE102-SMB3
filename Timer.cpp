@@ -38,6 +38,15 @@ bool CTimer::IsRunning()
 	return false;
 }
 
+bool CTimer::IsDone()
+{
+	if(timeSpan == -1) return false;
+	if (timeStart == -1) return false;
+	if(ElapsedTime() >= timeSpan)
+		return true;
+	return false;
+}
+
 void CTimer::Reset()
 {
 	timeStart = -1;
