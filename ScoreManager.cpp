@@ -14,4 +14,6 @@ void CScoreManager::AddScore(float x, float y, int type)
 	CScore* score = new CScore(x, y, type);
 	scene->AddObject(score);
 	DebugOut(L"[INFO] Add Score: %d\n", type);
+	CGameData* gameData = CGameData::GetInstance();
+	gameData->score += type;
 }

@@ -6,6 +6,7 @@
 #include "PlayScene.h"
 #include "Score.h"
 #include "GameObject.h"
+#include "GameData.h"
 
 using namespace std;
 
