@@ -1,3 +1,5 @@
+#[CAMERA]
+
 [ASSETS]
 mario.txt
 brick.txt
@@ -40,8 +42,11 @@ effect.txt
 #20 : background color
 #21:  unbreakablebrick
 #50 : portal
+#100 : camera
 
 [OBJECTS]
+#CAMERA
+100	0	240
 
 #BG COLOR, flower:3, mushroom:2, star:4
 20	7	7	176	40	0

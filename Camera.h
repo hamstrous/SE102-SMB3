@@ -17,6 +17,7 @@ public:
 	CMario* GetMario();
 	
 	CCamera();
+	CCamera(float x, float y);
 	void Render() {};
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	bool IsOutOfCamera(LPGAMEOBJECT obj) {

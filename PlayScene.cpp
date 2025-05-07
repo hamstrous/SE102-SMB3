@@ -330,15 +330,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CGameFX(x, y, type);
 		break;
 	}
-		
-	
-
-
+	case OBJECT_TYPE_CAMERA:
+	{
+		camera = new CCamera(x,y);
+		break;
+	}
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
 		return;
 	}
 
+	if(obj == NULL) return;
 	// General object setup
 	obj->SetPosition(x, y);
 
@@ -422,7 +424,7 @@ void CPlayScene::Load()
 		}
 	}
 
-	camera = new CCamera();
+	if(camera == NULL) camera = new CCamera();
 	f.close();
 
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
@@ -465,6 +467,15 @@ void CPlayScene::Update(DWORD dt)
 			else if (obj->GetSleep()) {
 				obj->SetSleep(false);
 				character->Reset(characterCopy[dynamic_cast<CCharacter*>(obj)]);
+			}
+		}else if(CPowerUp* power = dynamic_cast<CPowerUp*>(obj)){
+			if (IsObjectOutOfCamera(obj)) {
+				obj->Delete();
+			}
+		}
+		else if (CFireball* fireball = dynamic_cast<CFireball*>(obj)) {
+			if (IsObjectOutOfCamera(obj)) {
+				obj->Delete();
 			}
 		}
 	}

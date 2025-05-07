@@ -700,6 +700,7 @@ void CMario::Acceleration(DWORD dt)
 		}
 	}
 	else {
+		//dirInput != 0;
 		const float absVx = abs(vx);
 		if (isOnPlatform) {
 			if (
@@ -722,10 +723,12 @@ void CMario::Acceleration(DWORD dt)
 			}
 		}
 		else {
+			// midair
 			if (!IsPMeterFull()) {
 				if(abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X) topSpeed = MARIO_WALK_MAX_SPEED_X;
 				else topSpeed = MARIO_RUN_MAX_SPEED_X;
 			}else topSpeed = MARIO_SPRINT_MAX_SPEED_X;
+
 			if (!IsRaccoon()) {
 				if ((vx > 0 && dirInput < 0) || (vx < 0 && dirInput > 0)) {
 					vx += dirInput * MARIO_DECEL_MIDAIR_X * dt;
@@ -741,19 +744,13 @@ void CMario::Acceleration(DWORD dt)
 				const float NEW_MARIO_RACCOON_MIDAIR_DECEL = 0.00005625f;
 				const float NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE = 0.000675f; //0030
 				if (gameData->IsFlightMode()) {
-					
-					
 					if (vx < 0 && dirInput> 0 || vx > 0 && dirInput < 0) {
 						vx += dirInput * NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE * dt;
 					}
-					else {
-						if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
-							vx += (vx > 0 ? -NEW_MARIO_RACCOON_MIDAIR_DECEL : NEW_MARIO_RACCOON_MIDAIR_DECEL) * dt;
-						}else vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
-						/*if (abs(vx) > MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
-							vx = MARIO_RACCOON_MIDAIR_SPEED_LIMIT * dirInput;
-						}*/
-					}
+					else if (abs(vx) < MARIO_RACCOON_MIDAIR_SPEED_LIMIT) {
+						vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+					}else
+						vx += (vx > 0 ? -NEW_MARIO_RACCOON_MIDAIR_DECEL : NEW_MARIO_RACCOON_MIDAIR_DECEL) * dt;
 
 				}
 				else {

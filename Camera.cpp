@@ -17,7 +17,14 @@ CCamera::CCamera() : CGameObject(0, 0) {
 	CGame* game = CGame::GetInstance();
 	screenHeight = game->GetBackBufferHeight();
 	screenWidth = game->GetBackBufferWidth();
-};
+}
+CCamera::CCamera(float x, float y) : CGameObject(x, y)
+{
+	CGame* game = CGame::GetInstance();
+	screenHeight = game->GetBackBufferHeight();
+	screenWidth = game->GetBackBufferWidth();
+}
+;
 
 void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
