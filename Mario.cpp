@@ -586,7 +586,9 @@ void CMario::SetState(int state)
 			}
 			if (vy == 0) vy = -MARIO_JUMP_SPEED[3];
 			jumpVx = vx;
+			break;
 		}
+		jumpVx = 0;
 		break;
 
 	case MARIO_STATE_RELEASE_JUMP:
@@ -765,6 +767,7 @@ void CMario::Acceleration(DWORD dt)
 						vx = topSpeed * dirInput;
 
 					}
+					DebugOutTitle(L"vx %f", vx);
 				}
 			}
 		}
