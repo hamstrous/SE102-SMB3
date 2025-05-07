@@ -23,19 +23,8 @@ effect.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 
-#########SMALLBUSH######
-#5	200	164	16	16	3	130001	130001	130001	0
-
-
-########CLOUD############
-#5	216	130	16	16	5	140001	140001	140001	1
-
-
-#######WOODBRICK#######
-#5	350	164	16	16	3	150001	150001	150001	1
-
 # MARIO
-0	80	10
+0	80	160
 
 #ENEMIES
 
@@ -53,11 +42,6 @@ effect.txt
 #GOOMBA
 #2	10	50
 
-#Unbreakable brick
-24	96	120	
-24	112	120	
-24	128	120	
-24	144	120	
 
 #QUESTIONBLOCK
 #15	96	120	1

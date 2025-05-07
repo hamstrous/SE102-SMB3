@@ -30,13 +30,13 @@ void CScore::Render()
 	case 8000:
 		aniId = ID_ANI_SCORE_8000;
 		break;
+	case SCORE_1UP:
+		aniId = ID_ANI_SCORE_1UP;
+		break;
 	default:
 		break;
 	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	//if(!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	//else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
-	//RenderBoundingBox();
 }
 
 void CScore::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
