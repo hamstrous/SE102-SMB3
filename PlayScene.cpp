@@ -32,6 +32,8 @@
 #include "Score.h"
 #include "Font.h"
 #include "GameFX.h"
+#include "CloudPlatform.h"
+
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -243,6 +245,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CLOUD: obj = new CCloud(x, y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_BACKGROUND_COLOR: obj = new CBackgroundColor(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str()), atoi(tokens[5].c_str())); break;
 	case OBJECT_TYPE_UNBREAKABLEBRICK: obj = new CUnbreakableBrick(x,y, atoi(tokens[3].c_str())); break;
+	case OBJECT_TYPE_CLOUDPLATFORM: obj = new CCloudPlatform(x, y); break;
 	case OBJECT_TYPE_FLOOR:
 	{
 		int width = atoi(tokens[3].c_str());
