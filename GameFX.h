@@ -5,7 +5,7 @@
 
 #define ANI_ID_TAILHIT 181000
 
-#define TIME_TAILHIT 300
+#define TIME_TAILHIT 150
 
 #define TYPE_TAILHIT 1
 #define TYPE_BREAK 2
