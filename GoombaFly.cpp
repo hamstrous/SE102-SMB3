@@ -4,7 +4,7 @@
 #include "Mario.h"
 void CGoombaFly::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == GOOMBA_STATE_DIE || state == GOOMBAFLY_STATE_DIE_UP)
+	if (state == GOOMBAFLY_STATE_DIE || state == GOOMBAFLY_STATE_DIE_UP)
 	{
 		left = top = right = bottom = 0;
 	}
@@ -60,7 +60,11 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CGoombaFly::Render()
 {
-	if (GetIsPause()) return;
+	if (GetIsPause() )
+	{
+		die_start = GetTickCount64();
+		return;
+	}
 	int aniId = ID_ANI_GOOMBAFLY_WALKING;
 	if (hasWing && state == GOOMBAFLY_STATE_WALKING) 
 	{	
@@ -92,7 +96,7 @@ void CGoombaFly::Render()
 	}
 	if(!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CGoombaFly::OnNoCollision(DWORD dt)
@@ -178,7 +182,10 @@ void CGoombaFly::SetState(int state)
 
 void CGoombaFly::Stomped()
 {
-	if (hasWing) hasWing = false;
+	if (hasWing) {
+		SetState(GOOMBAFLY_STATE_WALKING);
+		hasWing = false;
+	}
 	else SetState(GOOMBAFLY_STATE_DIE);
 }
 
@@ -214,7 +221,17 @@ void CGoombaFly::ShellHit(int shellX)
 }
 
 void CGoombaFly::TailHit(float x)
-{
+{	
+	if (x < this->x)
+	{
+		dir = -1;
+		vx = GOOMBA_FLYING_SPEED_X;
+	}
+	else
+	{
+		dir = 1;
+		vx = -GOOMBA_FLYING_SPEED_X;
+	}
 	tailhit = true;
 	SetState(GOOMBAFLY_STATE_DIE_UP);
 }

@@ -26,6 +26,7 @@ void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &botto
 		right = left + GOOMBA_BBOX_WIDTH;
 		bottom = top + GOOMBA_BBOX_HEIGHT;
 	}
+	
 }
 
 void CGoomba::OnNoCollision(DWORD dt)
@@ -86,7 +87,7 @@ void CGoomba::Render()
 	}
 	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CGoomba::SetState(int state)
@@ -107,6 +108,7 @@ void CGoomba::SetState(int state)
 			vx = -GOOMBA_WALKING_SPEED;
 			break;
 		case GOOMBA_STATE_DIE_UP:
+			ay = GOOMBA_GRAVITY;
 			die_start = GetTickCount64();
 			if (tailhit) vy = -GOOMBA_TAILHIT_SPEED_Y;
 			else vy = -GOOMBA_FLYING_SPEED;
@@ -147,6 +149,22 @@ void CGoomba::ShellHit(int shellX)
 		dir = 0;
 		vx = 0;
 	}
+	SetState(GOOMBA_STATE_DIE_UP);
+}
+
+void CGoomba::TailHit(float x)
+{	
+	if (x < this->x)
+	{
+		dir = -1;
+		vx = GOOMBA_FLYING_SPEED_X;
+	}
+	else
+	{
+		dir = 1;
+		vx = -GOOMBA_FLYING_SPEED_X;
+	}
+	tailhit = true;
 	SetState(GOOMBA_STATE_DIE_UP);
 }
 

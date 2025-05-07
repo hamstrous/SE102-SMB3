@@ -15,6 +15,7 @@
 #include "Mushroom.h"
 #include "Leaf.h"
 #include "Font.h"
+#include "ScoreManager.h"
 
 
 unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animationMap = {
@@ -189,6 +190,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 				if (pointsTouched[TOP]) vy = 0;
 				else y -= 1;
 			}else if (e->ny < 0) {
+				count = 0;
 				if (!pointsTouched[DOWNRIGHT] && !pointsTouched[DOWNLEFT]) {
 					y += 1;
 					isOnPlatform = false;
@@ -230,11 +232,16 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 {
 	CCharacter* character = dynamic_cast<CCharacter*>(e->obj);
-
+	float characterX, characterY;
+	character->GetPosition(characterX, characterY);
 	// jump on top >> kill Koopa and deflect a bit 
 	if (e->ny < 0)
 	{	
 		character->Stomped();
+		if(count <= 7) CScoreManager::GetInstance()->AddScore(characterX, characterY, score[count]);
+		else CScoreManager::GetInstance()->AddScore(characterX, characterY, score[7]);
+		count++;
+
 		if (CGame::GetInstance()->IsKeyDown(DIK_S)) SetJumpInput(1);
 		if (jumpInput == 1) vy = -MARIO_JUMP_DEFLECT_SPEED;
 		else vy = -MARIO_JUMP_WEAK_DEFLECT_SPEED;
@@ -271,7 +278,8 @@ void CMario::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
-	coin++;
+	CGameData::GetInstance()->AddCoin(1);
+	
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
@@ -339,13 +347,15 @@ void CMario::TailAttackInit()
 }
 
 void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
+{	
+	//CScoreManager::GetInstance()->AddScore(characterX, characterY, score[count]);
+	//count++;
 	if(!attackTimer->IsRunning()) return;
 	float l1, t1, r1, b1;
 	float l2, t2, r2, b2;
 	GetTailHitBox(l1, t1, r1, b1, l2, t2, r2, b2);
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, 0, 0, dt, coObjects, x);
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, 0, 0, dt, coObjects, x);
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, 0, 0, dt, coObjects, x, -nx, this->x);
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, 0, 0, dt, coObjects, x, nx, this->x);
 }
 
 //Change animaion when mario kick the shell

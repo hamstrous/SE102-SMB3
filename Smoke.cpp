@@ -4,7 +4,6 @@
 void CSmoke::Render()
 {	
 	if (GetIsPause()) {
-		start = GetTickCount64();
 		return;
 	}
 	int aniId = ID_ANI_SMOKE;

@@ -3,7 +3,6 @@
 void CGameFX::Render()
 {
 	if (GetIsPause()) {
-		start = GetTickCount64();
 		return;
 	}
 	switch (type)

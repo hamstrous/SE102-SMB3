@@ -50,7 +50,7 @@ public:
 	virtual void SetState(int state);
 	virtual void Stomped();
 	virtual void ShellHit(int shellX);
-	virtual void TailHit(float x) {};
+	virtual void TailHit(float x);
 	virtual void BlockHit() {};
 	virtual void TowardMario(float speed, float awayMario = 1);
 };

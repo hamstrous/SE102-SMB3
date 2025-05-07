@@ -158,6 +158,7 @@ namespace std {
 const float MARIO_JUMP_SPEED[4] = { 0.20625f, 0.21375f, 0.22125f, 0.23625f };
 const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
 
+
 class CMario : public CCharacter
 {
 protected:
@@ -171,6 +172,8 @@ protected:
 	CKoopa* holdingShell;
 	vector<CGameObject*> points;
 	vector<bool> pointsTouched;
+	int count = 0;
+	vector<int> score = { 100,200,400,800,1000,2000,4000,8000 };
 
 	// mario vx speed at jump point, for midair physics
 	float jumpVx = 0;
