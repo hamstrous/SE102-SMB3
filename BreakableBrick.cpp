@@ -14,3 +14,12 @@ void CBreakableBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 	r = l + BRICK_BBOX_WIDTH;
 	b = t + BRICK_BBOX_HEIGHT;
 }
+
+void CBreakableBrick::SideHit()
+{
+	isDeleted = true;
+}
+
+void CBreakableBrick::BottomHit()
+{
+}

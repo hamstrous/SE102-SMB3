@@ -138,20 +138,12 @@ void CMushroom::SetState(int state)
 	{	
 		if (type == ITEM_RED_MUSHROOM)
 		{	
-			/*CScore* score = new CScore(x, y - MUSHROOM_BBOX_HEIGHT, SCORE_1000);
-			score->SetState(SCORE_STATE_UP);
-			((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(score);
-			CGameData::GetInstance()->AddScore(1000);*/
-
 			CScoreManager::GetInstance()->AddScore(x, y - MUSHROOM_BBOX_HEIGHT, SCORE_1000);
 			CGameData::GetInstance()->AddScore(0);
 		}
 		if (type == ITEM_GREEN_MUSHROOM)
 		{	
 			CScoreManager::GetInstance()->AddScore(x, y - MUSHROOM_BBOX_HEIGHT, SCORE_1UP);
-			/*CScore* score = new CScore(x, y - MUSHROOM_BBOX_HEIGHT, SCORE_1000);
-			score->SetState(SCORE_STATE_UP);
-			((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(score);*/
 		}
 		Delete();
 		break;

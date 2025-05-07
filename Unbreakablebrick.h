@@ -9,7 +9,7 @@ class CUnbreakableBrick : public CBaseBrick
 {
 	int width;				// Unit: cell 
 	int height;				// Unit: cell 
-	int type; //	type: 0: wood, 1:blue
+	int type; //	type: 0: wood, 1:blue 
 	int brickSpriteId[2] = { 150001, 160001 };
 public:
 	int IsCollidable() { return 1; }

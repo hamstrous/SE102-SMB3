@@ -1,19 +1,31 @@
 #include "GameFX.h"
-
+#include "Game.h"
 void CGameFX::Render()
 {
+	if (isOn) {
+		CGame* game = CGame::GetInstance();
+		float hx = game->GetBackBufferWidth() / 2;
+		float hy = game->GetBackBufferHeight() - HUD_SIZE_Y;
+		CAnimations::GetInstance()->Get(ANI_ID_GAMEPAUSE)->Render(hx, hy);
+		return;
+	}
 	if (GetIsPause()) {
 		return;
 	}
 	switch (type)
 	{
 	case TYPE_TAILHIT:
+	{
 		int aniId = ANI_ID_TAILHIT;
 		if (GetTickCount64() - start <= TIME_TAILHIT)
 		{
 			if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 			else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 		}
+		break;
+	}
+		
+	default:
 		break;
 	}
 }
