@@ -556,6 +556,7 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 							float goombaX, goombaY;
 							obj->GetPosition(goombaX, goombaY);
 							CScoreManager::GetInstance()->AddScore(goombaX, goombaY, SCORE_100);
+							
 							//CGameData::GetInstance()->AddScore(0);
 						}
 					}

@@ -13,5 +13,5 @@ void CScoreManager::AddScore(float x, float y, int type)
 	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
 	CScore* score = new CScore(x, y, type);
 	scene->AddObject(score);
-	if(type != 1000) CGameData::GetInstance()->AddScore(type);
+	if(type <= 10000 || type >=100) CGameData::GetInstance()->AddScore(type);
 }

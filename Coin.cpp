@@ -1,5 +1,5 @@
 #include "Coin.h"
-
+#include "ScoreManager.h"
 void CCoin::Render()
 {	
 	if (GetIsPause()) return;
@@ -51,9 +51,7 @@ void CCoin::SetState(int state)
 		break;
 	case COIN_STATE_GONE:
 		{
-		CScore* score = new CScore(x, y, ID_ANI_SCORE_100);
-		score->SetState(SCORE_STATE_UP);
-		scene->AddObject(score);
+		CScoreManager::GetInstance()->AddScore(x, y, 100);
 		Delete();
 		break;
 		}

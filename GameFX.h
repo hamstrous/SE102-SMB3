@@ -4,7 +4,7 @@
 #include "Animations.h"
 
 #define ANI_ID_TAILHIT 181000
-#define ANI_ID_GAMEPAUSE 180005
+#define ANI_ID_GAMEPAUSE 182000
 
 #define TIME_TAILHIT 150
 
