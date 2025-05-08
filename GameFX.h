@@ -12,6 +12,9 @@
 #define TYPE_BREAK 2
 #define TYPE_GAMEPAUSE 3
 
+
+#define OFFSET_PAUSE_WIDTH 20
+#define OFFSET_PAUSE_HEIGHT -110
 class CGameFX : public CGameObject
 {
 protected:
