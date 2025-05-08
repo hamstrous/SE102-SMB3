@@ -523,7 +523,9 @@ void CPlayScene::Render()
 			backgroundRenderObjects.push_back(i);
 
 		if(dynamic_cast<CGenericPlatform*>(i)
-			|| dynamic_cast<CMountain*>(i))
+			|| dynamic_cast<CMountain*>(i)
+			|| dynamic_cast<CCloud*>(i))
+
 			firstRenderObjects.push_back(i);
 
 		if(dynamic_cast<CCharacter*>(i)
