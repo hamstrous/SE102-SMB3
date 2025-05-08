@@ -160,11 +160,11 @@ namespace std {
 #define MARIO_SMALL_BBOX_HEIGHT 14
 
 // time = animation time (sum of all frame duration)
-#define ATTACK_TIME	267
+#define ATTACK_TIME	17
 #define GLIDE_TIME	267
 #define FLY_TIME	267
 
-#define MARIO_UNTOUCHABLE_TIME 2500
+#define UNTOUCHABLE_TIME 2500
 
 const float MARIO_JUMP_SPEED[4] = { 0.20625f, 0.21375f, 0.22125f, 0.23625f };
 const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
@@ -176,8 +176,6 @@ protected:
 	static unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;
 	BOOLEAN isSitting;
 	MarioLevel level;
-	int untouchable;
-	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
 	int coin;
 	CKoopa* holdingShell;
@@ -194,7 +192,7 @@ protected:
 	int runInput = 0; // 1: run, 0: no run
 
 	// timers for animations
-	CTimer *attackTimer, *glideTimer, *flyTimer;
+	CTimer *attackTimer, *glideTimer, *flyTimer, *untouchableTimer;
 
 	int currentAnimation = -1;
 
@@ -225,20 +223,17 @@ public:
 	bool canHold = false;
 	CMario(float x, float y) : CCharacter(x, y)
 	{
-		glideTimer = new CTimer();
-		flyTimer = new CTimer();
-		attackTimer = new CTimer();
-		glideTimer->SetTimeSpan(GLIDE_TIME);
-		flyTimer->SetTimeSpan(FLY_TIME);
-		attackTimer->SetTimeSpan(ATTACK_TIME);
+		glideTimer = new CTimer(GLIDE_TIME);
+		flyTimer = new CTimer(FLY_TIME);
+		attackTimer = new CTimer(ATTACK_TIME);
+		untouchableTimer = new CTimer(UNTOUCHABLE_TIME);
+		
 		isSitting = false;
 		maxVx = 0.0f;
 		maxVy = 0.3f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
 		level = MarioLevel::RACCOON;
-		untouchable = 0;
-		untouchable_start = -1;
 		isOnPlatform = false;
 		coin = 0;
 		canHold = false;
@@ -270,7 +265,7 @@ public:
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
 	void SetLevel(MarioLevel l);
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
+	void StartUntouchable() { untouchableTimer->Start(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2, float& t2, float& r2, float& b2);

@@ -147,12 +147,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	Acceleration(dt);
 
 	// reset untouchable timer if untouchable time has passed
-	if ( GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME) 
-	{
-		untouchable_start = 0;
-		untouchable = 0;
-	}
-
 	// for mario has to be called first so process can call OnCollision
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	if (holdingShell != NULL) {
@@ -265,7 +259,7 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 			holdingShell = koopa;
 			koopa->Held();
 			DebugOut(L"HOLD\n");
-		}else if (untouchable == 0)
+		}else if (!untouchableTimer->IsRunning())
 		{
 			character->Touched();
 		}
@@ -322,7 +316,7 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 }
 
 void CMario::Attacked() {
-	if (!untouchable)
+	if (!untouchableTimer->IsRunning())
 	{
 		if (level == MarioLevel::RACCOON)
 		{
@@ -529,7 +523,7 @@ void CMario::Render()
 		GetAniId();
 	}
 
-	if(untouchable)
+	if(untouchableTimer->IsRunning())
 	{
 		// if stopping animation then flicker and stopping 
 		if(animations->Get(currentAnimation)->GetType() == 3) 
