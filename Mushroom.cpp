@@ -139,7 +139,6 @@ void CMushroom::SetState(int state)
 		if (type == ITEM_RED_MUSHROOM)
 		{	
 			CScoreManager::GetInstance()->AddScore(x, y - MUSHROOM_BBOX_HEIGHT, SCORE_1000);
-			CGameData::GetInstance()->AddScore(0);
 		}
 		if (type == ITEM_GREEN_MUSHROOM)
 		{	

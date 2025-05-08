@@ -25,12 +25,14 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::IDLE_LEFT, 401},
 			{MarioAnimationType::WALKING_RIGHT, 500},
 			{MarioAnimationType::WALKING_LEFT, 501},
-			{MarioAnimationType::RUNNING_RIGHT, 600},
+			{MarioAnimationType::RUNNING_RIGHT, 600}, //fix da ktra
 			{MarioAnimationType::RUNNING_LEFT, 601},
-			{MarioAnimationType::SPRINTING_RIGHT, 1302}, //fix
-			{MarioAnimationType::SPRINTING_LEFT, 1303},
+			{MarioAnimationType::SPRINTING_RIGHT, 602}, //fix da ktra
+			{MarioAnimationType::SPRINTING_LEFT, 603},
 			{MarioAnimationType::JUMP_RIGHT, 700},
 			{MarioAnimationType::JUMP_LEFT, 701},
+			{MarioAnimationType::JUMP_FALL_RIGHT,702}, // da them va ktra
+			{MarioAnimationType::JUMP_FALL_LEFT,703}, // da them va ktra
 			{MarioAnimationType::JUMP_SPRINT_RIGHT, 800},
 			{MarioAnimationType::JUMP_SPRINT_LEFT, 801},
 			{MarioAnimationType::SIT_RIGHT, 900},
@@ -50,10 +52,10 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::GROW_LEFT, 1024},
 			{MarioAnimationType::SHRINK_RIGHT, 1025},
 			{MarioAnimationType::SHRINK_LEFT, 1026},
-			{MarioAnimationType::RUN_HOLD_RIGHT, 1652}, //fix
-			{MarioAnimationType::RUN_HOLD_LEFT, 1653},
-			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1653}, //fix
-			{MarioAnimationType::SPRINT_HOLD_LEFT, 1653},
+			{MarioAnimationType::RUN_HOLD_RIGHT, 1016}, //fix da ktra
+			{MarioAnimationType::RUN_HOLD_LEFT, 1017},
+			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1018}, //fix da ktra
+			{MarioAnimationType::SPRINT_HOLD_LEFT, 1019},
 			{MarioAnimationType::DIE, 999}
 		}
 	},
@@ -84,10 +86,10 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::JUMP_HOLD_LEFT, 1656},
 			{MarioAnimationType::GROW_RIGHT, 1657},
 			{MarioAnimationType::GROW_LEFT, 1658},
-			{MarioAnimationType::RUN_HOLD_RIGHT, 1652}, //fix
-			{MarioAnimationType::RUN_HOLD_LEFT, 1653},
-			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1653}, //fix
-			{MarioAnimationType::SPRINT_HOLD_LEFT, 1653},
+			{MarioAnimationType::RUN_HOLD_RIGHT, 1660}, //fix da kiem tra
+			{MarioAnimationType::RUN_HOLD_LEFT, 1661},
+			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1662}, //fix da kiemtra
+			{MarioAnimationType::SPRINT_HOLD_LEFT, 1663},
 			{MarioAnimationType::DIE, 999}
 		}
 	},
@@ -97,14 +99,16 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::IDLE_LEFT, 1702},
 			{MarioAnimationType::WALKING_RIGHT, 1800},
 			{MarioAnimationType::WALKING_LEFT, 1801},
-			{MarioAnimationType::RUNNING_RIGHT, 1900},
+			{MarioAnimationType::RUNNING_RIGHT, 1900}, //fix da ktra
 			{MarioAnimationType::RUNNING_LEFT, 1901},
-			{MarioAnimationType::SPRINTING_RIGHT, 1302}, //fix
-			{MarioAnimationType::SPRINTING_LEFT, 1303},
+			{MarioAnimationType::SPRINTING_RIGHT, 1902}, //fix da ktra
+			{MarioAnimationType::SPRINTING_LEFT, 1903},
 			{MarioAnimationType::BRACE_RIGHT, 2001},
 			{MarioAnimationType::BRACE_LEFT, 2000},
 			{MarioAnimationType::JUMP_RIGHT, 2100},
 			{MarioAnimationType::JUMP_LEFT, 2101},
+			{MarioAnimationType::JUMP_FALL_RIGHT,1908}, // da them va ktra
+			{MarioAnimationType::JUMP_FALL_LEFT,1909}, // da them va ktra
 			{MarioAnimationType::JUMP_SPRINT_RIGHT, 2200},
 			{MarioAnimationType::JUMP_SPRINT_LEFT, 2201},
 			{MarioAnimationType::SIT_RIGHT, 2300},
@@ -126,10 +130,10 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 			{MarioAnimationType::JUMP_HOLD_LEFT, 2656},
 			{MarioAnimationType::SHRINK_RIGHT, 1023},
 			{MarioAnimationType::SHRINK_LEFT, 1024},
-			{MarioAnimationType::RUN_HOLD_RIGHT, 1652}, //fix
-			{MarioAnimationType::RUN_HOLD_LEFT, 1653},
-			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1653}, //fix
-			{MarioAnimationType::SPRINT_HOLD_LEFT, 1653},
+			{MarioAnimationType::RUN_HOLD_RIGHT, 1904}, //fix da ktra
+			{MarioAnimationType::RUN_HOLD_LEFT, 1905},
+			{MarioAnimationType::SPRINT_HOLD_RIGHT, 1906}, //fix da ktra
+			{MarioAnimationType::SPRINT_HOLD_LEFT, 1907},
 			{MarioAnimationType::DIE, 999}
 		}
 	}
@@ -461,6 +465,8 @@ void CMario::GetAniId()
 		else {
 			// run and walk
 			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_RIGHT : MarioAnimationType::JUMP_LEFT];
+			if(jumpInput == 0 && level != MarioLevel::SMALL)
+				currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_FALL_RIGHT : MarioAnimationType::JUMP_FALL_LEFT];
 		}
 	}
 	else if (isSitting) {

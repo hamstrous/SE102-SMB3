@@ -43,6 +43,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
 	hud = new CHUD();
+
 }
 
 
@@ -391,7 +392,6 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 	}
 
 	f.close();
-
 	DebugOut(L"[INFO] Done loading assets from %s\n", assetFile);
 }
 
@@ -427,7 +427,7 @@ void CPlayScene::Load()
 
 	if(camera == NULL) camera = new CCamera();
 	f.close();
-
+	CGameFXManager::GetInstance()->InitPauseFX();
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
 }
 
@@ -540,7 +540,8 @@ void CPlayScene::Render()
 			|| dynamic_cast<CScore*>(i)
 			|| dynamic_cast<CLeaf*>(i)
 			|| dynamic_cast<CSmoke*>(i)
-			|| dynamic_cast<CGameFX*>(i))
+			|| dynamic_cast<CGameFX*>(i)
+			|| dynamic_cast<CGameFXManager*>(i))
 			projectileRenderObjects.push_back(i);
 	}
 
@@ -620,8 +621,10 @@ void CPlayScene::Unload()
 bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; }
 
 void CPlayScene::SetIsPause()
-{
+{	
+
 	if (pauseTimer->IsRunning()) {
+
 		CGameFXManager::GetInstance()->AddPause();
 	}
 	else {

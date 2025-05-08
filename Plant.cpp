@@ -4,6 +4,48 @@
 #include "Pipe.h"
 #include "PlayScene.h"
 #include "Fireball.h"
+#include <map>
+enum Direction {
+	LEFT_UP_CLOSE,
+	LEFT_UP_FAR,
+	LEFT_DOWN_FAR,
+	LEFT_DOWN_CLOSE,
+	RIGHT_UP_CLOSE,
+	RIGHT_UP_FAR,
+	RIGHT_DOWN_FAR,
+	RIGHT_DOWN_CLOSE
+};
+
+std::map<Direction, std::pair<float, float>> fireballSpeeds = {
+	{LEFT_UP_CLOSE,     {-FIREBALL_SPEED, -FIREBALL_SPEED * 0.8f}},
+	{LEFT_UP_FAR,       {-FIREBALL_SPEED, -FIREBALL_SPEED * 0.2f}},
+	{LEFT_DOWN_FAR,     {-FIREBALL_SPEED,  FIREBALL_SPEED * 0.2f}},
+	{LEFT_DOWN_CLOSE,   {-FIREBALL_SPEED,  FIREBALL_SPEED * 0.5f}},
+	{RIGHT_UP_CLOSE,    { FIREBALL_SPEED, -FIREBALL_SPEED * 0.8f}},
+	{RIGHT_UP_FAR,      { FIREBALL_SPEED, -FIREBALL_SPEED * 0.2f}},
+	{RIGHT_DOWN_FAR,    { FIREBALL_SPEED,  FIREBALL_SPEED * 0.2f}},
+	{RIGHT_DOWN_CLOSE,  { FIREBALL_SPEED,  FIREBALL_SPEED * 0.5f}}
+};
+
+Direction GetDirection(float mario_x, float mario_y, float plant_x, float plant_y)
+{
+	if (mario_x < plant_x)
+	{
+		if (mario_y < plant_y)
+			return (mario_x > plant_x - 100) ? LEFT_UP_CLOSE : LEFT_UP_FAR;
+		else
+			return (mario_x > plant_x - 100) ? LEFT_DOWN_CLOSE : LEFT_DOWN_FAR;
+	}
+	else
+	{
+		if (mario_y < plant_y)
+			return (mario_x < plant_x + 100) ? RIGHT_UP_CLOSE : RIGHT_UP_FAR;
+		else
+			return (mario_x < plant_x + 100) ? RIGHT_DOWN_CLOSE : RIGHT_DOWN_FAR;
+	}
+}
+
+
 void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {	
 	left = x - PRIRANHA_BBOX_WIDTH / 2;
@@ -125,7 +167,7 @@ void CPlant::ShootFireball()
 	float fbvx = toLeft ? -FIREBALL_SPEED_X : FIREBALL_SPEED_X;
 	float fbvy = FIREBALL_SPEED_Y[angle];
 
-	fireball->SetSpeed(fbvx, fbvy);
+	fireball->SetSpeed(fbvx, fbvy
 	scene->AddObject(fireball);
 	isFired = false;
 }

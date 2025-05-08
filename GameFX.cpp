@@ -6,12 +6,15 @@ void CGameFX::Render()
 		CGame* game = CGame::GetInstance();
 		float hx = game->GetBackBufferWidth() / 2;
 		float hy = game->GetBackBufferHeight() - HUD_SIZE_Y;
-		CAnimations::GetInstance()->Get(ANI_ID_GAMEPAUSE)->Render(hx, hy);
+		CAnimations::GetInstance()->Get(ANI_ID_GAMEPAUSE)->Render(hx, hy-100);
 		return;
 	}
 	if (GetIsPause()) {
 		return;
 	}
+	CGame* game = CGame::GetInstance();
+	float hx = game->GetBackBufferWidth() / 2;
+	float hy = game->GetBackBufferHeight() - HUD_SIZE_Y;
 	switch (type)
 	{
 	case TYPE_TAILHIT:
@@ -24,7 +27,6 @@ void CGameFX::Render()
 		}
 		break;
 	}
-		
 	default:
 		break;
 	}

@@ -1,5 +1,5 @@
 #include "BreakableBrick.h"
-
+#include "ScoreManager.h"
 void CBreakableBrick::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
@@ -18,8 +18,10 @@ void CBreakableBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 void CBreakableBrick::SideHit()
 {
 	isDeleted = true;
+	CScoreManager::GetInstance()->AddScore(x, y, 10);
 }
 
 void CBreakableBrick::BottomHit()
 {
+
 }
