@@ -459,7 +459,7 @@ void CMario::GetAniId()
 	}
 
 	if (!isOnPlatform) {
-		if (abs(vx) > MARIO_RUN_MAX_SPEED_X) {
+		if (IsPMeterFull()) {
 			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_SPRINT_RIGHT : MarioAnimationType::JUMP_SPRINT_LEFT];
 		}
 		else {

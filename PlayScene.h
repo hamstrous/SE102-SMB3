@@ -7,6 +7,7 @@
 #include "Mario.h"
 #include "Goomba.h"
 #include "GoombaFly.h"
+#include "Timer.h"
 
 //#include "Koopas.h"
 
@@ -53,6 +54,8 @@ public:
 
 	LPGAMEOBJECT GetPlayer() { return player; }
 	CCamera* GetCamera() { return camera; }
+	CTimer* GetPauseTimer() { return pauseTimer; }
+	void SetPlayer(LPGAMEOBJECT player) { this->player = player; }
 	void AddObject(CGameObject* obj) { objects.push_back(obj); }
 	void Clear();
 	void PurgeDeletedObjects();

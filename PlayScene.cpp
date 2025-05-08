@@ -35,6 +35,7 @@
 #include "CloudPlatform.h"
 #include "GameFXManager.h"
 #include "GameFX.h"
+#include "TimerManager.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -656,9 +657,11 @@ void CPlayScene::SetIsPause()
 	if (pauseTimer->IsRunning()) {
 
 		CGameFXManager::GetInstance()->AddPause();
+		CTimerManager::GetInstance()->Resume();
 	}
 	else {
 		CGameFXManager::GetInstance()->RemovePause();
+		CTimerManager::GetInstance()->Pause();
 	}
 	pauseTimer->Flip();
 }

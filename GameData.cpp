@@ -18,8 +18,19 @@ void CGameData::OnDeath()
 	else {
 		CGame* game = CGame::GetInstance();
 	}
-
+	countDown->Start();
 	pmeter = 0;
+}
+
+int CGameData::GetRemainingTime()
+
+{
+	int time = 300 - (countDown->ElapsedTime() / 1000);
+
+	CGame* game = CGame::GetInstance();
+	CTimer* pauseTimer = dynamic_cast<CPlayScene*>(game->GetCurrentScene())->GetPauseTimer();
+	if (pauseTimer->IsRunning()) time = 300 - ((pauseTimer->GetTimeStart() - countDown->GetTimeStart()) / 1000);
+	return (time >= 0) ? time : 0;
 }
 
 void CGameData::Update(DWORD dt)
