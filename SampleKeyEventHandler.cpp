@@ -6,6 +6,7 @@
 #include "Mario.h"
 #include "Character.h"
 #include "PlayScene.h"
+#include "GameFXManager.h"
 
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {

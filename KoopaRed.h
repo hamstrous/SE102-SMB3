@@ -29,7 +29,7 @@ protected:
 
 	virtual void OnNoCollision(DWORD dt);
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
-	virtual void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e);
+	virtual void OnCollisionWithBaseBrick(LPCOLLISIONEVENT e);
 	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
 
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

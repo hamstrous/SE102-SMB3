@@ -38,8 +38,8 @@ void CKoopaRed::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCharacter(e);
 		return;
 	}
-	if (dynamic_cast<CQuestionBlock*>(e->obj)) {
-		OnCollisionWithQuestionBlock(e);
+	if (dynamic_cast<CBaseBrick*>(e->obj)) {
+		OnCollisionWithBaseBrick(e);
 		return;
 	}
 	if (!e->obj->IsBlocking()) return;
@@ -54,13 +54,12 @@ void CKoopaRed::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 }
 
-void CKoopaRed::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
+void CKoopaRed::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 {
 	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 	CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
-	CQuestionBlock* questionblock = (CQuestionBlock*)e->obj;
-	if (questionblock->GetState() == QUESTION_BLOCK_STATE_MOVEUP) {
-		
+	CBaseBrick* basebrick = (CBaseBrick*)e->obj;
+	if (basebrick->GetState() == QUESTION_BLOCK_STATE_MOVEUP) {
 			if (state == KOOPA_STATE_WALKING) {
 				float xx, yy;
 				player->GetPosition(xx, yy);
@@ -84,11 +83,8 @@ void CKoopaRed::OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e)
 			vx = -vx;
 		}
 	}
-	if (questionblock->GetState() != QUESTION_BLOCK_STATE_UNBOX) {
-		if (state == KOOPA_STATE_SHELL_MOVING) {
-			questionblock->SetState(QUESTION_BLOCK_STATE_MOVEUP);
-		}
-	}
+	if (state == KOOPA_STATE_SHELL_MOVING || state == KOOPA_STATE_SHELL_MOVING_TAILHIT)
+		basebrick->SideHit();
 }
 
 void CKoopaRed::Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

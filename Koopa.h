@@ -75,7 +75,7 @@ protected:
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e) = 0;
 	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e) = 0;
-	virtual void OnCollisionWithQuestionBlock(LPCOLLISIONEVENT e) = 0;
+	virtual void OnCollisionWithBaseBrick(LPCOLLISIONEVENT e) = 0;
 
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
 	virtual void Flying() = 0;

@@ -1,5 +1,6 @@
 #include "QuestionBlock.h"
 #include "Mushroom.h"
+#include "ScoreManager.h"
 void CQuestionBlock::Render()
 {	
 	CAnimations* animations = CAnimations::GetInstance();
