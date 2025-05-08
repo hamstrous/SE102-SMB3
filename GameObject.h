@@ -44,6 +44,8 @@ public:
 	void SetSleep(bool sleep) { this->sleep = sleep; }
 
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
+	int GetX() { return x; }
+	int GetY() { return y; }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 	bool GetSleep() { return sleep; }
 
