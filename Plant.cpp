@@ -1,49 +1,10 @@
-#include "Plant.h"
+﻿#include "Plant.h"
 #include "Game.h"
 #include "Mario.h"
 #include "Pipe.h"
 #include "PlayScene.h"
 #include "Fireball.h"
 #include <map>
-enum Direction {
-	LEFT_UP_CLOSE,
-	LEFT_UP_FAR,
-	LEFT_DOWN_FAR,
-	LEFT_DOWN_CLOSE,
-	RIGHT_UP_CLOSE,
-	RIGHT_UP_FAR,
-	RIGHT_DOWN_FAR,
-	RIGHT_DOWN_CLOSE
-};
-
-std::map<Direction, std::pair<float, float>> fireballSpeeds = {
-	{LEFT_UP_CLOSE,     {-FIREBALL_SPEED, -FIREBALL_SPEED * 0.8f}},
-	{LEFT_UP_FAR,       {-FIREBALL_SPEED, -FIREBALL_SPEED * 0.2f}},
-	{LEFT_DOWN_FAR,     {-FIREBALL_SPEED,  FIREBALL_SPEED * 0.2f}},
-	{LEFT_DOWN_CLOSE,   {-FIREBALL_SPEED,  FIREBALL_SPEED * 0.5f}},
-	{RIGHT_UP_CLOSE,    { FIREBALL_SPEED, -FIREBALL_SPEED * 0.8f}},
-	{RIGHT_UP_FAR,      { FIREBALL_SPEED, -FIREBALL_SPEED * 0.2f}},
-	{RIGHT_DOWN_FAR,    { FIREBALL_SPEED,  FIREBALL_SPEED * 0.2f}},
-	{RIGHT_DOWN_CLOSE,  { FIREBALL_SPEED,  FIREBALL_SPEED * 0.5f}}
-};
-
-Direction GetDirection(float mario_x, float mario_y, float plant_x, float plant_y)
-{
-	if (mario_x < plant_x)
-	{
-		if (mario_y < plant_y)
-			return (mario_x > plant_x - 100) ? LEFT_UP_CLOSE : LEFT_UP_FAR;
-		else
-			return (mario_x > plant_x - 100) ? LEFT_DOWN_CLOSE : LEFT_DOWN_FAR;
-	}
-	else
-	{
-		if (mario_y < plant_y)
-			return (mario_x < plant_x + 100) ? RIGHT_UP_CLOSE : RIGHT_UP_FAR;
-		else
-			return (mario_x < plant_x + 100) ? RIGHT_DOWN_CLOSE : RIGHT_DOWN_FAR;
-	}
-}
 
 
 void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -75,7 +36,7 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if ((state == STATE_PRIRANHA_DOWN) && startY < y - type*-20)
 	{	
 		y = startY;
-		if (marioX < x-50 || marioX > x+50)
+		if (marioX < x-30 || marioX > x+30)
 		{
 			SetState(STATE_PRIRANHA_STOP);
 		}
@@ -129,44 +90,54 @@ void CPlant::Render()
 
 void CPlant::ShootFireball()
 {
-	const float FIREBALL_SPEED_X = FIREBALL_SPEED;
-	const float FIREBALL_SPEED_Y[] = {
-		0.04f, 0.01f, -0.01, -0.025f
+	const float FIREBALL_SPEED_X = 0.07f; 
+	const float FIREBALL_ANGLES[] = {
+		225.0f,  // Above near
+		202.5f, // Above far
+		162.5f, // Under far
+		135.0f // Under near
 	};
-
-	const float FIREBALL_RANGE_X = 100.0f;
-
-	enum FireballAngle {
-		// Angles for fireball trajectory
-		LOW = 0,
-		MEDIUM_LOW = 1,
-		MEDIUM_HIGH = 2,
-		HIGH = 3
-	};
-
 
 	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
 	CFireball* fireball = new CFireball(x, y + size);
 	float mario_x, mario_y;
 	scene->GetPlayer()->GetPosition(mario_x, mario_y);
 
+	// Distance mario-plant
 	float dx = mario_x - x;
 	float dy = mario_y - y;
 
-	bool toLeft = dx < 0;
-	bool isAbove = dy < 0;
-	bool isClose = abs(dx) <= FIREBALL_RANGE_X;
+	bool toLeft = dx < 0; // Mario on the left
+	bool isAbove = dy < 0; // Mario on above
 
-	FireballAngle angle;
+	// Get angle
+	int angleIndex;
+	if (isAbove)
+	{
+		angleIndex = abs(dx) <= 80 ? 0 : 1; // above near : far
+	}
+	else
+	{
+		angleIndex = abs(dx) <= 80 ? 3 : 2; // under near : far
+	}
 
-	if (isAbove && isClose)       angle = HIGH;
-	else if (isAbove && !isClose) angle = MEDIUM_HIGH;
-	else if (!isAbove && !isClose)angle = MEDIUM_LOW;
-	else                          angle = LOW;
+	// get angle
+	float angle = FIREBALL_ANGLES[angleIndex];
 
-	float fbvx = toLeft ? -FIREBALL_SPEED_X : FIREBALL_SPEED_X;
-	float fbvy = FIREBALL_SPEED_Y[angle];
+	// from angle to radians
+	float radians = angle * (3.14159265f / 180.0f);
 
+	// cal fbvx fbvy
+	float fbvx = FIREBALL_SPEED_X * cos(radians);
+	float fbvy = FIREBALL_SPEED_X * sin(radians);
+
+	// if mario left, swap
+	if (!toLeft)
+	{
+		fbvx = -fbvx;
+	}
+
+	// set speed for fireball
 	fireball->SetSpeed(fbvx, fbvy);
 	scene->AddObject(fireball);
 	isFired = false;
