@@ -2,6 +2,7 @@
 #include "Timer.h"
 #include "Mario.h"
 #include <vector>
+#include "debug.h"
 
 #define FRAME_24 400
 #define FRAME_16 267
@@ -64,7 +65,8 @@ public:
 	void Update(DWORD dt);
 
 	void AddScore(int s)
-	{
+	{	
+		DebugOut(L"AddScore is called");
 		score += s;
 	}
 

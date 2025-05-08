@@ -59,9 +59,8 @@ public:
 	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
 
 	bool GetIsPause() { return pauseTimer->IsRunning(); }
-	void SetIsPause() {
-		pauseTimer->Flip();
-	}
+	void SetIsPause();
+	
 	bool GetIsStop() { return stopTimer->IsRunning(); }
 	void SetIsStop(int timeSpan) {
 		stopTimer->SetTimeSpan(timeSpan);

@@ -8,7 +8,7 @@
 #include "GameFXManager.h"
 #include "debug.h"
 #include "Mario.h"
-
+#include "ScoreManager.h"
 #define BLOCK_PUSH_FACTOR 0.01f
 
 CCollision* CCollision::__instance = NULL;
@@ -519,7 +519,7 @@ bool CCollision::CheckTouchCharacterForShellHeldHit(float ml, float mt, float mr
 	}return isTouching;
 }
 
-bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, int nx, float marioX)
+bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, int nx, float y)
 {
 	bool isTouching = false;
 	if (coObjects->size() > 0)
@@ -551,7 +551,13 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 					{
 						character->TailHit(x);
 						CGameFXManager::GetInstance()->AddGameFX((ml + mr) / 2, (mt + mb) / 2, 1);
-
+						if (dynamic_cast<CGoomba*>(obj) || dynamic_cast<CGoombaFly*>(obj))
+						{	
+							float goombaX, goombaY;
+							obj->GetPosition(goombaX, goombaY);
+							CScoreManager::GetInstance()->AddScore(goombaX, goombaY, SCORE_100);
+							//CGameData::GetInstance()->AddScore(0);
+						}
 					}
 					else if (CBaseBrick* brick = dynamic_cast<CBaseBrick*>(obj))
 					{	

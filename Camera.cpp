@@ -45,9 +45,9 @@ void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (mx > cr) x += mx - cr;
 	if (my > cb) y += my - cb;
 	if (CGameData::GetInstance()->IsFlightMode()) {
-		if (my < ct) y -= ct - my;
+		
 	}
-
+	if (my < ct) y -= ct - my;
 	Clamp(x, 0, levelWidth - screenWidth);
 	Clamp(y, 0, 240);
 }

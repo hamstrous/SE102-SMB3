@@ -1,6 +1,8 @@
 #include "Mushroom.h"
 #include "QuestionBlock.h"
 #include "BaseBrick.h"
+#include "GameData.h"
+#include "ScoreManager.h"
 void CMushroom::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 		left = x - MUSHROOM_BBOX_WIDTH / 2;
@@ -133,10 +135,16 @@ void CMushroom::SetState(int state)
 		vx = -vx;
 		break;
 	case MUSHROOM_STATE_DELETE:
-	{
-		CScore* score = new CScore(x, y - MUSHROOM_BBOX_HEIGHT, SCORE_1000);
-		score->SetState(SCORE_STATE_UP);
-		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(score);
+	{	
+		if (type == ITEM_RED_MUSHROOM)
+		{	
+			CScoreManager::GetInstance()->AddScore(x, y - MUSHROOM_BBOX_HEIGHT, SCORE_1000);
+			CGameData::GetInstance()->AddScore(0);
+		}
+		if (type == ITEM_GREEN_MUSHROOM)
+		{	
+			CScoreManager::GetInstance()->AddScore(x, y - MUSHROOM_BBOX_HEIGHT, SCORE_1UP);
+		}
 		Delete();
 		break;
 	}

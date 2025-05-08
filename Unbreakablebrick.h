@@ -9,11 +9,11 @@ class CUnbreakableBrick : public CBaseBrick
 {
 	int width;				// Unit: cell 
 	int height;				// Unit: cell 
-	int type; //	type: 0: wood, 1:blue
+	int type; //	type: 0: wood, 1:blue 
 	int brickSpriteId[2] = { 150001, 160001 };
 public:
 	int IsCollidable() { return 1; }
-
+	int IsBlocking() { return 1; }
 	CUnbreakableBrick(float x, float y, int type) : CBaseBrick(x, y) {
 		this->type = type;
 	}
@@ -24,5 +24,8 @@ public:
 		b = t + BRICK_BBOX_HEIGHT;
 	}
 	void Render();
+	virtual void SetState(int state) {};
+	virtual void SideHit() {};
+	virtual void BottomHit() {};
 };
 

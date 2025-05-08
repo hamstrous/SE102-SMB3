@@ -33,7 +33,8 @@
 #include "Font.h"
 #include "GameFX.h"
 #include "CloudPlatform.h"
-
+#include "GameFXManager.h"
+#include "GameFX.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -610,6 +611,17 @@ void CPlayScene::Unload()
 }
 
 bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; }
+
+void CPlayScene::SetIsPause()
+{
+	if (pauseTimer->IsRunning()) {
+		CGameFXManager::GetInstance()->AddPause();
+	}
+	else {
+		CGameFXManager::GetInstance()->RemovePause();
+	}
+	pauseTimer->Flip();
+}
 
 void CPlayScene::PurgeDeletedObjects()
 {

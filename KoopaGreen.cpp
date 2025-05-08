@@ -1,5 +1,7 @@
 #include "KoopaGreen.h"
-
+#include "GameFXManager.h"
+#include "ScoreManager.h"
+#include "GameData.h"
 void CKoopaGreen::Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (vx > 0) nx = 1;
@@ -273,12 +275,20 @@ void CKoopaGreen::OnNoCollision(DWORD dt)
 void CKoopaGreen::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 {
 	CCharacter* character = dynamic_cast<CCharacter*>(e->obj);
+	float character_x, character_y;
+	character->GetPosition(character_x, character_y);
 	if (state == KOOPA_STATE_SHELL_MOVING || state == KOOPA_STATE_SHELL_MOVING_TAILHIT) {
 		// if hit another moving shell, then both get shell hit
 		// call this Koppa shell hit first, else no effect
 		if (dynamic_cast<CKoopa*>(character) && 
 			(dynamic_cast<CKoopa*>(character)->GetState() == KOOPA_STATE_SHELL_MOVING || dynamic_cast<CKoopa*>(character)->GetState() == KOOPA_STATE_SHELL_MOVING_TAILHIT) ){
 			ShellHit(-e->nx);
+		}
+		if (!dynamic_cast<CMario*>(e->obj))
+		{
+			if (count <= 7) CScoreManager::GetInstance()->AddScore(character_x, character_y, score[count]);
+			else CScoreManager::GetInstance()->AddScore(character_x, character_y, score[7]);
+			count++;
 		}
 		character->ShellHit(e->nx);
 	}
@@ -428,6 +438,7 @@ void CKoopaGreen::ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchingSolid(ml, mt, mr, mb, vx, vy, dt, coObjects)) {
 			SetState(KOOPA_STATE_DIE_UP);
+			CScoreManager::GetInstance()->AddScore(x, y, 100);
 		}
 	}
 }
@@ -450,6 +461,8 @@ void CKoopaGreen::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
 			SetState(KOOPA_STATE_DIE_UP);
+			CScoreManager::GetInstance()->AddScore(x, y, 100);
+
 		}
 	}
 }
