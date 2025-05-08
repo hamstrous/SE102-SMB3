@@ -53,6 +53,7 @@
     <ClCompile Include="GameFX.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="CloudPlatform.cpp" />
+    <ClCompile Include="TimerManager.cpp" />
     <ClCompile Include="Abyss.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +112,7 @@
     <ClInclude Include="GameFX.h" />
     <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="CloudPlatform.h" />
+    <ClInclude Include="TimerManager.h" />
     <ClInclude Include="Abyss.h" />
   </ItemGroup>
   <ItemGroup>

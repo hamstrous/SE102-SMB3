@@ -27,6 +27,8 @@ public:
 	CTimer* ptimer;
 	int worldName;
 	bool flightMode = 0;
+	bool isPaused = 0;
+	ULONGLONG pauseStart = 0;
 	vector<int> cards;
 	MarioLevel marioLevel;
 
@@ -56,11 +58,7 @@ public:
 		pmeter = 0;
 	}
 
-	int GetRemainingTime()
-	{
-		int time = 300 - (countDown->ElapsedTime()/1000);
-		return (time >= 0) ? time : 0;
-	}
+	int GetRemainingTime();
 
 	void Update(DWORD dt);
 

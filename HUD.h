@@ -28,6 +28,9 @@
 // Course Clear
 #define ID_SPRITE_COURSE_CLEAR            8058
 
+// HUD BLACK
+#define ID_SPRITE_BLACK            170105
+
 
 // CONSTANTS
 #define HUD_SIZE_Y	30

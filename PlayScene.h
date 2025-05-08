@@ -7,6 +7,7 @@
 #include "Mario.h"
 #include "Goomba.h"
 #include "GoombaFly.h"
+#include "Timer.h"
 
 //#include "Koopas.h"
 
@@ -32,6 +33,7 @@ protected:
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_SPRITES_SCREEN(string line);
+	void _ParseSection_SPRITES_OFFSET(string line);
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATIONS_VIBRATING(string line);
 	void _ParseSection_ANIMATIONS_FLICKERING(string line);
@@ -52,6 +54,8 @@ public:
 
 	LPGAMEOBJECT GetPlayer() { return player; }
 	CCamera* GetCamera() { return camera; }
+	CTimer* GetPauseTimer() { return pauseTimer; }
+	void SetPlayer(LPGAMEOBJECT player) { this->player = player; }
 	void AddObject(CGameObject* obj) { objects.push_back(obj); }
 	void Clear();
 	void PurgeDeletedObjects();

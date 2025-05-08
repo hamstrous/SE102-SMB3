@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-#include "Timer.h"
+#include "TimerManager.h"
 
 
 CTimer::CTimer(ULONGLONG timeSpan)
@@ -8,6 +8,7 @@ CTimer::CTimer(ULONGLONG timeSpan)
 	this->timeSpan = timeSpan;
 	timeStart = -1;
 	started = false;
+	AddToManager();
 }
 
 CTimer::CTimer()
@@ -15,6 +16,7 @@ CTimer::CTimer()
 	timeSpan = 0;
 	timeStart = -1;
 	started = false;
+	AddToManager();
 }
 
 void CTimer::Start()
@@ -63,6 +65,24 @@ void CTimer::Flip()
 	{
 		Reset();
 	}
+}
+
+void CTimer::Pause()
+{
+	pauseStart = GetTickCount64();
+}
+
+void CTimer::Resume()
+{
+	if (timeStart == -1) return;
+	ULONGLONG elapsed = GetTickCount64() - pauseStart;
+	timeStart += elapsed;
+	started = true;
+}
+
+void CTimer::AddToManager()
+{
+	CTimerManager::GetInstance()->Add(this);
 }
 
 ULONGLONG CTimer::ElapsedTime()

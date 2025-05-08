@@ -466,7 +466,7 @@ void CMario::GetAniId()
 	}
 
 	if (!isOnPlatform) {
-		if (abs(vx) > MARIO_RUN_MAX_SPEED_X) {
+		if (IsPMeterFull()) {
 			currentAnimation = animationMap[level][nx >= 0 ? MarioAnimationType::JUMP_SPRINT_RIGHT : MarioAnimationType::JUMP_SPRINT_LEFT];
 		}
 		else {
@@ -540,11 +540,8 @@ void CMario::Render()
 	else {
 		animations->Get(currentAnimation)->ResetType();
 	}
-	
-	float offsetX = 0, offsetY = 0;
-	if (IsRaccoon()) offsetX = (nx > 0) ? -4 : 4;
 
-	animations->Get(currentAnimation)->Render(x + offsetX, y);
+	animations->Get(currentAnimation)->Render(x, y);
 
 	RenderBoundingBox();
 	
@@ -661,12 +658,13 @@ void CMario::PointsCheck()
 	}
 
 	int dir = 0;
-	if (pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN]) {
-		dir = -2;
-	}
-	else if (pointsTouched[LEFTUP] || pointsTouched[LEFTDOWN]) {
+	if (pointsTouched[LEFTUP] || pointsTouched[LEFTDOWN]) {
 		dir = 2;
 	}
+	else if (pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN]) {
+		dir = -2;
+	}
+
 	x += dir;
 	if ((vx < 0 && dir > 0) || (vx > 0 && dir < 0)) {
 		vx = 0;

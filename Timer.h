@@ -5,8 +5,10 @@ class CTimer
 {
 private:
 	ULONGLONG timeStart;
+	ULONGLONG pauseStart = 0;
 	ULONGLONG timeSpan;
 	bool started;
+
 public:
 	CTimer(ULONGLONG timeSpan);
 	CTimer();
@@ -18,6 +20,11 @@ public:
 	bool IsDone();
 	void Reset();
 	void Flip();
+	void Pause();
+	void Resume();
+	void AddToManager();
+
+	ULONGLONG GetTimeStart() { return timeStart; }
 	ULONGLONG ElapsedTime();
 };
 
