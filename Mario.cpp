@@ -859,7 +859,7 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float hx, hy;
 	//holdingShell->SetPosition(x, y);
 	holdingShell->GetPosition(hx, hy);
-	holdingShell->SetPositionY(y);
+	holdingShell->SetY(y);
 
 	// move the shell, also move faster when mario turn
 	if (nx == 1)
@@ -885,6 +885,9 @@ void CMario::SetLevel(MarioLevel l)
 	if (level == MarioLevel::SMALL)
 	{
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
+	}else if (IsBig() && l == MarioLevel::SMALL)
+	{
+		y += (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 	}
 	if((int)l - (int)level == 1)
 	{

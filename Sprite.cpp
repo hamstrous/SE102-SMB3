@@ -2,7 +2,7 @@
 
 #include "Game.h"
 
-CSprite::CSprite(int id, int left, int top, int right, int bottom, LPTEXTURE tex, bool onScreen, float offsetX, float offsexY)
+CSprite::CSprite(int id, int left, int top, int right, int bottom, LPTEXTURE tex, bool onScreen, float offsetX, float offsetY)
 {
 	this->id = id;
 	this->left = left;

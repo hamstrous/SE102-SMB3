@@ -39,7 +39,7 @@ protected:
 public: 
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetPositionX(float x) { this->x = x; }
-	void SetPositionY(float y) { this->y = y; }
+	void SetY(float y) { this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void SetSleep(bool sleep) { this->sleep = sleep; }
 
