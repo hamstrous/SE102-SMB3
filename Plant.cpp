@@ -87,48 +87,45 @@ void CPlant::Render()
 
 void CPlant::ShootFireball()
 {
+	const float FIREBALL_SPEED_X = FIREBALL_SPEED;
+	const float FIREBALL_SPEED_Y[] = {
+		0.04f, 0.01f, -0.01, -0.025f
+	};
+
+	const float FIREBALL_RANGE_X = 100.0f;
+
+	enum FireballAngle {
+		// Angles for fireball trajectory
+		LOW = 0,
+		MEDIUM_LOW = 1,
+		MEDIUM_HIGH = 2,
+		HIGH = 3
+	};
+
+
 	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
 	CFireball* fireball = new CFireball(x, y + size);
-	float mario_x, mario_y, a;
+	float mario_x, mario_y;
 	scene->GetPlayer()->GetPosition(mario_x, mario_y);
-	if (mario_x < x)
-	{
-		if (mario_y < y && mario_x > x - 100)
-		{
-			fireball->SetSpeed(-FIREBALL_SPEED, -FIREBALL_SPEED * 0.8f );
-		}
-		else if (mario_y < y && mario_x < x - 100)
-		{
-			fireball->SetSpeed(-FIREBALL_SPEED, -FIREBALL_SPEED * 0.2f);
-		}
-		else if (mario_y > y && mario_x < x - 100)
-		{
-			fireball->SetSpeed(-FIREBALL_SPEED, FIREBALL_SPEED * 0.2f);
-		}
-		else if (mario_y > y && mario_x > x - 100)
-		{
-			fireball->SetSpeed(-FIREBALL_SPEED, FIREBALL_SPEED * 0.5f );
-		}
-	}
-	else
-	{
-		if (mario_y < y && mario_x < x + 100)
-		{
-			fireball->SetSpeed(FIREBALL_SPEED, -FIREBALL_SPEED * 0.8f);
-		}
-		else if (mario_y < y && mario_x > x + 100)
-		{
-			fireball->SetSpeed(FIREBALL_SPEED, -FIREBALL_SPEED * 0.2f);
-		}
-		else if (mario_y > y && mario_x > x + 100)
-		{
-			fireball->SetSpeed(FIREBALL_SPEED, FIREBALL_SPEED * 0.2f);
-		}
-		else if (mario_y > y && mario_x < x + 100)
-		{
-			fireball->SetSpeed(FIREBALL_SPEED, FIREBALL_SPEED * 0.5f);
-		}
-	}
+
+	float dx = mario_x - x;
+	float dy = mario_y - y;
+
+	bool toLeft = dx < 0;
+	bool isAbove = dy < 0;
+	bool isClose = abs(dx) <= FIREBALL_RANGE_X;
+
+	FireballAngle angle;
+
+	if (isAbove && isClose)       angle = HIGH;
+	else if (isAbove && !isClose) angle = MEDIUM_HIGH;
+	else if (!isAbove && !isClose)angle = MEDIUM_LOW;
+	else                          angle = LOW;
+
+	float fbvx = toLeft ? -FIREBALL_SPEED_X : FIREBALL_SPEED_X;
+	float fbvy = FIREBALL_SPEED_Y[angle];
+
+	fireball->SetSpeed(fbvx, fbvy);
 	scene->AddObject(fireball);
 	isFired = false;
 }
