@@ -167,7 +167,7 @@ void CPlant::ShootFireball()
 	float fbvx = toLeft ? -FIREBALL_SPEED_X : FIREBALL_SPEED_X;
 	float fbvy = FIREBALL_SPEED_Y[angle];
 
-	fireball->SetSpeed(fbvx, fbvy
+	fireball->SetSpeed(fbvx, fbvy);
 	scene->AddObject(fireball);
 	isFired = false;
 }
