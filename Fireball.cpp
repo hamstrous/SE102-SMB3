@@ -1,4 +1,6 @@
 #include "Fireball.h"
+#include "debug.h"
+#include "Mario.h"
 
 void CFireball::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -13,7 +15,8 @@ void CFireball::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (GetTickCount64() - time_start > FIREBALL_TIME_DELETE)
 		Delete();
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	//CCollision::GetInstance()->ProcessOnlyMario(this, dt, coObjects);
+	OnNoCollision(dt);
 }
 
 void CFireball::Render()
@@ -25,12 +28,21 @@ void CFireball::Render()
 	int aniId = ID_ANI_FIREBALL; 
 	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
+	RenderBoundingBox();
 }
 
 void CFireball::OnNoCollision(DWORD dt)
 {
 	x += vx * dt;
 	y += vy * dt;
+}
+
+void CFireball::OnCollisionWith(LPCOLLISIONEVENT e)
+{
+	if (dynamic_cast<CMario*>(e->obj))
+	{
+		DebugOut(L"[INFO] Fireball hit Mario\n");
+	}
 }
 
 

@@ -487,6 +487,13 @@ void CPlayScene::Update(DWORD dt)
 		if(!objects[i]->GetSleep()) coObjects.push_back(objects[i]);
 	}
 
+	std::sort(coObjects.begin(), coObjects.end(),
+		[](LPGAMEOBJECT a, LPGAMEOBJECT b) {
+			return a->IsBlocking() > b->IsBlocking(); // blocking events first
+		}
+	);
+
+
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (!objects[i]->GetSleep()) objects[i]->Update(dt, &coObjects);

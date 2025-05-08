@@ -37,10 +37,7 @@ struct CCollisionEvent
 
 	int WasCollided();
 
-	static bool compare(const LPCOLLISIONEVENT& a, LPCOLLISIONEVENT& b)
-	{
-		return a->t < b->t;
-	}
+	static bool PrioritizeBlockingEvent(const LPCOLLISIONEVENT a, const LPCOLLISIONEVENT b);
 };
 
 class CCollision
@@ -71,6 +68,16 @@ public:
 		DWORD dt, 
 		vector<LPGAMEOBJECT>* objDests, 
 		vector<LPCOLLISIONEVENT>& coEvents);
+	void ScanIsBlocking(
+		LPGAMEOBJECT objSrc,
+		DWORD dt,
+		vector<LPGAMEOBJECT>* objDests,
+		vector<LPCOLLISIONEVENT>& coEvents);
+	void ScanNotBlocking(
+		LPGAMEOBJECT objSrc,
+		DWORD dt,
+		vector<LPGAMEOBJECT>* objDests,
+		vector<LPCOLLISIONEVENT>& coEvents);
 
 	void Filter(
 		LPGAMEOBJECT objSrc,
@@ -82,11 +89,13 @@ public:
 		int filterY);
 
 	void Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void ProcessOnlyMario(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouch);
 	int CheckStillTouchSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	bool CheckTouchingSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	bool CheckTouchCharacterForShellHeldHit(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool notMario);
 	bool CheckTouchCharacterForTailAttack(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, int nx, float marioX);
+
 
 	void SetPositionAndOnCollisionWith(LPGAMEOBJECT obj, float x, float y, LPCOLLISIONEVENT coEvent);
 

@@ -229,7 +229,6 @@ void CPlant::SetState(int state)
 		CSmoke* smoke = new CSmoke(x, y);
 		((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(smoke);
 	}
-	DebugOut(L"[INFO] PLANT STATE: %d\n", state);
 	CGameObject::SetState(state);
 }
 
