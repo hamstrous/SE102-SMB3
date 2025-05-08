@@ -6,7 +6,7 @@ void CGameFX::Render()
 		CGame* game = CGame::GetInstance();
 		float hx = game->GetBackBufferWidth() / 2;
 		float hy = game->GetBackBufferHeight() - HUD_SIZE_Y;
-		CAnimations::GetInstance()->Get(ANI_ID_GAMEPAUSE)->Render(hx, hy-100);
+		CAnimations::GetInstance()->Get(ANI_ID_GAMEPAUSE)->Render(hx + OFFSET_PAUSE_WIDTH, hy + OFFSET_PAUSE_HEIGHT);
 		return;
 	}
 	if (GetIsPause()) {
