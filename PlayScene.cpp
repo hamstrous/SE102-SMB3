@@ -437,9 +437,9 @@ void CPlayScene::Update(DWORD dt)
 
 	//if (GetIsPause() || GetIsStop() ) return;
 
-	if (GetIsStop()) return;
+	if (GetIsPause()) return;
 
-	if (GetIsPause())
+	if (GetIsStop())
 	{
 		for (size_t i = 0; i < objects.size(); i++)
 		{

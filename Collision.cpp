@@ -8,7 +8,7 @@
 #include "GameFXManager.h"
 #include "debug.h"
 #include "Mario.h"
-#include "Fireball.h"
+#include "Leaf.h"
 #include "ScoreManager.h"
 #define BLOCK_PUSH_FACTOR 0.01f
 
@@ -293,6 +293,7 @@ void CCollision::Filter( LPGAMEOBJECT objSrc,
 */
 void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	LPCOLLISIONEVENT colX = NULL; 
 	LPCOLLISIONEVENT colY = NULL;

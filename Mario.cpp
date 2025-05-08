@@ -306,8 +306,8 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 {	
-	e->obj->Delete();
-	SetLevel(MarioLevel::RACCOON);
+	e->obj->SetState(LEAF_STATE_DELETE);
+	SetLevel((MarioLevel)((int)level + 1));
 }
 
 void CMario::Attacked() {
@@ -862,6 +862,10 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMario::SetLevel(MarioLevel l)
 {
+	if(l > MarioLevel::RACCOON)
+	{
+		l = MarioLevel::RACCOON;
+	}
 	// Adjust position to avoid falling off platform
 	if (level == MarioLevel::SMALL)
 	{
