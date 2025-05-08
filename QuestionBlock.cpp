@@ -70,6 +70,7 @@ void CQuestionBlock::SetState(int state)
 			CCoin* coin = new CCoin(x, y);
 			coin->SetState(COIN_STATE_MOVEUP);
 			scene->AddObject(coin);
+			CGameData::GetInstance()->AddCoin(1);
 		}
 		if (type == ITEM_RED_MUSHROOM && mario->GetLevel() >= MarioLevel::BIG) {
 			CLeaf* leaf = new CLeaf(x, y - DISTANCE_SPAWN - 15);

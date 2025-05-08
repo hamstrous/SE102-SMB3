@@ -1,5 +1,6 @@
 #include "Leaf.h"
-
+#include "GameData.h"
+#include "ScoreManager.h"
 void CLeaf::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x - LEAF_BBOX_WIDTH / 2;
@@ -88,10 +89,7 @@ void CLeaf::SetState(int state)
 		break;
 	case LEAF_STATE_DELETE:
 	{
-		CScore* score = new CScore(x, y, ID_ANI_SCORE_1000);
-		score->SetState(SCORE_STATE_UP);
-		LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
-		scene->AddObject(score);
+		CScoreManager::GetInstance()->AddScore(x, y, SCORE_1000);
 		Delete();
 		break;
 	}
