@@ -160,7 +160,7 @@ namespace std {
 #define MARIO_SMALL_BBOX_HEIGHT 14
 
 // time = animation time (sum of all frame duration)
-#define ATTACK_TIME	17
+#define ATTACK_TIME	210
 #define GLIDE_TIME	267
 #define FLY_TIME	267
 

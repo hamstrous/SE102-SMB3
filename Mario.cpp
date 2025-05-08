@@ -348,14 +348,22 @@ void CMario::TailAttackInit()
 }
 
 void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{	
+{
 	//CScoreManager::GetInstance()->AddScore(characterX, characterY, score[count]);
 	//count++;
-	if(!attackTimer->IsRunning()) return;
+	if (!attackTimer->IsRunning()) return;
+	float elapsed = attackTimer->ElapsedTime();
 	float l1, t1, r1, b1;
 	float l2, t2, r2, b2;
 	GetTailHitBox(l1, t1, r1, b1, l2, t2, r2, b2);
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, 0, 0, dt, coObjects, x, -nx, y);
+	//left
+	if (nx < 0 && elapsed < ATTACK_TIME / 4
+		|| nx > 0 && (elapsed >= ATTACK_TIME /2 && elapsed < ATTACK_TIME * 3 / 4))
+			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, 0, 0, dt, coObjects, x, -nx, y);
+
+	//right
+	if (nx > 0 && elapsed < ATTACK_TIME / 4
+		|| nx < 0 && (elapsed >= ATTACK_TIME / 2 && elapsed < ATTACK_TIME * 3 / 4))
 	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, 0, 0, dt, coObjects, x, nx, y);
 }
 
@@ -827,16 +835,18 @@ void CMario::GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2
 	// 1 is left hit box
 	// 2 is right hit box
 	if(level == MarioLevel::RACCOON)
-	{
-		l1 = x - 0.7 * MARIO_BIG_BBOX_WIDTH;
-		t1 = y;
-		r1 = l1 + MARIO_BIG_BBOX_WIDTH;
-		b1 = t1 + MARIO_BIG_BBOX_HEIGHT / 2;
+	{	
+		const float MARIO_TAIL_BBOX_WIDTH = 10.0f;
+		const float MARIO_TAIL_BBOX_HEIGHT = 4.0;
+		l1 = x - MARIO_BIG_BBOX_WIDTH/2 - MARIO_TAIL_BBOX_WIDTH;
+		t1 = y + 2;
+		r1 = l1 + MARIO_TAIL_BBOX_WIDTH;
+		b1 = t1 + MARIO_TAIL_BBOX_HEIGHT;
 
 		l2 = x + MARIO_BIG_BBOX_WIDTH / 2;
-		t2 = y;
-		r2 = l2 + MARIO_BIG_BBOX_WIDTH * 0.4;
-		b2 = t2 + MARIO_BIG_BBOX_HEIGHT / 2;
+		t2 = y + 2;
+		r2 = l2 + MARIO_TAIL_BBOX_WIDTH;
+		b2 = t2 + MARIO_TAIL_BBOX_HEIGHT;
 	}
 	else
 	{
