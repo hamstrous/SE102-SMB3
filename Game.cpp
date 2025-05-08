@@ -461,6 +461,11 @@ void CGame::_ParseSection_SCENES(string line)
 	scenes[id] = scene;
 }
 
+void CGame::GetCamPos(float &x, float &y)
+{
+	dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->GetCamPos(x, y);	
+}
+
 /*
 	Load game campaign file and load/initiate first scene
 */

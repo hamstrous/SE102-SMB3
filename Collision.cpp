@@ -8,6 +8,7 @@
 #include "GameFXManager.h"
 #include "debug.h"
 #include "Mario.h"
+#include "Leaf.h"
 #include "ScoreManager.h"
 #define BLOCK_PUSH_FACTOR 0.01f
 
@@ -27,6 +28,13 @@ static int StillColliding(float al, float at, float ar, float ab, float dx, floa
 int CCollisionEvent::WasCollided() {
 	return
 		t >= 0.0f && t <= 1.0f && obj->IsDirectionColliable(nx, ny) == 1;
+}
+
+bool CCollisionEvent::PrioritizeBlockingEvent(const LPCOLLISIONEVENT a, const LPCOLLISIONEVENT b)
+{
+	if (a->obj->IsBlocking() && !b->obj->IsBlocking()) return true;
+	if (!a->obj->IsBlocking() && b->obj->IsBlocking()) return false;
+	return a->t < b->t;	
 }
 
 CCollision* CCollision::GetInstance()
@@ -195,15 +203,48 @@ void CCollision::Scan(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* objDe
 	for (UINT i = 0; i < objDests->size(); i++)
 	{
 		if (!(objDests->at(i)->IsCollidable())) continue; // if the other obj not collidable then skip (2 way)
-		LPCOLLISIONEVENT e = SweptAABB(objSrc, dt, objDests->at(i));
 
-		if (e->WasCollided()==1)
+		LPCOLLISIONEVENT e = SweptAABB(objSrc, dt, objDests->at(i));
+		if (e->WasCollided() == 1) {
 			coEvents.push_back(e);
+		}
 		else
 			delete e;
 	}
 
-	//std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
+	//std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::PrioritizeBlockingEvent);
+}
+
+void CCollision::ScanIsBlocking(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* objDests, vector<LPCOLLISIONEVENT>& coEvents)
+{
+	for (UINT i = 0; i < objDests->size(); i++)
+	{
+		if (!(objDests->at(i)->IsCollidable())) continue; // if the other obj not collidable then skip (2 way)
+		if (!(objDests->at(i)->IsBlocking())) continue; // if the other obj not blocking
+
+		LPCOLLISIONEVENT e = SweptAABB(objSrc, dt, objDests->at(i));
+		if (e->WasCollided() == 1) {
+			coEvents.push_back(e);
+		}
+		else
+			delete e;
+	}
+}
+
+void CCollision::ScanNotBlocking(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* objDests, vector<LPCOLLISIONEVENT>& coEvents)
+{
+	for (UINT i = 0; i < objDests->size(); i++)
+	{
+		if (!(objDests->at(i)->IsCollidable())) continue; // if the other obj not collidable then skip (2 way)
+		if (objDests->at(i)->IsBlocking()) continue; // if the other obj blocking
+
+		LPCOLLISIONEVENT e = SweptAABB(objSrc, dt, objDests->at(i));
+		if (e->WasCollided() == 1) {
+			coEvents.push_back(e);
+		}
+		else
+			delete e;
+	}
 }
 
 void CCollision::Filter( LPGAMEOBJECT objSrc,
@@ -252,26 +293,24 @@ void CCollision::Filter( LPGAMEOBJECT objSrc,
 */
 void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	LPCOLLISIONEVENT colX = NULL; 
 	LPCOLLISIONEVENT colY = NULL;
 
+	// Deal with blocking collision first
 	coEvents.clear();
+	if (!objSrc->IsCollidable()) return;
+	
+	ScanIsBlocking(objSrc, dt, coObjects, coEvents);
 
-	if (objSrc->IsCollidable())
-	{
-		Scan(objSrc, dt, coObjects, coEvents);
-	}
-
-	// No collision detected
 	if (coEvents.size() == 0)
 	{
 		objSrc->OnNoCollision(dt);
 	}
 	else
 	{
-		Filter(objSrc, coEvents, colX, colY);
-
+		Filter(objSrc, coEvents, colX, colY); // filter blocking both x and y
 		float x, y, vx, vy, dx, dy;
 		objSrc->GetPosition(x, y);
 		objSrc->GetSpeed(vx, vy);
@@ -370,17 +409,55 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	//
 	// Scan all non-blocking collisions for further collision logic
 	//
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	coEvents.clear();
+
+	// Scan for non-blocking collisions
+	ScanNotBlocking(objSrc, dt, coObjects, coEvents);
+
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
 		LPCOLLISIONEVENT e = coEvents[i];
+	
 		if (e->isDeleted) continue;
 		if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
 
-		objSrc->OnCollisionWith(e);			
+		objSrc->OnCollisionWith(e);	
 	}
 
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
+
+// Process collision to Mario only (fireball, leaf)
+
+void CCollision::ProcessOnlyMario(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	vector<LPCOLLISIONEVENT> coEvents;
+	LPCOLLISIONEVENT colX = NULL;
+	LPCOLLISIONEVENT colY = NULL;
+
+	coEvents.clear();
+
+	if (objSrc->IsCollidable())
+	{
+		Scan(objSrc, dt, coObjects, coEvents);
+	}
+
+	objSrc->OnNoCollision(dt);
+
+	//for (UINT i = 0; i < coEvents.size(); i++)
+	//{
+	//	LPCOLLISIONEVENT e = coEvents[i];
+	//	if (e->isDeleted) continue;
+	//	if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
+
+	//	objSrc->OnCollisionWith(e);
+	//}
+
+
+	//for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
 }
 
 // the start of mario seperate collision check (enemy, item touch, collsion point check)

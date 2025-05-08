@@ -13,6 +13,7 @@ void CGameData::OnDeath()
 	if (life < 0) {
 		life = 0;
 		game->SwitchScene(-1);
+		//lose game
 	}
 	else {
 		CGame* game = CGame::GetInstance();

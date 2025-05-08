@@ -35,10 +35,8 @@ protected:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-	int IsCollidable(LPGAMEOBJECT obj)  {
-		if (dynamic_cast<CMario*>(obj))
-			return 1; 
-		return 0;
+	int IsCollidable() {
+		return 1;
 	};
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
