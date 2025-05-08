@@ -19,8 +19,7 @@ class CSprites
 	unordered_map<int, LPSPRITE> sprites;
 
 public:
-	void Add(int id, int left, int top, int right, int bottom, LPTEXTURE tex);
-	void AddScreen(int id, int left, int top, int right, int bottom, LPTEXTURE tex);
+	void Add(int id, int left, int top, int right, int bottom, LPTEXTURE tex, bool onScreen = false, float offsetX = 0, float offsetY = 0);
 	LPSPRITE Get(int id);
 	void Clear();
 
