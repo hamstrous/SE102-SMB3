@@ -26,7 +26,8 @@
 #define PMETER_X_OFFSET		-60
 #define PMETER_Y_OFFSET		-3
 
-
+#define BLACK_X_OFFSET		-124
+#define BLACK_Y_OFFSET		23
 
 CHUD::CHUD()
 {
@@ -66,4 +67,10 @@ void CHUD::Render()
 
 	int coin = gameData->coin;
 	font->FontToSprite(hx + COIN_X_OFFSET, hy + COIN_Y_OFFSET, coin);
+
+	for (int i = 0; i < 17; i++) {
+		for (int j = 0; j < 4; j++) {
+			CSprites::GetInstance()->Get(ID_SPRITE_BLACK)->Draw(hx + BLACK_X_OFFSET + (i * 16), hy + BLACK_Y_OFFSET + (j * 16));
+		}
+	}
 }
