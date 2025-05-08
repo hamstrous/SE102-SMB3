@@ -36,6 +36,7 @@
 #include "GameFXManager.h"
 #include "GameFX.h"
 #include "TimerManager.h"
+#include "Abyss.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -275,6 +276,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BACKGROUND_COLOR: obj = new CBackgroundColor(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str()), atoi(tokens[5].c_str())); break;
 	case OBJECT_TYPE_UNBREAKABLEBRICK: obj = new CUnbreakableBrick(x,y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_CLOUDPLATFORM: obj = new CCloudPlatform(x, y); break;
+	case OBJECT_TYPE_ABYSS: obj = new CAbyss(x, y); break;
 	case OBJECT_TYPE_FLOOR:
 	{
 		int width = atoi(tokens[3].c_str());
@@ -457,6 +459,13 @@ void CPlayScene::Load()
 	if(camera == NULL) camera = new CCamera();
 	f.close();
 	CGameFXManager::GetInstance()->InitPauseFX();
+	//CGameFXManager::GetInstance()->InitTimeupFX();
+	/*float mapWidth = 1024.0f; 
+	float abyssHeight = 16.0f; 
+	float abyssY = 500.0f; 
+
+	CAbyss* abyss = new CAbyss(7, 391, mapWidth, abyssHeight);
+	objects.push_back(abyss);*/
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
 }
 
@@ -572,6 +581,7 @@ void CPlayScene::Render()
 			|| dynamic_cast<CLeaf*>(i)
 			|| dynamic_cast<CSmoke*>(i)
 			|| dynamic_cast<CGameFX*>(i)
+			|| dynamic_cast<CAbyss*>(i)
 			|| dynamic_cast<CGameFXManager*>(i))
 			projectileRenderObjects.push_back(i);
 	}

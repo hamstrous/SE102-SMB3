@@ -16,6 +16,7 @@
 #include "Leaf.h"
 #include "Font.h"
 #include "ScoreManager.h"
+#include "Abyss.h"
 
 
 unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animationMap = {
@@ -223,6 +224,12 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithMushroom(e);
 	else if (dynamic_cast<CLeaf*>(e->obj))
 		OnCollisionWithLeaf(e);
+	else if (dynamic_cast<CAbyss*>(e->obj))
+	{
+		DebugOut(L"[INFO] abyss\n");
+		SetState(MARIO_STATE_DIE);
+		return;
+	}
 }
 
 void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)

@@ -48,6 +48,9 @@ effect.txt
 #CAMERA
 100	0	240
 
+#Abyss test
+25	2843	544
+
 #BG COLOR, flower:3, mushroom:2, star:4
 20	7	7	176	40	0
 20	2503	7	20	40	1
