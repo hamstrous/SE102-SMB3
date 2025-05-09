@@ -163,7 +163,7 @@ namespace std {
 #define ATTACK_TIME	210
 #define GLIDE_TIME	267
 #define FLY_TIME	267
-#define TURN_TIME	100
+#define TURN_TIME	75
 #define PROTECT_TIME	267
 
 #define UNTOUCHABLE_TIME 2500
@@ -273,6 +273,7 @@ public:
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2, float& t2, float& r2, float& b2);
 	void SetCanHold(bool pick) { this->canHold = pick; }
+	bool GetHolding() { return holdingShell != NULL; }
 	void Drop() { holdingShell = NULL; }
 	void HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Attacked();

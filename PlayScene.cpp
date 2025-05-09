@@ -571,7 +571,7 @@ void CPlayScene::Render()
 			|| dynamic_cast<CCloud*>(i))
 
 			firstRenderObjects.push_back(i);
-
+		
 		if(dynamic_cast<CCharacter*>(i)
 			|| dynamic_cast<CCoin*>(i)
 			|| dynamic_cast<CMushroom*>(i))
@@ -593,16 +593,22 @@ void CPlayScene::Render()
 	}
 
 	int mode = 0;
+
+	CMario* mario = dynamic_cast<CMario*>(player);
+
 	for(auto i : backgroundRenderObjects)
 		i->Render();
 	for (auto i : firstRenderObjects)
 		i->Render();
+	if (mario->GetHolding()) mario->Render();
 	for (auto i : secondRenderObjects)
-		i->Render();
+		if (i != player) i->Render();
 	for (auto i : thirdRenderObjects)
 		i->Render();
 	for (auto i : projectileRenderObjects)
 		i->Render();
+	if (!mario->GetHolding()) mario->Render();
+	
 
 	backgroundRenderObjects.clear();
 	firstRenderObjects.clear();
