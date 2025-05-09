@@ -360,12 +360,12 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//left
 	if (nx < 0 && elapsed < ATTACK_TIME / 2
 		|| nx > 0 && (elapsed >= ATTACK_TIME / 2))
-			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, vx, vy, dt, coObjects, x, -nx, y);
+			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, vx, 0, dt, coObjects, x, -nx, y);
 
 	//right
 	if (nx > 0 && elapsed < ATTACK_TIME / 2
 		|| nx < 0 && (elapsed >= ATTACK_TIME / 2))
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects, x, nx, y);
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, 0, dt, coObjects, x, nx, y);
 }
 
 //Change animaion when mario kick the shell
@@ -663,10 +663,10 @@ void CMario::PointsCheck()
 
 	int dir = 0;
 	if (pointsTouched[LEFTUP] || pointsTouched[LEFTDOWN]) {
-		dir = 2;
+		dir = 1;
 	}
 	else if (pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN]) {
-		dir = -2;
+		dir = -1;
 	}
 
 	x += dir;
@@ -837,7 +837,7 @@ void CMario::GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2
 	// 2 is right hit box
 	if(level == MarioLevel::RACCOON)
 	{	
-		const float MARIO_TAIL_BBOX_WIDTH = 8.0f;
+		const float MARIO_TAIL_BBOX_WIDTH = 10.0f;
 		const float MARIO_TAIL_BBOX_HEIGHT = 4.0;
 		l1 = x - MARIO_BIG_BBOX_WIDTH/2 - MARIO_TAIL_BBOX_WIDTH;
 		t1 = y + 2;

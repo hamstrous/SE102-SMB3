@@ -311,7 +311,7 @@ void CKoopaGreen::InitHorizontalSpeedBasedOnMario(float speed, float awayMario)
 
 void CKoopaGreen::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	//DebugOutTitle(L"KoopaGreen x:%f, y: %f, vx: %f, vy: %f", x, y, vx, vy);
+	DebugOutTitle(L"KoopaGreen x:%f, y: %f, vx: %f, vy: %f", x, y, vx, vy);
 	vy += ay * dt;
 	vx += ax * dt;
 	if (hasWing)

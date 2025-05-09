@@ -89,6 +89,12 @@ public:
 	// Does this object collide with other object at certain direction ( like ColorBox )
 	virtual int IsDirectionColliable(float nx, float ny) { return 1; }
 
+	bool IsBoundBoxZero(){
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		return (l == 0 && t == 0 && r == 0 && b == 0);
+	}
+
 	void Clear();
 
 	~CGameObject();
