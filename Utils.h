@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+#include "GameObject.h"
 
 #include <signal.h>
 #include <string>
@@ -21,3 +22,5 @@ LPCWSTR ToLPCWSTR(string st);
 void Clamp(float& x, float min, float max);
 
 void ToUpperCase(std::string& str);
+
+void DebugObjectType(LPGAMEOBJECT obj);

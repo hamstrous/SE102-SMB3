@@ -26,7 +26,6 @@ class CKoopaGreen : public CKoopa
 {
 protected:
 	int count = 0;
-	vector<int> score = { 100,200,400,800,1000,2000,4000,8000 };
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Flying();
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);

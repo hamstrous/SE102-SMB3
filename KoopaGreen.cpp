@@ -167,7 +167,6 @@ void CKoopaGreen::SetState(int state)
 		break;
 	
 	}
-	DebugOut(L"[INFO] Koopa state: %d\n", state);
 	CGameObject::SetState(state);
 
 }
@@ -442,6 +441,7 @@ void CKoopaGreen::ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchingSolid(ml, mt, mr, mb, vx, vy, dt, coObjects)) {
 			SetState(KOOPA_STATE_DIE_UP);
+			DebugOut(L"[INFO] KoopaGreen::throwinblock\n");
 			CScoreManager::GetInstance()->AddScore(x, y, 100);
 		}
 	}
@@ -452,10 +452,9 @@ void CKoopaGreen::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == KOOPA_STATE_SHELL_HELD || state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
-		DebugOut(L"[INFO] KoopaGreen::ShellHeldTouch - Checking collision, State: %d, BoundingBox: [%f, %f, %f, %f]\n",
-			state, ml, mt, mr, mb);
+		//DebugOut(L"[INFO] KoopaGreen::ShellHeldTouch - Checking collision, State: %d, BoundingBox: [%f, %f, %f, %f]\n",state, ml, mt, mr, mb);
 
-		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
+		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(this, dt, coObjects, true)) {
 			SetState(KOOPA_STATE_DIE_UP);
 			CScoreManager::GetInstance()->AddScore(x, y, 100);
 

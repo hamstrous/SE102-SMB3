@@ -11,6 +11,7 @@
 #include "Leaf.h"
 #include "ScoreManager.h"
 #include "Koopa.h"
+#include "Utils.h"
 #define BLOCK_PUSH_FACTOR 0.01f
 
 CCollision* CCollision::__instance = NULL;
@@ -563,8 +564,12 @@ bool CCollision::CheckTouchingSolid(float ml, float mt, float mr, float mb, floa
 	}return false;
 }
 
-bool CCollision::CheckTouchCharacterForShellHeldHit(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool notMario = 1)
+bool CCollision::CheckTouchCharacterForShellHeldHit(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool notMario = 1)
 {
+	float ml, mt, mr, mb;
+	objSrc->GetBoundingBox(ml, mt, mr, mb);
+	float vx, vy;
+	objSrc->GetSpeed(vx, vy);
 	bool isTouching = false;
 	if (coObjects->size() > 0)
 	{
@@ -572,6 +577,7 @@ bool CCollision::CheckTouchCharacterForShellHeldHit(float ml, float mt, float mr
 		{
 			if(notMario && dynamic_cast<CMario*>(obj)) continue;
 			if(dynamic_cast<CCharacter*>(obj) == NULL) continue;
+			if(obj == objSrc) continue;
 			CCharacter* character = dynamic_cast<CCharacter*>(obj);
 			if (obj->IsCollidable() )
 			{
@@ -593,6 +599,7 @@ bool CCollision::CheckTouchCharacterForShellHeldHit(float ml, float mt, float mr
 
 				if (IsColliding(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) {
 					isTouching = true;
+					DebugObjectType(obj);
 					character->ShellHeldHit((ml+mr)/2);
 				}
 			}

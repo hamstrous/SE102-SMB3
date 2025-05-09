@@ -864,9 +864,7 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		holdingShell->SetSpeed(min((x + KOOPA_BBOX_WIDTH - hx)/dt, MARIO_SHELL_TURNING_SPEED), vy);
 	else
 		holdingShell->SetSpeed(max((x - KOOPA_BBOX_WIDTH - hx) / dt, -MARIO_SHELL_TURNING_SPEED), vy);
-	float kvx, kvy;
-	holdingShell->GetSpeed(kvx, kvy);
-	DebugOutTitle(L"Shell speed: %f\n", kvx);
+
 	if (!canHold)
 	{
 		holdingShell->Kicked();

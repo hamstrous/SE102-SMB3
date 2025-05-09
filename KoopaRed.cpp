@@ -28,11 +28,6 @@ int CKoopaRed::OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopaRed::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (vy < 0) {
-		float tx, ty;
-		e->obj->GetPosition(tx, ty);
-		if(dynamic_cast<CBackgroundColor*>(e->obj)) DebugOut(L"%f %f",tx, ty);
-	}
 
 	if (dynamic_cast<CCharacter*>(e->obj)) {
 		OnCollisionWithCharacter(e);
@@ -498,7 +493,7 @@ void CKoopaRed::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == KOOPA_STATE_SHELL_HELD || state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
-		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
+		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(this, dt, coObjects, true)) {
 			SetState(KOOPA_STATE_DIE_UP);
 		}
 	}
