@@ -21,14 +21,14 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-	if (((state == GOOMBAFLY_STATE_DIE) || (state == GOOMBAFLY_STATE_DIE_UP))
+	if ( ( (state == GOOMBAFLY_STATE_DIE) || (state == GOOMBAFLY_STATE_DIE_UP))
 		&& (GetTickCount64() - die_start > GOOMBAFLY_DIE_TIMEOUT))
 	{
 		DebugOut(L"State: ", state);
 		isDeleted = true;
 		return;
 	}
-	if (state == GOOMBAFLY_STATE_DIE_UP)  SetState(GOOMBAFLY_STATE_DIE);
+	//if (state == GOOMBAFLY_STATE_DIE_UP)  SetState(GOOMBAFLY_STATE_DIE);
 	if (state == GOOMBAFLY_STATE_WALKING && (GetTickCount64() - walking_start >= WALKING_TIME) && hasWing)
 	{	
 		if (GetTickCount64() - toward_mario_start >= TOWARD_MARIO_TIME)
@@ -173,9 +173,10 @@ void CGoombaFly::SetState(int state)
 		vy = -GOOMBA_FLYING_SPEED;
 		break;
 	case GOOMBAFLY_STATE_DIE_UP:
-		if (die_start != -1) break;
+		if ((this->state == GOOMBAFLY_STATE_DIE_UP) && (GetTickCount64() - die_start <= GOOMBAFLY_DIE_TIMEOUT))
+			break;
 		ay = GOOMBA_GRAVITY;
-		//die_start = GetTickCount64();
+		die_start = GetTickCount64();
 		if (tailhit) vy = -GOOMBA_TAILHIT_SPEED_Y;
 		else vy = -GOOMBA_FLYING_SPEED;
 		break;
@@ -220,7 +221,7 @@ void CGoombaFly::ShellHit(int shellX)
 		dir = 0;
 		vx = 0;
 	}
-	die_start = GetTickCount64();
+	//die_start = GetTickCount64();
 	SetState(GOOMBAFLY_STATE_DIE_UP);
 }
 
@@ -237,7 +238,7 @@ void CGoombaFly::TailHit(float x)
 		vx = -GOOMBA_FLYING_SPEED_X;
 	}
 	tailhit = true;
-	die_start = GetTickCount64();
+	//die_start = GetTickCount64();
 	SetState(GOOMBAFLY_STATE_DIE_UP);
 }
 

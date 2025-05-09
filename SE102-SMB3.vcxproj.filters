@@ -55,6 +55,7 @@
     <ClCompile Include="CloudPlatform.cpp" />
     <ClCompile Include="TimerManager.cpp" />
     <ClCompile Include="Abyss.cpp" />
+    <ClCompile Include="Block.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -114,6 +115,7 @@
     <ClInclude Include="CloudPlatform.h" />
     <ClInclude Include="TimerManager.h" />
     <ClInclude Include="Abyss.h" />
+    <ClInclude Include="Block.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
