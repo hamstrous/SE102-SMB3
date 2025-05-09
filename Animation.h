@@ -44,7 +44,7 @@ public:
 	virtual void StillRender(float x, float y);
 	virtual void NoRender(float x, float y) {};
 	void SetType(int type) { this->type = type; }
-	int GetType() { return type; }
+	int GetType() { return initType; }
 	void ResetType() { type = initType; }
 	bool IsDone() { return done; }
 	void Reset() { currentFrame = -1; done = false; }

@@ -301,7 +301,10 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 
 	// Deal with blocking collision first
 	coEvents.clear();
-	if (!objSrc->IsCollidable()) return;
+	if (!objSrc->IsCollidable()) {
+		objSrc->OnNoCollision(dt);
+		return;
+	}
 	
 	ScanIsBlocking(objSrc, dt, coObjects, coEvents);
 

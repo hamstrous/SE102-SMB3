@@ -17,7 +17,6 @@
 class CFireball : public CGameObject
 {
 protected:
-	ULONGLONG time_start;
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -31,7 +30,6 @@ public:
 	{	
 		this->x = x;
 		this->y = y - 8;
-		time_start = GetTickCount64();
 	}
 	void SetState(int state);
 };
