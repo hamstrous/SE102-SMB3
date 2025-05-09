@@ -16,6 +16,7 @@
 #include "Leaf.h"
 #include "Font.h"
 #include "ScoreManager.h"
+#include "GameFXManager.h"
 #include "Abyss.h"
 
 
@@ -348,8 +349,6 @@ void CMario::TailAttackInit()
 
 void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	//CScoreManager::GetInstance()->AddScore(characterX, characterY, score[count]);
-	//count++;
 	if (!attackTimer->IsRunning()) return;
 	float elapsed = attackTimer->ElapsedTime();
 	float l1, t1, r1, b1;
@@ -634,6 +633,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_SPEED_Y;
 		CPlayScene* s = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+		CGameFXManager::GetInstance()->AddTimeup(x, 0, TYPE_TIMEUP);
 		s->OnPlayerDie();
 		vx = 0;
 		ax = 0;
@@ -834,7 +834,7 @@ void CMario::GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2
 	// 2 is right hit box
 	if(level == MarioLevel::RACCOON)
 	{	
-		const float MARIO_TAIL_BBOX_WIDTH = 10.0f;
+		const float MARIO_TAIL_BBOX_WIDTH = 8.0f;
 		const float MARIO_TAIL_BBOX_HEIGHT = 4.0;
 		l1 = x - MARIO_BIG_BBOX_WIDTH/2 - MARIO_TAIL_BBOX_WIDTH;
 		t1 = y + 2;

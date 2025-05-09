@@ -16,13 +16,17 @@ public:
 
 	static CGameFXManager* GetInstance();
 
-	CGameFX* pauseFX = nullptr;
-	CGameFX* timeupFX = nullptr;
 	void AddGameFX(float x, float y, int type);
-	void AddTimeup(float x, float y, int type);
+
+	CGameFX* pauseFX = nullptr;
 	void InitPauseFX();
-	void InitTimeupFX();
 	void AddPause();
 	void RemovePause();
+	
+	CGameFX* timeupFX = nullptr;
+	void InitTimeupFX();
+	void AddTimeup(float x, float y, int type);
+
+	
 };
 

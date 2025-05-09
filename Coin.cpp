@@ -3,11 +3,12 @@
 void CCoin::Render()
 {	
 	if (GetIsPause()) return;
+	int aniId = (this->type == TYPE_1) ? ID_ANI_COIN : ID_ANI_COIN_2;
 	CAnimations* animations = CAnimations::GetInstance();
 	if (!isDeleted)
-		animations->Get(ID_ANI_COIN)->Render(x, y);
-	if (!GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_COIN)->Render(x, y);
-	else CAnimations::GetInstance()->Get(ID_ANI_COIN)->Render(x, y, 1);
+		animations->Get(aniId)->Render(x, y);
+	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	//RenderBoundingBox();
 }
 
@@ -55,7 +56,6 @@ void CCoin::SetState(int state)
 		Delete();
 		break;
 		}
-		
 	case COIN_STATE_MOVEUP:
 		vy = -SPEED_COIN_FAST;
 		break;

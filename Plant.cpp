@@ -90,7 +90,7 @@ void CPlant::Render()
 
 void CPlant::ShootFireball()
 {
-	const float FIREBALL_SPEED_X = 0.07f; 
+	const float FIREBALL_SPEED_X = 0.06f; 
 	const float FIREBALL_ANGLES[] = {
 		225.0f,  // Above near
 		202.5f, // Above far

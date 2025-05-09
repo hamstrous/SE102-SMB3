@@ -24,8 +24,12 @@ void CGameFX::Render()
 		break;
 	}
 	case TYPE_TIMEUP:
-	{
-		CAnimations::GetInstance()->Get(ANI_ID_TIMEUP)->Render(x, y);
+	{	
+		if (GetTickCount64() - start <= 5000)
+		{	
+			if (!GetIsStop()) CAnimations::GetInstance()->Get(ANI_ID_TIMEUP)->Render(x, y );
+			else CAnimations::GetInstance()->Get(ANI_ID_TIMEUP)->Render(x, y, 1);
+		}
 		break;
 	}
 	default:
@@ -33,12 +37,14 @@ void CGameFX::Render()
 	}
 }
 
-void CGameFX::Update(DWORD dt)
+void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {		
+	//DebugOut(L"Type: %d, Time elapsed: %llu\n", type, GetTickCount64() - start);
+	
 	y += vy * dt;
-	x += vx * dt;
+	//DebugOut(L"x: %f, y: %f\n", x, y);
 	CGame* game = CGame::GetInstance();
-	float hy = game->GetBackBufferHeight() - HUD_SIZE_Y;
+	float hy = game->GetBackBufferHeight() + 100;
 	switch (type)
 	{
 		case TYPE_TAILHIT:
@@ -47,13 +53,16 @@ void CGameFX::Update(DWORD dt)
 			break;
 		}
 		case TYPE_TIMEUP:
-		{
-			if (GetTickCount64() - start >= 1000)
-				isDeleted = true;
-			break;
+		{	
+			
+			if (y >= hy)
+			{
+				vy = -0.7f;
+			}
+			else vy = 0;
 		}
 	}
-	
+	CGameObject::Update(dt, coObjects);
 }
 
 void CGameFX::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -64,17 +73,6 @@ void CGameFX::SetState(int state)
 {
 	switch (state)
 	{
-	case STATE_TIME_MOVEUP:
-		isOver = true;
-		vy = -0.5f;
-		break;
-	case STATE_TIME_STOP:
-		vy = 0.0f;
-		break;
-	case STATE_OTHER:
-		break;
-	default:
-		break;
 	}
 	CGameObject::SetState(state);
 }
