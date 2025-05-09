@@ -25,7 +25,7 @@ void CGameData::OnDeath()
 int CGameData::GetRemainingTime()
 
 {
-	int time = 300 - (countDown->ElapsedTime() / 1000);
+	int time = levelTime - (countDown->ElapsedTime() / 1000);
 
 	CGame* game = CGame::GetInstance();
 	CTimer* pauseTimer = dynamic_cast<CPlayScene*>(game->GetCurrentScene())->GetPauseTimer();

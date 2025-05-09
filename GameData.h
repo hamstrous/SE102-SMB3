@@ -29,6 +29,7 @@ public:
 	bool flightMode = 0;
 	bool isPaused = 0;
 	ULONGLONG pauseStart = 0;
+	ULONGLONG levelTime = 300;
 	vector<int> cards;
 	MarioLevel marioLevel;
 

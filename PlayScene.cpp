@@ -588,8 +588,9 @@ void CPlayScene::Render()
 			|| dynamic_cast<CSmoke*>(i)
 			|| dynamic_cast<CGameFX*>(i)
 			|| dynamic_cast<CAbyss*>(i)
-			|| dynamic_cast<CGameFXManager*>(i))
+			|| dynamic_cast<CGameFXManager*>(i)) {
 			projectileRenderObjects.push_back(i);
+		}
 	}
 
 	int mode = 0;
