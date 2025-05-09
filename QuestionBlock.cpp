@@ -67,7 +67,7 @@ void CQuestionBlock::SetState(int state)
 		up = true;
 		if (type == ITEM_COIN)
 		{
-			CCoin* coin = new CCoin(x, y);
+			CCoin* coin = new CCoin(x, y, TYPE_1);
 			coin->SetState(COIN_STATE_MOVEUP);
 			scene->AddObject(coin);
 			CGameData::GetInstance()->AddCoin(1);

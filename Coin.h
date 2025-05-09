@@ -6,6 +6,7 @@
 #include "Score.h"
 #include "PlayScene.h"
 #define ID_ANI_COIN 11000
+#define ID_ANI_COIN_2	11001
 
 #define	COIN_WIDTH 10
 #define COIN_BBOX_WIDTH 10
@@ -23,13 +24,17 @@
 #define SPEED_COIN_FAST 0.2f
 #define SPEED_COIN_SLOW 0.1F
 
+#define TYPE_1	100
+#define TYPE_2	200
 
 class CCoin : public CGameObject {
 private:
 	float startY;
+	int type;
 public:
-	CCoin(float x, float y) : CGameObject(x, y) {
+	CCoin(float x, float y, int type) : CGameObject(x, y) {
 		startY = y;
+		this->type = type;
 		SetState(COIN_STATE_NORMAL);
 	}
 	void Render();
