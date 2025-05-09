@@ -454,49 +454,33 @@ void CCollision::ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJE
 			//DebugObjectType(objSrc);
 			//DebugOut(L"\n");
 
-			//debug mario as soure and koopagreen as dest
-			if (dynamic_cast<CMario*>(objSrc) && dynamic_cast<CKoopa*>(i)
-				|| dynamic_cast<CMario*>(i) && dynamic_cast<CKoopa*>(objSrc))
-			{
-				DebugOut(L"[DEBUG] Mario and Koopa\n");
-			}
 		}
 	}
 }
 
-// Process collision to Mario only (fireball, leaf)
-
-void CCollision::ProcessOnlyMario(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+// For mario when untouchable done, check if ovelapping with any enemies
+// no speed need to account for
+void CCollision::ProcessMarioOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	vector<LPCOLLISIONEVENT> coEvents;
-	LPCOLLISIONEVENT colX = NULL;
-	LPCOLLISIONEVENT colY = NULL;
+	if (!objSrc->IsCollidable() || objSrc->IsBlocking()) return; //for non blocking objects only
+	float ml, mt, mr, mb;
+	objSrc->GetBoundingBox(ml, mt, mr, mb);
+	for (auto i : *coObjects) {
+		if (!i->IsCollidable() || i->IsBlocking()) continue; //for non blocking objects only
+		if (!dynamic_cast<CCharacter*>(i)) continue; //to check character only
+		if (objSrc == i) continue;
+		float sl, st, sr, sb;
+		i->GetBoundingBox(sl, st, sr, sb);
+		if (IsOverlapping(ml,mt , mr, mb, sl, st, sr, sb)) {
+			dynamic_cast<CMario*>(objSrc)->Attacked();
+			return;
 
-	coEvents.clear();
-
-	if (objSrc->IsCollidable())
-	{
-		Scan(objSrc, dt, coObjects, coEvents);
+		}
 	}
-
-	objSrc->OnNoCollision(dt);
-
-	//for (UINT i = 0; i < coEvents.size(); i++)
-	//{
-	//	LPCOLLISIONEVENT e = coEvents[i];
-	//	if (e->isDeleted) continue;
-	//	if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
-
-	//	objSrc->OnCollisionWith(e);
-	//}
-
-
-	//for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
 }
 
 // the start of mario seperate collision check (enemy, item touch, collsion point check)
-void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouched)
+void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouched)
 {
 	pointsTouched->clear();
 	int k = 0;

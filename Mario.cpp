@@ -162,6 +162,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		TailAttack(dt, coObjects);
 	}
+
+	if (untouchableTimer->IsDone()) {
+		untouchableTimer->Reset();
+		CCollision::GetInstance()->ProcessMarioOverlap(this, dt, coObjects);
+		//this will call mario->attacked if overlap enemies
+	}
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -452,7 +458,7 @@ void CMario::GetAniId()
 			return;
 		}
 
-		else if (nx > 0) {
+		if (nx > 0) {
 			if(vx <= MARIO_WALK_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_RIGHT];
 			else if (vx <= MARIO_RUN_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::RUN_HOLD_RIGHT];
 			else if (vx <= MARIO_SPRINT_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::SPRINT_HOLD_RIGHT];
@@ -652,7 +658,7 @@ void CMario::PointsCheck()
 	SetPointsPosition();
 	vector<LPGAMEOBJECT> coObjects;
 	GetCollidableObjects(&coObjects);
-	CCollision::GetInstance()->ProcessForMario(this, &points, &coObjects, &pointsTouched);
+	CCollision::GetInstance()->ProcessMarioPoints(this, &points, &coObjects, &pointsTouched);
 
 	for (int i = 0; i < 7; i++)
 	{
