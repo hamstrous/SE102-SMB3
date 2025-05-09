@@ -175,6 +175,7 @@ void CGoombaFly::SetState(int state)
 	case GOOMBAFLY_STATE_DIE_UP:
 		if ((this->state == GOOMBAFLY_STATE_DIE_UP) && (GetTickCount64() - die_start <= GOOMBAFLY_DIE_TIMEOUT))
 			break;
+		die_start = GetTickCount64();
 		ay = GOOMBA_GRAVITY;
 		if (tailhit) vy = -GOOMBA_TAILHIT_SPEED_Y;
 		else vy = -GOOMBA_FLYING_SPEED;
