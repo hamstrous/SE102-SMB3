@@ -19,9 +19,9 @@ void CGameFXManager::AddTimeup(float x, float y, int type)
 {		
 	CGame* game = CGame::GetInstance();
 	float hx = game->GetBackBufferWidth() / 2;
-	float hy = game->GetBackBufferHeight() + 500;
+	float hy = game->GetBackBufferHeight() + 700;
 	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
-	CGameFX* fx = new CGameFX(x, hy, TYPE_TIMEUP);
+	CGameFX* fx = new CGameFX(hx, hy, TYPE_TIMEUP);
 	scene->AddObject(fx);
 }
 

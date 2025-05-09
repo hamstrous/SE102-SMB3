@@ -682,17 +682,6 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 						character->TailHit(x);
 						CGameFXManager::GetInstance()->AddGameFX((ml + mr) / 2, (mt + mb) / 2, 1);
 
-						//CGame* game = CGame::GetInstance();
-						//float hx = game->GetBackBufferWidth() / 2;
-						//float hy = game->GetBackBufferHeight() + 500;
-						//CGameFX* timeUpEffect = new CGameFX(x,hy,TYPE_TIMEUP);
-
-						//LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
-						////scene->AddObject(timeUpEffect);
-
-						//CGameFXManager::GetInstance()->AddGameFX(hx, hy, TYPE_TIMEUP);
-
-
 						if (!dynamic_cast<CKoopa*>(obj))
 						{	
 							float enemy_x, enemy_y;

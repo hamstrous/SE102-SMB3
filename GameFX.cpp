@@ -27,7 +27,7 @@ void CGameFX::Render()
 	{	
 		if (GetTickCount64() - start <= 5000)
 		{	
-			if (!GetIsStop()) CAnimations::GetInstance()->Get(ANI_ID_TIMEUP)->Render(x, y );
+			if (!GetIsStop()) CAnimations::GetInstance()->Get(ANI_ID_TIMEUP)->Render(x, y);
 			else CAnimations::GetInstance()->Get(ANI_ID_TIMEUP)->Render(x, y, 1);
 		}
 		break;
@@ -44,7 +44,7 @@ void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	y += vy * dt;
 	//DebugOut(L"x: %f, y: %f\n", x, y);
 	CGame* game = CGame::GetInstance();
-	float hy = game->GetBackBufferHeight() + 100;
+	float hy = game->GetBackBufferHeight() - 150;
 	switch (type)
 	{
 		case TYPE_TAILHIT:

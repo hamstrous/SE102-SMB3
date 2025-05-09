@@ -636,7 +636,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_SPEED_Y;
 		CPlayScene* s = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-		CGameFXManager::GetInstance()->AddTimeup(x, 0, TYPE_TIMEUP);
+		CGameFXManager::GetInstance()->AddTimeup(0, 0, TYPE_TIMEUP);
 		s->OnPlayerDie();
 		vx = 0;
 		ax = 0;

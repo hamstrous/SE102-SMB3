@@ -11,7 +11,7 @@
 
 //#include "Koopas.h"
 
-#define DEATH_TIME	2000
+#define DEATH_TIME	4000
 
 class CPlayScene: public CScene
 {

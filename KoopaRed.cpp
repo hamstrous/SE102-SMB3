@@ -272,7 +272,7 @@ CKoopaRed::CKoopaRed(float x, float y, bool hasWing) : CKoopa(x, y)
 
 	if (!hasWing) {
 		SetState(KOOPA_STATE_WALKING);
-		InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED);
+		
 	}
 	else {
 		nx = -1;
