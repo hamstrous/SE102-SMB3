@@ -22,15 +22,15 @@ effect.txt
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = pile
 # See OBJECT_TYPE constants in AssetIDs.h
 
-100	0	240
+100	0	0
 
 # MARIO
-0	80	160
+0	20	100
 
 #ENEMIES
 
 #KOOPARED
-#3	80	50	0
+3	80	50	0
 #3	120	50	1
 
 #KOOPAGREEN

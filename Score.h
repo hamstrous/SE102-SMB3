@@ -22,7 +22,7 @@
 #define SCORE_2000 2000
 #define SCORE_4000 4000
 #define SCORE_8000 8000
-#define SCORE_1UP 10000
+#define SCORE_1UP 0
 
 #define SCORE_SPEED 0.015f
 #define SCORE_SPEED2 0.03f

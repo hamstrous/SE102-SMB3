@@ -26,6 +26,7 @@ void CGameFX::Render()
 	case TYPE_TIMEUP:
 	{
 		CAnimations::GetInstance()->Get(ANI_ID_TIMEUP)->Render(x, y);
+		break;
 	}
 	default:
 		break;
@@ -34,6 +35,8 @@ void CGameFX::Render()
 
 void CGameFX::Update(DWORD dt)
 {		
+	y += vy * dt;
+	x += vx * dt;
 	CGame* game = CGame::GetInstance();
 	float hy = game->GetBackBufferHeight() - HUD_SIZE_Y;
 	switch (type)
@@ -50,8 +53,7 @@ void CGameFX::Update(DWORD dt)
 			break;
 		}
 	}
-	/*y += vy * dt;
-	x += vx * dt;*/
+	
 }
 
 void CGameFX::GetBoundingBox(float& l, float& t, float& r, float& b)

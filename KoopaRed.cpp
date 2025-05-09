@@ -46,7 +46,9 @@ void CKoopaRed::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	if (e->ny != 0 && !hasWing)
 	{
-		vy = 0;
+		if (state == KOOPA_STATE_TAILHIT)
+			vx = 0;
+		else vy = 0;
 	}
 	else if (e->nx != 0)
 	{
@@ -73,6 +75,13 @@ void CKoopaRed::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 			}
 		
 	}
+	else if (state == KOOPA_STATE_TAILHIT)
+	{
+		if (e->ny != 0)
+		{
+			vx = 0;
+		}
+	}
 	else {
 		if (e->ny != 0 && !hasWing)
 		{
@@ -83,8 +92,9 @@ void CKoopaRed::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 			vx = -vx;
 		}
 	}
-	if (state == KOOPA_STATE_SHELL_MOVING || state == KOOPA_STATE_SHELL_MOVING_TAILHIT)
+	if (state == KOOPA_STATE_SHELL_MOVING || state == KOOPA_STATE_SHELL_MOVING_TAILHIT) {
 		basebrick->SideHit();
+	}
 }
 
 void CKoopaRed::Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -112,7 +122,7 @@ void CKoopaRed::SetState(int state)
 {	
 	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 	CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
-	if (this->state == KOOPA_STATE_SHELL_HELD) {
+	if (this->state == KOOPA_STATE_SHELL_HELD || this->state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		ay = KOOPA_GRAVITY;
 	}
 	else if (this->state == KOOPA_STATE_FLYING) {
@@ -136,6 +146,11 @@ void CKoopaRed::SetState(int state)
 			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
 			break;
 		}
+		if (this->state == KOOPA_STATE_TAILHIT) {
+			y = (y + KOOPA_BBOX_HEIGHT_SHELL / 2) - KOOPA_BBOX_HEIGHT / 2; // when start walking, move up to normal y so dont drop through floor
+			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
+			break;
+		}
 		vx = KOOPA_WALKING_SPEED * nx;
 		// when start walking, walk toward mario
 		break;
@@ -143,7 +158,17 @@ void CKoopaRed::SetState(int state)
 		isIdle = false;
 		InitHorizontalSpeedBasedOnMario(KOOPA_SHELL_SPEED); // when kicked, move away from mario
 		break;
+	case KOOPA_STATE_SHELL_MOVING_TAILHIT:
+		//ay = KOOPA_FLYING_GRAVITY_Y;
+		isIdle = false;
+		InitHorizontalSpeedBasedOnMario(KOOPA_SHELL_SPEED); // when kicked, move away from mario
+		break;
 	case KOOPA_STATE_SHELL_HELD:
+		vx = 0;
+		vy = 0;
+		ay = 0;
+		break;
+	case KOOPA_STATE_SHELL_HELD_TAILHIT:
 		vx = 0;
 		vy = 0;
 		ay = 0;
@@ -157,6 +182,11 @@ void CKoopaRed::SetState(int state)
 		isDeleted = true;
 		Release(true);
 		break;
+	case KOOPA_STATE_TAILHIT:
+		if (this->state == KOOPA_STATE_WALKING) y = (y + KOOPA_BBOX_HEIGHT / 2) - KOOPA_BBOX_HEIGHT_SHELL / 2;
+		shell_start = GetTickCount64();
+		isIdle = true;
+		break;
 	case KOOPA_STATE_DIE_UP: //when hold shell, vy = mario speed
 		Release(true);
 		float player_x, player_y;
@@ -169,24 +199,24 @@ void CKoopaRed::SetState(int state)
 		hasWing = false;
 		delete_time = GetTickCount64();
 		break;
-	case KOOPA_STATE_HIT_DIE: //when question block hit
-		float xx, yy;
-		player->GetPosition(xx, yy);
-		if (xx < x) {
-			vx = KOOPA_FLYING_SPEED_X;
-			vy = -2.0f;
-		}
-		else {
-			vx = -KOOPA_FLYING_SPEED_X;
-			vy = -2.0f;
-		}
-		
-		vy = -2.0f;
-		DebugOut(L"vy cua hit die vy: %f\n", vy);
-		hit = true;
-		hasWing = false;
-		delete_time = GetTickCount64();
-		break;
+	//case KOOPA_STATE_HIT_DIE: //when question block hit
+	//	float xx, yy;
+	//	player->GetPosition(xx, yy);
+	//	if (xx < x) {
+	//		vx = KOOPA_FLYING_SPEED_X;
+	//		vy = -2.0f;
+	//	}
+	//	else {
+	//		vx = -KOOPA_FLYING_SPEED_X;
+	//		vy = -2.0f;
+	//	}
+	//	
+	//	vy = -2.0f;
+	//	DebugOut(L"vy cua hit die vy: %f\n", vy);
+	//	hit = true;
+	//	hasWing = false;
+	//	delete_time = GetTickCount64();
+	//	break;
 	}
 	CGameObject::SetState(state);
 
@@ -229,6 +259,16 @@ void CKoopaRed::Render()
 	case KOOPA_STATE_DIE_UP:
 		aniId = ID_ANI_KOOPA_DIE_UP;
 		break;
+	case KOOPA_STATE_SHELL_HELD_TAILHIT:
+	case KOOPA_STATE_TAILHIT:
+		if (isIdle && shellTime > KOOPA_SHELL_COOLDOWN_VIBRATION && shellTime <= KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+			aniId = ID_ANI_KOOPA_SHELLHIT_VIBRATING;
+		}
+		else if (isIdle && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+			aniId = ID_ANI_KOOPA_SHELLHIT_VIBRATING_LEG;
+		}
+		else aniId = ID_ANI_KOOPA_DIE_UP;
+		break;
 	case KOOPA_STATE_HIT_DIE:
 		aniId = ID_ANI_KOOPA_DIE_UP;
 		break;
@@ -240,7 +280,7 @@ void CKoopaRed::Render()
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	if (hasWing && nx == 1 && !GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 8);
 	else if (hasWing && nx == -1 && !GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 8);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 CKoopaRed::CKoopaRed(float x, float y, bool hasWing) : CKoopa(x, y)
@@ -279,7 +319,7 @@ void CKoopaRed::GetBoundingBox(float& left, float& top, float& right, float& bot
 		right = left + KOOPA_BBOX_WIDTH;
 		bottom = top + KOOPA_BBOX_HEIGHT_SHELL;
 	}
-	if (state == KOOPA_STATE_DIE)
+	if (hit)
 		left = top = right = bottom = 0;
 }
 
@@ -292,11 +332,19 @@ void CKoopaRed::OnNoCollision(DWORD dt)
 void CKoopaRed::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 {
 	CCharacter* character = dynamic_cast<CCharacter*>(e->obj);
-	if (state == KOOPA_STATE_SHELL_MOVING) {
+	float character_x, character_y;
+	character->GetPosition(character_x, character_y);
+	if (state == KOOPA_STATE_SHELL_MOVING || state == KOOPA_STATE_SHELL_MOVING_TAILHIT) {
 		// if hit another moving shell, then both get shell hit
 		// call this Koppa shell hit first, else no effect
-		if (dynamic_cast<CKoopa*>(character) && dynamic_cast<CKoopa*>(character)->GetState() == KOOPA_STATE_SHELL_MOVING) {
+		if (dynamic_cast<CKoopa*>(character) &&
+			(dynamic_cast<CKoopa*>(character)->GetState() == KOOPA_STATE_SHELL_MOVING || dynamic_cast<CKoopa*>(character)->GetState() == KOOPA_STATE_SHELL_MOVING_TAILHIT)) {
 			ShellHit(-e->nx);
+		}
+		if (!dynamic_cast<CMario*>(e->obj))
+		{
+			CScoreManager::GetInstance()->AddScoreDouble(character_x, character_y, count);
+			count++;
 		}
 		character->ShellHit(e->nx);
 	}
@@ -336,10 +384,10 @@ void CKoopaRed::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		Walking(dt, coObjects);
 	if (vx > 0) nx = 1;
 	else if (vx < 0) nx = -1;
-	if (state == KOOPA_STATE_SHELL_HELD) {
+	if (state == KOOPA_STATE_SHELL_HELD || state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		ShellHeldTouch(dt, coObjects);
 	}
-	if (state == KOOPA_STATE_DIE_UP_ANI || state == KOOPA_STATE_DIE_UP) {
+	if (state == KOOPA_STATE_DIE_UP_ANI) {
 		if (GetTickCount64() - delete_time > KOOPA_TIME_DELETE) {
 			isDeleted = true;
 		}
@@ -353,6 +401,9 @@ void CKoopaRed::Kicked()
 	if (state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_SHELL_HELD) {
 		SetState(KOOPA_STATE_SHELL_MOVING);
 	}
+	if (state == KOOPA_STATE_TAILHIT || state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
+		SetState(KOOPA_STATE_SHELL_MOVING_TAILHIT);
+	}
 }
 
 void CKoopaRed::Stomped()
@@ -361,6 +412,8 @@ void CKoopaRed::Stomped()
 		hasWing = false;
 		SetState(KOOPA_STATE_WALKING);
 	}
+	else if (state == KOOPA_STATE_SHELL_MOVING_TAILHIT) SetState(KOOPA_STATE_TAILHIT);
+	else if (state == KOOPA_STATE_TAILHIT) Kicked();
 	else if (state != KOOPA_STATE_SHELL_IDLE)
 	{
 		SetState(KOOPA_STATE_SHELL_IDLE);
@@ -372,12 +425,15 @@ void CKoopaRed::Stomped()
 
 void CKoopaRed::Held()
 {
-	if (state == KOOPA_STATE_SHELL_IDLE) SetState(KOOPA_STATE_SHELL_HELD);
+	if (state == KOOPA_STATE_SHELL_IDLE)
+		SetState(KOOPA_STATE_SHELL_HELD);
+	if (state == KOOPA_STATE_TAILHIT)
+		SetState(KOOPA_STATE_SHELL_HELD_TAILHIT);
 }
 
 void CKoopaRed::Release(bool dead = false)
 {
-	if (state == KOOPA_STATE_SHELL_HELD) {
+	if (state == KOOPA_STATE_SHELL_HELD || state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
 		if (!dead) vy = -0.3f;
@@ -387,12 +443,11 @@ void CKoopaRed::Release(bool dead = false)
 
 void CKoopaRed::ShellHit(int shellX)
 {
-	SetState(KOOPA_STATE_DIE_UP);
+	SetState(KOOPA_STATE_DIE_UP_ANI);
 	if (shellX == -1) vx = KOOPA_FLYING_SPEED_X;
 	else if (shellX == 1) vx = -KOOPA_FLYING_SPEED_X;
 	else if (shellX < x) vx = KOOPA_FLYING_SPEED_X;
-	else vx = -KOOPA_FLYING_SPEED_X;
-
+	else if (shellX > x) vx = -KOOPA_FLYING_SPEED_X;
 	vy = -KOOPA_STATE_FLYING_UP;
 	hit = true;
 	hasWing = false;
@@ -401,16 +456,23 @@ void CKoopaRed::ShellHit(int shellX)
 
 void CKoopaRed::TailHit(float x)
 {
+	SetState(KOOPA_STATE_TAILHIT);
+	if (x < this->x) vx = KOOPA_FLYING_SPEED_X;
+	else if (x > this->x) vx = -KOOPA_FLYING_SPEED_X;
+	vy = -KOOPA_TAILHIT_SPEED_Y;
+	hasWing = false;
+
+	hit = false;
 }
 
 void CKoopaRed::Touched()
 {
 	CPlayScene* scene = (CPlayScene*)(CGame::GetInstance()->GetCurrentScene());
 	CMario* mario = dynamic_cast<CMario*>(scene->GetPlayer());
-	if (state != KOOPA_STATE_SHELL_IDLE && state != KOOPA_STATE_SHELL_HELD) {
+	if (state != KOOPA_STATE_SHELL_IDLE && state != KOOPA_STATE_SHELL_HELD && state != KOOPA_STATE_TAILHIT && state != KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		mario->Attacked();
 	}
-	else if (state == KOOPA_STATE_SHELL_IDLE) {
+	else if (state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_TAILHIT) {
 		Kicked();
 		mario->KickedShell();
 	}
@@ -422,7 +484,7 @@ void CKoopaRed::HeldDie()
 
 void CKoopaRed::ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (state == KOOPA_STATE_SHELL_MOVING) {
+	if (state == KOOPA_STATE_SHELL_MOVING || state == KOOPA_STATE_SHELL_MOVING_TAILHIT) {
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchingSolid(ml, mt, mr, mb, vx, vy, dt, coObjects)) {
@@ -433,7 +495,7 @@ void CKoopaRed::ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopaRed::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (state == KOOPA_STATE_SHELL_HELD) {
+	if (state == KOOPA_STATE_SHELL_HELD || state == KOOPA_STATE_SHELL_HELD_TAILHIT) {
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {

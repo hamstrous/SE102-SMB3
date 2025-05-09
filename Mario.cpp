@@ -239,8 +239,7 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 			return;
 		}
 		character->Stomped();
-		if(count <= 7) CScoreManager::GetInstance()->AddScore(characterX, characterY, score[count]);
-		else CScoreManager::GetInstance()->AddScore(characterX, characterY, score[7]);
+		CScoreManager::GetInstance()->AddScoreDouble(characterX, characterY, count);
 		count++;
 
 		if (CGame::GetInstance()->IsKeyDown(DIK_S)) SetJumpInput(1);
@@ -828,14 +827,14 @@ void CMario::GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2
 	// 2 is right hit box
 	if(level == MarioLevel::RACCOON)
 	{
-		l1 = x - 0.7 * MARIO_BIG_BBOX_WIDTH;
+		l1 = x - 1.2 * MARIO_BIG_BBOX_WIDTH;
 		t1 = y;
 		r1 = l1 + MARIO_BIG_BBOX_WIDTH;
 		b1 = t1 + MARIO_BIG_BBOX_HEIGHT / 2;
 
 		l2 = x + MARIO_BIG_BBOX_WIDTH / 2;
 		t2 = y;
-		r2 = l2 + MARIO_BIG_BBOX_WIDTH * 0.4;
+		r2 = l2 + MARIO_BIG_BBOX_WIDTH / 1.5;
 		b2 = t2 + MARIO_BIG_BBOX_HEIGHT / 2;
 	}
 	else
