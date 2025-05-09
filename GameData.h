@@ -64,7 +64,7 @@ public:
 
 	void AddScore(int s)
 	{	
-		DebugOut(L"AddScore is called");
+		//DebugOut(L"AddScore is called");
 		score += s;
 	}
 

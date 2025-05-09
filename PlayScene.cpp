@@ -496,6 +496,10 @@ void CPlayScene::Update(DWORD dt)
 			}
 			if (IsObjectOutOfCamera(obj)) {
 				//when out of camera, go to sleep and put back at og pos
+				if (obj->GetKillOffCam()) {
+					obj->Delete();
+					continue;
+				}
 				obj->SetSleep(true);
 				float nx, ny;
 				if (characterCopy.find(character) != characterCopy.end() && IsObjectOutOfCamera(characterCopy[character])) {

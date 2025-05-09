@@ -26,7 +26,6 @@ class CKoopaGreen : public CKoopa
 {
 protected:
 	int count = 0;
-	vector<int> score = { 100,200,400,800,1000,2000,4000,8000 };
 	virtual void Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Flying();
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
@@ -41,7 +40,6 @@ public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
-	virtual int IsCollidable() { return KOOPA_STATE_SHELL_HELD != state; };
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
@@ -49,7 +47,7 @@ public:
 		*this = *(const CKoopaGreen*)og;
 		if (!hasWing) {
 			SetState(KOOPA_STATE_WALKING);
-			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED);
+			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
 		}
 		else {
 			SetState(KOOPA_STATE_FLYING);

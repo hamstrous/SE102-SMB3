@@ -6,6 +6,7 @@
 
 #include "Goomba.h"
 #include "Koopa.h"
+#include "KoopaGreen.h"
 #include "Coin.h"
 #include "Portal.h"
 #include "Plant.h"
@@ -146,9 +147,11 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	Acceleration(dt);
+	//DebugOutTitle(L"vx: %f, vx: %f\n", vx, vy);
 
 	// reset untouchable timer if untouchable time has passed
 	// for mario has to be called first so process can call OnCollision
+	CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
@@ -864,9 +867,6 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		holdingShell->SetSpeed(min((x + KOOPA_BBOX_WIDTH - hx)/dt, MARIO_SHELL_TURNING_SPEED), vy);
 	else
 		holdingShell->SetSpeed(max((x - KOOPA_BBOX_WIDTH - hx) / dt, -MARIO_SHELL_TURNING_SPEED), vy);
-	float kvx, kvy;
-	holdingShell->GetSpeed(kvx, kvy);
-	DebugOutTitle(L"Shell speed: %f\n", kvx);
 	if (!canHold)
 	{
 		holdingShell->Kicked();

@@ -11,19 +11,28 @@
 #include "Leaf.h"
 #include "ScoreManager.h"
 #include "Koopa.h"
+#include "Utils.h"
 #define BLOCK_PUSH_FACTOR 0.01f
 
 CCollision* CCollision::__instance = NULL;
 
-static bool IsColliding(float al, float at, float ar, float ab, float bl, float bt, float br, float bb) {
+static bool IsOverlapping(float al, float at, float ar, float ab, float bl, float bt, float br, float bb) {
 	return al < br && ar > bl && at < bb && ab > bt;
 }
 
-static int StillColliding(float al, float at, float ar, float ab, float dx, float dy, float bl, float bt, float br, float bb) {
-	int curTouch = IsColliding(al, at, ar, ab, bl, bt, br, bb);
-	int nexTouch = IsColliding(al + dx, at + dy, ar + dx, ab + dy, bl, bt, br, bb);
+static int StillOverlapping(float al, float at, float ar, float ab, float dx, float dy, float bl, float bt, float br, float bb) {
+	int curTouch = IsOverlapping(al, at, ar, ab, bl, bt, br, bb);
+	int nexTouch = IsOverlapping(al + dx, at + dy, ar + dx, ab + dy, bl, bt, br, bb);
 	if(curTouch == 0) return 0; // not touch
 	return  curTouch + nexTouch; // 2: still touch, 1: touch then not touch
+}
+
+LPCOLLISIONEVENT CCollisionEvent::Reverse(LPCOLLISIONEVENT e)
+{
+	LPCOLLISIONEVENT ne = new CCollisionEvent(e->t, -e->nx, -e->ny, -e->dx, -e->dy, e->src_obj, e->obj);
+	ne->src_obj->OnCollisionWith(ne);
+	return ne;
+
 }
 
 int CCollisionEvent::WasCollided() {
@@ -234,12 +243,12 @@ void CCollision::ScanIsBlocking(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJE
 
 void CCollision::ScanNotBlocking(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* objDests, vector<LPCOLLISIONEVENT>& coEvents)
 {
-	for (UINT i = 0; i < objDests->size(); i++)
+	for (auto obj : *objDests)
 	{
-		if (!(objDests->at(i)->IsCollidable())) continue; // if the other obj not collidable then skip (2 way)
-		if (objDests->at(i)->IsBlocking()) continue; // if the other obj blocking
+		if (!obj->IsCollidable()) continue;
+		if (obj->IsBlocking()) continue;
 
-		LPCOLLISIONEVENT e = SweptAABB(objSrc, dt, objDests->at(i));
+		LPCOLLISIONEVENT e = SweptAABB(objSrc, dt, obj);
 		if (e->WasCollided() == 1) {
 			coEvents.push_back(e);
 		}
@@ -294,10 +303,10 @@ void CCollision::Filter( LPGAMEOBJECT objSrc,
 */
 void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
 	vector<LPCOLLISIONEVENT> coEvents;
-	LPCOLLISIONEVENT colX = NULL; 
+	LPCOLLISIONEVENT colX = NULL;
 	LPCOLLISIONEVENT colY = NULL;
+
 
 	// Deal with blocking collision first
 	coEvents.clear();
@@ -305,7 +314,7 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 		objSrc->OnNoCollision(dt);
 		return;
 	}
-	
+
 	ScanIsBlocking(objSrc, dt, coObjects, coEvents);
 
 	if (coEvents.size() == 0)
@@ -320,7 +329,7 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 		objSrc->GetSpeed(vx, vy);
 		dx = vx * dt;
 		dy = vy * dt;
-		if (colX != NULL && colY != NULL) 
+		if (colX != NULL && colY != NULL)
 		{
 			if (colY->t < colX->t)	// was collision on Y first ?
 			{
@@ -345,7 +354,7 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 
 				if (colX_other != NULL)
 				{
-					x += colX_other->t * dx +colX_other->nx * BLOCK_PUSH_FACTOR;
+					x += colX_other->t * dx + colX_other->nx * BLOCK_PUSH_FACTOR;
 					SetPositionAndOnCollisionWith(objSrc, x, y, colX_other); // set position and call OnCollisionWith
 				}
 				else
@@ -388,26 +397,26 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 			}
 		}
 		else
-		if (colX != NULL)
-		{
-			x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
-			y += dy;
-			SetPositionAndOnCollisionWith(objSrc, x, y, colX); // set position and call OnCollisionWith
-		}
-		else 
-			if (colY != NULL)
+			if (colX != NULL)
 			{
-				x += dx;
-				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
-				SetPositionAndOnCollisionWith(objSrc, x, y, colY); // set position and call OnCollisionWith
-			}
-			else // both colX & colY are NULL 
-			{
-				x += dx;
+				x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
 				y += dy;
-				objSrc->SetPosition(x, y);
+				SetPositionAndOnCollisionWith(objSrc, x, y, colX); // set position and call OnCollisionWith
 			}
-		
+			else
+				if (colY != NULL)
+				{
+					x += dx;
+					y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
+					SetPositionAndOnCollisionWith(objSrc, x, y, colY); // set position and call OnCollisionWith
+				}
+				else // both colX & colY are NULL 
+				{
+					x += dx;
+					y += dy;
+					objSrc->SetPosition(x, y);
+				}
+
 	}
 
 	//
@@ -422,15 +431,49 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
 		LPCOLLISIONEVENT e = coEvents[i];
-	
+
 		if (e->isDeleted) continue;
 		if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
 
 		objSrc->OnCollisionWith(e);	
+		e->Reverse(e);
 	}
 
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
+
+void CCollision::ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	if (!objSrc->IsCollidable() || objSrc->IsBlocking()) return; //for non blocking objects only
+	float ml, mt, mr, mb;
+	objSrc->GetBoundingBox(ml, mt, mr, mb);
+	float vx, vy;
+	objSrc->GetSpeed(vx, vy);
+	float mdx = vx * dt;
+	float mdy = vy * dt;
+	for(auto i:*coObjects){
+		if (!i->IsCollidable() || i->IsBlocking()) continue; //for non blocking objects only
+		if (objSrc == i) continue;
+		float sl, st, sr, sb;
+		i->GetBoundingBox(sl, st, sr, sb);
+		float svx, svy;
+		i->GetSpeed(svx, svy);
+		float sdx = svx * dt;
+		float sdy = svy * dt;
+		if (IsOverlapping(ml + mdx, mt + mdy, mr + mdx, mb + mdy, sl + sdx, st + sdy, sr + sdx, sb + sdy)) {
+			//DebugObjectType(i);
+			//DebugObjectType(objSrc);
+			//DebugOut(L"\n");
+
+			//debug mario as soure and koopagreen as dest
+			if(dynamic_cast<CMario*>(objSrc) && dynamic_cast<CKoopa*>(i)
+				|| dynamic_cast<CMario*>(i) && dynamic_cast<CKoopa*>(objSrc))
+			{
+				DebugOut(L"[DEBUG] Mario and Koopa\n");
+			}
+		}
+	}
 }
 
 // Process collision to Mario only (fireball, leaf)
@@ -487,7 +530,7 @@ void CCollision::ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* poin
 				if(k == LEFTUP || k == LEFTDOWN || k == RIGHTUP || k == RIGHTDOWN)
 					if(dynamic_cast<CGenericPlatform*>(obj) && oy > st) continue; // skip if moving up to platform
 
-				if (IsColliding(ml, mt, mr, mb, sl, st, sr, sb))
+				if (IsOverlapping(ml, mt, mr, mb, sl, st, sr, sb))
 				{
 					pointsTouched->push_back(true);
 					touched = true;
@@ -526,7 +569,7 @@ int CCollision::CheckStillTouchSolid(float ml, float mt, float mr, float mb, flo
 				float dx = mdx - sdx;
 				float dy = mdy - sdy;
 
-				mxOutCome = max(mxOutCome, StillColliding(ml, mt, mr, mb, dx, dy, sl, st, sr, sb));
+				mxOutCome = max(mxOutCome, StillOverlapping(ml, mt, mr, mb, dx, dy, sl, st, sr, sb));
 			}
 		}
 	}return mxOutCome;
@@ -557,14 +600,18 @@ bool CCollision::CheckTouchingSolid(float ml, float mt, float mr, float mb, floa
 				float dx = mdx - sdx;
 				float dy = mdy - sdy;
 
-				if(IsColliding(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) return true;
+				if(IsOverlapping(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) return true;
 			}
 		}
 	}return false;
 }
 
-bool CCollision::CheckTouchCharacterForShellHeldHit(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool notMario = 1)
+bool CCollision::CheckTouchCharacterForShellHeldHit(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool notMario = 1)
 {
+	float ml, mt, mr, mb;
+	objSrc->GetBoundingBox(ml, mt, mr, mb);
+	float vx, vy;
+	objSrc->GetSpeed(vx, vy);
 	bool isTouching = false;
 	if (coObjects->size() > 0)
 	{
@@ -572,6 +619,7 @@ bool CCollision::CheckTouchCharacterForShellHeldHit(float ml, float mt, float mr
 		{
 			if(notMario && dynamic_cast<CMario*>(obj)) continue;
 			if(dynamic_cast<CCharacter*>(obj) == NULL) continue;
+			if(obj == objSrc) continue;
 			CCharacter* character = dynamic_cast<CCharacter*>(obj);
 			if (obj->IsCollidable() )
 			{
@@ -591,8 +639,9 @@ bool CCollision::CheckTouchCharacterForShellHeldHit(float ml, float mt, float mr
 				float dx = mdx - sdx;
 				float dy = mdy - sdy;
 
-				if (IsColliding(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) {
+				if (IsOverlapping(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) {
 					isTouching = true;
+					DebugObjectType(obj);
 					character->ShellHeldHit((ml+mr)/2);
 				}
 			}
@@ -626,7 +675,7 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 				float dx = mdx - sdx;
 				float dy = mdy - sdy;
 
-				if (IsColliding(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) {
+				if (IsOverlapping(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) {
 					isTouching = true;
 					if (CCharacter* character = dynamic_cast<CCharacter*>(obj))
 					{

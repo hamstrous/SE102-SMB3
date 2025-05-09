@@ -214,9 +214,6 @@ protected:
 			DebugOut(L"[ERROR] Mario::AssignCurrentAnimation: type %d not found\n", type);
 			return;
 		}
-		if(level == MarioLevel::RACCOON && type == MarioAnimationType::SHRINK_RIGHT) {
-			DebugOut(L"SHRINK_RIGHT \n");
-		}
 		currentAnimation = animationMap[level][type];
 		ResetCurrentAnimation();
 	}
@@ -261,7 +258,7 @@ public:
 		return (state != MARIO_STATE_DIE);
 	}
 
-	int IsBlocking() { return false; }
+	int IsBlocking() { return 0; }
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
