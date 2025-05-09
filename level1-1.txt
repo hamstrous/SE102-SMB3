@@ -41,6 +41,7 @@ effect.txt
 #19 : floor
 #20 : background color
 #21:  unbreakablebrick
+#22: goombafly
 #50 : portal
 #100 : camera
 
@@ -645,6 +646,13 @@ effect.txt
 #KOOPA
 3	583	369	0
 
+#GOOMBA
+2	855	391
+2	887	391
+22	967	391
+
+#KOOPAGREEN
+14	1351	300	0
 #PLANT
 8	367	395	0	0	1
 8	1807	416	10	1	0
