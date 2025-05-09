@@ -182,7 +182,6 @@ protected:
 	vector<CGameObject*> points;
 	vector<bool> pointsTouched;
 	int count = 0;
-	vector<int> score = { 100,200,400,800,1000,2000,4000,8000 };
 
 	// mario vx speed at jump point, for midair physics
 	float jumpVx = 0;

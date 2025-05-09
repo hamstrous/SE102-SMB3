@@ -239,8 +239,7 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 			return;
 		}
 		character->Stomped();
-		if(count <= 7) CScoreManager::GetInstance()->AddScore(characterX, characterY, score[count]);
-		else CScoreManager::GetInstance()->AddScore(characterX, characterY, score[7]);
+		CScoreManager::GetInstance()->AddScoreDouble(characterX, characterY, count);
 		count++;
 
 		if (CGame::GetInstance()->IsKeyDown(DIK_S)) SetJumpInput(1);

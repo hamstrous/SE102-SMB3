@@ -10,6 +10,7 @@
 #include "Mario.h"
 #include "Leaf.h"
 #include "ScoreManager.h"
+#include "Koopa.h"
 #define BLOCK_PUSH_FACTOR 0.01f
 
 CCollision* CCollision::__instance = NULL;
@@ -631,15 +632,15 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 					{
 						character->TailHit(x);
 						CGameFXManager::GetInstance()->AddGameFX((ml + mr) / 2, (mt + mb) / 2, 1);
-						//CGameFXManager::GetInstance()->AddTimeup(x, y, TYPE_TIMEUP);
-						/*LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
-						CGameFX* timeup = new CGameFX(x, y, TYPE_TIMEUP);
-						scene->AddObject(timeup);*/
-						if (dynamic_cast<CGoomba*>(obj) || dynamic_cast<CGoombaFly*>(obj))
+						/*CGameFX* timeUpEffect = new CGameFX(x,y,TYPE_TIMEUP);
+						timeUpEffect->SetState(STATE_TIME_MOVEUP);
+						LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
+						scene->AddObject(timeUpEffect);*/
+						if (!dynamic_cast<CKoopa*>(obj))
 						{	
-							float goombaX, goombaY;
-							obj->GetPosition(goombaX, goombaY);
-							CScoreManager::GetInstance()->AddScore(goombaX, goombaY, SCORE_100);
+							float enemy_x, enemy_y;
+							obj->GetPosition(enemy_x, enemy_y);
+							CScoreManager::GetInstance()->AddScore(enemy_x, enemy_y, SCORE_100);
 						}
 					}
 					else if (CBaseBrick* brick = dynamic_cast<CBaseBrick*>(obj))

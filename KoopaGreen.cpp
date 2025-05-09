@@ -26,10 +26,6 @@ void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithBaseBrick(e);
 		return;
 	}
-	if (dynamic_cast<CBreakableBrick*>(e->obj) && e->nx != 0)
-	{
-		//OncollisionWith
-	}
 
 	if (!e->obj->IsBlocking()) return;
 
@@ -50,16 +46,22 @@ void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CKoopaGreen::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 {
-	//CQuestionBlock* questionblock = (CQuestionBlock*)e->obj;
 	CBaseBrick* basebrick = (CBaseBrick*)e->obj;
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
 	if (basebrick->GetState() == QUESTION_BLOCK_STATE_MOVEUP) {
-		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
 		if (state == KOOPA_STATE_WALKING) {
 			float xx, yy;
 			player->GetPosition(xx, yy);
-			ShellHit(nx);
+			if (xx < x) {
+				vx = KOOPA_FLYING_SPEED_X;
+			}
+			else {
+				vx = -KOOPA_FLYING_SPEED_X;
+			}
+			vy = -KOOPA_BOUNCE_SPEED;
 		}
+		
 
 	}
 	else if (state == KOOPA_STATE_TAILHIT)
@@ -289,8 +291,7 @@ void CKoopaGreen::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		}
 		if (!dynamic_cast<CMario*>(e->obj))
 		{
-			if (count <= 7) CScoreManager::GetInstance()->AddScore(character_x, character_y, score[count]);
-			else CScoreManager::GetInstance()->AddScore(character_x, character_y, score[7]);
+			CScoreManager::GetInstance()->AddScoreDouble(character_x, character_y, count);
 			count++;
 		}
 		character->ShellHit(e->nx);
@@ -454,14 +455,6 @@ void CKoopaGreen::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		DebugOut(L"[INFO] KoopaGreen::ShellHeldTouch - Checking collision, State: %d, BoundingBox: [%f, %f, %f, %f]\n",
 			state, ml, mt, mr, mb);
 
-		for (LPGAMEOBJECT obj : *coObjects) {
-			float ol, ot, or_, ob;
-			obj->GetBoundingBox(ol, ot, or_, ob);
-
-			if (ml < or_ && mr > ol && mt < ob && mb > ot) {
-				DebugOut(L"[INFO] KoopaGreen::ShellHeldTouch - Colliding with object:\n");
-			}
-		}
 		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(ml, mt, mr, mb, vx, vy, dt, coObjects, true)) {
 			SetState(KOOPA_STATE_DIE_UP);
 			CScoreManager::GetInstance()->AddScore(x, y, 100);
