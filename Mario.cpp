@@ -858,15 +858,17 @@ void CMario::GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2
 void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float hx, hy;
+	const float offsetX = 9.f;
+	const float offsetY = 6.f;
 	//holdingShell->SetPosition(x, y);
 	holdingShell->GetPosition(hx, hy);
 	holdingShell->SetY(y);
 
 	// move the shell, also move faster when mario turn
 	if (nx == 1)
-		holdingShell->SetSpeed(min((x + KOOPA_BBOX_WIDTH - hx)/dt, MARIO_SHELL_TURNING_SPEED), vy);
+		holdingShell->SetPosition(x + offsetX, y);
 	else
-		holdingShell->SetSpeed(max((x - KOOPA_BBOX_WIDTH - hx) / dt, -MARIO_SHELL_TURNING_SPEED), vy);
+		holdingShell->SetPosition(x - offsetX, y);
 	if (!canHold)
 	{
 		holdingShell->Kicked();

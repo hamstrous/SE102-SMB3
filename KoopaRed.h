@@ -76,7 +76,7 @@ public:
 	virtual void TailHit(float x);
 	virtual void BlockHit() {};
 	virtual void Touched();
-	virtual bool CanHold() { return state == KOOPA_STATE_SHELL_IDLE; };
+	virtual bool CanHold() { return IsIdle(); };
 	void HeldDie();
 	void ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

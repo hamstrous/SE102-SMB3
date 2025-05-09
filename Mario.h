@@ -163,6 +163,8 @@ namespace std {
 #define ATTACK_TIME	210
 #define GLIDE_TIME	267
 #define FLY_TIME	267
+#define TURN_TIME	267
+#define PROTECT_TIME	267
 
 #define UNTOUCHABLE_TIME 2500
 
@@ -191,7 +193,7 @@ protected:
 	int runInput = 0; // 1: run, 0: no run
 
 	// timers for animations
-	CTimer *attackTimer, *glideTimer, *flyTimer, *untouchableTimer;
+	CTimer *attackTimer, *glideTimer, *flyTimer, *untouchableTimer, *turnHoldTimer, *shellProtectTimer;
 
 	int currentAnimation = -1;
 
@@ -226,6 +228,8 @@ public:
 		flyTimer = new CTimer(FLY_TIME);
 		attackTimer = new CTimer(ATTACK_TIME);
 		untouchableTimer = new CTimer(UNTOUCHABLE_TIME);
+		turnHoldTimer = new CTimer(TURN_TIME);
+		shellProtectTimer = new CTimer(PROTECT_TIME);
 		
 		isSitting = false;
 		maxVx = 0.0f;
@@ -314,6 +318,10 @@ public:
 	int GetDirInput() { return dirInput; }
 
 	void SetPointsPosition();
+
+	void StartHoldTurn(int nx) {
+		if(this->nx != nx) turnHoldTimer->Start();
+	}
 };
 
 //GROUND PHYSICS
