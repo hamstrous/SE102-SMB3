@@ -303,30 +303,6 @@ void CCollision::Filter( LPGAMEOBJECT objSrc,
 */
 void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (dynamic_cast<CMario*>(objSrc))
-	{
-		float ml, mt, mr, mb;
-		objSrc->GetBoundingBox(ml, mt, mr, mb);
-		float vx, vy;
-		objSrc->GetSpeed(vx, vy);
-		DebugOut(L"[DEBUG] Mario info vx: %f, vy: %f, l: %f, r:%f\n", vx, vy, ml, mr);
-
-		//debug koopa info too
-		for (auto i : *coObjects)
-		{
-			if (dynamic_cast<CKoopa*>(i))
-			{
-				float sl, st, sr, sb;
-				i->GetBoundingBox(sl, st, sr, sb);
-				float vx, vy;
-				i->GetSpeed(vx, vy);
-				DebugOut(L"[DEBUG] Koopa info vx: %f, vy: %f, l: %f, r:%f\n", vx, vy, sl, sr);
-			}
-		}
-		DebugOut(L"\n");
-	}
-
-
 	vector<LPCOLLISIONEVENT> coEvents;
 	LPCOLLISIONEVENT colX = NULL;
 	LPCOLLISIONEVENT colY = NULL;
@@ -443,29 +419,6 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 
 	}
 
-	if (dynamic_cast<CMario*>(objSrc))
-	{
-		float ml, mt, mr, mb;
-		objSrc->GetBoundingBox(ml, mt, mr, mb);
-		float vx, vy;
-		objSrc->GetSpeed(vx, vy);
-		DebugOut(L"[DEBUG] Mario info vx: %f, vy: %f, l: %f, r:%f\n", vx, vy, ml, mr);
-
-		//debug koopa info too
-		for (auto i : *coObjects)
-		{
-			if (dynamic_cast<CKoopa*>(i))
-			{
-				float sl, st, sr, sb;
-				i->GetBoundingBox(sl, st, sr, sb);
-				float vx, vy;
-				i->GetSpeed(vx, vy);
-				DebugOut(L"[DEBUG] Koopa info vx: %f, vy: %f, l: %f, r:%f\n", vx, vy, sl, sr);
-			}
-		}
-		DebugOut(L"\n");
-	}
-
 	//
 	// Scan all non-blocking collisions for further collision logic
 	//
@@ -481,35 +434,6 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 
 		if (e->isDeleted) continue;
 		if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
-
-		if (dynamic_cast<CMario*>(objSrc) && dynamic_cast<CKoopa*>(e->obj)
-			|| dynamic_cast<CMario*>(e->obj) && dynamic_cast<CKoopa*>(objSrc))
-		{
-			DebugOut(L"[DEBUG] Mario and Koopa\n");
-			float ml, mt, mr, mb;
-			objSrc->GetBoundingBox(ml, mt, mr, mb);
-			
-			float sl, st, sr, sb;
-			e->obj->GetBoundingBox(sl, st, sr, sb);
-			
-			DebugOut(L"dt: %d\n", dt);
-			DebugOut(L"[DEBUG] Mario and Koopa: %f %f %f %f\n", ml, mt, mr, mb);
-			DebugOut(L"[DEBUG] Mario and Koopa: %f %f %f %f\n", sl, st, sr, sb);
-		}
-
-		float sl, st, sr, sb;
-		e->obj->GetBoundingBox(sl, st, sr, sb);
-		float ml, mt, mr, mb;
-		objSrc->GetBoundingBox(ml, mt, mr, mb);
-
-		const float EPSILON = dt * 0.05f;
-
-		if (abs(ml - sr) < EPSILON &&
-			dynamic_cast<CKoopa*>(e->obj) )
-		{
-			DebugOut(L"[DEBUG] Koopa\n");
-		}
-
 
 		objSrc->OnCollisionWith(e);	
 		e->Reverse(e);
