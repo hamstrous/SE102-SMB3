@@ -21,6 +21,8 @@ CGameObject::CGameObject()
 
 void CGameObject::RenderBoundingBox()
 {
+	// When report turn off this
+	return;
 	D3DXVECTOR3 p(x, y, 0);
 	RECT rect;
 
