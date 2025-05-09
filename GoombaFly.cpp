@@ -176,9 +176,9 @@ void CGoombaFly::SetState(int state)
 		if ((this->state == GOOMBAFLY_STATE_DIE_UP) && (GetTickCount64() - die_start <= GOOMBAFLY_DIE_TIMEOUT))
 			break;
 		ay = GOOMBA_GRAVITY;
-		die_start = GetTickCount64();
 		if (tailhit) vy = -GOOMBA_TAILHIT_SPEED_Y;
 		else vy = -GOOMBA_FLYING_SPEED;
+		killOffCam = true;
 		break;
 	}
 	CGameObject::SetState(state);
