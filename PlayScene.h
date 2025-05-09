@@ -66,7 +66,7 @@ public:
 	void SetIsPause();
 	
 	bool GetIsStop() { return stopTimer->IsRunning(); }
-	void SetIsStop(int timeSpan) {
+	void SetIsStop(float timeSpan) {
 		stopTimer->SetTimeSpan(timeSpan);
 		stopTimer->Start();
 	}

@@ -215,6 +215,9 @@ protected:
 			DebugOut(L"[ERROR] Mario::AssignCurrentAnimation: type %d not found\n", type);
 			return;
 		}
+		if(level == MarioLevel::RACCOON && type == MarioAnimationType::SHRINK_RIGHT) {
+			DebugOut(L"SHRINK_RIGHT \n");
+		}
 		currentAnimation = animationMap[level][type];
 		ResetCurrentAnimation();
 	}

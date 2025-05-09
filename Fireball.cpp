@@ -12,8 +12,6 @@ void CFireball::GetBoundingBox(float& left, float& top, float& right, float& bot
 
 void CFireball::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (GetTickCount64() - time_start > FIREBALL_TIME_DELETE)
-		Delete();
 	CGameObject::Update(dt, coObjects);
 	//CCollision::GetInstance()->ProcessOnlyMario(this, dt, coObjects);
 	OnNoCollision(dt);
@@ -22,7 +20,6 @@ void CFireball::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CFireball::Render()
 {	
 	if (GetIsPause()) {
-		time_start = GetTickCount64();
 		return;
 	}
 	int aniId = ID_ANI_FIREBALL; 
