@@ -640,6 +640,9 @@ void CMario::SetState(int state)
 		s->OnPlayerDie();
 		vx = 0;
 		ax = 0;
+		canHold = false;
+		if(holdingShell != NULL) holdingShell->SetState(KOOPA_STATE_MARIO_DEAD); 
+		holdingShell = NULL;
 		break;
 	}
 

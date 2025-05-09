@@ -90,6 +90,8 @@ public:
 	void GetCamPos(float& x, float& y) {
 		camera->GetPosition(x, y);
 	}
+
+
 };
 
 typedef CPlayScene* LPPLAYSCENE;

@@ -173,10 +173,14 @@ void CKoopaRed::SetState(int state)
 		float player_x, player_y;
 		player->GetSpeed(player_x, player_y);
 		vx = player_x;
-		vy = -KOOPA_STATE_FLYING_UP;
+		vy = -KOOPA_FLYING_UP;
 		hit = true;
 		hasWing = false;
 		killOffCam = true;
+		break;
+	case KOOPA_STATE_MARIO_DEAD:
+		//call when mario is dead whild holding
+		state = this->state == KOOPA_STATE_SHELL_HELD ? KOOPA_STATE_SHELL_IDLE : KOOPA_STATE_SHELL_HELD_TAILHIT;
 		break;
 	//case KOOPA_STATE_HIT_DIE: //when question block hit
 	//	float xx, yy;
@@ -421,7 +425,7 @@ void CKoopaRed::ShellHit(int shellX)
 	else if (shellX == 1) vx = -KOOPA_FLYING_SPEED_X;
 	else if (shellX < x) vx = KOOPA_FLYING_SPEED_X;
 	else if (shellX > x) vx = -KOOPA_FLYING_SPEED_X;
-	vy = -KOOPA_STATE_FLYING_UP;
+	vy = -KOOPA_FLYING_UP;
 	hit = true;
 	hasWing = false;
 }

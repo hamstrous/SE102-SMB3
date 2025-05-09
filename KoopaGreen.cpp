@@ -86,6 +86,9 @@ void CKoopaGreen::SetState(int state)
 		ay = KOOPA_GRAVITY;
 	}
 
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
+
 	switch (state)
 	{
 	case KOOPA_STATE_SHELL_IDLE:
@@ -140,14 +143,16 @@ void CKoopaGreen::SetState(int state)
 		shell_start = GetTickCount64();
 		isIdle = true;
 		break;
+	case KOOPA_STATE_MARIO_DEAD:
+		//call when mario is dead whild holding
+		state = this->state == KOOPA_STATE_SHELL_HELD ? KOOPA_STATE_SHELL_IDLE : KOOPA_STATE_SHELL_HELD_TAILHIT;
+		break;
 	case KOOPA_STATE_DIE_UP:
-		CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-		CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
 		Release(true);
 		float player_x, player_y;
 		player->GetSpeed(player_x, player_y);
 		vx = player_x;
-		vy = -KOOPA_STATE_FLYING_UP;
+		vy = -KOOPA_FLYING_UP;
 		hit = true;
 		hasWing = false;
 		killOffCam = true;
@@ -385,7 +390,7 @@ void CKoopaGreen::ShellHit(int shellX)
 	else if (shellX == 1) vx = -KOOPA_FLYING_SPEED_X;
 	else if (shellX < x) vx = KOOPA_FLYING_SPEED_X;
 	else if (shellX > x) vx = -KOOPA_FLYING_SPEED_X;
-	vy = -KOOPA_STATE_FLYING_UP;
+	vy = -KOOPA_FLYING_UP;
 	hit = true;
 	hasWing = false;
 }
