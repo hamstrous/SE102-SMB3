@@ -447,7 +447,7 @@ void CMario::GetAniId()
 			return;
 		}
 
-		if (vx < 0 && ax > 0 || vx > 0 && ax < 0) {
+		if (turnHoldTimer->IsRunning()) {
 			currentAnimation = animationMap[level][MarioAnimationType::HOLD_FRONT];
 			return;
 		}
@@ -861,17 +861,21 @@ void CMario::GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2
 void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float hx, hy;
-	const float offsetX = 9.f;
-	const float offsetY = 6.f;
+	const float bigOffX = 9.f;
+	const float smallOffX = 5.f;
 	//holdingShell->SetPosition(x, y);
 	holdingShell->GetPosition(hx, hy);
-	holdingShell->SetY(y);
 
 	// move the shell, also move faster when mario turn
-	if (nx == 1)
-		holdingShell->SetPosition(x + offsetX, y);
-	else
-		holdingShell->SetPosition(x - offsetX, y);
+
+	if (turnHoldTimer->IsRunning()) {
+		ULONGLONG elapsed = turnHoldTimer->ElapsedTime();
+		int half = elapsed < TURN_TIME / 2 ? -1 : 1;
+		holdingShell->SetPosition(x + half * nx * smallOffX, y);
+	}
+	else {
+		holdingShell->SetPosition(x + nx * bigOffX, y);
+	}
 	if (!canHold)
 	{
 		holdingShell->Kicked();

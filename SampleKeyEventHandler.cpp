@@ -42,10 +42,10 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		CGame::GetInstance()->ResetCurrentScene();
 		break;
 	case DIK_LEFT:
-		mario->SetDirInput(-1);
+		mario->StartHoldTurn(-1);
 		break;
 	case DIK_RIGHT:
-		mario->SetDirInput(1);
+		mario->StartHoldTurn(1);
 		break;
 	case DIK_W:
 		dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->SetIsPause();
