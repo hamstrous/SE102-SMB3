@@ -69,7 +69,7 @@ protected:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
 
-	virtual int IsCollidable() { return KOOPA_STATE_SHELL_HELD != state; };
+	int IsCollidable() { return !IsHeld(); };
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt) = 0;
 
@@ -89,7 +89,6 @@ public:
 		ay = KOOPA_GRAVITY;
 		shell_start = -1;
 		fly_start = -1;
-		delete_time = -1;
 	}
 	virtual void SetState(int state) = 0;
 	virtual void Kicked() = 0;
@@ -104,5 +103,29 @@ public:
 	virtual void HeldDie() = 0;
 	virtual void ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
 	virtual void ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
+
+
+	bool IsIdle()
+	{
+		return state == KOOPA_STATE_SHELL_IDLE || state == KOOPA_STATE_TAILHIT;
+	}
+
+	bool IsHeld()
+	{
+		return state == KOOPA_STATE_SHELL_HELD || state == KOOPA_STATE_SHELL_HELD_TAILHIT;
+	}
+
+	bool IsUp() {
+		return state == KOOPA_STATE_SHELL_HELD_TAILHIT || state == KOOPA_STATE_TAILHIT;
+	}
+
+	bool IsDown() {
+		return state == KOOPA_STATE_SHELL_HELD || state == KOOPA_STATE_SHELL_IDLE;
+	}
+
+	bool IsMoving() {
+		return state == KOOPA_STATE_SHELL_MOVING || state == KOOPA_STATE_SHELL_MOVING_TAILHIT;
+	}
+	
 };
 

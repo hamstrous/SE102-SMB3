@@ -6,6 +6,7 @@
 
 #include "Goomba.h"
 #include "Koopa.h"
+#include "KoopaGreen.h"
 #include "Coin.h"
 #include "Portal.h"
 #include "Plant.h"
@@ -864,7 +865,6 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		holdingShell->SetSpeed(min((x + KOOPA_BBOX_WIDTH - hx)/dt, MARIO_SHELL_TURNING_SPEED), vy);
 	else
 		holdingShell->SetSpeed(max((x - KOOPA_BBOX_WIDTH - hx) / dt, -MARIO_SHELL_TURNING_SPEED), vy);
-
 	if (!canHold)
 	{
 		holdingShell->Kicked();
