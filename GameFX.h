@@ -35,14 +35,14 @@ public:
 		this->y = y;
 		this->type = type;
 		start = GetTickCount64();
-		this->state = STATE_OTHER;
 	}
 	void SetOn(bool on) { isOn = on; }
 	bool IsOn() { return isOn; }
 	void Render();
-	void Update(DWORD dt);
+	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void SetState(int state);
 	bool GetOver() { return isOver; }
+	void SetOver() {  isOver = true; }
 };
 

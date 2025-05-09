@@ -17,15 +17,12 @@ void CGameFXManager::AddGameFX(float x, float y, int type)
 
 void CGameFXManager::AddTimeup(float x, float y, int type)
 {		
-	if (timeupFX == nullptr)
-	{
-		InitTimeupFX();
-	}
-
-	if (timeupFX != nullptr)
-	{
-		timeupFX->SetState(STATE_TIME_MOVEUP);
-	}
+	CGame* game = CGame::GetInstance();
+	float hx = game->GetBackBufferWidth() / 2;
+	float hy = game->GetBackBufferHeight() + 500;
+	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
+	CGameFX* fx = new CGameFX(x, hy, TYPE_TIMEUP);
+	scene->AddObject(fx);
 }
 
 void CGameFXManager::InitPauseFX()

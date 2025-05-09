@@ -16,6 +16,7 @@
 #include "Leaf.h"
 #include "Font.h"
 #include "ScoreManager.h"
+#include "GameFXManager.h"
 #include "Abyss.h"
 
 
@@ -632,6 +633,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_SPEED_Y;
 		CPlayScene* s = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+		CGameFXManager::GetInstance()->AddTimeup(x, 0, TYPE_TIMEUP);
 		s->OnPlayerDie();
 		vx = 0;
 		ax = 0;
