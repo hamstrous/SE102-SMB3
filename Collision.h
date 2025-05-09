@@ -38,6 +38,7 @@ struct CCollisionEvent
 	int WasCollided();
 
 	static bool PrioritizeBlockingEvent(const LPCOLLISIONEVENT a, const LPCOLLISIONEVENT b);
+	LPCOLLISIONEVENT Reverse(LPCOLLISIONEVENT e);
 };
 
 class CCollision
@@ -89,6 +90,7 @@ public:
 		int filterY);
 
 	void Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ProcessOnlyMario(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ProcessForMario(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouch);
 	int CheckStillTouchSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects);

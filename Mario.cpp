@@ -146,9 +146,11 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	Acceleration(dt);
+	//DebugOutTitle(L"vx: %f, vx: %f\n", vx, vy);
 
 	// reset untouchable timer if untouchable time has passed
 	// for mario has to be called first so process can call OnCollision
+	CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);

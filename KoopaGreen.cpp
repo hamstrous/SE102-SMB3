@@ -18,30 +18,32 @@ void CKoopaGreen::Flying()
 
 void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlocking()) return;
+	if (e->obj->IsBlocking()) {
 
-	if (state == KOOPA_STATE_TAILHIT)
-	{
-		if (e->ny < 0)
+		if (state == KOOPA_STATE_TAILHIT)
 		{
-			vx = 0;
+			if (e->ny < 0)
+			{
+				vx = 0;
+				vy = 0;
+			}
+			else if (e->nx != 0)
+			{
+				vx = 0;
+			}
+		}
+		else if (e->ny != 0)
+		{
 			vy = 0;
-		}else if(e->nx !=0)
+			if (e->ny == -1 && hasWing) {
+				vy = -KOOPA_FLYING_BOOST;
+			}
+		}
+		else if (e->nx != 0)
 		{
-			vx = 0;
-		}
-	}else if (e->ny != 0)
-	{	
-		vy = 0;
-		if (e->ny == -1 && hasWing) {
-			vy = -KOOPA_FLYING_BOOST;
+			vx = -vx;
 		}
 	}
-	else if (e->nx != 0)
-	{
-		vx = -vx;
-	}
-
 	if (dynamic_cast<CCharacter*>(e->obj)) {
 		OnCollisionWithCharacter(e);
 	}
@@ -309,7 +311,7 @@ void CKoopaGreen::InitHorizontalSpeedBasedOnMario(float speed, float awayMario)
 
 void CKoopaGreen::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	DebugOutTitle(L"KoopaGreen x:%f, y: %f, vx: %f, vy: %f", x, y, vx, vy);
+	//DebugOutTitle(L"KoopaGreen x:%f, y: %f, vx: %f, vy: %f", x, y, vx, vy);
 	vy += ay * dt;
 	vx += ax * dt;
 	if (hasWing)
@@ -321,6 +323,7 @@ void CKoopaGreen::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (IsHeld()) {
 		ShellHeldTouch(dt, coObjects);
 	}
+	CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 

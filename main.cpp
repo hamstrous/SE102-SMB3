@@ -161,6 +161,7 @@ int Run()
 	int done = 0;
 	ULONGLONG frameStart = GetTickCount64();
 	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
+	ULONGLONG frame = 0;
 	while (!done)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -180,14 +181,16 @@ int Run()
 		{
 			frameStart = now;
 
-			CGame::GetInstance()->ProcessKeyboard();			
+			CGame::GetInstance()->ProcessKeyboard();	
+			DebugOut(L"-------------[INFO] FRAME = %d\n", frame);
 			Update(dt);
 			Render();
-
+			DebugOut(L"\n\n", dt);
 			CGame::GetInstance()->SwitchScene();
 		}
 		else
 			Sleep(tickPerFrame - dt);	
+		frame++;
 	}
 
 	return 1;

@@ -29,27 +29,28 @@ int CKoopaRed::OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CKoopaRed::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 
-	if (!e->obj->IsBlocking()) return;
+	if (e->obj->IsBlocking()) {
 
-	if (state == KOOPA_STATE_TAILHIT)
-	{
-		if (e->ny < 0)
+		if (state == KOOPA_STATE_TAILHIT)
 		{
-			vx = 0;
+			if (e->ny < 0)
+			{
+				vx = 0;
+				vy = 0;
+			}
+			else if (e->nx != 0)
+			{
+				vx = 0;
+			}
+		}
+		else if (e->ny != 0)
+		{
 			vy = 0;
 		}
 		else if (e->nx != 0)
 		{
-			vx = 0;
+			vx = -vx;
 		}
-	}
-	else if (e->ny != 0)
-	{
-		vy = 0;
-	}
-	else if (e->nx != 0)
-	{
-		vx = -vx;
 	}
 
 	if (dynamic_cast<CCharacter*>(e->obj)) {
@@ -455,7 +456,7 @@ void CKoopaRed::HeldDie()
 
 void CKoopaRed::ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (state == KOOPA_STATE_SHELL_MOVING || state == KOOPA_STATE_SHELL_MOVING_TAILHIT) {
+	if (IsMoving()) {
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchingSolid(ml, mt, mr, mb, vx, vy, dt, coObjects)) {
