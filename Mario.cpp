@@ -357,14 +357,14 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float l2, t2, r2, b2;
 	GetTailHitBox(l1, t1, r1, b1, l2, t2, r2, b2);
 	//left
-	if (nx < 0 && elapsed < ATTACK_TIME / 4
-		|| nx > 0 && (elapsed >= ATTACK_TIME /2 && elapsed < ATTACK_TIME * 3 / 4))
-			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, 0, 0, dt, coObjects, x, -nx, y);
+	if (nx < 0 && elapsed < ATTACK_TIME / 2
+		|| nx > 0 && (elapsed >= ATTACK_TIME / 2))
+			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, vx, vy, dt, coObjects, x, -nx, y);
 
 	//right
-	if (nx > 0 && elapsed < ATTACK_TIME / 4
-		|| nx < 0 && (elapsed >= ATTACK_TIME / 2 && elapsed < ATTACK_TIME * 3 / 4))
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, 0, 0, dt, coObjects, x, nx, y);
+	if (nx > 0 && elapsed < ATTACK_TIME / 2
+		|| nx < 0 && (elapsed >= ATTACK_TIME / 2))
+	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, vy, dt, coObjects, x, nx, y);
 }
 
 //Change animaion when mario kick the shell
@@ -782,7 +782,6 @@ void CMario::Acceleration(DWORD dt)
 						vx = topSpeed * dirInput;
 
 					}
-					DebugOutTitle(L"vx %f", vx);
 				}
 			}
 		}
@@ -866,6 +865,9 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		holdingShell->SetSpeed(min((x + KOOPA_BBOX_WIDTH - hx)/dt, MARIO_SHELL_TURNING_SPEED), vy);
 	else
 		holdingShell->SetSpeed(max((x - KOOPA_BBOX_WIDTH - hx) / dt, -MARIO_SHELL_TURNING_SPEED), vy);
+	float kvx, kvy;
+	holdingShell->GetSpeed(kvx, kvy);
+	DebugOutTitle(L"Shell speed: %f\n", kvx);
 	if (!canHold)
 	{
 		holdingShell->Kicked();
