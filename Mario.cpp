@@ -769,7 +769,7 @@ void CMario::Acceleration(DWORD dt)
 		else {
 			// midair
 			if (!IsPMeterFull()) {
-				if(abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X) topSpeed = MARIO_WALK_MAX_SPEED_X;
+				if(abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X && runInput == 0) topSpeed = MARIO_WALK_MAX_SPEED_X;
 				else topSpeed = MARIO_RUN_MAX_SPEED_X;
 			}else topSpeed = MARIO_SPRINT_MAX_SPEED_X;
 
