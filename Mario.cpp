@@ -19,6 +19,7 @@
 #include "ScoreManager.h"
 #include "GameFXManager.h"
 #include "Abyss.h"
+#include "Utils.h"
 
 
 unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animationMap = {
@@ -151,7 +152,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	// reset untouchable timer if untouchable time has passed
 	// for mario has to be called first so process can call OnCollision
-	CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
@@ -244,7 +244,6 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		DebugOut(L"[INFO] abyss\n");
 		SetState(MARIO_STATE_DIE);
-		return;
 	}
 }
 
@@ -430,24 +429,24 @@ void CMario::SetPointsPosition()
 	if (!IsBig() || isSitting) {
 		const float MARIO_SMALL_Y_OFFSET = 7.0f;
 		const float MARIO_SMALL_X_OFFSET = 3.0f;
-		points[0]->SetPosition(x, y - MARIO_SMALL_BBOX_HEIGHT / 2 - POINTS_OFFSET);
-		points[1]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2 - POINTS_OFFSET, y - MARIO_SMALL_Y_OFFSET);
-		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2 - POINTS_OFFSET, y + MARIO_SMALL_Y_OFFSET);
-		points[3]->SetPosition(x + MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2 + POINTS_OFFSET);
-		points[4]->SetPosition(x - MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2 + POINTS_OFFSET);
-		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2 + POINTS_OFFSET, y + MARIO_SMALL_Y_OFFSET);
-		points[6]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2 + POINTS_OFFSET, y - MARIO_SMALL_Y_OFFSET);
+		points[0]->SetPosition(x, y - MARIO_SMALL_BBOX_HEIGHT / 2);
+		points[1]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2, y - MARIO_SMALL_Y_OFFSET);
+		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2, y + MARIO_SMALL_Y_OFFSET);
+		points[3]->SetPosition(x + MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2);
+		points[4]->SetPosition(x - MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2);
+		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2, y + MARIO_SMALL_Y_OFFSET);
+		points[6]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2, y - MARIO_SMALL_Y_OFFSET);
 	}
 	else {
 		const float MARIO_BIG_Y_OFFSET = 12.0f;
 		const float MARIO_BIG_X_OFFSET = 4.0f;
-		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2 - POINTS_OFFSET);
+		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2);
 		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 - POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
 		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 - POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
-		points[3]->SetPosition(x + MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
-		points[4]->SetPosition(x - MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 + POINTS_OFFSET);
-		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 + POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
-		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 + POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
+		points[3]->SetPosition(x + MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2);
+		points[4]->SetPosition(x - MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2);
+		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_Y_OFFSET);
+		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2, y - MARIO_BIG_Y_OFFSET);
 	}
 }
 

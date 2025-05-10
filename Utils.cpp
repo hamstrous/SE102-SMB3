@@ -211,3 +211,6 @@ void DebugObjectType(LPGAMEOBJECT obj)
 		DebugOut(L"[DEBUG] Unknown object type: %d \n");
 	}
 }
+
+bool debug = false;
+DWORD DT = 0;

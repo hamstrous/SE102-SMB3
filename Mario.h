@@ -166,7 +166,7 @@ namespace std {
 #define TURN_TIME	75
 #define PROTECT_TIME	267
 
-#define UNTOUCHABLE_TIME 2500
+#define UNTOUCHABLE_TIME 3000
 
 const float MARIO_JUMP_SPEED[4] = { 0.20625f, 0.21375f, 0.22125f, 0.23625f };
 const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
