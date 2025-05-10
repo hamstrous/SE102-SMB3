@@ -184,6 +184,7 @@ protected:
 	vector<CGameObject*> points;
 	vector<bool> pointsTouched;
 	int count = 0;
+	bool timesup = false;
 
 	// mario vx speed at jump point, for midair physics
 	float jumpVx = 0;
@@ -323,6 +324,9 @@ public:
 	void StartHoldTurn(int nx) {
 		if(this->nx != nx) turnHoldTimer->Start();
 	}
+
+	bool GetTimesUp() { return timesup; }
+	void SetTimesUp() { timesup = true; }
 };
 
 //GROUND PHYSICS

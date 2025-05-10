@@ -461,13 +461,6 @@ void CPlayScene::Load()
 	if(camera == NULL) camera = new CCamera();
 	f.close();
 	CGameFXManager::GetInstance()->InitPauseFX();
-	//CGameFXManager::GetInstance()->InitTimeupFX();
-	/*float mapWidth = 1024.0f; 
-	float abyssHeight = 16.0f; 
-	float abyssY = 500.0f; 
-
-	CAbyss* abyss = new CAbyss(7, 391, mapWidth, abyssHeight);
-	objects.push_back(abyss);*/
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
 }
 
@@ -489,6 +482,16 @@ void CPlayScene::Update(DWORD dt)
 			}
 		}
 		return; 
+	}
+	int remainingTime = CGameData::GetInstance()->GetRemainingTime();
+	if (remainingTime <= 0)
+	{
+		if (player != NULL)
+		{
+			CMario* mario = dynamic_cast<CMario*>(player);
+			mario->SetTimesUp();
+			mario->SetState(MARIO_STATE_DIE);
+		}
 	}
 
 	for(auto obj : objects) {

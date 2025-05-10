@@ -44,7 +44,7 @@ void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	y += vy * dt;
 	//DebugOut(L"x: %f, y: %f\n", x, y);
 	CGame* game = CGame::GetInstance();
-	float hy = game->GetBackBufferHeight() - 150;
+	float hy = game->GetBackBufferHeight() - 135;
 	switch (type)
 	{
 		case TYPE_TAILHIT:
