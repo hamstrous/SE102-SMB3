@@ -237,7 +237,7 @@ public:
 		maxVy = 0.3f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
-		level = MarioLevel::RACCOON;
+		level = MarioLevel::SMALL;
 		isOnPlatform = false;
 		coin = 0;
 		canHold = false;
