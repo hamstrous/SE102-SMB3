@@ -175,7 +175,7 @@ void CMario::OnNoCollision(DWORD dt)
 	x += vx * dt;
 	y += vy * dt;
 	isOnPlatform = false;
-	PointsCheck();
+	//PointsCheck();
 }
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
@@ -183,26 +183,37 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	float objx, objy;
 	e->obj->GetPosition(objx, objy);
 	if (e->obj->IsBlocking()) {
-		PointsCheck();
+		//PointsCheck();
 		if (e->ny != 0)
 		{
+			//if (e->ny > 0) {
+			//	// head collide offset
+			//	if (pointsTouched[TOP]) vy = 0;
+			//	else y -= 1; //let mario phase through block so side points can do it job of offseting
+			//}else if (e->ny < 0) {
+			//	count = 0;
+			//	if (!pointsTouched[DOWNRIGHT] && !pointsTouched[DOWNLEFT]) {
+			//		y += 1;
+			//		isOnPlatform = false;
+			//	}
+			//	else {
+			//		vy = 0;
+			//		isOnPlatform = true;
+			//		if (glideTimer->IsRunning()) {
+			//			glideTimer->Reset();
+			//			SkipCurrentAnimation();
+			//		}
+			//	}
+			//}
 			if (e->ny > 0) {
-				// head collide offset
-				if (pointsTouched[TOP]) vy = 0;
-				else y -= 1; //let mario phase through block so side points can do it job of offseting
+				vy = 0;
 			}else if (e->ny < 0) {
 				count = 0;
-				if (!pointsTouched[DOWNRIGHT] && !pointsTouched[DOWNLEFT]) {
-					y += 1;
-					isOnPlatform = false;
-				}
-				else {
-					vy = 0;
-					isOnPlatform = true;
-					if (glideTimer->IsRunning()) {
-						glideTimer->Reset();
-						SkipCurrentAnimation();
-					}
+				vy = 0;
+				isOnPlatform = true;
+				if (glideTimer->IsRunning()) {
+					glideTimer->Reset();
+					SkipCurrentAnimation();
 				}
 			}
 		}
