@@ -236,7 +236,7 @@ void CKoopaGreen::Render()
 		aniId = ID_ANI_KOOPA_WALKING_LEFT;
 		break;
 	}
-	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	if (!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	if (hasWing && nx == 1 && !GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 8);
 	else if (hasWing && nx == -1 && !GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 8);

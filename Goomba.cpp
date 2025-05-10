@@ -85,7 +85,7 @@ void CGoomba::Render()
 	{
 		aniId = ID_ANI_GOOMBA_DIE + 2;
 	}
-	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	if (!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	RenderBoundingBox();
 }

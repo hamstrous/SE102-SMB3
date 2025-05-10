@@ -172,6 +172,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CMario::OnNoCollision(DWORD dt)
 {
+	if(GetIsStop()) return;
 	x += vx * dt;
 	y += vy * dt;
 	isOnPlatform = false;
@@ -452,6 +453,10 @@ void CMario::SetPointsPosition()
 
 void CMario::GetAniId()
 {
+	if (state == -1) {
+		DebugOut(L"[ERROR] Mario state is -1\n");
+	}
+
 	if (state == MARIO_STATE_DIE)
 	{
 		currentAnimation = animationMap[level][MarioAnimationType::DIE];
@@ -470,12 +475,14 @@ void CMario::GetAniId()
 		}
 
 		if (nx > 0) {
-			if(vx <= MARIO_WALK_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_RIGHT];
+			if(vx == 0) currentAnimation = animationMap[level][MarioAnimationType::IDLE_HOLD_RIGHT];
+			else if(vx <= MARIO_WALK_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_RIGHT];
 			else if (vx <= MARIO_RUN_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::RUN_HOLD_RIGHT];
 			else if (vx <= MARIO_SPRINT_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::SPRINT_HOLD_RIGHT];
 		}
 		else { // vx < 0
-			if (abs(vx) <= MARIO_WALK_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_LEFT];
+			if (abs(vx) == 0) currentAnimation = animationMap[level][MarioAnimationType::IDLE_HOLD_LEFT];
+			else if (abs(vx) <= MARIO_WALK_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_LEFT];
 			else if (abs(vx) <= MARIO_RUN_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::RUN_HOLD_LEFT];
 			else if (abs(vx) <= MARIO_SPRINT_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::SPRINT_HOLD_LEFT];
 		}
@@ -657,6 +664,7 @@ void CMario::SetState(int state)
 		if(holdingShell != NULL) holdingShell->SetState(KOOPA_STATE_MARIO_DEAD); 
 		holdingShell = NULL;
 		if(timesup) CGameFXManager::GetInstance()->AddTimeup(0, 0, TYPE_TIMEUP);
+		SetIsStop();
 		break;
 	}
 

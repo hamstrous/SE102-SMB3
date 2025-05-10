@@ -102,7 +102,11 @@ public:
 	static bool IsDeleted(const LPGAMEOBJECT &o) { return o->isDeleted; }
 	
 	bool GetIsPause();
+	
 	bool GetIsStop();
+	void SetIsStop();
+
+	bool GetIsDead();
 
 	void SetOldPosition(float x, float y) {
 		ox = x;

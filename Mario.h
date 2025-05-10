@@ -130,7 +130,7 @@ namespace std {
 #define MARIO_RACCOON_FLY_SPEED  0.09f
 #define MARIO_RACCOON_GLIDE_SPEED  0.06f
 
-#define MARIO_STATE_DIE				-10
+#define MARIO_STATE_DIE				-1
 #define MARIO_STATE_IDLE			0
 #define MARIO_STATE_WALKING_RIGHT	100
 #define MARIO_STATE_WALKING_LEFT	200
@@ -243,6 +243,8 @@ public:
 		canHold = false;
 
 		holdingShell = NULL;
+
+		SetState(MARIO_STATE_IDLE);
 
 		pointsTouched.resize(7, false);
 		points.resize(7); // top, left, leftdown, downleft, dowmright, rightdown, rightup

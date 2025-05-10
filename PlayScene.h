@@ -71,6 +71,8 @@ public:
 		stopTimer->Start();
 	}
 
+	bool GetIsDead() { return deathTimer->IsRunning(); }
+
 	void GetCollidableObjects(vector<LPGAMEOBJECT>* coObjects) {
 		for (auto i : objects)
 		{

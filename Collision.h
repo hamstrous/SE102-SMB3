@@ -68,18 +68,7 @@ public:
 		LPGAMEOBJECT objSrc, 
 		DWORD dt, 
 		vector<LPGAMEOBJECT>* objDests, 
-		vector<LPCOLLISIONEVENT>& coEvents);
-	void ScanIsBlocking(
-		LPGAMEOBJECT objSrc,
-		DWORD dt,
-		vector<LPGAMEOBJECT>* objDests,
-		vector<LPCOLLISIONEVENT>& coEvents);
-	void ScanNotBlocking(
-		LPGAMEOBJECT objSrc,
-		DWORD dt,
-		vector<LPGAMEOBJECT>* objDests,
-		vector<LPCOLLISIONEVENT>& coEvents);
-
+		vector<LPCOLLISIONEVENT>& coEvents, int type = 0, int dir = -1);
 	void Filter(
 		LPGAMEOBJECT objSrc,
 		vector<LPCOLLISIONEVENT>& coEvents,
@@ -90,6 +79,7 @@ public:
 		int filterY);
 
 	void Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void ProcessWithDirection(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects, int dir);
 	void ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ProcessMarioOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouch);

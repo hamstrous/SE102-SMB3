@@ -483,6 +483,9 @@ void CPlayScene::Update(DWORD dt)
 		}
 		return; 
 	}
+
+	
+
 	int remainingTime = CGameData::GetInstance()->GetRemainingTime();
 	if (remainingTime <= 0)
 	{
@@ -534,29 +537,32 @@ void CPlayScene::Update(DWORD dt)
 		if(!objects[i]->GetSleep()) coObjects.push_back(objects[i]);
 	}
 
-	std::sort(coObjects.begin(), coObjects.end(),
-		[](LPGAMEOBJECT a, LPGAMEOBJECT b) {
-			return a->IsBlocking() > b->IsBlocking(); // blocking events first
-		}
-	);
 
+	//if (deathTimer->IsRunning()) {
+	//	player->Update(dt, &coObjects);
+	//	PurgeDeletedObjects();
+	//	return;
+	//}
+
+	
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (!objects[i]->GetSleep()) objects[i]->Update(dt, &coObjects);
+		if (!objects[i]->GetSleep() && !deathTimer->IsRunning()) objects[i]->Update(dt, &coObjects);
 	}
+	if(deathTimer->IsRunning()) player->Update(dt, &coObjects);
+	else CGameData::GetInstance()->Update(dt);
 	camera->Update(dt, &coObjects);
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
 	PurgeDeletedObjects();
 
-	CGameData::GetInstance()->Update(dt);
-
 	if (deathTimer->IsDone()) {
 		CGame::GetInstance()->ResetCurrentScene();
 		deathTimer->Reset();
 	}
+	
 
 }
 
