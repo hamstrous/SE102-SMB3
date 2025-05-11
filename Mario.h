@@ -193,6 +193,8 @@ protected:
 	int jumpInput = 0; // 1: jump, 0: no jump
 	int runInput = 0; // 1: run, 0: no run
 
+	bool GoInPipe = false;
+
 	// timers for animations
 	CTimer *attackTimer, *glideTimer, *flyTimer, *untouchableTimer, *turnHoldTimer, *shellProtectTimer;
 
@@ -206,6 +208,8 @@ protected:
 	void OnCollisionWithFireball(LPCOLLISIONEVENT e);
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
     void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
+	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
+	void OnCollisionWithSwitch(LPCOLLISIONEVENT e);
 	void GetAniId();
 	void AssignCurrentAnimation(MarioLevel level, MarioAnimationType type) {
 		//if not in list
@@ -327,6 +331,9 @@ public:
 
 	bool GetTimesUp() { return timesup; }
 	void SetTimesUp() { timesup = true; }
+
+	bool GetPipe() { return GoInPipe; }
+	void SetPipe() { GoInPipe = true; }
 };
 
 //GROUND PHYSICS

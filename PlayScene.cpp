@@ -38,6 +38,7 @@
 #include "TimerManager.h"
 #include "Abyss.h"
 #include "Block.h"
+#include "Switch.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -279,6 +280,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CLOUDPLATFORM: obj = new CCloudPlatform(x, y); break;
 	case OBJECT_TYPE_ABYSS: obj = new CAbyss(x, y); break;
 	case OBJECT_TYPE_BLOCK: obj = new CBlock(x, y); break;
+	case OBJECT_TYPE_SWITCH: obj = new CSwitch(x, y); break;
 	case OBJECT_TYPE_FLOOR:
 	{
 		int width = atoi(tokens[3].c_str());

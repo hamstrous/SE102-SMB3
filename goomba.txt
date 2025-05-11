@@ -58,7 +58,6 @@
 34004	240	2	247	15	40
 
 
-
 [ANIMATIONS]
 #Lefttwing for walking
 5200	34001	100
