@@ -11,7 +11,8 @@ void CSwitch::GetBoundingBox(float& left, float& top, float& right, float& botto
 
 void CSwitch::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
+	CGameObject::Update(dt, coObjects);
+	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CSwitch::Render()
@@ -21,17 +22,17 @@ void CSwitch::Render()
 	else animations->Get(ID_ANI_SWITCH_ON)->Render(x, y);
 }
 
-void CSwitch::OnCollision(LPCOLLISIONEVENT e)
+void CSwitch::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (dynamic_cast<CMario*>(e->obj))
+	{	
+		//CGameFXManager::GetInstance()->AddGameFX(x, y, TYPE_SWITCH_SPAWN);
 		off = true;
+	}
+		
 }
 
 void CSwitch::SetState(int state)
 {
 }
 
-void CSwitch::SideHit()
-{
-	off = true;
-}

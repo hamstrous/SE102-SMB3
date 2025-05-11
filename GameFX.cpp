@@ -25,10 +25,19 @@ void CGameFX::Render()
 	}
 	case TYPE_TIMEUP:
 	{	
-		if (GetTickCount64() - start <= 5000)
+		if (GetTickCount64() - start <= TIME_TIMEUP)
 		{	
 			if (!GetIsStop()) CAnimations::GetInstance()->Get(ANI_ID_TIMEUP)->Render(x, y);
 			else CAnimations::GetInstance()->Get(ANI_ID_TIMEUP)->Render(x, y, 1);
+		}
+		break;
+	}
+	case TYPE_SWITCH_SPAWN:
+	{
+		if (GetTickCount64() - start <= TIME_SWITCH_SPAWN)
+		{
+			if (!GetIsStop()) CAnimations::GetInstance()->Get(ANI_ID_SWITCH_SPAWN)->Render(x, y);
+			else CAnimations::GetInstance()->Get(ANI_ID_SWITCH_SPAWN)->Render(x, y, 1);
 		}
 		break;
 	}
@@ -54,12 +63,18 @@ void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		case TYPE_TIMEUP:
 		{	
-			
+			if (GetTickCount64() - start >= TIME_TIMEUP) isDeleted = true;
 			if (y >= hy)
 			{
 				vy = -0.7f;
 			}
 			else vy = 0;
+			break;
+		}
+		case TYPE_SWITCH_SPAWN:
+		{
+			if (GetTickCount64() - start >= TIME_SWITCH_SPAWN) isDeleted = true;
+			break;
 		}
 	}
 	CGameObject::Update(dt, coObjects);

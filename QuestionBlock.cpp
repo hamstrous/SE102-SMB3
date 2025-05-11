@@ -1,6 +1,9 @@
 #include "QuestionBlock.h"
 #include "Mushroom.h"
 #include "ScoreManager.h"
+#include "Switch.h"
+#include "GameFXManager.h"
+
 void CQuestionBlock::Render()
 {	
 	CAnimations* animations = CAnimations::GetInstance();
@@ -10,7 +13,7 @@ void CQuestionBlock::Render()
 	}
 	if (isUnbox)
 		animations->Get(ID_ANI_BLOCK_UNBOX)->Render(x, y);
-	else if (type == ITEM_GREEN_MUSHROOM)
+	else if (type == ITEM_GREEN_MUSHROOM || type == ITEM_SWITCH)
 	animations->Get(ID_ANI_BREAKABLEBRICK)->Render(x, y);
 	else
 		animations->Get(ID_ANI_BLOCK_NORMAL)->Render(x, y);
@@ -76,6 +79,12 @@ void CQuestionBlock::SetState(int state)
 			CLeaf* leaf = new CLeaf(x, y - DISTANCE_SPAWN - 15);
 			leaf->SetState(LEAF_STATE_UP);
 			scene->AddObject(leaf);
+		}
+		if (type == ITEM_SWITCH)
+		{
+			CGameFXManager::GetInstance()->AddGameFX(x, y - 16, TYPE_SWITCH_SPAWN);
+			CSwitch* sw = new CSwitch(x, y - 16);
+			scene->AddObject(sw);
 		}
 		break;
 	case QUESTION_BLOCK_STATE_MOVEDOWN:

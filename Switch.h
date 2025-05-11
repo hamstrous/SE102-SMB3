@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "BaseBrick.h"
 #include "PowerUp.h"
+#include "GameFXManager.h"
 #define ID_ANI_SWITCH_ON 8200
 #define ID_ANI_SWITCH_OFF 8201
 
@@ -19,14 +20,13 @@ protected:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-	virtual int IsCollidable() { return 1; };
+	int IsCollidable() { return 1; }
 	virtual int IsBlocking() { return 0; }
-	virtual void OnCollision(LPCOLLISIONEVENT e);
+	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 public:
 	CSwitch(float x, float y) : CBaseBrick(x, y) {};
 	virtual void SetState(int state);
 	void SetOff() { off = true; }
-	void SideHit();
 };
 
 
