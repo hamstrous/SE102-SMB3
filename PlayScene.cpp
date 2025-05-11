@@ -38,6 +38,7 @@
 #include "TimerManager.h"
 #include "Abyss.h"
 #include "Block.h"
+#include "InvisibleWall.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -277,6 +278,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BACKGROUND_COLOR: obj = new CBackgroundColor(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str()), atoi(tokens[5].c_str())); break;
 	case OBJECT_TYPE_UNBREAKABLEBRICK: obj = new CUnbreakableBrick(x,y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_CLOUDPLATFORM: obj = new CCloudPlatform(x, y); break;
+	case OBJECT_TYPE_INVISIBLE_WALL: obj = new CInvisibleWall(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str())); break;
 	case OBJECT_TYPE_ABYSS: obj = new CAbyss(x, y); break;
 	case OBJECT_TYPE_BLOCK: obj = new CBlock(x, y); break;
 	case OBJECT_TYPE_FLOOR:
@@ -548,6 +550,7 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
+		LPGAMEOBJECT obj = objects[i];
 		if (!objects[i]->GetSleep() && !deathTimer->IsRunning()) objects[i]->Update(dt, &coObjects);
 	}
 	if(deathTimer->IsRunning()) player->Update(dt, &coObjects);

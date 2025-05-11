@@ -157,6 +157,7 @@
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="GoombaFly.h" />
     <ClInclude Include="HUD.h" />
+    <ClInclude Include="InvisibleWall.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="KoopaGreen.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="GoombaFly.cpp" />
     <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="InvisibleWall.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="KoopaGreen.cpp" />
     <ClCompile Include="KoopaRed.cpp" />
