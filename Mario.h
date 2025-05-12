@@ -156,7 +156,7 @@ namespace std {
 
 #define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)
 
-#define MARIO_SMALL_BBOX_WIDTH  13
+#define MARIO_SMALL_BBOX_WIDTH  12
 #define MARIO_SMALL_BBOX_HEIGHT 14
 
 // time = animation time (sum of all frame duration)
@@ -329,6 +329,14 @@ public:
 
 	bool GetTimesUp() { return timesup; }
 	void SetTimesUp() { timesup = true; }
+
+	void SetSpeed(float vx, float vy) {
+		this->vx = vx;
+		this->vy = vy;
+		for (int i = 0; i < 7; i++) {
+			points[i]->SetSpeed(vx, vy);
+		}
+	}
 };
 
 //GROUND PHYSICS

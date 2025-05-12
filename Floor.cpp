@@ -20,8 +20,8 @@ void CFloor::Render()
 
 void CFloor::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x - TILE_SIZE / 2;
-	t = y - TILE_SIZE / 2;
+	l = x - TILE_SIZE / 2.f;
+	t = y - TILE_SIZE / 2.f;
 	r = l + this->width * TILE_SIZE;
 	b = t + this->height * TILE_SIZE;
 }

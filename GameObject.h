@@ -40,13 +40,16 @@ public:
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetX(float x) { this->x = x; }
 	void SetY(float y) { this->y = y; }
-	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
+
+	virtual void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
+
 	void SetSleep(bool sleep) { this->sleep = sleep; }
 	bool GetKillOffCam() { return killOffCam; }
 
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
 	int GetX() { return x; }
 	int GetY() { return y; }
+
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 	bool GetSleep() { return sleep; }
 

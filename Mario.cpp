@@ -150,16 +150,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	Acceleration(dt);
 
 	//DebugOutTitle(L"vx: %f, vx: %f\n", vx, vy);
-	DebugOutTitle(L"y: %f\n", y);
+	//DebugOutTitle(L"l: %f, vt: %f, r: %f, b: %f\n", l, t, r, b);
 
 	// reset untouchable timer if untouchable time has passed
 	// for mario has to be called first so process can call OnCollision
 	SetPointsPosition();
-	CCollision::GetInstance()->Process(this, dt, coObjects);
-	DebugOut(L"y: %f\n", y);
+	//CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, &pointsTouched, dt);
+	PointsCheck();
 
-	//Collision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, &pointsTouched, dt);
-	//PointsCheck();
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
 	}
@@ -250,6 +249,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		DebugOut(L"[INFO] abyss\n");
 		SetState(MARIO_STATE_DIE);
 	}
+	SetSpeed(vx, vy); // reset speed after collision
 }
 
 void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
@@ -432,55 +432,42 @@ bool CMario::IsPMeterFull()
 void CMario::SetPointsPosition()
 {
 	if (!IsBig() || isSitting) {
-		const float MARIO_SMALL_Y_OFFSET = 7.0f;
+		const float MARIO_SMALL_Y_OFFSET = 5.0f;
 		const float MARIO_SMALL_X_OFFSET = 3.0f;
-		points[0]->SetPosition(x, y - MARIO_SMALL_BBOX_HEIGHT / 2);
-		points[0]->SetSpeed(vx, vy);
+		points[0]->SetPosition(x, y - MARIO_SMALL_BBOX_HEIGHT / 2.f);
 
-		points[1]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2, y - MARIO_SMALL_Y_OFFSET);
-		points[1]->SetSpeed(vx, vy);
+		points[1]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y - MARIO_SMALL_Y_OFFSET);
 
-		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2, y + MARIO_SMALL_Y_OFFSET);
-		points[2]->SetSpeed(vx, vy);
+		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_Y_OFFSET);
 
-		points[3]->SetPosition(x + MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2);
-		points[3]->SetSpeed(vx, vy);
+		points[3]->SetPosition(x + MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
 
-		points[4]->SetPosition(x - MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2);
-		points[4]->SetSpeed(vx, vy);
+		points[4]->SetPosition(x - MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
 
-		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2, y + MARIO_SMALL_Y_OFFSET);
-		points[5]->SetSpeed(vx, vy);
+		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_Y_OFFSET);
 
-		points[6]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2, y - MARIO_SMALL_Y_OFFSET);
-		points[6]->SetSpeed(vx, vy);
+		points[6]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y - MARIO_SMALL_Y_OFFSET);
 
 	}
 	else {
-		const float MARIO_BIG_Y_OFFSET = 12.0f;
+		const float MARIO_BIG_Y_OFFSET = 10.0f;
 		const float MARIO_BIG_X_OFFSET = 4.0f;
-		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2);
-		points[0]->SetSpeed(vx, vy);
+		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
 
-		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2 - POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
-		points[1]->SetSpeed(vx, vy);
+		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f - POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
 
-		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2 - POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
-		points[2]->SetSpeed(vx, vy);
+		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f - POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
 
-		points[3]->SetPosition(x + MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT / 2);
-		points[3]->SetSpeed(vx, vy);
+		points[3]->SetPosition(x + MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT / 2.f);
 
-		points[4]->SetPosition(x - MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT / 2);
-		points[4]->SetSpeed(vx, vy);
+		points[4]->SetPosition(x - MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT / 2.f);
 
-		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_Y_OFFSET);
-		points[5]->SetSpeed(vx, vy);
+		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_Y_OFFSET);
 
-		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2, y - MARIO_BIG_Y_OFFSET);
-		points[6]->SetSpeed(vx, vy);
-
+		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y - MARIO_BIG_Y_OFFSET);
 	}
+	SetSpeed(vx, vy);
+
 }
 
 void CMario::GetAniId()
@@ -864,23 +851,23 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	{
 		if (isSitting)
 		{
-			left = x - MARIO_BIG_SITTING_BBOX_WIDTH / 2;
-			top = y - MARIO_BIG_SITTING_BBOX_HEIGHT / 2;
+			left = x - MARIO_BIG_SITTING_BBOX_WIDTH / 2.f;
+			top = y - MARIO_BIG_SITTING_BBOX_HEIGHT / 2.f;
 			right = left + MARIO_BIG_SITTING_BBOX_WIDTH;
 			bottom = top + MARIO_BIG_SITTING_BBOX_HEIGHT;
 		}
 		else 
 		{
-			left = x - MARIO_BIG_BBOX_WIDTH/2;
-			top = y - MARIO_BIG_BBOX_HEIGHT/2;
+			left = x - MARIO_BIG_BBOX_WIDTH / 2.f;
+			top = y - MARIO_BIG_BBOX_HEIGHT / 2.f;
 			right = left + MARIO_BIG_BBOX_WIDTH;
 			bottom = top + MARIO_BIG_BBOX_HEIGHT;
 		}
 	}
 	else
 	{
-		left = x - MARIO_SMALL_BBOX_WIDTH/2;
-		top = y - MARIO_SMALL_BBOX_HEIGHT/2;
+		left = x - MARIO_SMALL_BBOX_WIDTH / 2.f;
+		top = y - MARIO_SMALL_BBOX_HEIGHT / 2.f;
 		right = left + MARIO_SMALL_BBOX_WIDTH;
 		bottom = top + MARIO_SMALL_BBOX_HEIGHT;
 	}
