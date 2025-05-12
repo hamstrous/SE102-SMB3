@@ -1,4 +1,4 @@
-#include "Animation.h"
+﻿#include "Animation.h"
 #include "Animations.h"
 #include "Game.h"
 #include "PlayScene.h"
@@ -34,6 +34,8 @@ void CAnimation::Render(float x, float y, int mode)
 		StoppingRender(x, y);
 	else if (type == 4)
 		StoppingFlickeringRender(x, y);
+	else if (type == 6)
+		BouncingRender(x, y);
 	else
 		NormalRender(x, y);
 }
@@ -180,5 +182,59 @@ void CAnimation::StoppingRender(float x, float y)
 void CAnimation::StillRender(float x, float y)
 {
 	frames[(currentFrame != -1 ? currentFrame : 0)]->GetSprite()->Draw(x, y);
+}
+
+void CAnimation::BouncingRender(float x, float y)
+{
+	const float BOUNCE_MAX = 10.0f; 
+	const float BOUNCE_SPEED = 1.5f; 
+	ULONGLONG now = GetTickCount64();
+	if (currentFrame == -1)
+	{
+		dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->SetIsStop(FullTime());
+		currentFrame = 0;
+		lastFrameTime = now;
+	}
+	else
+	{
+		DWORD t = frames[currentFrame]->GetTime();
+		if (now - lastFrameTime > t)
+		{
+			currentFrame++;
+			lastFrameTime = now;
+			if (currentFrame == frames.size()) {
+				done = 1;
+				currentFrame = 0;
+			}
+		}
+		if (bouncingState == 0)
+		{
+			bouncingState = 1;
+			bouncingOffset = 0.0f;
+		}
+
+		// Moving offset
+		if (bouncingState == 1) // Going up
+		{
+			bouncingOffset += BOUNCE_SPEED;
+			if (bouncingOffset >= BOUNCE_MAX)
+			{
+				bouncingOffset = BOUNCE_MAX;
+				bouncingState = 2;
+			}
+		}
+		else if (bouncingState == 2) // Going Down
+		{
+			bouncingOffset -= BOUNCE_SPEED;
+			if (bouncingOffset <= 0.0f)
+			{
+				bouncingOffset = 0.0f;
+				bouncingState = 0; // Done
+			}
+		}
+	}
+	
+
+	frames[currentFrame /*!= -1 ? currentFrame : 0*/]->GetSprite()->Draw(x, y - bouncingOffset);
 }
 

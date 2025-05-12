@@ -5,12 +5,19 @@ void CBreakableBrick::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
 	if(CGame::GetInstance()->GetChangeBricktoCoin()) animations->Get(ID_ANI_COIN_TYPE2)->Render(x, y);
+	else if(bouncing) animations->Get(ID_ANI_BOUNCING)->Render(x, y);
 	else animations->Get(ID_ANI_BREAKABLEBRICK)->Render(x, y);
 	//RenderBoundingBox();
 }
 
 void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
+{	
+	y += vy * dt;
+	if (GetTickCount64() - time_start >= 230)
+	{
+		time_start = -1;
+		bouncing = false;
+	}
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -25,23 +32,27 @@ void CBreakableBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 
 void CBreakableBrick::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CMario*>(e->obj))
-	{
-		DebugOut(L"[INFO] Mario collided with BreakableBrick\n");
-	}
-
-	if (CGame::GetInstance()->GetChangeBricktoCoin())
-	{
-		DebugOut(L"[INFO] ChangeBricktoCoin is true\n");
-	}
-
 	if (dynamic_cast<CMario*>(e->obj) && CGame::GetInstance()->GetChangeBricktoCoin())
 	{
-		DebugOut(L"[INFO] BreakableBrick is deleted\n");
 		isDeleted = true;
 		CGameData::GetInstance()->AddCoin(1);
 		CGameData::GetInstance()->AddScore(50);
 	}
+}
+
+void CBreakableBrick::SetState(int state)
+{
+	switch (state)
+	{
+	case STATE_MOVE_UP:
+		vy = -0.02f;
+		time_start = GetTickCount64();
+		break;
+	case STATE_MOVE_DOWN:
+		vy = 0.02f;
+		break;
+	}
+
 }
 
 void CBreakableBrick::SideHit()
@@ -54,6 +65,9 @@ void CBreakableBrick::SideHit()
 }
 
 void CBreakableBrick::BottomHit()
-{
-
+{	
+	bouncing = true;
+	time_start = GetTickCount64();
+	/*SetState(STATE_MOVE_UP);
+	DebugOut(L"State_move_up");*/
 }

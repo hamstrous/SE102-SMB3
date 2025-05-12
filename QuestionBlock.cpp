@@ -26,7 +26,6 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state != QUESTION_BLOCK_STATE_MOVEUP) up = false;
 
 	if (state == QUESTION_BLOCK_STATE_MOVEUP && GetTickCount64() - start_up >= TIME_UP) {
-		//DebugOut(L"[INFO] Time up: %d\n", start_up);
 		SetState(QUESTION_BLOCK_STATE_MOVEDOWN);
 		start_up = -1;
 	}
@@ -83,7 +82,7 @@ void CQuestionBlock::SetState(int state)
 		if (type == ITEM_SWITCH)
 		{
 			CGameFXManager::GetInstance()->AddGameFX(x, y - 16, TYPE_SWITCH_SPAWN);
-			CSwitch* sw = new CSwitch(x, y - 16);
+			CSwitch* sw = new CSwitch(x, y - 15);
 			scene->AddObject(sw);
 		}
 		break;
