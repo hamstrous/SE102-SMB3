@@ -235,6 +235,6 @@ void CAnimation::BouncingRender(float x, float y)
 	}
 	
 
-	frames[currentFrame /*!= -1 ? currentFrame : 0*/]->GetSprite()->Draw(x, y - bouncingOffset);
+	frames[currentFrame]->GetSprite()->Draw(x, y - bouncingOffset);
 }
 
