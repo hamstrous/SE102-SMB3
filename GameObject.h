@@ -20,8 +20,6 @@ class CGameObject
 {
 protected:
 
-	float ox = 0, oy = 0; // old x, y before entering blocking zone
-
 	float x; 
 	float y;
 
@@ -65,6 +63,28 @@ public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) {
 		left = top = right = bottom = 0; // default bounding box is (0,0,0,0)
 	};
+
+	virtual float GetBoundingBoxTop() {
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		return t;
+	};
+	virtual float GetBoundingBoxBottom() {
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		return b;
+	};
+	virtual float GetBoundingBoxLeft() {
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		return l;
+	};
+	virtual float GetBoundingBoxRight() {
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		return r;
+	};
+
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) {};
 	virtual void UpdateLate() {};
 	virtual void Render() = 0;
@@ -107,15 +127,4 @@ public:
 	void SetIsStop();
 
 	bool GetIsDead();
-
-	void SetOldPosition(float x, float y) {
-		ox = x;
-		oy = y;
-	};
-
-	void GetOldPosition(float &x, float &y) {
-		x = ox;
-		y = oy;
-	};
-
 };

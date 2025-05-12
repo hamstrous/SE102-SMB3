@@ -10,7 +10,6 @@ CInvisibleWall::CInvisibleWall(float x, float y, float width, float height) : CB
 
 	// Set the state to static by default
 	SetState(INVISIBLE_WALL_STATE_STATIC);
-	//state = INVISIBLE_WALL_STATE_MOVING;
 }
 
 void CInvisibleWall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

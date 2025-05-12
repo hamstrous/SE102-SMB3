@@ -148,11 +148,18 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	Acceleration(dt);
+
 	//DebugOutTitle(L"vx: %f, vx: %f\n", vx, vy);
+	DebugOutTitle(L"y: %f\n", y);
 
 	// reset untouchable timer if untouchable time has passed
 	// for mario has to be called first so process can call OnCollision
+	SetPointsPosition();
 	CCollision::GetInstance()->Process(this, dt, coObjects);
+	DebugOut(L"y: %f\n", y);
+
+	//Collision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, &pointsTouched, dt);
+	//PointsCheck();
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
 	}
@@ -176,7 +183,6 @@ void CMario::OnNoCollision(DWORD dt)
 	x += vx * dt;
 	y += vy * dt;
 	isOnPlatform = false;
-	//PointsCheck();
 }
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
@@ -184,7 +190,6 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	float objx, objy;
 	e->obj->GetPosition(objx, objy);
 	if (e->obj->IsBlocking()) {
-		//PointsCheck();
 		if (e->ny != 0)
 		{
 			//if (e->ny > 0) {
@@ -430,23 +435,51 @@ void CMario::SetPointsPosition()
 		const float MARIO_SMALL_Y_OFFSET = 7.0f;
 		const float MARIO_SMALL_X_OFFSET = 3.0f;
 		points[0]->SetPosition(x, y - MARIO_SMALL_BBOX_HEIGHT / 2);
+		points[0]->SetSpeed(vx, vy);
+
 		points[1]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2, y - MARIO_SMALL_Y_OFFSET);
+		points[1]->SetSpeed(vx, vy);
+
 		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2, y + MARIO_SMALL_Y_OFFSET);
+		points[2]->SetSpeed(vx, vy);
+
 		points[3]->SetPosition(x + MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2);
+		points[3]->SetSpeed(vx, vy);
+
 		points[4]->SetPosition(x - MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2);
+		points[4]->SetSpeed(vx, vy);
+
 		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2, y + MARIO_SMALL_Y_OFFSET);
+		points[5]->SetSpeed(vx, vy);
+
 		points[6]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2, y - MARIO_SMALL_Y_OFFSET);
+		points[6]->SetSpeed(vx, vy);
+
 	}
 	else {
 		const float MARIO_BIG_Y_OFFSET = 12.0f;
 		const float MARIO_BIG_X_OFFSET = 4.0f;
 		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2);
-		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 - POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
-		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH/2 - POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
-		points[3]->SetPosition(x + MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2);
-		points[4]->SetPosition(x - MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2);
+		points[0]->SetSpeed(vx, vy);
+
+		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2 - POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
+		points[1]->SetSpeed(vx, vy);
+
+		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2 - POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
+		points[2]->SetSpeed(vx, vy);
+
+		points[3]->SetPosition(x + MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT / 2);
+		points[3]->SetSpeed(vx, vy);
+
+		points[4]->SetPosition(x - MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT / 2);
+		points[4]->SetSpeed(vx, vy);
+
 		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_Y_OFFSET);
+		points[5]->SetSpeed(vx, vy);
+
 		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2, y - MARIO_BIG_Y_OFFSET);
+		points[6]->SetSpeed(vx, vy);
+
 	}
 }
 
@@ -673,29 +706,27 @@ void CMario::SetState(int state)
 void CMario::PointsCheck()
 {
 	if (state == MARIO_STATE_DIE) return;
-	SetPointsPosition();
-	vector<LPGAMEOBJECT> coObjects;
-	GetCollidableObjects(&coObjects);
-	CCollision::GetInstance()->ProcessMarioPoints(this, &points, &coObjects, &pointsTouched);
 
-	for (int i = 0; i < 7; i++)
-	{
-		float px, py;
-		points[i]->GetPosition(px, py);
-		if(!pointsTouched[i]) points[i]->SetOldPosition(px, py);
-	}
-
-	int dir = 0;
+	int dirX = 0;
+	int dirY = 0;
 	if (pointsTouched[LEFTUP] || pointsTouched[LEFTDOWN]) {
-		dir = 1;
+		dirX = 1;
 	}
 	else if (pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN]) {
-		dir = -1;
+		dirX = -1;
 	}
 
-	x += dir;
-	if ((vx < 0 && dir > 0) || (vx > 0 && dir < 0)) {
+	if (pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT])
+		dirY = -1;
+
+	x += dirX;
+	y += dirY;
+	if ((vx < 0 && dirX > 0) || (vx > 0 && dirX < 0)) {
 		vx = 0;
+	}
+
+	if ((vy < 0 && dirY > 0) || (vy > 0 && dirY < 0)) {
+		vy = 0;
 	}
 }
 

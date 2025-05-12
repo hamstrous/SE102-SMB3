@@ -136,6 +136,7 @@
     <ClInclude Include="BackgroundColor.h" />
     <ClInclude Include="BaseBrick.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Box.h" />
     <ClInclude Include="BreakableBrick.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="BackgroundColor.cpp" />
     <ClCompile Include="BaseBrick.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Box.cpp" />
     <ClCompile Include="BreakableBrick.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
