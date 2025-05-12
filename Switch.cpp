@@ -13,6 +13,8 @@ void CSwitch::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
+	if(GetTickCount64() - time_start >= TIME_SWITCH)
+		CGame::GetInstance()->SetChangeBricktoCoin(false);
 }
 
 void CSwitch::Render()
@@ -24,10 +26,11 @@ void CSwitch::Render()
 
 void CSwitch::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CMario*>(e->obj))
+	if (dynamic_cast<CMario*>(e->obj) && !off)
 	{	
-		//CGameFXManager::GetInstance()->AddGameFX(x, y, TYPE_SWITCH_SPAWN);
 		off = true;
+		CGame::GetInstance()->SetChangeBricktoCoin(true);
+		time_start = GetTickCount64();
 	}
 		
 }
