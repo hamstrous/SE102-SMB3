@@ -184,7 +184,7 @@ int Run()
 			frameStart = now;
 
 			CGame::GetInstance()->ProcessKeyboard();	
-			DebugOut(L"-------------[INFO] FRAME = %d\n", frame);
+			//DebugOut(L"-------------[INFO] FRAME = %d\n", frame);
 			Update(dt);
 			Render();
 			DebugOut(L"\n\n", dt);

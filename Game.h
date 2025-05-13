@@ -18,11 +18,15 @@ using namespace std;
 #define KEYBOARD_BUFFER_SIZE 1024
 #define KEYBOARD_STATE_SIZE 256
 
+
+
 /*
 	Our simple game framework
 */
 class CGame
-{
+{	
+	bool ChangeBricktoCoin = false;
+
 	static CGame* __instance;
 	HWND hWnd;									// Window handle
 
@@ -58,6 +62,7 @@ class CGame
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_SCENES(string line);
 
+	
 public:
 	// Init DirectX, Sprite Handler
 	void Init(HWND hWnd, HINSTANCE hInstance);
@@ -118,6 +123,8 @@ public:
 
 	void _ParseSection_TEXTURES(string line);
 
+	bool GetChangeBricktoCoin() { return ChangeBricktoCoin; }
+	void SetChangeBricktoCoin(bool set) { ChangeBricktoCoin = set; }
 
 	~CGame();
 };

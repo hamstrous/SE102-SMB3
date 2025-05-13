@@ -29,7 +29,7 @@ void CScoreManager::AddScoreDouble(float x, float y, int count)
 	}
 	else
 	{
-		AddScore(x, y, score[7]);
+		AddScore(x, y, SCORE_1UP);
 	}	
 	
 }

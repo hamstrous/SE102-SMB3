@@ -20,7 +20,8 @@
 #include "GameFXManager.h"
 #include "Abyss.h"
 #include "Utils.h"
-
+#include "Pipe.h"
+#include "Switch.h"
 
 unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animationMap = {
 	{
@@ -189,7 +190,18 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	e->obj->GetPosition(objx, objy);
 	if (e->obj->IsBlocking()) {
 		if (e->ny != 0)
-		{
+		{	
+
+			/*if (dynamic_cast<CPipe*>(e->obj))
+			{	
+				DebugOut(L"On pipe oncollision with");
+				CPipe* pipe = (CPipe*)e->obj;
+				float pipeX, pipeY;
+				pipe->GetPosition(pipeX, pipeY);
+				if (pipe->IsGoInside() && y < pipeY)
+					SetPipe();
+			}*/
+
 			if (e->ny > 0) {
 				vy = 0;
 			}else if (e->ny < 0) {
@@ -224,6 +236,10 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithMushroom(e);
 	else if (dynamic_cast<CLeaf*>(e->obj))
 		OnCollisionWithLeaf(e);
+	else if (dynamic_cast<CPipe*>(e->obj))
+		OnCollisionWithPipe(e);
+	else if (dynamic_cast<CSwitch*>(e->obj))
+		OnCollisionWithSwitch(e);
 	else if (dynamic_cast<CAbyss*>(e->obj))
 	{
 		DebugOut(L"[INFO] abyss\n");
@@ -317,6 +333,20 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 {	
 	e->obj->SetState(LEAF_STATE_DELETE);
 	SetLevel((MarioLevel)((int)level + 1));
+}
+
+void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
+{	
+	CPipe* pipe = (CPipe*)e->obj;
+	float pipeX, pipeY;
+	pipe->GetPosition(pipeX, pipeY);
+	if(pipe->IsGoInside() && y < pipeY)
+		SetPipe();
+}
+
+void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)
+{	
+	
 }
 
 void CMario::Attacked() {
@@ -828,6 +858,10 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			right = left + MARIO_BIG_BBOX_WIDTH;
 			bottom = top + MARIO_BIG_BBOX_HEIGHT;
 		}
+	}
+	else if (GoInPipe)
+	{
+		left = top = right = bottom = 0;
 	}
 	else
 	{

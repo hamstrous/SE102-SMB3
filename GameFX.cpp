@@ -25,10 +25,19 @@ void CGameFX::Render()
 	}
 	case TYPE_TIMEUP:
 	{	
-		if (GetTickCount64() - start <= 5000)
+		if (GetTickCount64() - start <= TIME_TIMEUP)
 		{	
 			if (!GetIsStop()) CAnimations::GetInstance()->Get(ANI_ID_TIMEUP)->Render(x, y);
 			else CAnimations::GetInstance()->Get(ANI_ID_TIMEUP)->Render(x, y, 1);
+		}
+		break;
+	}
+	case TYPE_SWITCH_SPAWN:
+	{
+		if (GetTickCount64() - start <= TIME_SWITCH_SPAWN)
+		{
+			if (!GetIsStop()) CAnimations::GetInstance()->Get(ANI_ID_SWITCH_SPAWN)->Render(x, y);
+			else CAnimations::GetInstance()->Get(ANI_ID_SWITCH_SPAWN)->Render(x, y, 1);
 		}
 		break;
 	}
@@ -39,9 +48,8 @@ void CGameFX::Render()
 
 void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {		
-	//DebugOut(L"Type: %d, Time elapsed: %llu\n", type, GetTickCount64() - start);
-	
 	y += vy * dt;
+
 	//DebugOut(L"x: %f, y: %f\n", x, y);
 	CGame* game = CGame::GetInstance();
 	float hy = game->GetBackBufferHeight() - 135;
@@ -54,16 +62,28 @@ void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		case TYPE_TIMEUP:
 		{	
-			
-			if (y >= hy)
-			{
-				vy = -0.7f;
-			}
+			if (GetTickCount64() - start >= TIME_TIMEUP) isDeleted = true;
+			if (y >= hy) vy = -0.7f;
 			else vy = 0;
+			break;
+		}
+		case TYPE_SWITCH_SPAWN:
+		{
+			if (GetTickCount64() - start >= TIME_SWITCH_SPAWN) 
+			break;
+		}
+		case TYPE_LEFT_BOT_BREAK:
+		case TYPE_LEFT_TOP_BREAK:
+		case TYPE_RIGHT_TOP_BREAK:
+		case TYPE_RIGHT_BOT_BREAK:
+		{
+			if (GetTickCount64() - start <= TIME_BREAK) isDeleted = true;
+			break;
 		}
 	}
 	CGameObject::Update(dt, coObjects);
 }
+
 
 void CGameFX::GetBoundingBox(float& l, float& t, float& r, float& b)
 {

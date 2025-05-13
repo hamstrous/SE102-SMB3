@@ -16,6 +16,9 @@
 #define STATE_PRIRANHA_STOP 200
 #define STATE_PRIRANHA_DOWN 300
 
+#define TAILHIT_DISTANCE1 368
+#define TAILHIT_DISTANCE2 384
+
 #define ID_ANI_STEM 7300
 #define ID_ANI_PRIRANHA_RED_DOWN_LEFT 7311
 #define ID_ANI_PRIRANHA_RED_DOWN_RIGHT 7313
@@ -34,6 +37,7 @@
 class CPlant : public CCharacter
 {
 protected:
+	bool tailhit = false;
 	ULONGLONG up_start;
 	float startY;
 	bool isFired;
@@ -42,7 +46,9 @@ protected:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-	virtual int IsCollidable() { return 1; };
+	virtual int IsCollidable() { 
+		if (tailhit) return 1;
+		else return 0; };
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 	virtual void RenderBoundingBox();

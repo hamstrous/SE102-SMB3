@@ -38,7 +38,7 @@ protected:
 	void _ParseSection_ANIMATIONS_VIBRATING(string line);
 	void _ParseSection_ANIMATIONS_FLICKERING(string line);
 	void _ParseSection_ANIMATIONS_STOPPING(string line);
-
+	void _ParseSection_ANIMATIONS_BOUNCING(string line);
 	void _ParseSection_ASSETS(string line);
 	void _ParseSection_OBJECTS(string line);
 

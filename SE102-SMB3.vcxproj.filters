@@ -58,6 +58,8 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="InvisibleWall.cpp" />
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Switch.cpp" />
+    <ClCompile Include="GameFXBreak.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -120,6 +122,8 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="InvisibleWall.h" />
     <ClInclude Include="Box.h" />
+    <ClInclude Include="Switch.h" />
+    <ClInclude Include="GameFXBreak.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
