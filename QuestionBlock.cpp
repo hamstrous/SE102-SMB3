@@ -39,7 +39,8 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy = 0;
 	}
 	y += vy * dt;
-
+	CGameObject::Update(dt, coObjects);
+	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CQuestionBlock::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -81,7 +82,7 @@ void CQuestionBlock::SetState(int state)
 		}
 		if (type == ITEM_SWITCH)
 		{
-			CGameFXManager::GetInstance()->AddGameFX(x, y - 16, TYPE_SWITCH_SPAWN);
+			CGameFXManager::GetInstance()->AddGameFX(x, y - 15, TYPE_SWITCH_SPAWN);
 			CSwitch* sw = new CSwitch(x, y - 15);
 			scene->AddObject(sw);
 		}

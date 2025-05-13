@@ -48,11 +48,11 @@ public:
 	}
 	void SetOn(bool on) { isOn = on; }
 	bool IsOn() { return isOn; }
-	void Render();
-	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	void GetBoundingBox(float& l, float& t, float& r, float& b);
-	void SetState(int state);
-	bool GetOver() { return isOver; }
-	void SetOver() {  isOver = true; }
+	virtual void Render();
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
+	virtual void SetState(int state);
+	virtual bool GetOver() { return isOver; }
+	virtual void SetOver() {  isOver = true; }
 };
 

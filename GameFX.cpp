@@ -60,7 +60,6 @@ void CGameFX::Render()
 
 void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {		
-	//DebugOut(L"Type: %d, Time elapsed: %llu\n", type, GetTickCount64() - start);
 	y += vy * dt;
 
 	//DebugOut(L"x: %f, y: %f\n", x, y);
@@ -76,16 +75,8 @@ void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		case TYPE_TIMEUP:
 		{	
 			if (GetTickCount64() - start >= TIME_TIMEUP) isDeleted = true;
-			if (y >= hy)
-			{
-				DebugOut(L"if is called");
-				vy = -0.7f;
-			}
-			else {
-				DebugOut(L"else is called");
-				vy = 0;
-			}
-
+			if (y >= hy) vy = -0.7f;
+			else vy = 0;
 			break;
 		}
 		case TYPE_SWITCH_SPAWN:

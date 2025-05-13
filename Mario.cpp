@@ -352,9 +352,7 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)
 {	
-	/*DebugOut(L"Oncollision with switch");
-	CSwitch* sw = (CSwitch*)e->obj;
-	sw->SetOff();*/
+	
 }
 
 void CMario::Attacked() {

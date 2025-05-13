@@ -151,6 +151,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="GameFX.h" />
+    <ClInclude Include="GameFXBreak.h" />
     <ClInclude Include="GameFXManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GenericPlatform.h" />
@@ -210,6 +211,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="GameFX.cpp" />
+    <ClCompile Include="GameFXBreak.cpp" />
     <ClCompile Include="GameFXManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GenericPlatform.cpp" />
