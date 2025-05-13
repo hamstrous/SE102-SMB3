@@ -182,7 +182,6 @@ protected:
 	int coin;
 	CKoopa* holdingShell;
 	vector<CPoint*> points;
-	vector<bool> pointsTouched;
 	int count = 0;
 	bool timesup = false;
 
@@ -245,18 +244,22 @@ public:
 		holdingShell = NULL;
 
 		SetState(MARIO_STATE_IDLE);
-
-		pointsTouched.resize(7, false);
 		points.resize(7); // top, left, leftdown, downleft, dowmright, rightdown, rightup
 		for (int i = 0; i < 7; i++) {
 			points[i] = new CPoint(0, 0);
 		}
 	}
+
+	~CMario() {
+		for (CPoint* point : points) {
+			delete point; // Free each dynamically allocated CPoint
+		}
+		points.clear(); // Clear the vector
+	}
+
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
-
-	void PointsCheck();
 
 	void Acceleration(DWORD dt);
 

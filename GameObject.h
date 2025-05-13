@@ -14,7 +14,9 @@
 using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
+#define ID_TEX_POINT -90		// special texture to draw mario's points
 #define BBOX_ALPHA 0.25f		// Bounding box transparency
+#define POINT_ALPHA 1.f		// Bounding box transparency
 
 class CGameObject
 {

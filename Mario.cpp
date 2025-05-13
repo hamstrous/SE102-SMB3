@@ -155,9 +155,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// reset untouchable timer if untouchable time has passed
 	// for mario has to be called first so process can call OnCollision
 	SetPointsPosition();
-	CCollision::GetInstance()->Process(this, dt, coObjects);
-	//CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, &pointsTouched, dt);
-	//PointsCheck();
+	//CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, dt);
 
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
@@ -411,38 +410,46 @@ bool CMario::IsPMeterFull()
 
 void CMario::SetPointsPosition()
 {
+	const float MARIO_RIGHTLEFT_DOWN_Y_OFFSET = 6.0f;
+	const float MARIO_FOOT_EXTRA_OFFSET = 3.0f;
+
+	if (points.size() < 7) {
+		DebugOut(L"[ERROR] Points size is less than 7\n");
+
+	}
 	if (!IsBig() || isSitting) {
 		const float MARIO_SMALL_Y_OFFSET = 5.0f;
 		const float MARIO_SMALL_X_OFFSET = 3.0f;
+		const float MARIO_SMALL_Y_UP_OFFSET = 4.0f;
 		points[0]->SetPosition(x, y - MARIO_SMALL_BBOX_HEIGHT / 2.f);
 
 		points[1]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y - MARIO_SMALL_Y_OFFSET);
 
-		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_Y_OFFSET);
+		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_BBOX_HEIGHT / 2 - MARIO_RIGHTLEFT_DOWN_Y_OFFSET);
 
-		points[3]->SetPosition(x + MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
+		points[3]->SetPosition(x + MARIO_SMALL_X_OFFSET + (nx > 0 ? MARIO_FOOT_EXTRA_OFFSET : 0), y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
 
-		points[4]->SetPosition(x - MARIO_SMALL_X_OFFSET, y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
+		points[4]->SetPosition(x - MARIO_SMALL_X_OFFSET - (nx < 0 ? MARIO_FOOT_EXTRA_OFFSET : 0), y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
 
-		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_Y_OFFSET);
+		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_BBOX_HEIGHT / 2 - MARIO_RIGHTLEFT_DOWN_Y_OFFSET);
 
 		points[6]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y - MARIO_SMALL_Y_OFFSET);
 
 	}
 	else {
-		const float MARIO_BIG_Y_OFFSET = 10.0f;
-		const float MARIO_BIG_X_OFFSET = 4.0f;
+		const float MARIO_BIG_Y_OFFSET = 5.0f;
+		const float MARIO_BIG_X_OFFSET = 3.0f;
 		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
 
 		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f - POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
 
-		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f - POINTS_OFFSET, y + MARIO_BIG_Y_OFFSET);
+		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f - POINTS_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 - MARIO_RIGHTLEFT_DOWN_Y_OFFSET );
 
-		points[3]->SetPosition(x + MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT / 2.f);
+		points[3]->SetPosition(x + MARIO_BIG_X_OFFSET + (nx > 0 ? MARIO_FOOT_EXTRA_OFFSET : 0), y + MARIO_BIG_BBOX_HEIGHT / 2.f);
 
-		points[4]->SetPosition(x - MARIO_BIG_X_OFFSET, y + MARIO_BIG_BBOX_HEIGHT / 2.f);
+		points[4]->SetPosition(x - MARIO_BIG_X_OFFSET - (nx < 0 ? MARIO_FOOT_EXTRA_OFFSET : 0), y + MARIO_BIG_BBOX_HEIGHT / 2.f);
 
-		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_Y_OFFSET);
+		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_BBOX_HEIGHT / 2 - MARIO_RIGHTLEFT_DOWN_Y_OFFSET);
 
 		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y - MARIO_BIG_Y_OFFSET);
 	}
@@ -567,6 +574,10 @@ void CMario::Render()
 	animations->Get(currentAnimation)->Render(x, y);
 
 	RenderBoundingBox();
+	for(int i=0;i<7;i++)
+	{
+		points[i]->RenderBoundingBox();
+	}
 	
 	//DebugOutTitle(L"Coins: %d", coin);
 }
@@ -670,32 +681,6 @@ void CMario::SetState(int state)
 	CGameObject::SetState(state);
 }
 
-void CMario::PointsCheck()
-{
-	if (state == MARIO_STATE_DIE) return;
-
-	int dirX = 0;
-	int dirY = 0;
-	if (pointsTouched[LEFTUP] || pointsTouched[LEFTDOWN]) {
-		dirX = 1;
-	}
-	else if (pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN]) {
-		dirX = -1;
-	}
-
-	if (pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT])
-		dirY = -2;
-
-	x += dirX;
-	y += dirY;
-	if ((vx < 0 && dirX > 0) || (vx > 0 && dirX < 0)) {
-		vx = 0;
-	}
-
-	if ((vy < 0 && dirY > 0) || (vy > 0 && dirY < 0)) {
-		vy = 0;
-	}
-}
 
 void CMario::Acceleration(DWORD dt)
 {

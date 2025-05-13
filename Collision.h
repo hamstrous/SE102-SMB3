@@ -81,10 +81,9 @@ public:
 		int filterY);
 
 	void Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	void ProcessWithDirection(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects, int dir, LPGAMEOBJECT objBase);
 	void ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ProcessMarioOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	void ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouch, DWORD dt);
+	void ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points, vector<LPGAMEOBJECT>* coObjects, DWORD dt);
 	int CheckStillTouchSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	bool CheckTouchingSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	bool CheckTouchCharacterForShellHeldHit(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool notMario);

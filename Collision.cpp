@@ -10,10 +10,12 @@
 #include "Mario.h"
 #include "Leaf.h"
 #include "ScoreManager.h"
+#include "QuestionBlock.h"
 #include "Koopa.h"
 #include "Utils.h"
 #include "Floor.h"
 #include "Box.h"
+#include "Pipe.h"
 #define BLOCK_PUSH_FACTOR 0.01f
 
 #define DIRECTION_LEFT	0
@@ -243,16 +245,11 @@ void CCollision::Scan(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* objDe
 	for (auto obj : *objDests)
 	{
 		if (!obj->IsCollidable()) continue; // if the other obj not collidable then skip (2 way)
+		if(obj->IsBoundBoxZero()) continue; // if the other obj not collidable then skip (2 way)	
 		if (type == 1 && !obj->IsBlocking()) continue;
 		else if (type == 2 && obj->IsBlocking()) continue;
 
 		LPCOLLISIONEVENT e = SweptAABB(objSrc, dt, obj);
-
-		if(dir == 1 && dynamic_cast<CFloor*> (obj)) {
-			float l, t, r, b;
-			obj->GetBoundingBox(l, t, r, b);
-			DebugOut(L"Floor: %f %f %f %f\n", l, t, r, b);
-		}
 
 		if (dir != -1) {
 			if (!(dir == 0 && e->nx < 0  // left
@@ -325,7 +322,7 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 
 	coEvents.clear();
 
-	if (!objSrc->IsCollidable()) {
+	if (!objSrc->IsCollidable() || objSrc->IsBoundBoxZero()) {
 		objSrc->OnNoCollision(dt);
 		return;
 	}
@@ -497,7 +494,7 @@ void CCollision::ProcessMarioOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAM
 	}
 }
 
-void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouched, DWORD dt)
+void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points, vector<LPGAMEOBJECT>* coObjects, DWORD dt)
 {
 
 	//collision check
@@ -714,7 +711,16 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	if (eventCount == 0) objSrc->OnNoCollision(dt);
 
 	//overlap push
-	pointsTouched->clear();
+	objSrc->GetPosition(x, y);
+	objSrc->GetSpeed(vx, vy);
+
+	vector<bool> pointsTouched;
+	vector<bool> pointsMaybeTouched;
+	vector<LPGAMEOBJECT>  collidedObjects;
+	pointsTouched.clear();
+	pointsMaybeTouched.clear();
+	collidedObjects.clear();
+
 	int k = 0;
 	float idk;
 	float footBeforeY, footBeforeX;
@@ -731,6 +737,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	for (auto i : *points) {
 		CPoint* point = i;
 		bool touched = false;
+		bool maybe = false;
 
 		for (auto obj : *coObjects)
 		{
@@ -742,19 +749,32 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 				obj->GetBoundingBox(sl, st, sr, sb);
 				float ml, mt, mr, mb;
 				point->GetBoundingBox(ml, mt, mr, mb);
-				
-				if ((k == DOWNRIGHT || k == DOWNLEFT)) {
-					if (dynamic_cast<CGenericPlatform*>(obj) && !(bodyLeftBeforeX >= sr || bodyRightBeforeX <= sl)) continue;
-					if(mb - st > 10) continue; 
-				}
-				else
-					if (k == RIGHTUP || k == LEFTUP || k == RIGHTDOWN || k == LEFTDOWN) {
-						if (dynamic_cast<CGenericPlatform*>(obj) && footBeforeY >= st) continue; // skip if moving up to platform
-					}
 
 				if (IsOverlapping(ml, mt, mr, mb, sl, st, sr, sb))
 				{
-					pointsTouched->push_back(true);
+					pointsMaybeTouched.push_back(true);
+					maybe = true;
+				}
+
+				if (dynamic_cast<CGenericPlatform*>(obj)) {
+					if (k == RIGHTUP || k == RIGHTDOWN) {
+						if (vx > 0 || footBeforeY >= st) continue; // skip if moving up to platform
+					}
+					else if (k == LEFTUP || k == LEFTDOWN) {
+						if (vx < 0 || footBeforeY >= st) continue;
+					}
+				}
+
+				if (IsOverlapping(ml, mt, mr, mb, sl, st, sr, sb))
+				{
+					if(dynamic_cast<CPipe*>(obj) && k == LEFTDOWN) {
+						//DebugOut(L"Collided with brick\n");
+						//DebugObjectType(obj);
+						//DebugObjectType(objSrc);
+						DebugOut(L"\n");
+					}
+					collidedObjects.push_back(obj);
+					pointsTouched.push_back(true);
 					touched = true;
 					break;
 				}
@@ -763,11 +783,58 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 			//else if (dynamic_cast<CCharacter*>(obj)) {}
 		}
 		if (!touched) {
-			pointsTouched->push_back(false);
+			pointsTouched.push_back(false);
 			i->SetBeforeBlockPosition(i->GetX(), i->GetY());
+			collidedObjects.push_back(NULL);
 		}
+
+		if(!maybe) {
+			pointsMaybeTouched.push_back(false);
+		}
+
 		k++;
 	}
+
+
+	int dirX = 0;
+	int dirY = 0;
+	if (pointsTouched[LEFTUP] || pointsTouched[LEFTDOWN]) {
+		dirX = 1;
+	}
+	else if (pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN]) {
+		dirX = -1;
+	}
+
+	if ((pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT]) && !(pointsMaybeTouched[LEFTUP] || pointsMaybeTouched[LEFTDOWN] || pointsMaybeTouched[RIGHTUP] || pointsMaybeTouched[RIGHTDOWN])) {
+		/*LPGAMEOBJECT obj = collidedObjects[DOWNLEFT];
+		if(obj != NULL) {
+			float sl, st, sr, sb;
+			obj->GetBoundingBox(sl, st, sr, sb);
+			dirY = -(mario->GetBoundingBoxBottom() - st);
+			
+		}
+		else {
+			obj	= collidedObjects[DOWNRIGHT];
+			if (obj != NULL) {
+				float sl, st, sr, sb;
+				obj->GetBoundingBox(sl, st, sr, sb);
+				dirY = -(mario->GetBoundingBoxBottom() - st);
+			}
+		}*/
+		dirY = -2;
+	}
+
+	x += dirX;
+	y += dirY;
+	if ((vx < 0 && dirX > 0) || (vx > 0 && dirX < 0)) {
+		vx = 0;
+	}
+
+	if ((vy < 0 && dirY > 0) || (vy > 0 && dirY < 0)) {
+		vy = 0;
+	}
+	objSrc->SetPosition(x, y);
+	objSrc->SetSpeed(vx, vy);
 }
 
 

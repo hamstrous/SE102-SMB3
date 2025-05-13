@@ -7,7 +7,10 @@ class CPoint : public CGameObject
 	float beforeBlockX;
 	float beforeBlockY;
 public:
-	CPoint(float x, float y) : CGameObject(x, y) {};
+	CPoint(float x, float y) : CGameObject(x, y) {
+		this->beforeBlockX = x;
+		this->beforeBlockY = y;
+	};
 
 	void Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects = nullptr) {};
 	void Render() {};
@@ -28,5 +31,6 @@ public:
 		y = beforeBlockY;
 	};
 
+	void RenderBoundingBox();
 };
 
