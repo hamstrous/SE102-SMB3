@@ -449,142 +449,6 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	if (eventCount == 0) objSrc->OnNoCollision(dt);
 }
 
-void CCollision::ProcessWithDirection(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects, int dir, LPGAMEOBJECT objBase)
-{
-	float x, y;
-	objBase->GetPosition(x, y);
-	vector<LPCOLLISIONEVENT> coEvents;
-	LPCOLLISIONEVENT colX = NULL;
-	LPCOLLISIONEVENT colY = NULL;
-
-	coEvents.clear();
-
-	if (!objBase->IsCollidable()) {
-		objBase->OnNoCollision(dt);
-		return;
-	}
-
-	Scan(objSrc, dt, coObjects, coEvents, 1, dir);
-
-	int eventCount = coEvents.size();
-
-	// No collision detected
-	if (coEvents.size() > 0)
-	{
-		Filter(objSrc, coEvents, colX, colY);
-
-		float vx, vy, dx, dy;
-		objBase->GetSpeed(vx, vy);
-		dx = vx * dt;
-		dy = vy * dt;
-		if (colX != NULL && colY != NULL)
-		{
-			if (colY->t < colX->t)	// was collision on Y first ?
-			{
-				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
-				objBase->OnCollisionWith(colY); // set position and call OnCollisionWith
-
-				//
-				// see if after correction on Y, is there still a collision on X ? 
-				//
-				LPCOLLISIONEVENT colX_other = NULL;
-
-				//
-				// check again if there is true collision on X 
-				//
-				colX->isDeleted = true;		// remove current collision event on X
-
-				// replace with a new collision event using corrected location 
-				coEvents.push_back(SweptAABB(objSrc, dt, colX->obj));
-
-				// re-filter on X only
-				Filter(objSrc, coEvents, colX_other, colY, /*filterBlock = */ 1, 1, /*filterY=*/0);
-
-				if (colX_other != NULL)
-				{
-					x += colX_other->t * dx + colX_other->nx * BLOCK_PUSH_FACTOR;
-					objBase->OnCollisionWith(colX_other);
-				}
-				else
-				{
-					x += dx;
-				}
-			}
-			else // collision on X first
-			{
-				x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
-				objBase->OnCollisionWith(colX);
-				//
-				// see if after correction on X, is there still a collision on Y ? 
-				//
-				LPCOLLISIONEVENT colY_other = NULL;
-
-				//
-				// check again if there is true collision on Y
-				//
-				colY->isDeleted = true;		// remove current collision event on Y
-
-				// replace with a new collision event using corrected location 
-				coEvents.push_back(SweptAABB(objSrc, dt, colY->obj));
-
-				// re-filter on Y only
-				Filter(objSrc, coEvents, colX, colY_other, /*filterBlock = */ 1, /*filterX=*/0, /*filterY=*/1);
-
-				if (colY_other != NULL)
-				{
-					y += colY_other->t * dy + colY_other->ny * BLOCK_PUSH_FACTOR;
-					objBase->OnCollisionWith(colY_other);
-				}
-				else
-				{
-					y += dy;
-				}
-			}
-		}
-		else
-			if (colX != NULL)
-			{
-				x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
-				y += dy;
-				objBase->OnCollisionWith(colX);
-			}
-			else
-				if (colY != NULL)
-				{
-					x += dx;
-					y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
-					objBase->OnCollisionWith(colY);
-				}
-				else // both colX & colY are NULL 
-				{
-					x += dx;
-					y += dy;
-				}
-	}
-
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	coEvents.clear();
-
-	// process non-blocking collisions
-	Scan(objSrc, dt, coObjects, coEvents, 2, dir);
-
-	eventCount += coEvents.size();
-
-	for (UINT i = 0; i < coEvents.size(); i++)
-	{
-		LPCOLLISIONEVENT e = coEvents[i];
-		if (e->isDeleted) continue;
-		if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
-		objBase->OnCollisionWith(e);
-	}
-
-
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-	objBase->SetPosition(x, y);
-	if (eventCount == 0) objBase->OnNoCollision(dt);
-}
-
 void CCollision::ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!objSrc->IsCollidable() || objSrc->IsBlocking()) return; //for non blocking objects only
@@ -633,7 +497,7 @@ void CCollision::ProcessMarioOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAM
 	}
 }
 
-void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouched, DWORD dt)
+void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouched, DWORD dt)
 {
 
 	//collision check
@@ -808,6 +672,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* p
 					y += dy;
 				}
 	}
+	objSrc->SetPosition(x, y);
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
@@ -846,17 +711,25 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* p
 	delete body;
 	delete foot;
 
-	objSrc->SetPosition(x, y);
 	if (eventCount == 0) objSrc->OnNoCollision(dt);
-
-
-
 
 	//overlap push
 	pointsTouched->clear();
 	int k = 0;
+	float idk;
+	float footBeforeY, footBeforeX;
+	float bodyLeftBeforeX, bodyRightBeforeX;
+	
+	CMario* mario = dynamic_cast<CMario*>(objSrc);
+	mario->SetPointsPosition();
+
+	(*points)[DOWNLEFT]->GetBeforeBlockPosition(idk, footBeforeY);
+	(*points)[RIGHTUP]->GetBeforeBlockPosition(bodyRightBeforeX, idk);
+	(*points)[LEFTUP]->GetBeforeBlockPosition(bodyLeftBeforeX, idk);
+
+
 	for (auto i : *points) {
-		LPGAMEOBJECT point = i;
+		CPoint* point = i;
 		bool touched = false;
 
 		for (auto obj : *coObjects)
@@ -869,9 +742,15 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* p
 				obj->GetBoundingBox(sl, st, sr, sb);
 				float ml, mt, mr, mb;
 				point->GetBoundingBox(ml, mt, mr, mb);
-
-				if (k == LEFTUP || k == LEFTDOWN || k == RIGHTUP || k == RIGHTDOWN)
-					if (dynamic_cast<CGenericPlatform*>(obj) && objSrc->GetBoundingBoxBottom() > obj->GetBoundingBoxTop()) continue; // skip if moving up to platform
+				
+				if ((k == DOWNRIGHT || k == DOWNLEFT)) {
+					if (dynamic_cast<CGenericPlatform*>(obj) && !(bodyLeftBeforeX >= sr || bodyRightBeforeX <= sl)) continue;
+					if(mb - st > 10) continue; 
+				}
+				else
+					if (k == RIGHTUP || k == LEFTUP || k == RIGHTDOWN || k == LEFTDOWN) {
+						if (dynamic_cast<CGenericPlatform*>(obj) && footBeforeY >= st) continue; // skip if moving up to platform
+					}
 
 				if (IsOverlapping(ml, mt, mr, mb, sl, st, sr, sb))
 				{
@@ -883,7 +762,11 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* p
 			//mario stomp enemy even when the feet collided sideways
 			//else if (dynamic_cast<CCharacter*>(obj)) {}
 		}
-		if (!touched) pointsTouched->push_back(false);
+		if (!touched) {
+			pointsTouched->push_back(false);
+			i->SetBeforeBlockPosition(i->GetX(), i->GetY());
+		}
+		k++;
 	}
 }
 

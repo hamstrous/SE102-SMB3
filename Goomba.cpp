@@ -50,13 +50,19 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 }
 
+float pvx = 0;
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	pvx = vx;
 	vy += ay * dt;
 	vx += ax * dt;
+	DebugOutTitle(L"vx: %f, vy: %f", vx, vy);
 	if ( ( (state==GOOMBA_STATE_DIE) || (state == GOOMBA_STATE_DIE_UP) )
 		&& (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT) )
 	{
+		if (vx < 0 && pvx > 0) {
+			DebugOut(L"vx: %f, vy: %f", vx, vy);
+		}
 		isDeleted = true;
 		return;
 	}
@@ -66,6 +72,15 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}*/
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
+	if (((state == GOOMBA_STATE_DIE) || (state == GOOMBA_STATE_DIE_UP))
+		&& (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
+	{
+		if (vx < 0 && pvx > 0) {
+			DebugOut(L"vx: %f, vy: %f", vx, vy);
+		}
+		isDeleted = true;
+		return;
+	}
 }
 
 

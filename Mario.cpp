@@ -155,9 +155,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// reset untouchable timer if untouchable time has passed
 	// for mario has to be called first so process can call OnCollision
 	SetPointsPosition();
-	//CCollision::GetInstance()->Process(this, dt, coObjects);
-	CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, &pointsTouched, dt);
-	PointsCheck();
+	CCollision::GetInstance()->Process(this, dt, coObjects);
+	//CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, &pointsTouched, dt);
+	//PointsCheck();
 
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
@@ -191,25 +191,6 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->obj->IsBlocking()) {
 		if (e->ny != 0)
 		{
-			//if (e->ny > 0) {
-			//	// head collide offset
-			//	if (pointsTouched[TOP]) vy = 0;
-			//	else y -= 1; //let mario phase through block so side points can do it job of offseting
-			//}else if (e->ny < 0) {
-			//	count = 0;
-			//	if (!pointsTouched[DOWNRIGHT] && !pointsTouched[DOWNLEFT]) {
-			//		y += 1;
-			//		isOnPlatform = false;
-			//	}
-			//	else {
-			//		vy = 0;
-			//		isOnPlatform = true;
-			//		if (glideTimer->IsRunning()) {
-			//			glideTimer->Reset();
-			//			SkipCurrentAnimation();
-			//		}
-			//	}
-			//}
 			if (e->ny > 0) {
 				vy = 0;
 			}else if (e->ny < 0) {
@@ -283,7 +264,6 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 			CKoopa* koopa = dynamic_cast<CKoopa*>(character);
 			holdingShell = koopa;
 			koopa->Held();
-			DebugOut(L"HOLD\n");
 		}else if (!untouchableTimer->IsRunning())
 		{
 			character->Touched();
@@ -704,7 +684,7 @@ void CMario::PointsCheck()
 	}
 
 	if (pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT])
-		dirY = -1;
+		dirY = -2;
 
 	x += dirX;
 	y += dirY;

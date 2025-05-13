@@ -181,7 +181,7 @@ protected:
 	BOOLEAN isOnPlatform;
 	int coin;
 	CKoopa* holdingShell;
-	vector<CGameObject*> points;
+	vector<CPoint*> points;
 	vector<bool> pointsTouched;
 	int count = 0;
 	bool timesup = false;
@@ -336,6 +336,11 @@ public:
 		for (int i = 0; i < 7; i++) {
 			points[i]->SetSpeed(vx, vy);
 		}
+	}
+
+	CPoint* GetPoint(int id) {
+		if (id < 0 || id >= points.size()) return NULL;
+		return points[id];
 	}
 };
 

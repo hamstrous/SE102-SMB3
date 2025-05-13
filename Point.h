@@ -4,6 +4,8 @@
 // This class is for mario collision detection point
 class CPoint : public CGameObject
 {
+	float beforeBlockX;
+	float beforeBlockY;
 public:
 	CPoint(float x, float y) : CGameObject(x, y) {};
 
@@ -14,6 +16,16 @@ public:
 	void GetBoundingBox(float& l, float& t, float& r, float& b) {
 		l = r = x;
 		t = b = y;
+	};
+
+	void SetBeforeBlockPosition(float x, float y) {
+		this->beforeBlockX = x;
+		this->beforeBlockY = y;
+	};
+
+	void GetBeforeBlockPosition(float& x, float& y) {
+		x = beforeBlockX;
+		y = beforeBlockY;
 	};
 
 };
