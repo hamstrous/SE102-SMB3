@@ -21,6 +21,17 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float marioX, marioY;
 	mario->GetPosition(marioX, marioY);
 	
+	if (type == 0)
+	{
+		if (y < TAILHIT_DISTANCE1) tailhit = true;
+		else tailhit = false;
+	}
+	else
+	{
+		if (y < TAILHIT_DISTANCE2) tailhit = true;
+		else tailhit = false;
+	}
+
 	if ((state == STATE_PRIRANHA_UP) && startY - y > PIRANHA_BBOX - size )
 	{
 		SetState(STATE_PRIRANHA_STOP);

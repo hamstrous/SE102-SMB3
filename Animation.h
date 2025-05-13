@@ -23,6 +23,9 @@ protected:
 	//0:normal, 1:vibrate, 2:flicker, 3:stop
 	int type = 0;
 	int initType = 0;
+
+	int bouncingState = 0; 
+	float bouncingOffset = 0.0f;
 public:
 	CAnimation(int defaultTime = 100, int type = 0, int doneTime = 0) 
 	{ 
@@ -42,6 +45,7 @@ public:
 	virtual void StoppingFlickeringRender(float x, float y);
 	virtual void StoppingRender(float x, float y);
 	virtual void StillRender(float x, float y);
+	virtual void BouncingRender(float x, float y);
 	virtual void NoRender(float x, float y) {};
 	void SetType(int type) { this->type = type; }
 	int GetType() { return initType; }

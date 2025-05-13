@@ -38,6 +38,7 @@
 #include "TimerManager.h"
 #include "Abyss.h"
 #include "Block.h"
+#include "Switch.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -62,6 +63,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define ASSETS_SECTION_ANIMATIONS_VIBRATING 3
 #define ASSETS_SECTION_ANIMATIONS_FLICKERING 4
 #define ASSETS_SECTION_ANIMATIONS_STOPPING 5
+#define ASSETS_SECTION_ANIMATIONS_BOUNCING 6
 
 #define MAX_SCENE_LINE 1024
 
@@ -221,7 +223,29 @@ void CPlayScene::_ParseSection_ANIMATIONS_STOPPING(string line)
 
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
-	LPANIMATION ani = new CAnimation(100, 3);
+	LPANIMATION ani = new CAnimation(100, 5);
+
+	int ani_id = atoi(tokens[0].c_str());
+
+	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
+	{
+		int sprite_id = atoi(tokens[i].c_str());
+		int frame_time = atoi(tokens[i + 1].c_str());
+		ani->Add(sprite_id, frame_time);
+	}
+
+	CAnimations::GetInstance()->Add(ani_id, ani);
+}
+
+void CPlayScene::_ParseSection_ANIMATIONS_BOUNCING(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 3) return; // skip invalid lines - an animation must at least has 1 frame and 1 frame time
+
+	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+
+	LPANIMATION ani = new CAnimation(100, 6);
 
 	int ani_id = atoi(tokens[0].c_str());
 
@@ -279,6 +303,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CLOUDPLATFORM: obj = new CCloudPlatform(x, y); break;
 	case OBJECT_TYPE_ABYSS: obj = new CAbyss(x, y); break;
 	case OBJECT_TYPE_BLOCK: obj = new CBlock(x, y); break;
+	case OBJECT_TYPE_SWITCH: obj = new CSwitch(x, y); break;
 	case OBJECT_TYPE_FLOOR:
 	{
 		int width = atoi(tokens[3].c_str());
@@ -408,6 +433,7 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		if (line == "[ANIMATIONS_VIBRATION]") { section = ASSETS_SECTION_ANIMATIONS_VIBRATING; continue; };
 		if (line == "[ANIMATIONS_FLICKERING]") { section = ASSETS_SECTION_ANIMATIONS_FLICKERING; continue; };
 		if (line == "[ANIMATIONS_STOPPING]") { section = ASSETS_SECTION_ANIMATIONS_FLICKERING; continue; };
+		if (line == "[ANIMATIONS_BOUNCING]") { section = ASSETS_SECTION_ANIMATIONS_BOUNCING; continue; };
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -421,6 +447,7 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		case ASSETS_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case ASSETS_SECTION_ANIMATIONS_VIBRATING: _ParseSection_ANIMATIONS_VIBRATING(line); break;
 		case ASSETS_SECTION_ANIMATIONS_FLICKERING: _ParseSection_ANIMATIONS_STOPPING(line); break;
+		case ASSETS_SECTION_ANIMATIONS_BOUNCING: _ParseSection_ANIMATIONS_BOUNCING(line); break;
 		}
 	}
 
@@ -487,7 +514,7 @@ void CPlayScene::Update(DWORD dt)
 	if (remainingTime <= 0)
 	{
 		if (player != NULL)
-		{
+		{	
 			CMario* mario = dynamic_cast<CMario*>(player);
 			mario->SetTimesUp();
 			mario->SetState(MARIO_STATE_DIE);
@@ -582,7 +609,7 @@ void CPlayScene::Render()
 
 		if (dynamic_cast<CFloor*>(i)
 			|| dynamic_cast<CBaseBrick*>(i)
-			|| dynamic_cast<CPipe*>(i))
+			/*|| dynamic_cast<CPipe*>(i)*/)
 			thirdRenderObjects.push_back(i);
 
 		if (dynamic_cast<CFireball*>(i)
@@ -591,6 +618,7 @@ void CPlayScene::Render()
 			|| dynamic_cast<CSmoke*>(i)
 			|| dynamic_cast<CGameFX*>(i)
 			|| dynamic_cast<CAbyss*>(i)
+			|| dynamic_cast<CPipe*>(i)
 			|| dynamic_cast<CGameFXManager*>(i)) {
 			projectileRenderObjects.push_back(i);
 		}

@@ -56,6 +56,8 @@
     <ClCompile Include="TimerManager.cpp" />
     <ClCompile Include="Abyss.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Switch.cpp" />
+    <ClCompile Include="GameFXBreak.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -116,6 +118,8 @@
     <ClInclude Include="TimerManager.h" />
     <ClInclude Include="Abyss.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Switch.h" />
+    <ClInclude Include="GameFXBreak.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
