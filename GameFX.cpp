@@ -41,18 +41,6 @@ void CGameFX::Render()
 		}
 		break;
 	}
-	case TYPE_LEFT_BOT_BREAK:
-	case TYPE_LEFT_TOP_BREAK:
-	case TYPE_RIGHT_TOP_BREAK:
-	case TYPE_RIGHT_BOT_BREAK:
-	{
-		if (GetTickCount64() - start <= TIME_BREAK)
-		{
-			if (!GetIsStop()) CAnimations::GetInstance()->Get(ANI_ID_BREAKABLEBRICK)->Render(x, y);
-			else CAnimations::GetInstance()->Get(ANI_ID_BREAKABLEBRICK)->Render(x, y, 1);
-		}
-		break;
-	}
 	default:
 		break;
 	}
