@@ -1,8 +1,6 @@
 #pragma once
 #include "GameFX.h"
 
-#define 
-
 class CGameFXBreak : public CGameFX
 {
 protected:
