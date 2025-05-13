@@ -224,7 +224,7 @@ void CPlayScene::_ParseSection_ANIMATIONS_STOPPING(string line)
 
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
-	LPANIMATION ani = new CAnimation(100, 5);
+	LPANIMATION ani = new CAnimation(100, 3);
 
 	int ani_id = atoi(tokens[0].c_str());
 
@@ -432,9 +432,9 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		if (line == "[SPRITES_OFFSET]") { section = ASSETS_SECTION_SPRITES_OFFSET; continue; };
 		if (line == "[ANIMATIONS]") { section = ASSETS_SECTION_ANIMATIONS; continue; };
 		// many types of animation
-		if (line == "[ANIMATIONS_VIBRATION]") { section = ASSETS_SECTION_ANIMATIONS_VIBRATING; continue; };
+		if (line == "[ANIMATIONS_VIBRATING]") { section = ASSETS_SECTION_ANIMATIONS_VIBRATING; continue; };
 		if (line == "[ANIMATIONS_FLICKERING]") { section = ASSETS_SECTION_ANIMATIONS_FLICKERING; continue; };
-		if (line == "[ANIMATIONS_STOPPING]") { section = ASSETS_SECTION_ANIMATIONS_FLICKERING; continue; };
+		if (line == "[ANIMATIONS_STOPPING]") { section = ASSETS_SECTION_ANIMATIONS_STOPPING; continue; };
 		if (line == "[ANIMATIONS_BOUNCING]") { section = ASSETS_SECTION_ANIMATIONS_BOUNCING; continue; };
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
@@ -448,7 +448,8 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 		case ASSETS_SECTION_SPRITES_OFFSET: _ParseSection_SPRITES_OFFSET(line); break;
 		case ASSETS_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case ASSETS_SECTION_ANIMATIONS_VIBRATING: _ParseSection_ANIMATIONS_VIBRATING(line); break;
-		case ASSETS_SECTION_ANIMATIONS_FLICKERING: _ParseSection_ANIMATIONS_STOPPING(line); break;
+		case ASSETS_SECTION_ANIMATIONS_FLICKERING: _ParseSection_ANIMATIONS_FLICKERING(line); break;
+		case ASSETS_SECTION_ANIMATIONS_STOPPING: _ParseSection_ANIMATIONS_STOPPING(line); break;
 		case ASSETS_SECTION_ANIMATIONS_BOUNCING: _ParseSection_ANIMATIONS_BOUNCING(line); break;
 		}
 	}
