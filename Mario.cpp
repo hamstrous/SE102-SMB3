@@ -343,12 +343,11 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 {	
-	//DebugOut(L"On pipe oncollisionpipe with");
-	//CPipe* pipe = (CPipe*)e->obj;
-	//float pipeX, pipeY;
-	//pipe->GetPosition(pipeX, pipeY);
-	//if(pipe->IsGoInside() /*&& y < pipeY*/)
-	//	SetPipe();
+	CPipe* pipe = (CPipe*)e->obj;
+	float pipeX, pipeY;
+	pipe->GetPosition(pipeX, pipeY);
+	if(pipe->IsGoInside() && y < pipeY)
+		SetPipe();
 }
 
 void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)

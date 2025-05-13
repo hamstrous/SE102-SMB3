@@ -38,8 +38,6 @@ protected:
 	int type;
 	bool isOn = false;
 	bool isOver = false;
-	float ax;
-	float ay;
 public:
 	CGameFX(float x, float y, int type) : CGameObject(x, y)
 	{
@@ -52,12 +50,9 @@ public:
 	bool IsOn() { return isOn; }
 	void Render();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	void OnNoCollision(DWORD dt);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void SetState(int state);
 	bool GetOver() { return isOver; }
 	void SetOver() {  isOver = true; }
-	/*int IsCollidable() { return 0;}
-	int IsBlocking() { return 0; }*/
 };
 

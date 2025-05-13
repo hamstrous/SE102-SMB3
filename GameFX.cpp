@@ -61,10 +61,6 @@ void CGameFX::Render()
 void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {		
 	//DebugOut(L"Type: %d, Time elapsed: %llu\n", type, GetTickCount64() - start);
-	/*vy += ay * dt;
-	vx += ax * dt;*/
-
-	x += vx * dt;
 	y += vy * dt;
 
 	//DebugOut(L"x: %f, y: %f\n", x, y);
@@ -109,11 +105,6 @@ void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 }
 
-void CGameFX::OnNoCollision(DWORD dt)
-{
-	/*x += vx * dt;
-	y += vy * dt;*/
-}
 
 void CGameFX::GetBoundingBox(float& l, float& t, float& r, float& b)
 {

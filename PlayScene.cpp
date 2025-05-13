@@ -511,7 +511,7 @@ void CPlayScene::Update(DWORD dt)
 		return; 
 	}
 	int remainingTime = CGameData::GetInstance()->GetRemainingTime();
-	if (remainingTime <= 298)
+	if (remainingTime <= 0)
 	{
 		if (player != NULL)
 		{	
@@ -609,7 +609,7 @@ void CPlayScene::Render()
 
 		if (dynamic_cast<CFloor*>(i)
 			|| dynamic_cast<CBaseBrick*>(i)
-			|| dynamic_cast<CPipe*>(i))
+			/*|| dynamic_cast<CPipe*>(i)*/)
 			thirdRenderObjects.push_back(i);
 
 		if (dynamic_cast<CFireball*>(i)
