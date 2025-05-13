@@ -511,10 +511,10 @@ void CPlayScene::Update(DWORD dt)
 		return; 
 	}
 	int remainingTime = CGameData::GetInstance()->GetRemainingTime();
-	if (remainingTime <= 0)
+	if (remainingTime <= 298)
 	{
 		if (player != NULL)
-		{
+		{	
 			CMario* mario = dynamic_cast<CMario*>(player);
 			mario->SetTimesUp();
 			mario->SetState(MARIO_STATE_DIE);

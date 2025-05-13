@@ -41,6 +41,18 @@ void CGameFX::Render()
 		}
 		break;
 	}
+	case TYPE_LEFT_BOT_BREAK:
+	case TYPE_LEFT_TOP_BREAK:
+	case TYPE_RIGHT_TOP_BREAK:
+	case TYPE_RIGHT_BOT_BREAK:
+	{
+		if (GetTickCount64() - start <= TIME_BREAK)
+		{
+			if (!GetIsStop()) CAnimations::GetInstance()->Get(ANI_ID_BREAKABLEBRICK)->Render(x, y);
+			else CAnimations::GetInstance()->Get(ANI_ID_BREAKABLEBRICK)->Render(x, y, 1);
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -49,8 +61,12 @@ void CGameFX::Render()
 void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {		
 	//DebugOut(L"Type: %d, Time elapsed: %llu\n", type, GetTickCount64() - start);
-	
+	/*vy += ay * dt;
+	vx += ax * dt;*/
+
+	x += vx * dt;
 	y += vy * dt;
+
 	//DebugOut(L"x: %f, y: %f\n", x, y);
 	CGame* game = CGame::GetInstance();
 	float hy = game->GetBackBufferHeight() - 135;
@@ -66,18 +82,37 @@ void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (GetTickCount64() - start >= TIME_TIMEUP) isDeleted = true;
 			if (y >= hy)
 			{
+				DebugOut(L"if is called");
 				vy = -0.7f;
 			}
-			else vy = 0;
+			else {
+				DebugOut(L"else is called");
+				vy = 0;
+			}
+
 			break;
 		}
 		case TYPE_SWITCH_SPAWN:
 		{
-			if (GetTickCount64() - start >= TIME_SWITCH_SPAWN) isDeleted = true;
+			if (GetTickCount64() - start >= TIME_SWITCH_SPAWN) 
+			break;
+		}
+		case TYPE_LEFT_BOT_BREAK:
+		case TYPE_LEFT_TOP_BREAK:
+		case TYPE_RIGHT_TOP_BREAK:
+		case TYPE_RIGHT_BOT_BREAK:
+		{
+			if (GetTickCount64() - start <= TIME_BREAK) isDeleted = true;
 			break;
 		}
 	}
 	CGameObject::Update(dt, coObjects);
+}
+
+void CGameFX::OnNoCollision(DWORD dt)
+{
+	/*x += vx * dt;
+	y += vy * dt;*/
 }
 
 void CGameFX::GetBoundingBox(float& l, float& t, float& r, float& b)

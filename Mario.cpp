@@ -679,7 +679,9 @@ void CMario::SetState(int state)
 		canHold = false;
 		if(holdingShell != NULL) holdingShell->SetState(KOOPA_STATE_MARIO_DEAD); 
 		holdingShell = NULL;
-		if(timesup) CGameFXManager::GetInstance()->AddTimeup(0, 0, TYPE_TIMEUP);
+		if (timesup) {
+			CGameFXManager::GetInstance()->AddTimeup(0, 0, TYPE_TIMEUP);
+		}
 		break;
 	}
 
