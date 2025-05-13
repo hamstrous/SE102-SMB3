@@ -27,6 +27,7 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include <list>
 
 #include "debug.h"
+#include "Utils.h"
 #include "Game.h"
 #include "GameObject.h"
 #include "Textures.h"
@@ -179,6 +180,7 @@ int Run()
 		DWORD dt = (DWORD)(now - frameStart);
 		if (dt >= tickPerFrame)
 		{
+			DT = dt;
 			frameStart = now;
 
 			CGame::GetInstance()->ProcessKeyboard();	

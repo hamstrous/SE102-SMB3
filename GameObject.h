@@ -14,13 +14,13 @@
 using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
+#define ID_TEX_POINT -90		// special texture to draw mario's points
 #define BBOX_ALPHA 0.25f		// Bounding box transparency
+#define POINT_ALPHA 1.f		// Bounding box transparency
 
 class CGameObject
 {
 protected:
-
-	float ox = 0, oy = 0; // old x, y before entering blocking zone
 
 	float x; 
 	float y;
@@ -40,15 +40,18 @@ protected:
 
 public: 
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
-	void SetPositionX(float x) { this->x = x; }
+	void SetX(float x) { this->x = x; }
 	void SetY(float y) { this->y = y; }
-	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
+
+	virtual void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
+
 	void SetSleep(bool sleep) { this->sleep = sleep; }
 	bool GetKillOffCam() { return killOffCam; }
 
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
 	int GetX() { return x; }
 	int GetY() { return y; }
+
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 	bool GetSleep() { return sleep; }
 
@@ -65,6 +68,28 @@ public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) {
 		left = top = right = bottom = 0; // default bounding box is (0,0,0,0)
 	};
+
+	virtual float GetBoundingBoxTop() {
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		return t;
+	};
+	virtual float GetBoundingBoxBottom() {
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		return b;
+	};
+	virtual float GetBoundingBoxLeft() {
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		return l;
+	};
+	virtual float GetBoundingBoxRight() {
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		return r;
+	};
+
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) {};
 	virtual void UpdateLate() {};
 	virtual void Render() = 0;
@@ -102,16 +127,9 @@ public:
 	static bool IsDeleted(const LPGAMEOBJECT &o) { return o->isDeleted; }
 	
 	bool GetIsPause();
+	
 	bool GetIsStop();
+	void SetIsStop();
 
-	void SetOldPosition(float x, float y) {
-		ox = x;
-		oy = y;
-	};
-
-	void GetOldPosition(float &x, float &y) {
-		x = ox;
-		y = oy;
-	};
-
+	bool GetIsDead();
 };

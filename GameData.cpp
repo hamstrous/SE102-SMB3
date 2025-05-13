@@ -2,8 +2,10 @@
 #include "Game.h"
 #include "PlayScene.h"
 #include "Mario.h"
+#include "Utils.h"
 
 CGameData* CGameData::__instance = NULL;
+
 
 void CGameData::OnDeath()
 {
@@ -41,6 +43,10 @@ void CGameData::Update(DWORD dt)
 	float mvx , mvy;
 	mario->GetSpeed(mvx, mvy);
 	
+	if (debug) {
+		DebugOut(L"GD: %d\n", pmeter);
+	}
+
 	if (pmeter < 7) {
 		if (ptimer->IsRunning()) return;
 		if (ptimer == f8) {

@@ -130,7 +130,7 @@ namespace std {
 #define MARIO_RACCOON_FLY_SPEED  0.09f
 #define MARIO_RACCOON_GLIDE_SPEED  0.06f
 
-#define MARIO_STATE_DIE				-10
+#define MARIO_STATE_DIE				-1
 #define MARIO_STATE_IDLE			0
 #define MARIO_STATE_WALKING_RIGHT	100
 #define MARIO_STATE_WALKING_LEFT	200
@@ -156,7 +156,7 @@ namespace std {
 
 #define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)
 
-#define MARIO_SMALL_BBOX_WIDTH  13
+#define MARIO_SMALL_BBOX_WIDTH  12
 #define MARIO_SMALL_BBOX_HEIGHT 14
 
 // time = animation time (sum of all frame duration)
@@ -166,7 +166,7 @@ namespace std {
 #define TURN_TIME	75
 #define PROTECT_TIME	267
 
-#define UNTOUCHABLE_TIME 2500
+#define UNTOUCHABLE_TIME 3000
 
 const float MARIO_JUMP_SPEED[4] = { 0.20625f, 0.21375f, 0.22125f, 0.23625f };
 const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
@@ -181,8 +181,7 @@ protected:
 	BOOLEAN isOnPlatform;
 	int coin;
 	CKoopa* holdingShell;
-	vector<CGameObject*> points;
-	vector<bool> pointsTouched;
+	vector<CPoint*> points;
 	int count = 0;
 	bool timesup = false;
 
@@ -248,17 +247,23 @@ public:
 
 		holdingShell = NULL;
 
-		pointsTouched.resize(7, false);
+		SetState(MARIO_STATE_IDLE);
 		points.resize(7); // top, left, leftdown, downleft, dowmright, rightdown, rightup
 		for (int i = 0; i < 7; i++) {
 			points[i] = new CPoint(0, 0);
 		}
 	}
+
+	~CMario() {
+		for (CPoint* point : points) {
+			delete point; // Free each dynamically allocated CPoint
+		}
+		points.clear(); // Clear the vector
+	}
+
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
-
-	void PointsCheck();
 
 	void Acceleration(DWORD dt);
 
@@ -332,6 +337,18 @@ public:
 	bool GetTimesUp() { return timesup; }
 	void SetTimesUp() { timesup = true; }
 
+	void SetSpeed(float vx, float vy) {
+		this->vx = vx;
+		this->vy = vy;
+		for (int i = 0; i < 7; i++) {
+			points[i]->SetSpeed(vx, vy);
+		}
+	}
+
+	CPoint* GetPoint(int id) {
+		if (id < 0 || id >= points.size()) return NULL;
+		return points[id];
+	}
 	bool GetPipe() { return GoInPipe; }
 	void SetPipe() { GoInPipe = true; }
 };

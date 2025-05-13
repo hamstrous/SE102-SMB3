@@ -4,8 +4,13 @@
 // This class is for mario collision detection point
 class CPoint : public CGameObject
 {
+	float beforeBlockX;
+	float beforeBlockY;
 public:
-	CPoint(float x, float y) : CGameObject(x, y) {};
+	CPoint(float x, float y) : CGameObject(x, y) {
+		this->beforeBlockX = x;
+		this->beforeBlockY = y;
+	};
 
 	void Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects = nullptr) {};
 	void Render() {};
@@ -16,5 +21,16 @@ public:
 		t = b = y;
 	};
 
+	void SetBeforeBlockPosition(float x, float y) {
+		this->beforeBlockX = x;
+		this->beforeBlockY = y;
+	};
+
+	void GetBeforeBlockPosition(float& x, float& y) {
+		x = beforeBlockX;
+		y = beforeBlockY;
+	};
+
+	void RenderBoundingBox();
 };
 

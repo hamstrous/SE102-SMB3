@@ -9,6 +9,8 @@ using namespace std;
 class CGameObject;
 typedef CGameObject* LPGAMEOBJECT;
 
+class CPoint;
+
 struct CCollisionEvent;
 typedef CCollisionEvent* LPCOLLISIONEVENT;
 
@@ -68,18 +70,7 @@ public:
 		LPGAMEOBJECT objSrc, 
 		DWORD dt, 
 		vector<LPGAMEOBJECT>* objDests, 
-		vector<LPCOLLISIONEVENT>& coEvents);
-	void ScanIsBlocking(
-		LPGAMEOBJECT objSrc,
-		DWORD dt,
-		vector<LPGAMEOBJECT>* objDests,
-		vector<LPCOLLISIONEVENT>& coEvents);
-	void ScanNotBlocking(
-		LPGAMEOBJECT objSrc,
-		DWORD dt,
-		vector<LPGAMEOBJECT>* objDests,
-		vector<LPCOLLISIONEVENT>& coEvents);
-
+		vector<LPCOLLISIONEVENT>& coEvents, int type = 0, int dir = -1);
 	void Filter(
 		LPGAMEOBJECT objSrc,
 		vector<LPCOLLISIONEVENT>& coEvents,
@@ -92,7 +83,7 @@ public:
 	void Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void ProcessMarioOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	void ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* points, vector<LPGAMEOBJECT>* coObjects, vector<bool>* pointsTouch);
+	void ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points, vector<LPGAMEOBJECT>* coObjects, DWORD dt);
 	int CheckStillTouchSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	bool CheckTouchingSolid(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	bool CheckTouchCharacterForShellHeldHit(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool notMario);

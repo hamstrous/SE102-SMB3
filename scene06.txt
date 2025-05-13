@@ -26,6 +26,8 @@ effect.txt
 
 
 
+15	40	100	1
+
 #ENEMIES
 
 #KOOPARED

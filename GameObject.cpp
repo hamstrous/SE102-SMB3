@@ -15,14 +15,12 @@ CGameObject::CGameObject()
 	x = y = 0;
 	vx = vy = 0;
 	nx = 1;	
-	state = -1;
+	state = -999;
 	isDeleted = false;
 }
 
 void CGameObject::RenderBoundingBox()
 {
-	// When report turn off this
-	return;
 	D3DXVECTOR3 p(x, y, 0);
 	RECT rect;
 
@@ -58,9 +56,22 @@ bool CGameObject::GetIsPause()
 	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 	return scene->GetIsPause();
 }
+void CGameObject::SetIsStop()
+{
+	CGame* game = CGame::GetInstance();
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	scene->SetIsStop(1);
+}
 bool CGameObject::GetIsStop()
 {
 	CGame* game = CGame::GetInstance();
 	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 	return scene->GetIsStop();
+}
+
+bool CGameObject::GetIsDead()
+{
+	CGame* game = CGame::GetInstance();
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	return scene->GetIsDead();
 }

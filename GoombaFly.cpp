@@ -96,7 +96,7 @@ void CGoombaFly::Render()
 	{
 		aniId = ID_ANI_GOOMBAFLY_DIE_UP_RIGHT;
 	}
-	if(!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	if(!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	RenderBoundingBox();
 }

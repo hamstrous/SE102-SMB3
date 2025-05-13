@@ -42,10 +42,15 @@ effect.txt
 #20 : background color
 #21:  unbreakablebrick
 #22: goombafly
+#27: switch
+#28: invisible wall
 #50 : portal
 #100 : camera
 
 [OBJECTS]
+#INVISIBLE WALL
+28	7	207	10	416
+
 #CAMERA
 100	1950	240
 
@@ -631,7 +636,7 @@ effect.txt
 
 
 #MARIO
-0	1970	200
+0	39	407
 
 ########## ENEMY ##########
 #PLANT

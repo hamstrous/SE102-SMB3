@@ -8,6 +8,7 @@
 #include "PlayScene.h"
 #include "Fireball.h"
 #include "GameFXManager.h"
+#include "Utils.h"
 
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
@@ -50,6 +51,9 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_W:
 		dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->SetIsPause();
 		break;
+	case DIK_SPACE:
+		debug = true;
+		break;
 	}
 }
 
@@ -68,6 +72,9 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_A:
 		mario->SetCanHold(false);
 		mario->SetRunInput(0);
+		break;
+	case DIK_SPACE:
+		debug = false;
 		break;
 	}
 }

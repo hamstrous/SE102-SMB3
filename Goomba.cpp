@@ -50,8 +50,10 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 }
 
+float pvx = 0;
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	pvx = vx;
 	vy += ay * dt;
 	vx += ax * dt;
 	if ( ( (state==GOOMBA_STATE_DIE) || (state == GOOMBA_STATE_DIE_UP) )
@@ -66,6 +68,12 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}*/
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
+	if (((state == GOOMBA_STATE_DIE) || (state == GOOMBA_STATE_DIE_UP))
+		&& (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
+	{
+		isDeleted = true;
+		return;
+	}
 }
 
 
@@ -85,7 +93,7 @@ void CGoomba::Render()
 	{
 		aniId = ID_ANI_GOOMBA_DIE + 2;
 	}
-	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	if (!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	RenderBoundingBox();
 }

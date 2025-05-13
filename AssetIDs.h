@@ -3,7 +3,6 @@
 //
 // This file contains all IDs of game assets 
 
-
 #define ID_TEX_MARIO 0
 #define ID_TEX_ENEMY 10
 #define ID_TEX_MISC 20
@@ -39,6 +38,7 @@
 #define OBJECT_TYPE_CLOUDPLATFORM 24
 #define OBJECT_TYPE_ABYSS 25
 #define OBJECT_TYPE_BLOCK 26
+#define OBJECT_TYPE_INVISIBLE_WALL 28
 #define OBJECT_TYPE_SWITCH 27
 #define OBJECT_TYPE_CAMERA 100
 

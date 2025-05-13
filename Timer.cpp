@@ -30,14 +30,8 @@ bool CTimer::IsRunning()
 	if (timeStart == -1) return false;
 	if (timeSpan == -1) return true;
 	ULONGLONG elapsed = GetTickCount64() - timeStart;
-	if (elapsed <= timeSpan)
-		return true;
-	else
-	{
-		started = false;
-		timeStart = -1;
-	}
-	return false;
+	if (elapsed <= timeSpan) return true;
+	else return false;
 }
 
 bool CTimer::IsDone()

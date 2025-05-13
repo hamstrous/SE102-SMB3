@@ -24,3 +24,6 @@ void Clamp(float& x, float min, float max);
 void ToUpperCase(std::string& str);
 
 void DebugObjectType(LPGAMEOBJECT obj);
+
+extern bool debug;
+extern DWORD DT;
