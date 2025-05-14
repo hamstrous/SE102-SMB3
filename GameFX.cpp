@@ -72,14 +72,6 @@ void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (GetTickCount64() - start >= TIME_SWITCH_SPAWN) 
 			break;
 		}
-		case TYPE_LEFT_BOT_BREAK:
-		case TYPE_LEFT_TOP_BREAK:
-		case TYPE_RIGHT_TOP_BREAK:
-		case TYPE_RIGHT_BOT_BREAK:
-		{
-			if (GetTickCount64() - start <= TIME_BREAK) isDeleted = true;
-			break;
-		}
 	}
 	CGameObject::Update(dt, coObjects);
 }
