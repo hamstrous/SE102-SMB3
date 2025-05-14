@@ -10,7 +10,7 @@ CInvisibleWall::CInvisibleWall(float x, float y, float width, float height) : CB
 	SetState(INVISIBLE_WALL_STATE_STATIC);
 }
 
-CInvisibleWall::CInvisibleWall(float x, float y, float width, float height, int state, float endX) : CBaseBrick(x, y)
+CInvisibleWall::CInvisibleWall(float x, float y, float width, float height, float endX, int state) : CBaseBrick(x, y)
 {
 	this->width = width;
 	this->height = height;

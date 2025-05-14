@@ -37,6 +37,16 @@ CCamera::CCamera(float x, float y, float levelWidth, float levelHeight, float st
 
 void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (state == CAMERA_STATE_STATIC) {
+		UpdateStatic(dt, coObjects);
+	}
+	else if (state == CAMERA_STATE_MOVING) {
+		UpdateMoving(dt, coObjects);
+	}	
+}
+
+void CCamera::UpdateStatic(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
 	CMario* mario = GetMario();
 	if (mario == NULL) return;
 
@@ -55,6 +65,17 @@ void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (my > cb) y += my - cb;
 	if (CGameData::GetInstance()->IsFlightMode()) {
 		if (my < ct) y -= ct - my;
+	}
+	Clamp(x, 0, levelWidth - screenWidth);
+	Clamp(y, 0, levelHeight - screenHeight);
+}
+
+void CCamera::UpdateMoving(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	x += vx * dt;
+	if(x > levelWidth - screenWidth)
+	{
+		SetState(CAMERA_STATE_STATIC);
 	}
 	Clamp(x, 0, levelWidth - screenWidth);
 	Clamp(y, 0, levelHeight - screenHeight);

@@ -306,15 +306,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		float width = (float)atof(tokens[3].c_str());
 		float height = (float)atof(tokens[4].c_str());
-		if (tokens.size() == 4) {
+		if (tokens.size() == 5) {
 			obj = new CInvisibleWall(x, y, width, height); 
 			break;
 		}
-		else if (tokens.size() == 6) {
+		else if (tokens.size() == 7) {
 		
-			int state = atoi(tokens[5].c_str());
-			float endX = (float)atof(tokens[6].c_str());
-			obj = new CInvisibleWall(x, y, width, height, state, endX);
+			int state = atoi(tokens[6].c_str());
+			float endX = (float)atof(tokens[5].c_str());
+			obj = new CInvisibleWall(x, y, width, height, endX, state);
 			break;
 		}
 	}

@@ -87,6 +87,7 @@ public:
 
 	void OnPlayerDie() {
 		deathTimer->Start();
+		camera->SetState(CAMERA_STATE_STOP);
 	}
 
 	void GetCamPos(float& x, float& y) {

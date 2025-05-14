@@ -1,10 +1,10 @@
 #pragma once
 #include "BaseBrick.h"
 
-#define INVISIBLE_WALL_STATE_MOVING 0
-#define INVISIBLE_WALL_STATE_STATIC 1
+#define INVISIBLE_WALL_STATE_MOVING 1
+#define INVISIBLE_WALL_STATE_STATIC 0
 
-#define INVISIBLE_WALL_SPEED 0.1f
+#define INVISIBLE_WALL_SPEED 0.01f
 
 class CInvisibleWall : public CBaseBrick
 {
@@ -13,7 +13,7 @@ class CInvisibleWall : public CBaseBrick
 	float endX;
 public:
 	CInvisibleWall(float x, float y, float width, float height);
-	CInvisibleWall(float x, float y, float width, float height, int type, float endX);
+	CInvisibleWall(float x, float y, float width, float height, float endX, int state);
 
 	void GetBoundingBox(float& l, float& t, float& r, float& b) {
 		l = x - width/2;
