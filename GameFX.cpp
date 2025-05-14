@@ -1,4 +1,5 @@
 #include "GameFX.h"
+
 #include "Game.h"
 void CGameFX::Render()
 {	

@@ -4,7 +4,7 @@
 void CSwitch::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x - SWITCH_BBOX / 2;
-	top = y - SWITCH_BBOX / 2;
+	top = y - SWITCH_BBOX / 3;
 	right = left + SWITCH_BBOX;
 	bottom = top + SWITCH_BBOX;
 }
@@ -26,13 +26,12 @@ void CSwitch::Render()
 
 void CSwitch::OnCollisionWith(LPCOLLISIONEVENT e)
 {	
-	if (dynamic_cast<CMario*>(e->obj) && !off && e->ny > 0)
+	if (dynamic_cast<CMario*>(e->obj) && !off && e->nx == 0)
 	{	
 		off = true;
 		CGame::GetInstance()->SetChangeBricktoCoin(true);
 		time_start = GetTickCount64();
-	}
-		
+	}		
 }
 
 void CSwitch::SetState(int state)

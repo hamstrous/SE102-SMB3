@@ -2,6 +2,7 @@
 #include "ScoreManager.h"
 #include "GameData.h"
 #include "GameFXBreak.h"
+#include "GameFXManager.h"
 void CBreakableBrick::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
@@ -60,17 +61,9 @@ void CBreakableBrick::SideHit()
 {
 	if (!CGame::GetInstance()->GetChangeBricktoCoin())
 	{
-		isDeleted = true;
 		CScoreManager::GetInstance()->AddScore(x, y, 10);
-		CGameFXBreak* br = new CGameFXBreak(x, y, TYPE_LEFT_BOT_BREAK);
-		CGameFXBreak* br2 = new CGameFXBreak(x, y, TYPE_LEFT_TOP_BREAK);
-		CGameFXBreak* br3 = new CGameFXBreak(x, y, TYPE_RIGHT_BOT_BREAK);
-		CGameFXBreak* br4 = new CGameFXBreak(x, y, TYPE_RIGHT_TOP_BREAK);
-		LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
-		scene->AddObject(br);
-		scene->AddObject(br2);
-		scene->AddObject(br3);
-		scene->AddObject(br4);
+		isDeleted = true;
+		CGameFXManager::GetInstance()->AddBreak(x, y);
 	}
 }
 

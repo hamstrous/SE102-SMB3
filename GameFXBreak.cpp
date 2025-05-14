@@ -24,13 +24,13 @@ void CGameFXBreak::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == STATE_LOW_JUMP && GetTickCount64() - start >= 120)
 	{
-		vx = vx > 0 ? 0.03 : -0.03;
-		vy = 0.1;
+		vx = vx > 0 ? SPEED_X3 : -SPEED_X3;
+		vy = DOWN_LOW_JUMP;
 	}
 	else if (state == STATE_HIGH_JUMP && GetTickCount64() - start >= 320)
 	{
-		vx = vx > 0 ? 0.03 : -0.03;
-		vy = 0.13;
+		vx = vx > 0 ? SPEED_X3 : -SPEED_X3;
+		vy = DOWN_HIG_JUMP;
 	}
 	CGameObject::Update(dt, coObjects);
 }
@@ -43,21 +43,6 @@ void CGameFXBreak::SetState(int state)
 {
 	switch (state)
 	{
-	case TYPE_LEFT_BOT_BREAK:
-		vx = -SPEED_X;
-		break;
-
-	case TYPE_LEFT_TOP_BREAK:
-		vx = -SPEED_X;
-		break;
-
-	case TYPE_RIGHT_BOT_BREAK:
-		vx = SPEED_X;
-		break;
-
-	case TYPE_RIGHT_TOP_BREAK:
-		vx = SPEED_X;
-		break;
 	case STATE_LOW_JUMP:
 		vy = -LOW_JUMP;
 		break;

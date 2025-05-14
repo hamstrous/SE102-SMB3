@@ -26,8 +26,6 @@ effect.txt
 
 
 
-15	40	100	1
-
 #ENEMIES
 
 #KOOPARED
@@ -168,10 +166,6 @@ effect.txt
 1	1248	180
 1	1264	180
 1	1280	180
-
-
-
-
 
 # MARIO
 0	20	100

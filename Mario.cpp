@@ -192,15 +192,19 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (e->ny != 0)
 		{	
 
-			/*if (dynamic_cast<CPipe*>(e->obj))
+			if (dynamic_cast<CPipe*>(e->obj))
 			{	
-				DebugOut(L"On pipe oncollision with");
+				DebugOut(L"On Pipe");
 				CPipe* pipe = (CPipe*)e->obj;
 				float pipeX, pipeY;
 				pipe->GetPosition(pipeX, pipeY);
 				if (pipe->IsGoInside() && y < pipeY)
+				{
 					SetPipe();
-			}*/
+					//y += 1;
+				}
+					
+			}
 
 			if (e->ny > 0) {
 				vy = 0;
@@ -340,8 +344,12 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 	CPipe* pipe = (CPipe*)e->obj;
 	float pipeX, pipeY;
 	pipe->GetPosition(pipeX, pipeY);
-	if(pipe->IsGoInside() && y < pipeY)
+	if (pipe->IsGoInside() && y < pipeY) 
+	{
 		SetPipe();
+		y += 1;
+	}
+		/*SetPipe();*/
 }
 
 void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)

@@ -4,13 +4,19 @@
 #define GRAVITY 0.002f
 #define SPEED_X 0.08f
 #define SPEED_X2 0.1f
+#define SPEED_X3 0.03f
 #define SPEED_Y 0.15f
 
-#define LOW_JUMP 0.1f
+#define LOW_JUMP 0.12f
 #define HIGH_JUMP 0.15f
+#define DOWN_LOW_JUMP 0.1f
+#define DOWN_HIG_JUMP 0.13
 
 #define STATE_LOW_JUMP 400
 #define STATE_HIGH_JUMP 500
+#define STATE_DOWN_LOW 600
+#define STATE_DOWN_HIGH 700
+
 
 #define TYPE_LEFT_TOP_BREAK 6
 #define TYPE_LEFT_BOT_BREAK 7 
