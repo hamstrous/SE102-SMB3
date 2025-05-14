@@ -302,7 +302,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BACKGROUND_COLOR: obj = new CBackgroundColor(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str()), atoi(tokens[5].c_str())); break;
 	case OBJECT_TYPE_UNBREAKABLEBRICK: obj = new CUnbreakableBrick(x,y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_CLOUDPLATFORM: obj = new CCloudPlatform(x, y); break;
-	case OBJECT_TYPE_INVISIBLE_WALL: obj = new CInvisibleWall(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str())); break;
+	case OBJECT_TYPE_INVISIBLE_WALL: 
+	{
+		float width = (float)atof(tokens[3].c_str());
+		float height = (float)atof(tokens[4].c_str());
+		if (tokens.size() == 4) {
+			obj = new CInvisibleWall(x, y, width, height); 
+			break;
+		}
+		else if (tokens.size() == 6) {
+		
+			int state = atoi(tokens[5].c_str());
+			float endX = (float)atof(tokens[6].c_str());
+			obj = new CInvisibleWall(x, y, width, height, state, endX);
+			break;
+		}
+	}
 	case OBJECT_TYPE_ABYSS: obj = new CAbyss(x, y); break;
 	case OBJECT_TYPE_BLOCK: obj = new CBlock(x, y); break;
 	case OBJECT_TYPE_SWITCH: obj = new CSwitch(x, y); break;
@@ -392,7 +407,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_CAMERA:
 	{
-		camera = new CCamera(x,y);
+		float levelWidth = (float)atof(tokens[3].c_str());
+		float levelHeight = (float)atof(tokens[4].c_str());
+		int state = (float)atof(tokens[5].c_str());
+		camera = new CCamera(x, y, levelWidth, levelHeight, state);
 		break;
 	}
 	default:

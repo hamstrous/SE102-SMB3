@@ -4,13 +4,17 @@
 #define CAMERA_SPEED 0.1f
 #define FIXED_BOX_SIZE 20.0f
 #define OUT_CAMERA 32.f
+
+#define CAMERA_STATE_STATIC 0
+#define CAMERA_STATE_MOVING 1
+
 class CMario;
 
 class CCamera : public CGameObject
 {
 	//camera position always the top left corner of the screen
-	const float levelWidth = 2816;
-	const float levelHeight = 626;
+	float levelWidth = 2816;
+	float levelHeight = 626;
 	float screenWidth = 320;
 	float screenHeight = 240;
 public:
@@ -18,6 +22,7 @@ public:
 	
 	CCamera();
 	CCamera(float x, float y);
+	CCamera(float x, float y, float levelWidth, float levelHeight, float state);
 	void Render() {};
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	bool IsOutOfCamera(LPGAMEOBJECT obj) {

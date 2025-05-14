@@ -12,8 +12,6 @@ CMario* CCamera::GetMario()
 }
 
 CCamera::CCamera() : CGameObject(0, 0) {
-	x = 0;
-	y = 240;
 	CGame* game = CGame::GetInstance();
 	screenHeight = game->GetBackBufferHeight();
 	screenWidth = game->GetBackBufferWidth();
@@ -23,6 +21,17 @@ CCamera::CCamera(float x, float y) : CGameObject(x, y)
 	CGame* game = CGame::GetInstance();
 	screenHeight = game->GetBackBufferHeight();
 	screenWidth = game->GetBackBufferWidth();
+}
+CCamera::CCamera(float x, float y, float levelWidth, float levelHeight, float state) : CGameObject(x, y)
+{
+	CGame* game = CGame::GetInstance();
+	screenHeight = game->GetBackBufferHeight();
+	screenWidth = game->GetBackBufferWidth();
+	this->x = x;
+	this->y = y;
+	this->levelWidth = levelWidth;
+	this->levelHeight = levelHeight;
+	SetState(state);
 }
 ;
 
@@ -48,5 +57,5 @@ void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (my < ct) y -= ct - my;
 	}
 	Clamp(x, 0, levelWidth - screenWidth);
-	Clamp(y, 0, 240);
+	Clamp(y, 0, levelHeight - screenHeight);
 }

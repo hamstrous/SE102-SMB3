@@ -6,16 +6,23 @@ CInvisibleWall::CInvisibleWall(float x, float y, float width, float height) : CB
 	this->width = width;
 	this->height = height;
 
-	vx = INVISIBLE_WALL_SPEED; // Set the speed of the wall
-
 	// Set the state to static by default
 	SetState(INVISIBLE_WALL_STATE_STATIC);
+}
+
+CInvisibleWall::CInvisibleWall(float x, float y, float width, float height, int state, float endX) : CBaseBrick(x, y)
+{
+	this->width = width;
+	this->height = height;
+	this->endX = endX;
+
+	SetState(state); 
 }
 
 void CInvisibleWall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Update the position of the invisible wall
-	if (state == INVISIBLE_WALL_STATE_MOVING)
+	if (state == INVISIBLE_WALL_STATE_MOVING && x < endX)
 	{
 		x += vx * dt;
 	}
