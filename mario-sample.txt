@@ -29,5 +29,6 @@ height	820
 80	textures\hud2.png
 25	textures\misc2.png
 90	textures\text.png
+100	textures\items.png
 
 
