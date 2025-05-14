@@ -23,6 +23,7 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_DOWN:
 		if(!mario->canHold) mario->SetState(MARIO_STATE_SIT);
+		mario->SetPress();
 		break;
 	case DIK_S:
 		mario->JumpPressed();
@@ -69,6 +70,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
+		mario->ReleasePress();
 	case DIK_A:
 		mario->SetCanHold(false);
 		mario->SetRunInput(0);

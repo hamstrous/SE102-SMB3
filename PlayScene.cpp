@@ -642,6 +642,7 @@ void CPlayScene::Render()
 		i->Render();
 	for (auto i : firstRenderObjects)
 		i->Render();
+	if (mario->ReturnRenderMarioInPipe()) mario->Render();
 	if (mario->GetHolding()) mario->Render();
 	for (auto i : secondRenderObjects)
 		if (i != player) i->Render();
@@ -649,7 +650,7 @@ void CPlayScene::Render()
 		i->Render();
 	for (auto i : projectileRenderObjects)
 		i->Render();
-	if (!mario->GetHolding()) mario->Render();
+	if (!mario->GetHolding() && !mario->ReturnRenderMarioInPipe()) mario->Render();
 	
 
 	backgroundRenderObjects.clear();

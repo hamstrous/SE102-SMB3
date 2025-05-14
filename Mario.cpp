@@ -1,4 +1,4 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include "debug.h"
 
 #include "Mario.h"
@@ -148,6 +148,28 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (GoDownPipe)
+	{	
+		RenderMarioInPipe = true;
+		y += SPEED_IN_PIPE * dt;
+		if (y >= DistancePipeGo)
+		{
+			GoDownPipe = false;
+			RenderMarioInPipe = false;
+		}
+		return; 
+	}
+	if (GoUpPipe)
+	{
+		RenderMarioInPipe = true;
+		y -= SPEED_IN_PIPE * dt;
+		if (y <= DistancePipeGo)
+		{
+			GoUpPipe = false;
+			RenderMarioInPipe = false;
+		}
+		return;
+	}
 	Acceleration(dt);
 
 	//DebugOutTitle(L"vx: %f, vx: %f\n", vx, vy);
@@ -156,8 +178,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// reset untouchable timer if untouchable time has passed
 	// for mario has to be called first so process can call OnCollision
 	SetPointsPosition();
-	//CCollision::GetInstance()->Process(this, dt, coObjects);
-	CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, dt);
+	CCollision::GetInstance()->Process(this, dt, coObjects);
+	//CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, dt);
 
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
@@ -191,21 +213,6 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->obj->IsBlocking()) {
 		if (e->ny != 0)
 		{	
-
-			if (dynamic_cast<CPipe*>(e->obj))
-			{	
-				DebugOut(L"On Pipe");
-				CPipe* pipe = (CPipe*)e->obj;
-				float pipeX, pipeY;
-				pipe->GetPosition(pipeX, pipeY);
-				if (pipe->IsGoInside() && y < pipeY)
-				{
-					SetPipe();
-					//y += 1;
-				}
-					
-			}
-
 			if (e->ny > 0) {
 				vy = 0;
 			}else if (e->ny < 0) {
@@ -344,12 +351,12 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 	CPipe* pipe = (CPipe*)e->obj;
 	float pipeX, pipeY;
 	pipe->GetPosition(pipeX, pipeY);
-	if (pipe->IsGoInside() && y < pipeY) 
+	tempState = state;
+	if (pipe->IsGoInside() && y < pipeY && DownPress && (pipeX) < x && x < (pipeX + 14))
 	{
-		SetPipe();
-		y += 1;
+		GoDownPipe = true;
+		DistancePipeGo = pipeY + 16;
 	}
-		/*SetPipe();*/
 }
 
 void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)
@@ -589,6 +596,12 @@ void CMario::GetAniId()
 	}
 }
 
+void CMario::GetAniIdInPipe()
+{
+	currentAnimation = animationMap[level][MarioAnimationType::HOLD_FRONT];
+
+}
+
 float num = 0;
 
 void CMario::Render()
@@ -611,6 +624,11 @@ void CMario::Render()
 	}
 	else {
 		animations->Get(currentAnimation)->ResetType();
+	}
+
+	if (RenderMarioInPipe)
+	{
+		GetAniIdInPipe();
 	}
 
 	animations->Get(currentAnimation)->Render(x, y);
@@ -705,7 +723,9 @@ void CMario::SetState(int state)
 		ax = 0.0f;
 		dirInput = 0;
 		break;
-
+	case MARIO_STATE_GOIN_PIPE:
+		vy = 0.2;
+		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_SPEED_Y;
 		CPlayScene* s = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
@@ -718,7 +738,9 @@ void CMario::SetState(int state)
 		if(timesup) CGameFXManager::GetInstance()->AddTimeup(0, 0, TYPE_TIMEUP);
 		SetIsStop();
 		break;
+	
 	}
+	
 
 	CGameObject::SetState(state);
 }
@@ -870,10 +892,6 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			right = left + MARIO_BIG_BBOX_WIDTH;
 			bottom = top + MARIO_BIG_BBOX_HEIGHT;
 		}
-	}
-	else if (GoInPipe)
-	{
-		left = top = right = bottom = 0;
 	}
 	else
 	{
