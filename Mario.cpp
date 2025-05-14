@@ -352,11 +352,18 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 	float pipeX, pipeY;
 	pipe->GetPosition(pipeX, pipeY);
 	tempState = state;
-	if (pipe->IsGoInside() && y < pipeY && DownPress && (pipeX) < x && x < (pipeX + 14))
+	if ( (pipe->IsGoInside() == 1) && y < pipeY && DownPress && (pipeX) < x && x < (pipeX + 14))
 	{
 		GoDownPipe = true;
 		DistancePipeGo = pipeY + 16;
 	}
+	if ( (pipe->IsGoInside() == 2) && y > pipeY && UpPress && (pipeX) < x && x < (pipeX + 14))
+	{
+		GoUpPipe = true;
+		DistancePipeGo = pipeY - 16;
+	}
+
+
 }
 
 void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)

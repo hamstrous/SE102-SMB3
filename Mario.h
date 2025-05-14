@@ -356,7 +356,8 @@ public:
 			points[i]->SetSpeed(vx, vy);
 		}
 	}
-	void SetPress() { DownPress = UpPress = true; }
+	void SetPressDown() { DownPress = true; }
+	void SetPressUp() {  UpPress = true; }
 	void ReleasePress() { DownPress = UpPress = false; }
 	bool ReturnRenderMarioInPipe() { return RenderMarioInPipe; }
 
