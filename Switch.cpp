@@ -25,8 +25,8 @@ void CSwitch::Render()
 }
 
 void CSwitch::OnCollisionWith(LPCOLLISIONEVENT e)
-{
-	if (dynamic_cast<CMario*>(e->obj) && !off)
+{	
+	if (dynamic_cast<CMario*>(e->obj) && !off && e->ny > 0)
 	{	
 		off = true;
 		CGame::GetInstance()->SetChangeBricktoCoin(true);
@@ -37,5 +37,15 @@ void CSwitch::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CSwitch::SetState(int state)
 {
+}
+
+void CSwitch::Enable()
+{
+	if (!off)
+	{
+		off = true;
+		CGame::GetInstance()->SetChangeBricktoCoin(true);
+		time_start = GetTickCount64();
+	}
 }
 

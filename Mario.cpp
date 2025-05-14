@@ -346,7 +346,11 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)
 {	
-	
+	/*if (e->ny > 0)
+	{
+		CSwitch* sw = dynamic_cast<CSwitch*>(e->obj);
+		sw->Enable();
+	}*/
 }
 
 void CMario::Attacked() {
