@@ -93,6 +93,11 @@ public:
 		camera->GetPosition(x, y);
 	}
 
+	void TransformMario(float x, float y)
+	{
+		CMario* mario = dynamic_cast<CMario*>(player);
+		mario->SetPosition(x, y);
+	}
 
 };
 

@@ -144,30 +144,65 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 	}
 };
 
-
-
-void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
-{
+void CMario::GoingPipe(DWORD dt) {
+	CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
+	SetState(MARIO_STATE_GOIN_PIPE);
 	if (GoDownPipe)
-	{	
-		RenderMarioInPipe = true;
+	{
 		y += SPEED_IN_PIPE * dt;
 		if (y >= DistancePipeGo)
 		{
 			GoDownPipe = false;
-			RenderMarioInPipe = false;
+			if (typepipe % 2 == 0) OutUpPipe = true;
+			else OutDownPipe = true;
+			DistancePipeOut = typepipe % 2 ? PipeLocation[typepipe].second + 3 : PipeLocation[typepipe].second - 16;
+			if (level != MarioLevel::SMALL)
+				DistancePipeOut -= 4;
+			scene->TransformMario(PipeLocation[typepipe].first, PipeLocation[typepipe].second);
 		}
-		return; 
+		return;
 	}
 	if (GoUpPipe)
 	{
-		RenderMarioInPipe = true;
 		y -= SPEED_IN_PIPE * dt;
 		if (y <= DistancePipeGo)
 		{
 			GoUpPipe = false;
+			if (typepipe % 2 == 0) OutUpPipe = true;
+			else OutDownPipe = true;
+			DistancePipeOut = typepipe % 2 ? PipeLocation[typepipe].second + 3 : PipeLocation[typepipe].second - 16;
+			if (level != MarioLevel::SMALL)
+				DistancePipeOut -= 4;
+			scene->TransformMario(PipeLocation[typepipe].first, PipeLocation[typepipe].second);
+		}
+		return;
+	}
+	if (OutDownPipe)
+	{
+		y += SPEED_IN_PIPE * dt;
+		if (y >= DistancePipeOut)
+		{
+			OutDownPipe = false;
 			RenderMarioInPipe = false;
 		}
+		return;
+	}
+	if (OutUpPipe)
+	{
+		y -= SPEED_IN_PIPE * dt;
+		if (y <= DistancePipeOut)
+		{
+			OutUpPipe = false;
+			RenderMarioInPipe = false;
+		}
+		return;
+	}
+}
+
+void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+{
+	if (RenderMarioInPipe) {
+		GoingPipe(dt);
 		return;
 	}
 	Acceleration(dt);
@@ -352,15 +387,19 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 	float pipeX, pipeY;
 	pipe->GetPosition(pipeX, pipeY);
 	tempState = state;
-	if ( (pipe->IsGoInside() == 1) && y < pipeY && DownPress && (pipeX) < x && x < (pipeX + 14))
+	if ( (pipe->IsGoInside() == 1) && y < pipeY && DownPress && (pipeX) < x && x < (pipeX + PIPE_RANGE))
 	{
+		RenderMarioInPipe = true;
+		typepipe = pipe->GetType();
 		GoDownPipe = true;
-		DistancePipeGo = pipeY + 16;
+		DistancePipeGo = pipeY + DISTANCE_GO_DOWN_PIPE;
 	}
-	if ( (pipe->IsGoInside() == 2) && y > pipeY && UpPress && (pipeX) < x && x < (pipeX + 14))
+	if ( (pipe->IsGoInside() == 2) && y > pipeY && UpPress && (pipeX) < x && x < (pipeX + PIPE_RANGE))
 	{
+		RenderMarioInPipe = true;
+		typepipe = pipe->GetType();
 		GoUpPipe = true;
-		DistancePipeGo = pipeY - 16;
+		DistancePipeGo = pipeY - DISTANCE_GO_UP_PIPE;
 	}
 
 
@@ -731,7 +770,8 @@ void CMario::SetState(int state)
 		dirInput = 0;
 		break;
 	case MARIO_STATE_GOIN_PIPE:
-		vy = 0.2;
+		vy = vx = 0;
+		ay = ax = 0;
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_SPEED_Y;
