@@ -173,7 +173,7 @@ namespace std {
 
 // for Pipe
 #define DISTANCEGODOWNPIPE 40
-#define SPEED_IN_PIPE 0.01f
+#define SPEED_IN_PIPE 0.03f
 
 #define PIPE_RANGE 14
 #define DISTANCE_GO_DOWN_PIPE 10

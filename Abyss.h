@@ -1,5 +1,9 @@
 #pragma once
 #include "GameObject.h"
+
+#define ABYSS_BBOX_HEIGHT 16
+#define ABYSS_BBOX_WIDTH 2815
+
 class CAbyss : public CGameObject
 {
 protected:

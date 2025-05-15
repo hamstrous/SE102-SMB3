@@ -52,10 +52,10 @@ effect.txt
 28	7	207	10	416
 
 #CAMERA
-100	2271	90
+100	0	100
 
 #Abyss test
-25	2843	544	
+25	1415	525	
 #26	16	415	
 
 #BG COLOR, flower:3, mushroom:2, star:4
@@ -636,7 +636,7 @@ effect.txt
 
 
 #MARIO
-0	2271	70
+0	50	390
 
 ########## ENEMY ##########
 #PLANT

@@ -160,7 +160,6 @@ void CMario::GoingPipe(DWORD dt) {
 				DistancePipeOut -= 4;
 			scene->TransformMario(PipeLocation[typepipe].first, PipeLocation[typepipe].second);
 		}
-		return;
 	}
 	if (GoUpPipe)
 	{
@@ -175,7 +174,6 @@ void CMario::GoingPipe(DWORD dt) {
 				DistancePipeOut -= 4;
 			scene->TransformMario(PipeLocation[typepipe].first, PipeLocation[typepipe].second);
 		}
-		return;
 	}
 	if (OutDownPipe)
 	{
@@ -185,7 +183,6 @@ void CMario::GoingPipe(DWORD dt) {
 			OutDownPipe = false;
 			RenderMarioInPipe = false;
 		}
-		return;
 	}
 	if (OutUpPipe)
 	{
@@ -195,7 +192,6 @@ void CMario::GoingPipe(DWORD dt) {
 			OutUpPipe = false;
 			RenderMarioInPipe = false;
 		}
-		return;
 	}
 }
 
