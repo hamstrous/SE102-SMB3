@@ -2,9 +2,9 @@
 #include "GameObject.h"
 
 
-#define ID_ANI_HEAD 8700
-#define ID_ANI_BODY 8701
-#define ID_ANI_LEG  8702
+#define ID_ANI_HEAD 87001
+#define ID_ANI_BODY 87002
+#define ID_ANI_LEG  87003
 
 #define BBOX_WIDTH 48
 #define BBOX_HEIGHT 16

@@ -37,8 +37,8 @@
 #include "GameFX.h"
 #include "TimerManager.h"
 #include "Abyss.h"
-#include "Block.h"
 #include "InvisibleWall.h"
+#include "MovingPlatform.h"
 #include "Switch.h"
 using namespace std;
 
@@ -304,7 +304,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CLOUDPLATFORM: obj = new CCloudPlatform(x, y); break;
 	case OBJECT_TYPE_INVISIBLE_WALL: obj = new CInvisibleWall(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str())); break;
 	case OBJECT_TYPE_ABYSS: obj = new CAbyss(x, y); break;
-	case OBJECT_TYPE_BLOCK: obj = new CBlock(x, y); break;
+	case OBJECT_TYPE_MOVING_PLATFORM: obj = new CMovingPlatform(x, y); break;
 	case OBJECT_TYPE_SWITCH: obj = new CSwitch(x, y); break;
 	case OBJECT_TYPE_FLOOR:
 	{
@@ -630,6 +630,7 @@ void CPlayScene::Render()
 			|| dynamic_cast<CGameFX*>(i)
 			|| dynamic_cast<CAbyss*>(i)
 			|| dynamic_cast<CPipe*>(i)
+			|| dynamic_cast<CMovingPlatform*>(i)
 			|| dynamic_cast<CGameFXManager*>(i)) {
 			projectileRenderObjects.push_back(i);
 		}

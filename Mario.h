@@ -231,6 +231,7 @@ protected:
     void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
 	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
 	void OnCollisionWithSwitch(LPCOLLISIONEVENT e);
+	void OnCollisionWithMovingPlatfrom(LPCOLLISIONEVENT e);
 	void GetAniId();
 	void GetAniIdInPipe();
 	void AssignCurrentAnimation(MarioLevel level, MarioAnimationType type) {

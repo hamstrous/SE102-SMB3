@@ -21,6 +21,7 @@
 #include "Abyss.h"
 #include "Utils.h"
 #include "Pipe.h"
+#include "MovingPlatform.h"
 #include "Switch.h"
 
 unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animationMap = {
@@ -282,6 +283,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPipe(e);
 	else if (dynamic_cast<CSwitch*>(e->obj))
 		OnCollisionWithSwitch(e);
+	else if (dynamic_cast<CMovingPlatform*>(e->obj))
+		OnCollisionWithMovingPlatfrom(e);
 	else if (dynamic_cast<CAbyss*>(e->obj))
 	{
 		DebugOut(L"[INFO] abyss\n");
@@ -408,6 +411,13 @@ void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)
 		CSwitch* sw = dynamic_cast<CSwitch*>(e->obj);
 		sw->Enable();
 	}*/
+}
+
+void CMario::OnCollisionWithMovingPlatfrom(LPCOLLISIONEVENT e)
+{
+	isOnPlatform = true;
+	//currentPlatform = dynamic_cast<CMovingPlatform*>(e->obj);
+	vy + 0.05;
 }
 
 void CMario::Attacked() {
@@ -641,7 +651,6 @@ void CMario::GetAniId()
 void CMario::GetAniIdInPipe()
 {
 	currentAnimation = animationMap[level][MarioAnimationType::HOLD_FRONT];
-
 }
 
 float num = 0;
