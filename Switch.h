@@ -21,12 +21,16 @@ protected:
 	virtual void Render();
 
 	int IsCollidable() { return 1; }
-	virtual int IsBlocking() { return 0; }
+	virtual int IsBlocking() { 
+		if (off) return 0;
+		else return 1;
+		}
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 public:
 	CSwitch(float x, float y) : CBaseBrick(x, y) {};
 	virtual void SetState(int state);
 	void SetOff() { off = true; }
+	void Enable();
 };
 
 

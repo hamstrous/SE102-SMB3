@@ -14,6 +14,7 @@ height	820
 7	scene-nhat-test.txt
 8	level1-1.txt
 9	secret.txt
+10	level1-4.txt
 # id	file 
 [TEXTURES]
 -100	textures\bbox.png
@@ -29,5 +30,6 @@ height	820
 80	textures\hud2.png
 25	textures\misc2.png
 90	textures\text.png
+100	textures\items.png
 
 

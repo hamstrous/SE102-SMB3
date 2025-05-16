@@ -1,4 +1,5 @@
 #include "GameFXManager.h"
+#include "GameFXBreak.h"
 #include "debug.h"
 CGameFXManager* CGameFXManager::__instance = NULL;
 
@@ -23,6 +24,19 @@ void CGameFXManager::AddTimeup(float x, float y, int type)
 	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
 	CGameFX* fx = new CGameFX(hx, hy, TYPE_TIMEUP);
 	scene->AddObject(fx);
+}
+
+void CGameFXManager::AddBreak(float x, float y)
+{
+	CGameFXBreak* br = new CGameFXBreak(x, y, TYPE_LEFT_BOT_BREAK);
+	CGameFXBreak* br2 = new CGameFXBreak(x, y, TYPE_LEFT_TOP_BREAK);
+	CGameFXBreak* br3 = new CGameFXBreak(x, y, TYPE_RIGHT_BOT_BREAK);
+	CGameFXBreak* br4 = new CGameFXBreak(x, y, TYPE_RIGHT_TOP_BREAK);
+	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
+	scene->AddObject(br);
+	scene->AddObject(br2);
+	scene->AddObject(br3);
+	scene->AddObject(br4);
 }
 
 void CGameFXManager::InitPauseFX()

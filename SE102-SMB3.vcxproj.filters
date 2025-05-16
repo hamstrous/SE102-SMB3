@@ -55,7 +55,6 @@
     <ClCompile Include="CloudPlatform.cpp" />
     <ClCompile Include="TimerManager.cpp" />
     <ClCompile Include="Abyss.cpp" />
-    <ClCompile Include="Block.cpp" />
     <ClCompile Include="InvisibleWall.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Switch.cpp" />
@@ -63,6 +62,7 @@
     <ClCompile Include="BoomerangBro.cpp" />
     <ClCompile Include="Boomerang.cpp" />
     <ClCompile Include="Random.cpp" />
+    <ClCompile Include="MovingPlatform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -122,7 +122,6 @@
     <ClInclude Include="CloudPlatform.h" />
     <ClInclude Include="TimerManager.h" />
     <ClInclude Include="Abyss.h" />
-    <ClInclude Include="Block.h" />
     <ClInclude Include="InvisibleWall.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Switch.h" />
@@ -130,6 +129,7 @@
     <ClInclude Include="BoomerangBro.h" />
     <ClInclude Include="Boomerang.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="MovingPlatform.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

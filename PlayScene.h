@@ -100,7 +100,12 @@ public:
 		else
 			x = y = 0;
 	}
-};
+	void TransformMario(float x, float y)
+	{
+		CMario* mario = dynamic_cast<CMario*>(player);
+		mario->SetPosition(x, y);
+	}
+
 
 typedef CPlayScene* LPPLAYSCENE;
 

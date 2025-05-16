@@ -1,4 +1,5 @@
 #include "GameFX.h"
+
 #include "Game.h"
 void CGameFX::Render()
 {	
@@ -70,14 +71,6 @@ void CGameFX::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		case TYPE_SWITCH_SPAWN:
 		{
 			if (GetTickCount64() - start >= TIME_SWITCH_SPAWN) 
-			break;
-		}
-		case TYPE_LEFT_BOT_BREAK:
-		case TYPE_LEFT_TOP_BREAK:
-		case TYPE_RIGHT_TOP_BREAK:
-		case TYPE_RIGHT_BOT_BREAK:
-		{
-			if (GetTickCount64() - start <= TIME_BREAK) isDeleted = true;
 			break;
 		}
 	}
