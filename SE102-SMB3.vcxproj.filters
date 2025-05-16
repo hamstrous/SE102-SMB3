@@ -59,6 +59,9 @@
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Switch.cpp" />
     <ClCompile Include="GameFXBreak.cpp" />
+    <ClCompile Include="BoomerangBro.cpp" />
+    <ClCompile Include="Boomerang.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="MovingPlatform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +126,9 @@
     <ClInclude Include="Box.h" />
     <ClInclude Include="Switch.h" />
     <ClInclude Include="GameFXBreak.h" />
+    <ClInclude Include="BoomerangBro.h" />
+    <ClInclude Include="Boomerang.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="MovingPlatform.h" />
   </ItemGroup>
   <ItemGroup>

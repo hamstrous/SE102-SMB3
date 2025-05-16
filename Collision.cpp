@@ -16,6 +16,7 @@
 #include "Floor.h"
 #include "Box.h"
 #include "Pipe.h"
+#include "InvisibleWall.h"
 #define BLOCK_PUSH_FACTOR 0.01f
 
 #define DIRECTION_LEFT	0
@@ -248,6 +249,8 @@ void CCollision::Scan(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* objDe
 		if(obj->IsBoundBoxZero()) continue; // if the other obj not collidable then skip (2 way)	
 		if (type == 1 && !obj->IsBlocking()) continue;
 		else if (type == 2 && obj->IsBlocking()) continue;
+		if(dynamic_cast<CBox*>(objSrc) == NULL && dynamic_cast<CInvisibleWall*>(obj) ) continue; //skip invisoble wall
+
 
 		LPCOLLISIONEVENT e = SweptAABB(objSrc, dt, obj);
 
@@ -446,6 +449,40 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	if (eventCount == 0) objSrc->OnNoCollision(dt);
 }
 
+void CCollision::ProcessNoBlock(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	float x, y;
+	objSrc->GetPosition(x, y);
+	vector<LPCOLLISIONEVENT> coEvents;
+	LPCOLLISIONEVENT colX = NULL;
+	LPCOLLISIONEVENT colY = NULL;
+
+	coEvents.clear();
+
+	if (!objSrc->IsCollidable() || objSrc->IsBoundBoxZero()) {
+		objSrc->OnNoCollision(dt);
+		return;
+	}
+
+	
+
+	// process non-blocking collisions
+	Scan(objSrc, dt, coObjects, coEvents, 2, -1);
+
+	for (UINT i = 0; i < coEvents.size(); i++)
+	{
+		LPCOLLISIONEVENT e = coEvents[i];
+		if (e->isDeleted) continue;
+		if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
+		objSrc->OnCollisionWith(e);
+	}
+
+
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	objSrc->OnNoCollision(dt);
+}
+
 void CCollision::ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!objSrc->IsCollidable() || objSrc->IsBlocking()) return; //for non blocking objects only
@@ -549,11 +586,6 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	CBox* foot = new CBox(foot_l, foot_t, foot_r, foot_b);	
 	foot->SetSpeed(vx, vy);
 	foot->SetPosition(x, y);
-
-	DebugOut(L"Head: %f %f %f %f\n", head_l, head_t, head_r, head_b);
-	DebugOut(L"Body: %f %f %f %f\n", body_l, body_t, body_r, body_b);
-	DebugOut(L"Foot: %f %f %f %f\n", foot_l, foot_t, foot_r, foot_b);
-	DebugOut(L"ObjSrc: %f %f %f %f\n", mario_l, mario_t, mario_r, mario_b);
 
 	if (!objSrc->IsCollidable()) {
 		objSrc->OnNoCollision(dt);
@@ -767,12 +799,6 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 
 				if (IsOverlapping(ml, mt, mr, mb, sl, st, sr, sb))
 				{
-					if(dynamic_cast<CPipe*>(obj) && k == LEFTDOWN) {
-						//DebugOut(L"Collided with brick\n");
-						//DebugObjectType(obj);
-						//DebugObjectType(objSrc);
-						DebugOut(L"\n");
-					}
 					collidedObjects.push_back(obj);
 					pointsTouched.push_back(true);
 					touched = true;

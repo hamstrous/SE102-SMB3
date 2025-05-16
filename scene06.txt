@@ -15,6 +15,7 @@ koopa-red.txt
 font.txt
 hud.txt
 effect.txt
+boomerang-bro.txt
 #
 
 [OBJECTS]
@@ -22,6 +23,13 @@ effect.txt
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = pile
 # See OBJECT_TYPE constants in AssetIDs.h
 
+#CAMERA
+100	0	0	1000	1000	0
+
+#BOOMERANG BRO
+29	80	100
+
+15	40	100	1
 100	0	0
 
 #BREAKABLE BRICK
@@ -83,6 +91,11 @@ effect.txt
 
 
 #PIPE
+
+#9	340	132	16	16	3	63000	63100	63200	63300	1
+#9	150	132	16	16	3	63000	63100	63200	63300	1
+#9	92	148	16	16	2	63000	63100	63200	63300	1
+
 #9	340	132	16	16	3	63000	63100	63200	63300	1	0
 #9	150	110	16	16	2	63200	63300	63000	63100	2	0	
 #9	92	148	16	16	2	63000	63100	63200	63300	1	0

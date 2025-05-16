@@ -87,19 +87,25 @@ public:
 
 	void OnPlayerDie() {
 		deathTimer->Start();
+		camera->SetState(CAMERA_STATE_STOP);
 	}
 
 	void GetCamPos(float& x, float& y) {
 		camera->GetPosition(x, y);
 	}
 
+	void GetPlayerPosition(float& x, float& y) {
+		if (player != NULL)
+			player->GetPosition(x, y);
+		else
+			x = y = 0;
+	}
 	void TransformMario(float x, float y)
 	{
 		CMario* mario = dynamic_cast<CMario*>(player);
 		mario->SetPosition(x, y);
 	}
 
-};
 
 typedef CPlayScene* LPPLAYSCENE;
 

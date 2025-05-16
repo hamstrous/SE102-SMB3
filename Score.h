@@ -46,6 +46,7 @@ public:
 		this->y = y;
 		this->score = score;
 		startY = y;
+		killOffCam = true;
 		SetState(SCORE_STATE_UP);
 	}
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom) { }

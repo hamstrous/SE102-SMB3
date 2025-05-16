@@ -28,7 +28,7 @@ protected:
 	float vx = 0;
 	float vy = 0;
 
-	int nx;	 
+	int nx;
 
 	int state;
 
@@ -132,4 +132,6 @@ public:
 	void SetIsStop();
 
 	bool GetIsDead();
+
+	void GetPlayerPosition(float &x, float &y);
 };

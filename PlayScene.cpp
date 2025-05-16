@@ -40,6 +40,8 @@
 #include "InvisibleWall.h"
 #include "MovingPlatform.h"
 #include "Switch.h"
+#include "BoomerangBro.h"
+#include "Boomerang.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -302,7 +304,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BACKGROUND_COLOR: obj = new CBackgroundColor(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str()), atoi(tokens[5].c_str())); break;
 	case OBJECT_TYPE_UNBREAKABLEBRICK: obj = new CUnbreakableBrick(x,y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_CLOUDPLATFORM: obj = new CCloudPlatform(x, y); break;
-	case OBJECT_TYPE_INVISIBLE_WALL: obj = new CInvisibleWall(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str())); break;
+	case OBJECT_TYPE_INVISIBLE_WALL: 
+	{
+		float width = (float)atof(tokens[3].c_str());
+		float height = (float)atof(tokens[4].c_str());
+		if (tokens.size() == 5) {
+			obj = new CInvisibleWall(x, y, width, height); 
+			break;
+		}
+		else if (tokens.size() == 7) {
+		
+			int state = atoi(tokens[6].c_str());
+			float endX = (float)atof(tokens[5].c_str());
+			obj = new CInvisibleWall(x, y, width, height, endX, state);
+			break;
+		}
+	}
 	case OBJECT_TYPE_ABYSS: obj = new CAbyss(x, y); break;
 	case OBJECT_TYPE_MOVING_PLATFORM: obj = new CMovingPlatform(x, y); break;
 	case OBJECT_TYPE_SWITCH: obj = new CSwitch(x, y); break;
@@ -393,9 +410,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_CAMERA:
 	{
-		camera = new CCamera(x,y);
+		float levelWidth = (float)atof(tokens[3].c_str());
+		float levelHeight = (float)atof(tokens[4].c_str());
+		int state = (float)atof(tokens[5].c_str());
+		camera = new CCamera(x, y, levelWidth, levelHeight, state);
 		break;
 	}
+	case OBJECT_TYPE_BOOMERANG_BRO: obj = new CBoomerangBro(x, y); break;
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
 		return;
@@ -529,16 +550,15 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	for(auto obj : objects) {
+		if (IsObjectOutOfCamera(obj) && obj->GetKillOffCam()) {
+			obj->Delete();
+		}
 		if(CCharacter* character = dynamic_cast<CCharacter*>(obj)){
 			if(dynamic_cast<CMario*>(character)) {
 				continue;
 			}
 			if (IsObjectOutOfCamera(obj)) {
 				//when out of camera, go to sleep and put back at og pos
-				if (obj->GetKillOffCam()) {
-					obj->Delete();
-					continue;
-				}
 				obj->SetSleep(true);
 				float nx, ny;
 				if (characterCopy.find(character) != characterCopy.end() && IsObjectOutOfCamera(characterCopy[character])) {
@@ -549,15 +569,6 @@ void CPlayScene::Update(DWORD dt)
 			else if (obj->GetSleep()) {
 				obj->SetSleep(false);
 				character->Reset(characterCopy[dynamic_cast<CCharacter*>(obj)]);
-			}
-		}else if(CPowerUp* power = dynamic_cast<CPowerUp*>(obj)){
-			if (IsObjectOutOfCamera(obj)) {
-				obj->Delete();
-			}
-		}
-		else if (CFireball* fireball = dynamic_cast<CFireball*>(obj)) {
-			if (IsObjectOutOfCamera(obj)) {
-				obj->Delete();
 			}
 		}
 	}
@@ -625,6 +636,7 @@ void CPlayScene::Render()
 
 		if (dynamic_cast<CFireball*>(i)
 			|| dynamic_cast<CScore*>(i)
+			|| dynamic_cast<CBoomerang*>(i)
 			|| dynamic_cast<CLeaf*>(i)
 			|| dynamic_cast<CSmoke*>(i)
 			|| dynamic_cast<CGameFX*>(i)

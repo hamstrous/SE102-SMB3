@@ -21,6 +21,7 @@ number.txt
 font.txt
 fireball.txt
 effect.txt
+boomerang-bro.txt
 
 #0 : mario
 #1 : brick
@@ -44,15 +45,17 @@ effect.txt
 #22: goombafly
 #27: switch
 #28: invisible wall
+#29: boomerang bro
 #50 : portal
 #100 : camera
 
 [OBJECTS]
-#INVISIBLE WALL
-28	7	207	10	416
+#INVISIBLE WALL (x, y, width, height, endx, state)
+28	7	207	10	416	2500	1
+28	254	207	10	416	2500	1
 
 #CAMERA
-100	0	100
+100	0	240	2816	475	1
 
 #Abyss test
 25	1415	525	

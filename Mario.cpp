@@ -18,6 +18,7 @@
 #include "Font.h"
 #include "ScoreManager.h"
 #include "GameFXManager.h"
+#include "Boomerang.h"
 #include "Abyss.h"
 #include "Utils.h"
 #include "Pipe.h"
@@ -283,6 +284,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPipe(e);
 	else if (dynamic_cast<CSwitch*>(e->obj))
 		OnCollisionWithSwitch(e);
+	else if (dynamic_cast<CBoomerang*>(e->obj))
+		OnCollisionWithBoomerang(e);
 	else if (dynamic_cast<CMovingPlatform*>(e->obj))
 		OnCollisionWithMovingPlatfrom(e);
 	else if (dynamic_cast<CAbyss*>(e->obj))
@@ -361,6 +364,11 @@ void CMario::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithFireball(LPCOLLISIONEVENT e)
 {	
+	Attacked();
+}
+
+void CMario::OnCollisionWithBoomerang(LPCOLLISIONEVENT e)
+{
 	Attacked();
 }
 
@@ -540,9 +548,10 @@ void CMario::SetPointsPosition()
 	else {
 		const float MARIO_BIG_Y_OFFSET = 5.0f;
 		const float MARIO_BIG_X_OFFSET = 3.0f;
+		const float MARIO_BIG_TOPSIDE_Y_OFFSET = 3.0f;
 		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
 
-		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f - POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET);
+		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f - POINTS_OFFSET, y - MARIO_BIG_Y_OFFSET - MARIO_BIG_TOPSIDE_Y_OFFSET);
 
 		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f - POINTS_OFFSET, y + MARIO_BIG_BBOX_HEIGHT/2 - MARIO_RIGHTLEFT_DOWN_Y_OFFSET );
 
@@ -552,7 +561,7 @@ void CMario::SetPointsPosition()
 
 		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_BBOX_HEIGHT / 2 - MARIO_RIGHTLEFT_DOWN_Y_OFFSET);
 
-		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y - MARIO_BIG_Y_OFFSET);
+		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y - MARIO_BIG_Y_OFFSET - MARIO_BIG_TOPSIDE_Y_OFFSET);
 	}
 	SetSpeed(vx, vy);
 
