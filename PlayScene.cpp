@@ -40,6 +40,8 @@
 #include "Block.h"
 #include "InvisibleWall.h"
 #include "Switch.h"
+#include "BoomerangBro.h"
+#include "Boomerang.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -413,6 +415,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		camera = new CCamera(x, y, levelWidth, levelHeight, state);
 		break;
 	}
+	case OBJECT_TYPE_BOOMERANG_BRO: obj = new CBoomerangBro(x, y); break;
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
 		return;
@@ -546,16 +549,15 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	for(auto obj : objects) {
+		if (IsObjectOutOfCamera(obj) && obj->GetKillOffCam()) {
+			obj->Delete();
+		}
 		if(CCharacter* character = dynamic_cast<CCharacter*>(obj)){
 			if(dynamic_cast<CMario*>(character)) {
 				continue;
 			}
 			if (IsObjectOutOfCamera(obj)) {
 				//when out of camera, go to sleep and put back at og pos
-				if (obj->GetKillOffCam()) {
-					obj->Delete();
-					continue;
-				}
 				obj->SetSleep(true);
 				float nx, ny;
 				if (characterCopy.find(character) != characterCopy.end() && IsObjectOutOfCamera(characterCopy[character])) {
@@ -566,15 +568,6 @@ void CPlayScene::Update(DWORD dt)
 			else if (obj->GetSleep()) {
 				obj->SetSleep(false);
 				character->Reset(characterCopy[dynamic_cast<CCharacter*>(obj)]);
-			}
-		}else if(CPowerUp* power = dynamic_cast<CPowerUp*>(obj)){
-			if (IsObjectOutOfCamera(obj)) {
-				obj->Delete();
-			}
-		}
-		else if (CFireball* fireball = dynamic_cast<CFireball*>(obj)) {
-			if (IsObjectOutOfCamera(obj)) {
-				obj->Delete();
 			}
 		}
 	}
@@ -642,6 +635,7 @@ void CPlayScene::Render()
 
 		if (dynamic_cast<CFireball*>(i)
 			|| dynamic_cast<CScore*>(i)
+			|| dynamic_cast<CBoomerang*>(i)
 			|| dynamic_cast<CLeaf*>(i)
 			|| dynamic_cast<CSmoke*>(i)
 			|| dynamic_cast<CGameFX*>(i)

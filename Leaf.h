@@ -51,6 +51,7 @@ public:
 		ax = 0;
 		ay = LEAF_GRAVITY;
 		startY = y;
+		killOffCam = true;
 	}
 	virtual void SetState(int state);
 };

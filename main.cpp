@@ -187,7 +187,7 @@ int Run()
 			//DebugOut(L"-------------[INFO] FRAME = %d\n", frame);
 			Update(dt);
 			Render();
-			DebugOut(L"\n\n", dt);
+			//DebugOut(L"\n\n", dt);
 			CGame::GetInstance()->SwitchScene();
 		}
 		else

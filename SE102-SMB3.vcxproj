@@ -136,6 +136,8 @@
     <ClInclude Include="BackgroundColor.h" />
     <ClInclude Include="BaseBrick.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Boomerang.h" />
+    <ClInclude Include="BoomerangBro.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="BreakableBrick.h" />
     <ClInclude Include="Camera.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="Portal.h" />
     <ClInclude Include="PowerUp.h" />
     <ClInclude Include="QuestionBlock.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="SampleKeyEventHandler.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Score.h" />
@@ -198,6 +201,8 @@
     <ClCompile Include="BackgroundColor.cpp" />
     <ClCompile Include="BaseBrick.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Boomerang.cpp" />
+    <ClCompile Include="BoomerangBro.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="BreakableBrick.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -238,6 +243,7 @@
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="QuestionBlock.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="SampleKeyEventHandler.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Score.cpp" />

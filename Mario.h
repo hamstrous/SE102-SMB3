@@ -205,6 +205,7 @@ protected:
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
 	void OnCollisionWithFireball(LPCOLLISIONEVENT e);
+	void OnCollisionWithBoomerang(LPCOLLISIONEVENT e);
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
     void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
 	void OnCollisionWithPipe(LPCOLLISIONEVENT e);

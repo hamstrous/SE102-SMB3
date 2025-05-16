@@ -13,7 +13,6 @@ void CFireball::GetBoundingBox(float& left, float& top, float& right, float& bot
 void CFireball::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
-	//CCollision::GetInstance()->ProcessOnlyMario(this, dt, coObjects);
 	OnNoCollision(dt);
 }
 

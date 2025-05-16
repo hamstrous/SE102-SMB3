@@ -18,6 +18,7 @@
 #include "Font.h"
 #include "ScoreManager.h"
 #include "GameFXManager.h"
+#include "Boomerang.h"
 #include "Abyss.h"
 #include "Utils.h"
 #include "Pipe.h"
@@ -240,6 +241,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPipe(e);
 	else if (dynamic_cast<CSwitch*>(e->obj))
 		OnCollisionWithSwitch(e);
+	else if (dynamic_cast<CBoomerang*>(e->obj))
+		OnCollisionWithBoomerang(e);
 	else if (dynamic_cast<CAbyss*>(e->obj))
 	{
 		DebugOut(L"[INFO] abyss\n");
@@ -316,6 +319,11 @@ void CMario::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithFireball(LPCOLLISIONEVENT e)
 {	
+	Attacked();
+}
+
+void CMario::OnCollisionWithBoomerang(LPCOLLISIONEVENT e)
+{
 	Attacked();
 }
 

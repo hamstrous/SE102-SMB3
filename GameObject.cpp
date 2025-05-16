@@ -75,3 +75,10 @@ bool CGameObject::GetIsDead()
 	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 	return scene->GetIsDead();
 }
+
+void CGameObject::GetPlayerPosition(float& x, float& y)
+{
+	CGame* game = CGame::GetInstance();
+	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+	scene->GetPlayerPosition(x, y);
+}

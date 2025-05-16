@@ -94,7 +94,12 @@ public:
 		camera->GetPosition(x, y);
 	}
 
-
+	void GetPlayerPosition(float& x, float& y) {
+		if (player != NULL)
+			player->GetPosition(x, y);
+		else
+			x = y = 0;
+	}
 };
 
 typedef CPlayScene* LPPLAYSCENE;

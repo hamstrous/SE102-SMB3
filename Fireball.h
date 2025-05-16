@@ -30,6 +30,7 @@ public:
 	{	
 		this->x = x;
 		this->y = y - 8;
+		killOffCam = true;
 	}
 	void SetState(int state);
 };

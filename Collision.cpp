@@ -449,6 +449,40 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	if (eventCount == 0) objSrc->OnNoCollision(dt);
 }
 
+void CCollision::ProcessNoBlock(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	float x, y;
+	objSrc->GetPosition(x, y);
+	vector<LPCOLLISIONEVENT> coEvents;
+	LPCOLLISIONEVENT colX = NULL;
+	LPCOLLISIONEVENT colY = NULL;
+
+	coEvents.clear();
+
+	if (!objSrc->IsCollidable() || objSrc->IsBoundBoxZero()) {
+		objSrc->OnNoCollision(dt);
+		return;
+	}
+
+	
+
+	// process non-blocking collisions
+	Scan(objSrc, dt, coObjects, coEvents, 2, -1);
+
+	for (UINT i = 0; i < coEvents.size(); i++)
+	{
+		LPCOLLISIONEVENT e = coEvents[i];
+		if (e->isDeleted) continue;
+		if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
+		objSrc->OnCollisionWith(e);
+	}
+
+
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	objSrc->OnNoCollision(dt);
+}
+
 void CCollision::ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!objSrc->IsCollidable() || objSrc->IsBlocking()) return; //for non blocking objects only

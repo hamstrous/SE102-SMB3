@@ -59,6 +59,7 @@ public:
 		startY = y;
 		this->dir = dir;
 		time_start = GetTickCount64();
+		killOffCam = true;
 	}
 	virtual void SetState(int state);
 };
