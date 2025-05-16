@@ -30,7 +30,6 @@ boomerang-bro.txt
 29	80	100
 
 15	40	100	1
-100	0	0
 
 #BREAKABLE BRICK
 1	64	120

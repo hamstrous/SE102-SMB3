@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+
 #include "GameObject.h"
 
 #include <signal.h>
@@ -11,6 +12,7 @@
 #include <stdlib.h>
 #include <vector>
 
+class CGameObject;
 
 using namespace std;
 

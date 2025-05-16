@@ -45,7 +45,7 @@ public:
 
 	virtual void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 
-	void SetSleep(bool sleep) { this->sleep = sleep; }
+	virtual void SetSleep(bool sleep) { this->sleep = sleep; }
 	bool GetKillOffCam() { return killOffCam; }
 
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }

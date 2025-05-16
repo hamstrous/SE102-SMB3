@@ -17,6 +17,8 @@
 #include "Plant.h"
 #include "KoopaRed.h"
 #include "KoopaGreen.h"
+#include "Goomba.h"
+#include "GoombaFly.h"
 #include "ColorBlock.h"
 #include "Koopa.h"
 #include "QuestionBlock.h"
@@ -40,6 +42,7 @@
 #include "InvisibleWall.h"
 #include "MovingPlatform.h"
 #include "Switch.h"
+#include "BreakableBrick.h"
 #include "BoomerangBro.h"
 #include "Boomerang.h"
 using namespace std;
