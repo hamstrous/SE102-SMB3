@@ -3,22 +3,19 @@
 #include "Textures.h"
 #include "Scene.h"
 #include "GameObject.h"
-#include "BreakableBrick.h"
 #include "Mario.h"
-#include "Goomba.h"
-#include "GoombaFly.h"
 #include "Timer.h"
 
 //#include "Koopas.h"
 
 #define DEATH_TIME	4000
 
-class CPlayScene: public CScene
+class CPlayScene : public CScene
 {
-protected: 
+protected:
 	// A play scene has to have player, right? 
-	LPGAMEOBJECT player;					
-	CCamera* camera;					
+	LPGAMEOBJECT player;
+	CCamera* camera;
 
 	unordered_map<CCharacter*, CCharacter*> characterCopy;
 	vector<LPGAMEOBJECT> objects;
@@ -43,8 +40,8 @@ protected:
 	void _ParseSection_OBJECTS(string line);
 
 	void LoadAssets(LPCWSTR assetFile);
-	
-public: 
+
+public:
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();
@@ -64,7 +61,7 @@ public:
 
 	bool GetIsPause() { return pauseTimer->IsRunning(); }
 	void SetIsPause();
-	
+
 	bool GetIsStop() { return stopTimer->IsRunning(); }
 	void SetIsStop(float timeSpan) {
 		stopTimer->SetTimeSpan(timeSpan);
@@ -105,6 +102,7 @@ public:
 		CMario* mario = dynamic_cast<CMario*>(player);
 		mario->SetPosition(x, y);
 	}
+};
 
 
 typedef CPlayScene* LPPLAYSCENE;

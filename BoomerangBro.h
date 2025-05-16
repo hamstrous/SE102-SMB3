@@ -85,6 +85,15 @@ public:
 	};
 	void BlockHit() {};
 
+	void SetSleep(bool sleep) {
+
+		CGameObject::SetSleep(sleep);
+		if (boomerang != NULL && sleep) {
+			boomerang->Delete();
+			boomerang = NULL;
+		}
+	}
+
 	void Reset(const CCharacter* og) {
 		*this = *(const CBoomerangBro*) og;
 	}

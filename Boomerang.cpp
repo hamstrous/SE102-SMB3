@@ -7,7 +7,7 @@ void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessNoBlock(this, dt, coObjects);
 
 	 if (state == BOOMERANG_STATE_MOVING_UP)
 	{
