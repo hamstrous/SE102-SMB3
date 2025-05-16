@@ -1,6 +1,9 @@
 #include "BreakableBrick.h"
 #include "ScoreManager.h"
 #include "GameData.h"
+#include "GameFXBreak.h"
+#include "GameFXManager.h"
+#include "Mario.h"
 void CBreakableBrick::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
@@ -59,15 +62,24 @@ void CBreakableBrick::SideHit()
 {
 	if (!CGame::GetInstance()->GetChangeBricktoCoin())
 	{
-		isDeleted = true;
 		CScoreManager::GetInstance()->AddScore(x, y, 10);
+		isDeleted = true;
+		CGameFXManager::GetInstance()->AddBreak(x, y);
 	}
 }
 
 void CBreakableBrick::BottomHit()
 {	
-	bouncing = true;
-	time_start = GetTickCount64();
-	/*SetState(STATE_MOVE_UP);
-	DebugOut(L"State_move_up");*/
+	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	if (mario->GetLevel() != MarioLevel::SMALL)
+	{
+		CScoreManager::GetInstance()->AddScore(x, y, 10);
+		isDeleted = true;
+		CGameFXManager::GetInstance()->AddBreak(x, y);
+	}
+	else {
+		bouncing = true;
+		time_start = GetTickCount64();
+	}
+	
 }

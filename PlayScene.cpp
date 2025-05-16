@@ -37,8 +37,8 @@
 #include "GameFX.h"
 #include "TimerManager.h"
 #include "Abyss.h"
-#include "Block.h"
 #include "InvisibleWall.h"
+#include "MovingPlatform.h"
 #include "Switch.h"
 using namespace std;
 
@@ -304,7 +304,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CLOUDPLATFORM: obj = new CCloudPlatform(x, y); break;
 	case OBJECT_TYPE_INVISIBLE_WALL: obj = new CInvisibleWall(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str())); break;
 	case OBJECT_TYPE_ABYSS: obj = new CAbyss(x, y); break;
-	case OBJECT_TYPE_BLOCK: obj = new CBlock(x, y); break;
+	case OBJECT_TYPE_MOVING_PLATFORM: obj = new CMovingPlatform(x, y); break;
 	case OBJECT_TYPE_SWITCH: obj = new CSwitch(x, y); break;
 	case OBJECT_TYPE_FLOOR:
 	{
@@ -365,7 +365,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int	spriteId_bot_left = atoi(tokens[8].c_str());
 		int spriteId_bot_right = atoi(tokens[9].c_str());
 		BOOLEAN isGoInside = atoi(tokens[10].c_str());
-		obj = new CPipe(x, y, cellWidth, cellHeight, height, spriteId_top_left, spriteId_top_right, spriteId_bot_left, spriteId_bot_right, isGoInside);
+		int type = atoi(tokens[11].c_str());
+		obj = new CPipe(x, y, cellWidth, cellHeight, height, spriteId_top_left, spriteId_top_right, spriteId_bot_left, spriteId_bot_right, isGoInside, type);
 		break;
 	}
 	case OBJECT_TYPE_MUSHROOM:
@@ -629,6 +630,7 @@ void CPlayScene::Render()
 			|| dynamic_cast<CGameFX*>(i)
 			|| dynamic_cast<CAbyss*>(i)
 			|| dynamic_cast<CPipe*>(i)
+			|| dynamic_cast<CMovingPlatform*>(i)
 			|| dynamic_cast<CGameFXManager*>(i)) {
 			projectileRenderObjects.push_back(i);
 		}
@@ -642,6 +644,7 @@ void CPlayScene::Render()
 		i->Render();
 	for (auto i : firstRenderObjects)
 		i->Render();
+	if (mario->ReturnRenderMarioInPipe()) mario->Render();
 	if (mario->GetHolding()) mario->Render();
 	for (auto i : secondRenderObjects)
 		if (i != player) i->Render();
@@ -649,7 +652,7 @@ void CPlayScene::Render()
 		i->Render();
 	for (auto i : projectileRenderObjects)
 		i->Render();
-	if (!mario->GetHolding()) mario->Render();
+	if (!mario->GetHolding() && !mario->ReturnRenderMarioInPipe()) mario->Render();
 	
 
 	backgroundRenderObjects.clear();

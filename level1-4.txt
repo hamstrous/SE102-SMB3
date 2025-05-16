@@ -1,0 +1,113 @@
+#[CAMERA]
+
+[ASSETS]
+mario.txt
+brick.txt
+coin.txt
+goomba.txt
+cloud.txt
+floor.txt
+background.txt
+color-block.txt
+koopa.txt
+koopa-red.txt
+koopa-green.txt
+cloud.txt
+font.txt
+hud.txt
+pipe.txt
+plant.txt
+number.txt
+font.txt
+fireball.txt
+effect.txt
+
+#0 : mario
+#1 : brick
+#2 : goomba
+#3 : koopa red
+#4 : coin
+#5 : platform
+#7 : fireball
+#8 : plant
+#9 : pipe
+#10 : mountain
+#12 : color block
+#14 : koopa green
+#15 : question block
+#16 : mushroom
+#17 : smoke
+#18 : cloud
+#19 : floor
+#20 : background color
+#21:  unbreakablebrick
+#22: goombafly
+#27: switch
+#28: invisible wall
+#50 : portal
+#100 : camera
+
+[OBJECTS]
+# MARIO
+0	2071	350
+
+#BG COLOR
+20	7	7	128	27	0
+20	2071	7	13	26	0
+20	2055	7	1	27	1
+20	2279	7	19	26	1
+19	2071	423	32	1	0
+20	2263	7	1	26	6
+
+#SMALLBUSH
+20	71	343	1	1	5
+20	87	343	1	1	5
+20	103	343	1	1	5
+20	119	343	1	1	5
+20	135	343	1	1	5
+20	2087	407	1	1	5
+20	2103	407	1	1	5
+
+#WOOD
+21	2039	247	0
+21	2039	263	0
+21	2039	279	0
+21	2039	295	0
+21	2039	311	0
+21	2039	327	0
+21	2039	343	0
+21	2039	359	0
+21	2039	375	0
+21	2039	391	0
+
+#COIN
+4	343	311	2
+4	359	311	2
+4	375	311	2
+4	423	279	2
+4	239	279	2
+4	455	279	2
+4	775	311	2
+4	791	311	2
+4	807	311	2
+4	855	279	2
+4	871	279	2
+4	887	279	2
+4	1335	295	2
+4	1351	295	2
+4	1367	295	2
+4	1511	279	2
+4	1511	295	2
+4	1511	311	2
+4	1511	327	2
+4	1511	343	2
+4	1511	359	2
+4	1511	375	2
+4	1511	391	2
+4	1895	311	2
+4	1911	311	2
+4	1927	311	2
+
+#PIPE
+9	1943	343	16	16	4	63000	63100	63200	63300	1	2
+9	2199	391	16	16	2	63000	63100	63200	63300	0	0

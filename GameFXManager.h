@@ -27,6 +27,7 @@ public:
 	void InitTimeupFX();
 	void AddTimeup(float x, float y, int type);
 
+	void AddBreak(float x, float y);
 	
 };
 

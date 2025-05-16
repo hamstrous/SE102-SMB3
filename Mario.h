@@ -144,6 +144,8 @@ namespace std {
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
+#define MARIO_STATE_GOIN_PIPE		602
+
 #define MARIO_TURN_TIME 500
 
 #define GROUND_Y 160.0f
@@ -168,6 +170,15 @@ namespace std {
 
 #define UNTOUCHABLE_TIME 3000
 
+
+// for Pipe
+#define DISTANCEGODOWNPIPE 40
+#define SPEED_IN_PIPE 0.03f
+
+#define PIPE_RANGE 14
+#define DISTANCE_GO_DOWN_PIPE 10
+#define DISTANCE_GO_UP_PIPE 6
+
 const float MARIO_JUMP_SPEED[4] = { 0.20625f, 0.21375f, 0.22125f, 0.23625f };
 const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
 
@@ -175,6 +186,11 @@ const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
 class CMario : public CCharacter
 {
 protected:
+	vector<pair<float, float>> PipeLocation{
+		{2335, 391},
+		{2990, 252},
+		{2207, 391}
+	}; // type % 2 == 0 ? OutDown : OutUp di len la so chan, di xuong la so le
 	static unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;
 	BOOLEAN isSitting;
 	MarioLevel level;
@@ -192,8 +208,15 @@ protected:
 	int jumpInput = 0; // 1: jump, 0: no jump
 	int runInput = 0; // 1: run, 0: no run
 
-	bool GoInPipe = false;
-
+	//Check to go down - up in pipe and distance, press
+	bool DownPress, UpPress = false;
+	bool GoDownPipe, GoUpPipe = false;
+	bool OutDownPipe, OutUpPipe = false;
+	bool RenderMarioInPipe = false;
+	float DistancePipeGo = 0;
+	float DistancePipeOut = 0;
+	int tempState;
+	int typepipe;
 	// timers for animations
 	CTimer *attackTimer, *glideTimer, *flyTimer, *untouchableTimer, *turnHoldTimer, *shellProtectTimer;
 
@@ -209,7 +232,9 @@ protected:
     void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
 	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
 	void OnCollisionWithSwitch(LPCOLLISIONEVENT e);
+	void OnCollisionWithMovingPlatfrom(LPCOLLISIONEVENT e);
 	void GetAniId();
+	void GetAniIdInPipe();
 	void AssignCurrentAnimation(MarioLevel level, MarioAnimationType type) {
 		//if not in list
 		if (animationMap.find(level) == animationMap.end()) {
@@ -344,13 +369,20 @@ public:
 			points[i]->SetSpeed(vx, vy);
 		}
 	}
+	void SetPressDown() { DownPress = true; }
+	void SetPressUp() {  UpPress = true; }
+	void ReleasePress() { DownPress = UpPress = false; }
+	bool ReturnRenderMarioInPipe() { return RenderMarioInPipe; }
+
+	void GoingPipe(DWORD dt);
 
 	CPoint* GetPoint(int id) {
 		if (id < 0 || id >= points.size()) return NULL;
 		return points[id];
 	}
-	bool GetPipe() { return GoInPipe; }
-	void SetPipe() { GoInPipe = true; }
+	
+	//bool DownPress() { return DownPress; }
+	//bool UpPress() { return UpPress; }
 };
 
 //GROUND PHYSICS

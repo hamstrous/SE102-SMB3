@@ -135,7 +135,6 @@
     <ClInclude Include="AssetIDs.h" />
     <ClInclude Include="BackgroundColor.h" />
     <ClInclude Include="BaseBrick.h" />
-    <ClInclude Include="Block.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="BreakableBrick.h" />
     <ClInclude Include="Camera.h" />
@@ -167,6 +166,7 @@
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Mountain.h" />
+    <ClInclude Include="MovingPlatform.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Plant.h" />
@@ -197,7 +197,6 @@
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="BackgroundColor.cpp" />
     <ClCompile Include="BaseBrick.cpp" />
-    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="BreakableBrick.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -229,6 +228,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Mountain.cpp" />
+    <ClCompile Include="MovingPlatform.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="Plant.cpp" />
