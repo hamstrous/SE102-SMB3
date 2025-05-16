@@ -160,7 +160,7 @@ void CMario::GoingPipe(DWORD dt) {
 			DistancePipeOut = typepipe % 2 ? PipeLocation[typepipe].second + 3 : PipeLocation[typepipe].second - 16;
 			if (level != MarioLevel::SMALL)
 				DistancePipeOut -= 4;
-			scene->TransformMario(PipeLocation[typepipe].first, PipeLocation[typepipe].second);
+			scene->SetPlayerPosition(PipeLocation[typepipe].first, PipeLocation[typepipe].second);
 		}
 	}
 	if (GoUpPipe)
@@ -174,7 +174,7 @@ void CMario::GoingPipe(DWORD dt) {
 			DistancePipeOut = typepipe % 2 ? PipeLocation[typepipe].second + 3 : PipeLocation[typepipe].second - 16;
 			if (level != MarioLevel::SMALL)
 				DistancePipeOut -= 4;
-			scene->TransformMario(PipeLocation[typepipe].first, PipeLocation[typepipe].second);
+			scene->SetPlayerPosition(PipeLocation[typepipe].first, PipeLocation[typepipe].second);
 		}
 	}
 	if (OutDownPipe)
