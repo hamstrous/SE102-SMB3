@@ -13,7 +13,7 @@ void CQuestionBlock::Render()
 	}
 	if (isUnbox)
 		animations->Get(ID_ANI_BLOCK_UNBOX)->Render(x, y);
-	else if (type == ITEM_GREEN_MUSHROOM || type == ITEM_SWITCH)
+	else if (type >= 3)
 	animations->Get(ID_ANI_BREAKABLEBRICK)->Render(x, y);
 	else
 		animations->Get(ID_ANI_BLOCK_NORMAL)->Render(x, y);
@@ -91,7 +91,7 @@ void CQuestionBlock::SetState(int state)
 		vy = SPEED_QUESTION_BLOCK;
 		break;
 	case QUESTION_BLOCK_STATE_UNBOX:
-		if (type == ITEM_RED_MUSHROOM && mario->GetLevel() == MarioLevel::SMALL)
+		if ( (type == ITEM_RED_MUSHROOM || type == ITEM_BREAK_LEVEL_UP) && mario->GetLevel() == MarioLevel::SMALL)
 		{	
 			bool dir = (x > marioX) ? true : false;
 			int type = (mario->GetLevel() >= MarioLevel::BIG) ? ITEM_GREEN_MUSHROOM : ITEM_RED_MUSHROOM;
