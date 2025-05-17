@@ -186,7 +186,6 @@ const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
 class CMario : public CCharacter
 {
 protected:
-	CPoint* expectedPoint6 = nullptr;
 
 	vector<pair<float, float>> PipeLocation{
 		{2335, 391},
@@ -282,7 +281,7 @@ public:
 			float px = 0, py = 0;
 			points[i]->GetPosition(px, py);
 			DebugOut(L"[INFO] Mario::CMario: point %d position: %f, %f\n", i, px, py); // Debugging output
-		}expectedPoint6 = points[6];
+		}
 	}
 
 	~CMario() {
@@ -356,24 +355,6 @@ public:
 
 	void SpecialPressed();
 	void JumpPressed();
-
-	void CheckPoint6Integrity() {
-		if (points.size() <= 6) {
-			DebugOut(L"[ERROR] points[6] does not exist!\n");
-			return;
-		}
-
-		if (points[6] != expectedPoint6) {
-			DebugOut(L"[CORRUPTION] points[6] address mismatch!\n");
-			DebugOut(L"[DETAILS] Current: %p, Expected: %p\n", points[6], expectedPoint6);
-		}
-
-		else if (points[6] == nullptr) {
-			DebugOut(L"[CORRUPTION] points[6] is NULL!\n");
-		}
-
-	}
-
 
 	MarioLevel GetLevel() { return level; }
 	bool IsBig() { return level >= MarioLevel::BIG; }
