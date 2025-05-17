@@ -9,6 +9,8 @@
 #define CAMERA_STATE_MOVING 1
 #define CAMERA_STATE_STOP 2
 
+#define CAMERA_STATE_SECRET_ROOM 3
+#define CAMERA_STATE_1_4_END 4
 class CMario;
 
 class CCamera : public CGameObject

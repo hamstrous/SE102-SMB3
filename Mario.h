@@ -343,6 +343,7 @@ public:
 	bool IsBig() { return level >= MarioLevel::BIG; }
 	bool IsRaccoon() { return level == MarioLevel::RACCOON; }
 	bool IsOnPlatform() { return isOnPlatform; }
+	void SetIsOnPlatform() { isOnPlatform = true; }
 	bool IsPMeterFull();
 
 	void SetJumpInput(int jump) { this->jumpInput = jump; }

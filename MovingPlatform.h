@@ -9,9 +9,12 @@
 #define BBOX_WIDTH 48
 #define BBOX_HEIGHT 16
 
+#define SPEED_Y	0.05f
+
 class CMovingPlatform : public CGameObject
 {
 protected:
+	bool isActive = false;
 public:
 	CMovingPlatform(float x, float y) :CGameObject(x, y) {}
 	void Render();

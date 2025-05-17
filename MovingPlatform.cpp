@@ -23,7 +23,9 @@ void CMovingPlatform::GetBoundingBox(float& l, float& t, float& r, float& b)
 void CMovingPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	x += vx * dt;
-	y += vy * dt;
+	if (isActive) {
+		y += SPEED_Y * dt;
+	}
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -33,6 +35,12 @@ void CMovingPlatform::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (dynamic_cast<CMario*>(e->obj))
 	{
-		vy = 0.05f;
+		CMario* mario = dynamic_cast<CMario*>(e->obj);
+		mario->SetIsOnPlatform();
+		float mx, my;
+		mario->GetPosition(mx, my);
+		// Move Mario down with platform
+		mario->SetPosition(mx, my + SPEED_Y);
+		isActive = true;
 	}
 }

@@ -8,6 +8,7 @@ void CBreakableBrick::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
 	if(CGame::GetInstance()->GetChangeBricktoCoin()) animations->Get(ID_ANI_COIN_TYPE2)->Render(x, y);
+	else if (unbox) animations->Get(QUESTION_BLOCK_STATE_UNBOX)->Render(x, y);
 	else if(bouncing) animations->Get(ID_ANI_BOUNCING)->Render(x, y);
 	else animations->Get(ID_ANI_BREAKABLEBRICK)->Render(x, y);
 	//RenderBoundingBox();
@@ -60,18 +61,22 @@ void CBreakableBrick::SetState(int state)
 
 void CBreakableBrick::SideHit()
 {
-	if (!CGame::GetInstance()->GetChangeBricktoCoin())
+	if (!CGame::GetInstance()->GetChangeBricktoCoin() && type != TYPE_ADDSCORE)
 	{
 		CScoreManager::GetInstance()->AddScore(x, y, 10);
 		isDeleted = true;
 		CGameFXManager::GetInstance()->AddBreak(x, y);
+	}
+	if (type == TYPE_ADDSCORE)
+	{
+		CScoreManager::GetInstance()->AddScore(x, y, 100);
 	}
 }
 
 void CBreakableBrick::BottomHit()
 {	
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-	if (mario->GetLevel() != MarioLevel::SMALL)
+	if (mario->GetLevel() != MarioLevel::SMALL && type != TYPE_ADDSCORE)
 	{
 		CScoreManager::GetInstance()->AddScore(x, y, 10);
 		isDeleted = true;
@@ -81,5 +86,8 @@ void CBreakableBrick::BottomHit()
 		bouncing = true;
 		time_start = GetTickCount64();
 	}
-	
+	if (type == TYPE_ADDSCORE)
+	{
+		CScoreManager::GetInstance()->AddScore(x, y, 100);
+	}
 }
