@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include "Game.h"
+#include "GameFXManager.h"
 #include "debug.h"
 #include "Utils.h"
 
@@ -557,11 +558,10 @@ void CGame::ResetCurrentScene()
 
 	CSprites::GetInstance()->Clear();
 	CAnimations::GetInstance()->Clear();
+	CGameFXManager::GetInstance()->Clear();
 	CGameData::GetInstance()->OnDeath();
 
-	LPSCENE s = scenes[current_scene];
-	this->SetKeyHandler(s->GetKeyEventHandler());
-	s->Load();
+	scenes[current_scene]->Load();
 }
 
 void CGame::InitiateSwitchScene(int scene_id)

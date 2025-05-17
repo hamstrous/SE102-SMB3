@@ -44,6 +44,12 @@ protected:
 
 public:
 	CKoopaRed(float x, float y, bool hasWing);
+	~CKoopaRed() {
+		if (FloorCheck != NULL) {
+			FloorCheck->Delete();
+			FloorCheck = NULL;
+		}
+	}
 	virtual void SetState(int state);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

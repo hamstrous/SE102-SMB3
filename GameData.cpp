@@ -22,6 +22,9 @@ void CGameData::OnDeath()
 	}
 	countDown->Start();
 	pmeter = 0;
+	ptimer->Reset();
+	ptimer = f8;
+	ptimer->Reset();
 }
 
 int CGameData::GetRemainingTime()
@@ -92,7 +95,6 @@ void CGameData::Update(DWORD dt)
 					pmeter = 0;
 					ptimer->Reset();
 					flightMode = false;
-					mario->SetState(MARIO_STATE_JUMP);
 				}
 			}else ptimer = f255, ptimer->Start();
 		}

@@ -56,6 +56,20 @@ public:
 		jumpTimer->Start();
 	}
 
+	~CBoomerangBro() {
+		if (boomerang != NULL) {
+			boomerang->Delete();
+			boomerang = NULL;
+		}
+		delete waitTimer;
+		delete throwTimer;
+		delete jumpTimer;
+
+		waitTimer = NULL;
+		throwTimer = NULL;
+		jumpTimer = NULL;
+	}
+
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 

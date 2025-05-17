@@ -28,6 +28,11 @@ public:
 	void AddTimeup(float x, float y, int type);
 
 	void AddBreak(float x, float y);
+
+	void Clear() {
+		pauseFX = nullptr;
+		timeupFX = nullptr;
+	}
 	
 };
 
