@@ -52,10 +52,10 @@ boomerang-bro.txt
 [OBJECTS]
 #INVISIBLE WALL (x, y, width, height, endx, state)
 28	7	207	10	416	2500	1
-28	254	207	10	416	2500	1
+#28	254	207	10	416	2500	1
 
 #CAMERA
-100	0	240	2816	475	1
+100	0	240	2816	475	0
 
 #Abyss test
 25	1415	525	

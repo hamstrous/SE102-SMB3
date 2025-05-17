@@ -29,6 +29,7 @@
 #define ITEM_RED_MUSHROOM 2
 #define ITEM_GREEN_MUSHROOM 3
 #define ITEM_SWITCH 4
+#define ITEM_BREAK_LEVELUP 5
 
 #define TIME_UP 80
 class CQuestionBlock : public CBaseBrick
