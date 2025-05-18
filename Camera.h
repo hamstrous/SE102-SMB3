@@ -8,9 +8,14 @@
 #define CAMERA_STATE_STATIC 0
 #define CAMERA_STATE_MOVING 1
 #define CAMERA_STATE_STOP 2
-
 #define CAMERA_STATE_SECRET_ROOM 3
 #define CAMERA_STATE_1_4_END 4
+
+#define CAMERA_SECRET_ROOM_X 2845
+#define CAMERA_SECRET_ROOM_Y 225
+
+#define CAMERA_1_4_X 2096
+#define CAMERA_1_4_Y 240
 class CMario;
 
 class CCamera : public CGameObject
@@ -44,6 +49,14 @@ public:
 		case CAMERA_STATE_STOP:
 			vx = 0;
 			break;
+		case CAMERA_STATE_SECRET_ROOM:
+			x = CAMERA_SECRET_ROOM_X;
+			y = CAMERA_SECRET_ROOM_Y;
+			break;
+		case CAMERA_STATE_1_4_END:
+			x = CAMERA_1_4_X;
+			y = CAMERA_1_4_Y;
+			break;
 		default:
 			break;
 		}
@@ -51,7 +64,8 @@ public:
 
 	void UpdateStatic(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void UpdateMoving(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-
+	void UpdateSecretRoom(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void Update1_4End(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	bool IsOutOfCamera(LPGAMEOBJECT obj) {
 		float ox, oy;
 		obj->GetPosition(ox, oy);

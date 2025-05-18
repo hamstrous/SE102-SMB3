@@ -4,6 +4,8 @@
 #include "GameFXBreak.h"
 #include "GameFXManager.h"
 #include "Mario.h"
+#include "Coin.h"
+#include "PlayScene.h"
 void CBreakableBrick::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
@@ -69,13 +71,14 @@ void CBreakableBrick::SideHit()
 	}
 	if (type == TYPE_ADDSCORE)
 	{
-		CScoreManager::GetInstance()->AddScore(x, y, 100);
+		AddScoreBrick();
 	}
 }
 
 void CBreakableBrick::BottomHit()
 {	
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
 	if (mario->GetLevel() != MarioLevel::SMALL && type != TYPE_ADDSCORE)
 	{
 		CScoreManager::GetInstance()->AddScore(x, y, 10);
@@ -88,6 +91,17 @@ void CBreakableBrick::BottomHit()
 	}
 	if (type == TYPE_ADDSCORE)
 	{
-		CScoreManager::GetInstance()->AddScore(x, y, 100);
+		AddScoreBrick();
 	}
+}
+
+void CBreakableBrick::AddScoreBrick()
+{
+	LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
+	CCoin* coin = new CCoin(x, y, TYPE_1);
+	coin->SetState(COIN_STATE_MOVEUP);
+	scene->AddObject(coin);
+	CGameData::GetInstance()->AddCoin(1);
+	bouncing = true;
+	time_start = GetTickCount64();
 }

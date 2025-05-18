@@ -47,4 +47,5 @@ public:
 	virtual void SetState(int state);
 	virtual void SideHit();
 	virtual void BottomHit();
+	virtual void AddScoreBrick();
 };

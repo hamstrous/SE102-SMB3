@@ -42,7 +42,10 @@ void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else if (state == CAMERA_STATE_MOVING) {
 		UpdateMoving(dt, coObjects);
-	}	
+	}
+	else if(state == CAMERA_STATE_SECRET_ROOM) {
+		UpdateSecretRoom(dt, coObjects);
+	}
 }
 
 void CCamera::UpdateStatic(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -76,6 +79,48 @@ void CCamera::UpdateMoving(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if(x > levelWidth - screenWidth)
 	{
 		SetState(CAMERA_STATE_STATIC);
+	}
+	Clamp(x, 0, levelWidth - screenWidth);
+	Clamp(y, 0, levelHeight - screenHeight);
+}
+
+void CCamera::UpdateSecretRoom(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	CMario* mario = GetMario();
+	if (mario == NULL) return;
+
+	float mx, my;
+	mario->GetPosition(mx, my);
+
+	float cl, cr, ct, cb; //line to check if we need to move the camera
+
+	cl = x + screenWidth / 2 - FIXED_BOX_SIZE;
+	cr = x + screenWidth / 2 + FIXED_BOX_SIZE;
+
+	if (mx < cl) x -= cl - mx;
+	if (mx > cr) x += mx - cr;
+}
+
+void CCamera::Update1_4End(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	CMario* mario = GetMario();
+	if (mario == NULL) return;
+
+	float mx, my;
+	mario->GetPosition(mx, my);
+
+	float cl, cr, ct, cb; //line to check if we need to move the camera
+
+	cl = x + screenWidth / 2 - FIXED_BOX_SIZE;
+	cr = x + screenWidth / 2 + FIXED_BOX_SIZE;
+	ct = y + screenHeight / 2 - FIXED_BOX_SIZE;
+	cb = y + screenHeight / 2 + FIXED_BOX_SIZE;
+
+	if (mx < cl) x -= cl - mx;
+	if (mx > cr) x += mx - cr;
+	if (my > cb) y += my - cb;
+	if (CGameData::GetInstance()->IsFlightMode()) {
+		if (my < ct) y -= ct - my;
 	}
 	Clamp(x, 0, levelWidth - screenWidth);
 	Clamp(y, 0, levelHeight - screenHeight);

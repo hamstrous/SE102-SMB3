@@ -383,6 +383,7 @@ public:
 		return points[id];
 	}
 	
+
 	//bool DownPress() { return DownPress; }
 	//bool UpPress() { return UpPress; }
 };

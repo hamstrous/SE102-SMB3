@@ -24,6 +24,7 @@
 #include "Pipe.h"
 #include "MovingPlatform.h"
 #include "Switch.h"
+#include "Camera.h"
 
 unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animationMap = {
 	{
@@ -148,6 +149,7 @@ unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animat
 
 void CMario::GoingPipe(DWORD dt) {
 	CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
+	CCamera* camera = scene->GetCamera();
 	SetState(MARIO_STATE_GOIN_PIPE);
 	if (goDownPipe)
 	{
@@ -162,6 +164,7 @@ void CMario::GoingPipe(DWORD dt) {
 				distancePipeOut -= 4;
 			scene->SetPlayerPosition(PipeLocation[typePipe].first, PipeLocation[typePipe].second);
 		}
+		
 	}
 	if (goUpPipe)
 	{
@@ -178,7 +181,8 @@ void CMario::GoingPipe(DWORD dt) {
 		}
 	}
 	if (outDownPipe)
-	{
+	{	
+		if (typePipe == 1) camera->SetState(CAMERA_STATE_SECRET_ROOM); 
 		y += SPEED_IN_PIPE * dt;
 		if (y >= distancePipeOut)
 		{
@@ -187,7 +191,10 @@ void CMario::GoingPipe(DWORD dt) {
 		}
 	}
 	if (outUpPipe)
-	{
+	{	
+		
+		if (typePipe == 0) camera->SetState(CAMERA_STATE_STATIC);
+		else if (typePipe == 2) camera->SetState(CAMERA_STATE_1_4_END);
 		y -= SPEED_IN_PIPE * dt;
 		if (y <= distancePipeOut)
 		{

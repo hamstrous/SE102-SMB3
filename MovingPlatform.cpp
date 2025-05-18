@@ -36,11 +36,10 @@ void CMovingPlatform::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<CMario*>(e->obj))
 	{
 		CMario* mario = dynamic_cast<CMario*>(e->obj);
-		mario->SetIsOnPlatform();
+		//mario->SetIsOnPlatform();
 		float mx, my;
-		mario->GetPosition(mx, my);
-		// Move Mario down with platform
-		mario->SetPosition(mx, my + SPEED_Y);
+		//mario->GetPosition(mx, my);
+		//mario->SetPosition(mx, my + SPEED_Y); // Move Mario down with platform
 		isActive = true;
 	}
 }
