@@ -112,7 +112,7 @@ void CQuestionBlock::SetState(int state)
 
 void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
 {	
-	DebugOut(L"[INFO] OnCollisionWith called\n");
+	/*DebugOut(L"[INFO] OnCollisionWith called\n");
 	if (vy != 0)
 	{
 		DebugOut(L"[INFO] OnCollisionWith: Block is moving\n");
@@ -145,7 +145,7 @@ void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
 	else
 	{
 		DebugOut(L"[INFO] Collided with another object\n");
-	}
+	}*/
 }
 
 void CQuestionBlock::SideHit()
