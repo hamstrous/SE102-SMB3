@@ -46,6 +46,10 @@ void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else if(state == CAMERA_STATE_SECRET_ROOM) {
 		UpdateSecretRoom(dt, coObjects);
 	}
+	else if (state == CAMERA_STATE_1_4_END)
+	{
+		Update1_4End(dt, coObjects);
+	}
 }
 
 void CCamera::UpdateStatic(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -122,6 +126,6 @@ void CCamera::Update1_4End(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (CGameData::GetInstance()->IsFlightMode()) {
 		if (my < ct) y -= ct - my;
 	}
-	Clamp(x, 0, levelWidth - screenWidth);
+	Clamp(x, MAX_X_CAMERA_1_4, levelWidth2 - screenWidth);
 	Clamp(y, 0, levelHeight - screenHeight);
 }
