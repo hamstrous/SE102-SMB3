@@ -217,6 +217,10 @@ protected:
 	float distancePipeOut = 0;
 	int tempState;
 	int typePipe;
+
+	//Moving flatform
+	bool isOnMovingFlatform = false;
+
 	// timers for animations
 	CTimer *attackTimer, *glideTimer, *flyTimer, *untouchableTimer, *turnHoldTimer, *shellProtectTimer;
 

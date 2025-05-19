@@ -210,6 +210,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		GoingPipe(dt);
 		return;
 	}
+	if (isOnMovingFlatform) {
+		y += SPEED_Y_MOVING_PLATFORM * dt;
+		isOnMovingFlatform = false;
+	}
 	Acceleration(dt);
 
 	//DebugOutTitle(L"vx: %f, vx: %f\n", vx, vy);
@@ -431,8 +435,9 @@ void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithMovingPlatfrom(LPCOLLISIONEVENT e)
 {
 	isOnPlatform = true;
+	isOnMovingFlatform = true;
 	//currentPlatform = dynamic_cast<CMovingPlatform*>(e->obj);
-	vy + 0.05;
+	//vy + 0.05;
 }
 
 void CMario::Attacked() {

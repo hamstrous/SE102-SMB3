@@ -13,7 +13,7 @@ void CBreakableBrick::Render()
 	else if (unbox) animations->Get(QUESTION_BLOCK_STATE_UNBOX)->Render(x, y);
 	else if(bouncing) animations->Get(ID_ANI_BOUNCING)->Render(x, y);
 	else animations->Get(ID_ANI_BREAKABLEBRICK)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
