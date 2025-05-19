@@ -6,7 +6,9 @@ void CMovingPlatform::Render()
 {
 	float xx = x - 16;
 	float xxx = x + 16;
+
 	CSprites* s = CSprites::GetInstance();
+
 	s->Get(ID_ANI_BODY)->Draw(x, y);
 	s->Get(ID_ANI_HEAD)->Draw(xx, y);
 	s->Get(ID_ANI_LEG)->Draw(xxx, y);
@@ -29,10 +31,7 @@ void CMovingPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float camWidth = CGame::GetInstance()->GetScreenWidth();
 	float camHeight = CGame::GetInstance()->GetScreenHeight();
 
-
-
-	if (!isActive && x >= cx && x <= cx + camWidth &&
-		y >= cy && y <= cy + camHeight) x += SPEED_X_MOVING_PLATFORM * dt;
+	if (!isActive && x >= cx && x <= cx + camWidth && y >= cy && y <= cy + camHeight) x += SPEED_X_MOVING_PLATFORM * dt;
 	if (isActive) y += SPEED_Y_MOVING_PLATFORM * dt;
 
 	CGameObject::Update(dt, coObjects);
