@@ -526,6 +526,7 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
+
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	//if (GetIsPause() || GetIsStop() ) return;
@@ -545,10 +546,16 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	CMario* mario = dynamic_cast<CMario*>(player);
+
+	if ((!winTimer->IsRunning() && !deathTimer->IsRunning()) && fadeoutAlpha > 0) {
+		fadeoutAlpha -= dt * fadeoutSpeed;
+	}
+
 	if (mario->GetState() == MARIO_STATE_WIN && IsObjectOutOfCamera(mario)) {
 		if (!winTimer->IsDone()) {
 			if (winTimer->IsRunning()) {
-
+				if (winTimer->RemainingTime() <= FADE_TIME)
+					fadeoutAlpha += dt * fadeoutSpeed;
 			}
 			else {
 				CGameData::GetInstance()->StartTimeToScore();
@@ -558,8 +565,6 @@ void CPlayScene::Update(DWORD dt)
 		else {
 			CGame::GetInstance()->SwitchScene(6);
 		}
-		CGameData::GetInstance()->Update(dt);
-		return;
 	}
 	
 
@@ -615,7 +620,7 @@ void CPlayScene::Update(DWORD dt)
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		LPGAMEOBJECT obj = objects[i];
-		if (!objects[i]->GetSleep() && !deathTimer->IsRunning()) objects[i]->Update(dt, &coObjects);
+		if (!objects[i]->GetSleep() && !deathTimer->IsRunning() && !winTimer->IsRunning()) objects[i]->Update(dt, &coObjects);
 	}
 	if(deathTimer->IsRunning()) player->Update(dt, &coObjects);
 	else CGameData::GetInstance()->Update(dt);
@@ -630,6 +635,8 @@ void CPlayScene::Update(DWORD dt)
 		deathTimer->Reset();
 	}
 	
+	if(deathTimer->RemainingTime() <= FADE_TIME || winTimer->RemainingTime() <= FADE_TIME)
+		fadeoutAlpha += dt * fadeoutSpeed;
 
 }
 
@@ -699,7 +706,11 @@ void CPlayScene::Render()
 	thirdRenderObjects.clear();
 	projectileRenderObjects.clear();
 	hud->Render();
-	if(winTimer->IsRunning()) hud->RenderEnd();
+	if (winTimer->IsRunning()) {
+		hud->RenderEnd();
+	}
+	
+	ScreenTransition();
 }
 
 /*

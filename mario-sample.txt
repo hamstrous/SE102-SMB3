@@ -19,6 +19,7 @@ height	820
 [TEXTURES]
 -100	textures\bbox.png
 -90	textures\point.png
+-80	textures\transition.png
 0	textures\mario.png
 10	textures\enemies.png
 20	textures\misc.png
