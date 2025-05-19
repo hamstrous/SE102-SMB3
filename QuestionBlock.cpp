@@ -13,7 +13,7 @@ void CQuestionBlock::Render()
 	}
 	if (isUnbox)
 		animations->Get(ID_ANI_BLOCK_UNBOX)->Render(x, y);
-	else if (type == ITEM_GREEN_MUSHROOM || type == ITEM_SWITCH)
+	else if (type >= 3)
 	animations->Get(ID_ANI_BREAKABLEBRICK)->Render(x, y);
 	else
 		animations->Get(ID_ANI_BLOCK_NORMAL)->Render(x, y);
@@ -75,7 +75,7 @@ void CQuestionBlock::SetState(int state)
 			scene->AddObject(coin);
 			CGameData::GetInstance()->AddCoin(1);
 		}
-		if (type == ITEM_RED_MUSHROOM && mario->GetLevel() >= MarioLevel::BIG) {
+		if ( (type == ITEM_RED_MUSHROOM || type == ITEM_BREAK_LEVELUP) && mario->GetLevel() >= MarioLevel::BIG) {
 			CLeaf* leaf = new CLeaf(x, y - DISTANCE_SPAWN - 15);
 			leaf->SetState(LEAF_STATE_UP);
 			scene->AddObject(leaf);
@@ -91,7 +91,7 @@ void CQuestionBlock::SetState(int state)
 		vy = SPEED_QUESTION_BLOCK;
 		break;
 	case QUESTION_BLOCK_STATE_UNBOX:
-		if (type == ITEM_RED_MUSHROOM && mario->GetLevel() == MarioLevel::SMALL)
+		if ( (type == ITEM_RED_MUSHROOM || type == ITEM_BREAK_LEVEL_UP) && mario->GetLevel() == MarioLevel::SMALL)
 		{	
 			bool dir = (x > marioX) ? true : false;
 			int type = (mario->GetLevel() >= MarioLevel::BIG) ? ITEM_GREEN_MUSHROOM : ITEM_RED_MUSHROOM;
@@ -112,7 +112,7 @@ void CQuestionBlock::SetState(int state)
 
 void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
 {	
-	DebugOut(L"[INFO] OnCollisionWith called\n");
+	/*DebugOut(L"[INFO] OnCollisionWith called\n");
 	if (vy != 0)
 	{
 		DebugOut(L"[INFO] OnCollisionWith: Block is moving\n");
@@ -145,7 +145,7 @@ void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
 	else
 	{
 		DebugOut(L"[INFO] Collided with another object\n");
-	}
+	}*/
 }
 
 void CQuestionBlock::SideHit()

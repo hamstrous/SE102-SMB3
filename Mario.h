@@ -213,14 +213,18 @@ protected:
 	int runInput = 0; // 1: run, 0: no run
 
 	//Check to go down - up in pipe and distance, press
-	bool DownPress, UpPress = false;
-	bool GoDownPipe, GoUpPipe = false;
-	bool OutDownPipe, OutUpPipe = false;
-	bool RenderMarioInPipe = false;
-	float DistancePipeGo = 0;
-	float DistancePipeOut = 0;
+	bool downPress, upPress = false;
+	bool goDownPipe, goUpPipe = false;
+	bool outDownPipe, outUpPipe = false;
+	bool renderMarioInPipe = false;
+	float distancePipeGo = 0;
+	float distancePipeOut = 0;
 	int tempState;
-	int typepipe;
+	int typePipe;
+
+	//Moving flatform
+	bool isOnMovingFlatform = false;
+
 	// timers for animations
 	CTimer *attackTimer, *glideTimer, *flyTimer, *untouchableTimer, *turnHoldTimer, *shellProtectTimer;
 
@@ -365,6 +369,7 @@ public:
 	bool IsBig() { return level >= MarioLevel::BIG; }
 	bool IsRaccoon() { return level == MarioLevel::RACCOON; }
 	bool IsOnPlatform() { return isOnPlatform; }
+	void SetIsOnPlatform() { isOnPlatform = true; }
 	bool IsPMeterFull();
 
 	void SetJumpInput(int jump) { this->jumpInput = jump; }
@@ -392,10 +397,10 @@ public:
 			points[i]->SetSpeed(vx, vy);
 		}
 	}
-	void SetPressDown() { DownPress = true; }
-	void SetPressUp() {  UpPress = true; }
-	void ReleasePress() { DownPress = UpPress = false; }
-	bool ReturnRenderMarioInPipe() { return RenderMarioInPipe; }
+	void SetPressDown() { downPress = true; }
+	void SetPressUp() {  upPress = true; }
+	void ReleasePress() { downPress = upPress = false; }
+	bool ReturnRenderMarioInPipe() { return renderMarioInPipe; }
 
 	void GoingPipe(DWORD dt);
 

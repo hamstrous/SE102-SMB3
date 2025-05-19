@@ -1,11 +1,14 @@
 #include "MovingPlatform.h"
 #include "Mario.h"
-
+#include "Abyss.h"
+#include "Game.h"
 void CMovingPlatform::Render()
 {
 	float xx = x - 16;
 	float xxx = x + 16;
+
 	CSprites* s = CSprites::GetInstance();
+
 	s->Get(ID_ANI_BODY)->Draw(x, y);
 	s->Get(ID_ANI_HEAD)->Draw(xx, y);
 	s->Get(ID_ANI_LEG)->Draw(xxx, y);
@@ -22,8 +25,14 @@ void CMovingPlatform::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CMovingPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	x += vx * dt;
-	y += vy * dt;
+	float cx, cy;
+	CGame::GetInstance()->GetCamPos(cx, cy);
+
+	float camWidth = CGame::GetInstance()->GetScreenWidth();
+	float camHeight = CGame::GetInstance()->GetScreenHeight();
+
+	if (!isActive && x >= cx && x <= cx + camWidth && y >= cy && y <= cy + camHeight) x += SPEED_X_MOVING_PLATFORM * dt;
+	if (isActive) y += SPEED_Y_MOVING_PLATFORM * dt;
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -31,8 +40,9 @@ void CMovingPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMovingPlatform::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CMario*>(e->obj))
+	if (dynamic_cast<CMario*>(e->obj) && e->ny > 0)
 	{
-		vy = 0.05f;
+		isActive = true;
 	}
+	if (dynamic_cast<CAbyss*>(e->obj)) isDeleted = true;
 }

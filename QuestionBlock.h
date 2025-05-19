@@ -29,6 +29,7 @@
 #define ITEM_RED_MUSHROOM 2
 #define ITEM_GREEN_MUSHROOM 3
 #define ITEM_SWITCH 4
+#define ITEM_BREAK_LEVEL_UP 5
 
 #define TIME_UP 80
 class CQuestionBlock : public CBaseBrick
@@ -55,7 +56,11 @@ public:
 		return 1;
 	};
 	bool Hit() { return isUnbox; };
-	int IsBlocking() { return 1; };
+	int IsBlocking() {
+		if (state == QUESTION_BLOCK_STATE_MOVEUP || state == QUESTION_BLOCK_STATE_MOVEDOWN)
+			return 0;
+		return 1;
+	};
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 	float ReturnXmin() {
 		float l;
