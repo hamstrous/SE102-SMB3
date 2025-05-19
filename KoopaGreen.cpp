@@ -276,7 +276,7 @@ void CKoopaGreen::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 	if (IsMoving()) {
 		// if hit another moving shell, then both get shell hit
 		// call this Koppa shell hit first, else no effect
-		if (dynamic_cast<CKoopa*>(character) && 
+		if (dynamic_cast<CKoopa*>(character) &&
 			(dynamic_cast<CKoopa*>(character))->IsMoving())
 		{
 			ShellHit(-e->nx);
@@ -292,7 +292,14 @@ void CKoopaGreen::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		HeldDie();
 		character->ShellHit(e->nx);
 	}
-	else if (state == KOOPA_STATE_WALKING) vx = -vx;
+	else if (state == KOOPA_STATE_WALKING)
+	{
+		if (dynamic_cast<CMario*>(e->obj) && e->ny >= 0) {
+
+			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
+		}
+		else vx = -vx;
+	}
 }
 
 void CKoopaGreen::InitHorizontalSpeedBasedOnMario(float speed, float awayMario)

@@ -247,7 +247,7 @@ void CCollision::Scan(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* objDe
 	{
 		if (!obj->IsCollidable()) continue; // if the other obj not collidable then skip (2 way)
 		if(obj->IsBoundBoxZero()) continue; // if the other obj not collidable then skip (2 way)	
-		if(dynamic_cast<CMario*>(obj) && dynamic_cast<CBox*>(objSrc)) continue; //skip mario collision check (mario is the source object, not the destination object)
+		if(dynamic_cast<CMario*>(obj) && dynamic_cast<CBox*>(objSrc)) continue; 
 		if (type == 1 && !obj->IsBlocking()) continue;
 		else if (type == 2 && obj->IsBlocking()) continue;
 		if(dynamic_cast<CBox*>(objSrc) == NULL && dynamic_cast<CInvisibleWall*>(obj) ) continue; //skip invisoble wall

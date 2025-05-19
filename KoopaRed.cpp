@@ -335,7 +335,14 @@ void CKoopaRed::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		HeldDie();
 		character->ShellHit(e->nx);
 	}
-	else if (state == KOOPA_STATE_WALKING) vx = -vx;
+	else if (state == KOOPA_STATE_WALKING)
+	{
+		if (dynamic_cast<CMario*>(e->obj) && e->ny >= 0) {
+
+			InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
+		}
+		else vx = -vx;
+	}
 }
 void CKoopaRed::InitHorizontalSpeedBasedOnMario(float speed, float towardMario)
 {
