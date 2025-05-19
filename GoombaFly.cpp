@@ -125,7 +125,6 @@ void CGoombaFly::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (e->nx != 0)
 	{	
-		DebugOut(L"[INFO] GOOMBAFLY REFLECT VX\n");
 		vx = -vx;
 	}
 

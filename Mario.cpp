@@ -536,10 +536,6 @@ void CMario::SetPointsPosition()
 	const float MARIO_RIGHTLEFT_DOWN_Y_OFFSET = 6.0f;
 	const float MARIO_FOOT_EXTRA_OFFSET = 3.0f;
 
-	if (points.size() < 7) {
-		DebugOut(L"[ERROR] Points size is less than 7\n");
-
-	}
 	if (!IsBig() || isSitting) {
 		const float MARIO_SMALL_Y_OFFSET = 5.0f;
 		const float MARIO_SMALL_X_OFFSET = 3.0f;
@@ -828,6 +824,7 @@ void CMario::SetState(int state)
 
 void CMario::Acceleration(DWORD dt)
 {
+	//debug vx
 	CGameData* gameData = CGameData::GetInstance();
 
 	float topSpeed = 0;
@@ -895,7 +892,7 @@ void CMario::Acceleration(DWORD dt)
 		else {
 			// midair
 			if (!IsPMeterFull()) {
-				if(abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X && runInput == 0) topSpeed = MARIO_WALK_MAX_SPEED_X;
+				if((abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X && runInput == 0) || glideTimer->IsRunning()) topSpeed = MARIO_WALK_MAX_SPEED_X;
 				else topSpeed = MARIO_RUN_MAX_SPEED_X;
 			}else topSpeed = MARIO_SPRINT_MAX_SPEED_X;
 

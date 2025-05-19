@@ -113,6 +113,8 @@ void CGameData::Update(DWORD dt)
 					pmeter = 0;
 					ptimer->Reset();
 					flightMode = false;
+					//from flight to glide max vx is walk speed
+					mario->jumpVx = 0;
 				}
 			}else ptimer = f255, ptimer->Start();
 		}

@@ -270,7 +270,6 @@ void CPlant::ShellHit(int shellX)
 void CPlant::TailHit(float x)
 {
 	SetState(STATE_PRIRANHA_SHELL_HIT);
-	DebugOut(L"PLANT TAIL HIT\n");
 }
 
 

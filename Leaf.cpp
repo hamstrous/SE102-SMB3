@@ -54,14 +54,12 @@ void CLeaf::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (dynamic_cast<CMario*>(e->obj))
 	{
-		DebugOut(L"Leaf collided with Mario\n");
 		CMario* mario = dynamic_cast<CMario*>(e->obj);
 		mario->SetLevel(MarioLevel::RACCOON);
 		this->Delete(); 
 	}
 	else
 	{	
-		DebugOut(L"Leaf collided with another object\n");
 		return;
 	}
 }

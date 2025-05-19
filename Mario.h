@@ -205,9 +205,6 @@ protected:
 	int count = 0;
 	bool timesup = false;
 
-	// mario vx speed at jump point, for midair physics
-	float jumpVx = 0;
-
 	int dirInput = 0; // 1: right, -1: left
 	int jumpInput = 0; // 1: jump, 0: no jump
 	int runInput = 0; // 1: run, 0: no run
@@ -407,6 +404,10 @@ public:
 	void WinCutscene() {
 		SetState(MARIO_STATE_WIN);
 	}
+
+	// mario vx speed at jump point, for midair physics
+	float jumpVx = 0;
+
 	//bool DownPress() { return DownPress; }
 	//bool UpPress() { return UpPress; }
 };

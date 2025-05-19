@@ -66,7 +66,7 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if((cycleCounter == 1 || cycleCounter == 2) && boomerang == NULL && canThrow) {
 		throwTimer->Start();
 		SetState(BOOMERANG_BRO_STATE_THROWING);
-		DebugOut(L"[INFO] Throwing\n");
+		//DebugOut(L"[INFO] Throwing\n");
 		canThrow = false;
 	}
 
