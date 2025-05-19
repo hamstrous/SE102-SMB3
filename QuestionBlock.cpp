@@ -75,7 +75,7 @@ void CQuestionBlock::SetState(int state)
 			scene->AddObject(coin);
 			CGameData::GetInstance()->AddCoin(1);
 		}
-		if (type == ITEM_RED_MUSHROOM && mario->GetLevel() >= MarioLevel::BIG) {
+		if ( (type == ITEM_RED_MUSHROOM || type == ITEM_BREAK_LEVELUP) && mario->GetLevel() >= MarioLevel::BIG) {
 			CLeaf* leaf = new CLeaf(x, y - DISTANCE_SPAWN - 15);
 			leaf->SetState(LEAF_STATE_UP);
 			scene->AddObject(leaf);
@@ -112,7 +112,7 @@ void CQuestionBlock::SetState(int state)
 
 void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
 {	
-	DebugOut(L"[INFO] OnCollisionWith called\n");
+	/*DebugOut(L"[INFO] OnCollisionWith called\n");
 	if (vy != 0)
 	{
 		DebugOut(L"[INFO] OnCollisionWith: Block is moving\n");
@@ -145,7 +145,7 @@ void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
 	else
 	{
 		DebugOut(L"[INFO] Collided with another object\n");
-	}
+	}*/
 }
 
 void CQuestionBlock::SideHit()

@@ -56,7 +56,11 @@ public:
 		return 1;
 	};
 	bool Hit() { return isUnbox; };
-	int IsBlocking() { return 1; };
+	int IsBlocking() {
+		if (state == QUESTION_BLOCK_STATE_MOVEUP || state == QUESTION_BLOCK_STATE_MOVEDOWN)
+			return 0;
+		return 1;
+	};
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 	float ReturnXmin() {
 		float l;
