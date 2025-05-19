@@ -595,6 +595,14 @@ void CPlayScene::Update(DWORD dt)
 				character->Reset(characterCopy[dynamic_cast<CCharacter*>(obj)]);
 			}
 		}
+		if (CMovingPlatform* mvp = dynamic_cast<CMovingPlatform*>(obj)) {
+			if (IsObjectOutOfCamera(obj)) {
+				obj->SetSleep(true);
+			}
+			else if (obj->GetSleep()) {
+				obj->SetSleep(false);
+			}
+		}
 	}
 
 	vector<LPGAMEOBJECT> coObjects;

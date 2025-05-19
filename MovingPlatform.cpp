@@ -31,7 +31,7 @@ void CMovingPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float camWidth = CGame::GetInstance()->GetScreenWidth();
 	float camHeight = CGame::GetInstance()->GetScreenHeight();
 
-	if (!isActive && x >= cx && x <= cx + camWidth && y >= cy && y <= cy + camHeight) x += SPEED_X_MOVING_PLATFORM * dt;
+	if (!isActive) x += SPEED_X_MOVING_PLATFORM * dt;
 	if (isActive) y += SPEED_Y_MOVING_PLATFORM * dt;
 
 	CGameObject::Update(dt, coObjects);
