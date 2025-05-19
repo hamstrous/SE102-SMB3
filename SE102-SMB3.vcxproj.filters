@@ -63,6 +63,8 @@
     <ClCompile Include="Boomerang.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="MovingPlatform.cpp" />
+    <ClCompile Include="Prize.cpp" />
+    <ClCompile Include="Decoration.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -130,6 +132,8 @@
     <ClInclude Include="Boomerang.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="MovingPlatform.h" />
+    <ClInclude Include="Prize.h" />
+    <ClInclude Include="Decoration.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

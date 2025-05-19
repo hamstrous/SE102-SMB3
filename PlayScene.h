@@ -8,7 +8,8 @@
 
 //#include "Koopas.h"
 
-#define DEATH_TIME	4000
+#define DEAD_TIME	4000
+#define WIN_TIME	3000
 
 class CPlayScene : public CScene
 {
@@ -26,7 +27,8 @@ protected:
 	vector<LPGAMEOBJECT> projectileRenderObjects;
 
 	CTimer* pauseTimer = new CTimer(-1), * stopTimer = new CTimer();
-	CTimer* deathTimer = new CTimer(DEATH_TIME);
+	CTimer* deathTimer = new CTimer(DEAD_TIME);
+	CTimer* winTimer = new CTimer(WIN_TIME);
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_SPRITES_SCREEN(string line);
@@ -82,9 +84,14 @@ public:
 		return camera->IsOutOfCamera(obj);
 	}
 
-	void OnPlayerDie() {
+	void OnPlayerDeath() {
 		deathTimer->Start();
 		camera->SetState(CAMERA_STATE_STOP);
+	}
+
+	void OnPlayerWin(int card) {
+		((CMario*)player)->WinCutscene();
+		CGameData::GetInstance()->SetJustWonCard(card);
 	}
 
 	void GetCamPos(float& x, float& y) {

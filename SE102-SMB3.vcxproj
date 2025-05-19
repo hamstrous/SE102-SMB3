@@ -147,6 +147,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="ColorBlock.h" />
     <ClInclude Include="debug.h" />
+    <ClInclude Include="Decoration.h" />
     <ClInclude Include="Fireball.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Font.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Point.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="PowerUp.h" />
+    <ClInclude Include="Prize.h" />
     <ClInclude Include="QuestionBlock.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="SampleKeyEventHandler.h" />
@@ -212,6 +214,7 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="ColorBlock.cpp" />
     <ClCompile Include="debug.cpp" />
+    <ClCompile Include="Decoration.cpp" />
     <ClCompile Include="Fireball.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Font.cpp" />
@@ -242,6 +245,7 @@
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="PowerUp.cpp" />
+    <ClCompile Include="Prize.cpp" />
     <ClCompile Include="QuestionBlock.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="SampleKeyEventHandler.cpp" />

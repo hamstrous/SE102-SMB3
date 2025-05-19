@@ -29,6 +29,15 @@
 #define BLACK_X_OFFSET		-124
 #define BLACK_Y_OFFSET		23
 
+#define CARD_X_OFFSET		56
+
+#define CLEAR_Y_OFFSET		30
+
+#define GOT_Y_OFFSET		60
+
+#define CARD_WIDTH		22
+#define CARD_HEIGHT		26
+
 CHUD::CHUD()
 {
 	gameData = CGameData::GetInstance();
@@ -68,9 +77,39 @@ void CHUD::Render()
 	int coin = gameData->coin;
 	font->FontToSprite(hx + COIN_X_OFFSET, hy + COIN_Y_OFFSET, coin);
 
+	vector<int> cards = gameData->cards;
+	for (int i = 0; i < cards.size(); i++)
+	{
+		int cardType = cards[i];
+		if (cardType == -1) continue;
+		sprites->Get(cardsSpriteId[cardType])->Draw(hx + CARD_X_OFFSET + (CARD_WIDTH + 2) * i, hy);
+	}
+
 	for (int i = 0; i < 17; i++) {
 		for (int j = 0; j < 4; j++) {
-			CSprites::GetInstance()->Get(ID_SPRITE_BLACK)->Draw(hx + BLACK_X_OFFSET + (i * 16), hy + BLACK_Y_OFFSET + (j * 16));
+			sprites->Get(ID_SPRITE_BLACK)->Draw(hx + BLACK_X_OFFSET + (i * 16), hy + BLACK_Y_OFFSET + (j * 16));
 		}
 	}
 }
+
+void CHUD::RenderEnd()
+{
+	CGame* game = CGame::GetInstance();
+
+	float midX = game->GetBackBufferWidth() / 2;
+	float hy = game->GetBackBufferHeight() - HUD_SIZE_Y;
+
+
+	int justWonCard = gameData->justWonCard;
+
+	const int youGotCardXOffset = 62;
+	CSprites::GetInstance()->Get(ID_SPRITE_COURSE_CLEAR)->Draw(midX, CLEAR_Y_OFFSET);
+	CSprites::GetInstance()->Get(ID_SPRITE_YOU_GOT)->Draw(midX, GOT_Y_OFFSET);
+	CSprites::GetInstance()->Get(cardsSpriteId[justWonCard])->Draw(midX + youGotCardXOffset, GOT_Y_OFFSET);
+
+	int pos = gameData->cards.size() + 1;
+	CAnimations::GetInstance()->Get(flickerCardsAniId[justWonCard])->Render(midX + CARD_X_OFFSET + (CARD_WIDTH + 2) * (pos - 1), hy);
+
+}
+
+

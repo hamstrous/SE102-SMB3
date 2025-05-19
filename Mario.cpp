@@ -211,8 +211,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// reset untouchable timer if untouchable time has passed
 	// for mario has to be called first so process can call OnCollision
 	SetPointsPosition();
-	CCollision::GetInstance()->Process(this, dt, coObjects);
-	//CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, dt);
+	//CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, dt);
 
 	if (holdingShell != NULL) {
 		HoldingProcess(dt, coObjects);
@@ -252,6 +252,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 				count = 0;
 				vy = 0;
 				isOnPlatform = true;
+				if (state == MARIO_STATE_WIN) vx = MARIO_WIN_WALKING_SPEED;
 				if (glideTimer->IsRunning()) {
 					glideTimer->Reset();
 					SkipCurrentAnimation();
@@ -705,7 +706,7 @@ void CMario::Render()
 void CMario::SetState(int state)
 {
 	// DIE is the end state, cannot be changed! 
-	if (this->state == MARIO_STATE_DIE) return; 
+	if (this->state == MARIO_STATE_DIE || this->state == MARIO_STATE_WIN) return; 
 
 	// run then walk mean release
 
@@ -787,10 +788,15 @@ void CMario::SetState(int state)
 		vy = vx = 0;
 		ay = ax = 0;
 		break;
+	case MARIO_STATE_WIN:
+		vx = 0;
+		vy = 0;
+		holdingShell = NULL;
+		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_SPEED_Y;
 		CPlayScene* s = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-		s->OnPlayerDie();
+		s->OnPlayerDeath();
 		vx = 0;
 		ax = 0;
 		canHold = false;
@@ -923,7 +929,8 @@ void CMario::Acceleration(DWORD dt)
 
 	if(glideTimer->IsRunning() || flyTimer->IsRunning())
 	{
-
+		// flying gliding speed is the same as walking
+		//Clamp(vx, -MARIO_WALK_MAX_SPEED_X, MARIO_WALK_MAX_SPEED_X);
 	}else if (vy < -0.12 && jumpInput == 1) {
 		vy += MARIO_GRAVITY_SLOW * dt;
 	}

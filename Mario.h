@@ -95,6 +95,7 @@ namespace std {
 #define FRAME_RATE (1000/60)
 
 #define MARIO_WALKING_SPEED		0.1f
+#define MARIO_WIN_WALKING_SPEED		0.075f
 #define MARIO_RUNNING_SPEED		0.24f
 #define MARIO_SHELL_TURNING_SPEED		0.3f
 
@@ -145,6 +146,8 @@ namespace std {
 #define MARIO_STATE_SIT_RELEASE		601
 
 #define MARIO_STATE_GOIN_PIPE		602
+
+#define MARIO_STATE_WIN			700
 
 #define MARIO_TURN_TIME 500
 
@@ -301,6 +304,8 @@ public:
 		untouchableTimer = NULL;
 		delete turnHoldTimer;
 		turnHoldTimer = NULL;
+		delete shellProtectTimer;
+		shellProtectTimer = NULL;
 		
 	}
 
@@ -393,6 +398,10 @@ public:
 	bool ReturnRenderMarioInPipe() { return RenderMarioInPipe; }
 
 	void GoingPipe(DWORD dt);
+
+	void WinCutscene() {
+		SetState(MARIO_STATE_WIN);
+	}
 	//bool DownPress() { return DownPress; }
 	//bool UpPress() { return UpPress; }
 };
