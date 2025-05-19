@@ -178,6 +178,7 @@ void CMario::GoingPipe(DWORD dt) {
 			if (level != MarioLevel::SMALL)
 				distancePipeOut -= 4;
 			scene->SetPlayerPosition(PipeLocation[typePipe].first, PipeLocation[typePipe].second);
+
 		}
 	}
 	if (outDownPipe)

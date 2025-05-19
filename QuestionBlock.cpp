@@ -91,7 +91,7 @@ void CQuestionBlock::SetState(int state)
 		vy = SPEED_QUESTION_BLOCK;
 		break;
 	case QUESTION_BLOCK_STATE_UNBOX:
-		if ( (type == ITEM_RED_MUSHROOM || type == ITEM_BREAK_LEVELUP) && mario->GetLevel() == MarioLevel::SMALL)
+		if ( (type == ITEM_RED_MUSHROOM || type == ITEM_BREAK_LEVEL_UP) && mario->GetLevel() == MarioLevel::SMALL)
 		{	
 			bool dir = (x > marioX) ? true : false;
 			int type = (mario->GetLevel() >= MarioLevel::BIG) ? ITEM_GREEN_MUSHROOM : ITEM_RED_MUSHROOM;
