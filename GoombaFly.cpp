@@ -57,7 +57,7 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		big_jump_start = -1;
 	}
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 }
 
 void CGoombaFly::Render()

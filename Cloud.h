@@ -32,5 +32,11 @@ public:
 	}
 	void Render();
 	void Update(DWORD dt) {};
+	void GetSpriteBox(float& l, float& t, float& r, float& b) {
+		l = x - TILE_SIZE / 2;
+		t = y - TILE_SIZE / 2;
+		r = l + (this->width + 2) * TILE_SIZE;
+		b = t + TILE_SIZE * 2;
+	};
 };
 

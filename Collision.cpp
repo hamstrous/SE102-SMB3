@@ -171,8 +171,8 @@ void CCollision::SweptAABB(
 
 	if ((tx_entry < 0.0f && ty_entry < 0.0f) || tx_entry > 1.0f || ty_entry > 1.0f) return;
 
-	t_entry = max(tx_entry, ty_entry);
-	t_exit = min(tx_exit, ty_exit);
+	t_entry = std::max<float>(tx_entry, ty_entry);
+	t_exit = std::min<float>(tx_exit, ty_exit);
 
 	if (t_entry > t_exit) return;
 
@@ -316,7 +316,7 @@ void CCollision::Filter(LPGAMEOBJECT objSrc,
 *  Simple/Sample collision framework
 *  NOTE: Student might need to improve this based on game logic
 */
-void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CCollision::ProcessCollision(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float x, y;
 	objSrc->GetPosition(x, y);
@@ -486,29 +486,30 @@ void CCollision::ProcessNoBlock(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJE
 
 void CCollision::ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (!objSrc->IsCollidable() || objSrc->IsBlocking()) return; //for non blocking objects only
+	vector<LPCOLLISIONEVENT> coEvents;
+	// all object have sprite box is included in this function
 	float ml, mt, mr, mb;
-	objSrc->GetBoundingBox(ml, mt, mr, mb);
+	objSrc->GetSpriteBox(ml, mt, mr, mb);
 	float vx, vy;
 	objSrc->GetSpeed(vx, vy);
 	float mdx = vx * dt;
 	float mdy = vy * dt;
 	for (auto i : *coObjects) {
-		if (!i->IsCollidable() || i->IsBlocking()) continue; //for non blocking objects only
 		if (objSrc == i) continue;
 		float sl, st, sr, sb;
-		i->GetBoundingBox(sl, st, sr, sb);
+		i->GetSpriteBox(sl, st, sr, sb);
 		float svx, svy;
 		i->GetSpeed(svx, svy);
 		float sdx = svx * dt;
 		float sdy = svy * dt;
 		if (IsOverlapping(ml + mdx, mt + mdy, mr + mdx, mb + mdy, sl + sdx, st + sdy, sr + sdx, sb + sdy)) {
-			//DebugObjectType(i);
-			//DebugObjectType(objSrc);
-			//DebugOut(L"\n");
-
+			LPCOLLISIONEVENT e = new CCollisionEvent(0, 0, 0, mdx, mdy, i, objSrc);
+			coEvents.push_back(e);
+			objSrc->OnOverlapWith(e);
 		}
 	}
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	coEvents.clear();
 }
 
 // For mario when untouchable done, check if ovelapping with any enemies
@@ -711,10 +712,10 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	coEventsHorizontal.clear();
 
 	// process non-blocking collisions
-	Scan(head, dt, coObjects, coEventsVertical, 2, 3);
-	Scan(body, dt, coObjects, coEventsHorizontal, 2, 0);
-	Scan(body, dt, coObjects, coEventsHorizontal, 2, 2);
-	Scan(foot, dt, coObjects, coEventsVertical, 2, 1);
+	Scan(head, dt, coObjects, coEventsVertical, 0, 3);
+	Scan(body, dt, coObjects, coEventsHorizontal, 0, 0);
+	Scan(body, dt, coObjects, coEventsHorizontal, 0, 2);
+	Scan(foot, dt, coObjects, coEventsVertical, 0, 1);
 
 	for (auto i : coEventsVertical)
 		coEvents.push_back(i);
@@ -726,7 +727,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	{
 		LPCOLLISIONEVENT e = coEvents[i];
 		if (e->isDeleted) continue;
-		if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
+		//if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
 		objSrc->OnCollisionWith(e);
 	}
 
@@ -744,6 +745,8 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	if (eventCount == 0) objSrc->OnNoCollision(dt);
 
 	//overlap push
+	if (((CMario*)(objSrc))->GetPointsDisable() > 0) return;
+
 	objSrc->GetPosition(x, y);
 	objSrc->GetSpeed(vx, vy);
 

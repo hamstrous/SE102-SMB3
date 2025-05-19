@@ -12,7 +12,7 @@ void CSwitch::GetBoundingBox(float& left, float& top, float& right, float& botto
 void CSwitch::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 	if(GetTickCount64() - time_start >= TIME_SWITCH)
 		CGame::GetInstance()->SetChangeBricktoCoin(false);
 }

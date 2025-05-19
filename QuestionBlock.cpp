@@ -40,7 +40,7 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	y += vy * dt;
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 }
 
 void CQuestionBlock::GetBoundingBox(float& l, float& t, float& r, float& b)

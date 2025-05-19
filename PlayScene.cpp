@@ -646,13 +646,13 @@ void CPlayScene::Render()
 	for (auto i : objects) {
 		if (i->GetSleep()) continue;
 
-		if (dynamic_cast<CBackgroundColor*>(i)
-			|| dynamic_cast<CDecoration*>(i))
+		if (dynamic_cast<CBackgroundColor*>(i))
 			backgroundRenderObjects.push_back(i);
 
 		if(dynamic_cast<CGenericPlatform*>(i)
 			|| dynamic_cast<CMountain*>(i)
-			|| dynamic_cast<CCloud*>(i))
+			|| dynamic_cast<CCloud*>(i)
+			|| dynamic_cast<CDecoration*>(i))
 
 			firstRenderObjects.push_back(i);
 		
@@ -687,6 +687,7 @@ void CPlayScene::Render()
 
 	for(auto i : backgroundRenderObjects)
 		i->Render();
+	if(mario->IsBehind()) mario->Render();
 	for (auto i : firstRenderObjects)
 		i->Render();
 	if (mario->ReturnRenderMarioInPipe()) mario->Render();
@@ -697,7 +698,7 @@ void CPlayScene::Render()
 		i->Render();
 	for (auto i : projectileRenderObjects)
 		i->Render();
-	if (!mario->GetHolding() && !mario->ReturnRenderMarioInPipe()) mario->Render();
+	if (!mario->GetHolding() && !mario->ReturnRenderMarioInPipe() && !mario->IsBehind()) mario->Render();
 	
 
 	backgroundRenderObjects.clear();

@@ -25,7 +25,7 @@ void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		bouncing = false;
 	}
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 }
 
 void CBreakableBrick::GetBoundingBox(float &l, float &t, float &r, float &b)

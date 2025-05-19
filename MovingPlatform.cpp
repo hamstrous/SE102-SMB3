@@ -35,7 +35,7 @@ void CMovingPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (isActive) y += SPEED_Y_MOVING_PLATFORM * dt;
 
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 }
 
 void CMovingPlatform::OnCollisionWith(LPCOLLISIONEVENT e)

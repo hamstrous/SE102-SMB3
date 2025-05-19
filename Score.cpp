@@ -52,7 +52,7 @@ void CScore::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(SCORE_STATE_DONE);
 	}
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 }
 
 void CScore::SetState(int state)

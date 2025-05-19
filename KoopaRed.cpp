@@ -376,7 +376,7 @@ void CKoopaRed::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (IsHeld()) {
 		ShellHeldTouch(dt, coObjects);
 	}
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 }
 
 void CKoopaRed::Kicked()

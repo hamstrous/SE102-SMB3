@@ -67,7 +67,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		SetState(GOOMBA_STATE_DIE_DOWN);
 	}*/
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 	if (((state == GOOMBA_STATE_DIE) || (state == GOOMBA_STATE_DIE_UP))
 		&& (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
 	{
