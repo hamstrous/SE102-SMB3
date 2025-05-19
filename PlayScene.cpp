@@ -45,6 +45,9 @@
 #include "BreakableBrick.h"
 #include "BoomerangBro.h"
 #include "Boomerang.h"
+#include "Decoration.h"
+#include "Prize.h"
+
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -305,8 +308,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_COLOR_BLOCK: obj = new CColorBlock(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str()), atoi(tokens[5].c_str())); break;
 	case OBJECT_TYPE_CLOUD: obj = new CCloud(x, y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_BACKGROUND_COLOR: obj = new CBackgroundColor(x, y, atoi(tokens[3].c_str()), atoi(tokens[4].c_str()), atoi(tokens[5].c_str())); break;
+	case OBJECT_TYPE_DECORATION: obj = new CDecoration(x, y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_UNBREAKABLEBRICK: obj = new CUnbreakableBrick(x,y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_CLOUDPLATFORM: obj = new CCloudPlatform(x, y); break;
+	case OBJECT_TYPE_PRIZE: obj = new CPrize(x, y); break;
 	case OBJECT_TYPE_INVISIBLE_WALL: 
 	{
 		float width = (float)atof(tokens[3].c_str());
@@ -539,6 +544,23 @@ void CPlayScene::Update(DWORD dt)
 		return; 
 	}
 
+	CMario* mario = dynamic_cast<CMario*>(player);
+	if (mario->GetState() == MARIO_STATE_WIN && IsObjectOutOfCamera(mario)) {
+		if (!winTimer->IsDone()) {
+			if (winTimer->IsRunning()) {
+
+			}
+			else {
+				CGameData::GetInstance()->StartTimeToScore();
+				winTimer->Start();
+			}
+		}
+		else {
+			CGame::GetInstance()->SwitchScene(6);
+		}
+		CGameData::GetInstance()->Update(dt);
+		return;
+	}
 	
 
 	int remainingTime = CGameData::GetInstance()->GetRemainingTime();
@@ -546,7 +568,6 @@ void CPlayScene::Update(DWORD dt)
 	{
 		if (player != NULL)
 		{	
-			CMario* mario = dynamic_cast<CMario*>(player);
 			mario->SetTimesUp();
 			mario->SetState(MARIO_STATE_DIE);
 		}
@@ -618,7 +639,8 @@ void CPlayScene::Render()
 	for (auto i : objects) {
 		if (i->GetSleep()) continue;
 
-		if (dynamic_cast<CBackgroundColor*>(i))
+		if (dynamic_cast<CBackgroundColor*>(i)
+			|| dynamic_cast<CDecoration*>(i))
 			backgroundRenderObjects.push_back(i);
 
 		if(dynamic_cast<CGenericPlatform*>(i)
@@ -629,7 +651,8 @@ void CPlayScene::Render()
 		
 		if(dynamic_cast<CCharacter*>(i)
 			|| dynamic_cast<CCoin*>(i)
-			|| dynamic_cast<CMushroom*>(i))
+			|| dynamic_cast<CMushroom*>(i)
+			|| dynamic_cast<CPrize*>(i))
 			secondRenderObjects.push_back(i);
 
 		if (dynamic_cast<CFloor*>(i)
@@ -676,6 +699,7 @@ void CPlayScene::Render()
 	thirdRenderObjects.clear();
 	projectileRenderObjects.clear();
 	hud->Render();
+	if(winTimer->IsRunning()) hud->RenderEnd();
 }
 
 /*

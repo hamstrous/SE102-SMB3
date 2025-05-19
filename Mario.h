@@ -95,6 +95,7 @@ namespace std {
 #define FRAME_RATE (1000/60)
 
 #define MARIO_WALKING_SPEED		0.1f
+#define MARIO_WIN_WALKING_SPEED		0.075f
 #define MARIO_RUNNING_SPEED		0.24f
 #define MARIO_SHELL_TURNING_SPEED		0.3f
 
@@ -146,6 +147,8 @@ namespace std {
 
 #define MARIO_STATE_GOIN_PIPE		602
 
+#define MARIO_STATE_WIN			700
+
 #define MARIO_TURN_TIME 500
 
 #define GROUND_Y 160.0f
@@ -186,6 +189,7 @@ const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
 class CMario : public CCharacter
 {
 protected:
+
 	vector<pair<float, float>> PipeLocation{
 		{2335, 391},
 		{2990, 252},
@@ -281,6 +285,9 @@ public:
 		points.resize(7); // top, left, leftdown, downleft, dowmright, rightdown, rightup
 		for (int i = 0; i < 7; i++) {
 			points[i] = new CPoint(0, 0);
+			float px = 0, py = 0;
+			points[i]->GetPosition(px, py);
+			DebugOut(L"[INFO] Mario::CMario: point %d position: %f, %f\n", i, px, py); // Debugging output
 		}
 	}
 
@@ -289,6 +296,21 @@ public:
 			delete point; // Free each dynamically allocated CPoint
 		}
 		points.clear(); // Clear the vector
+
+		//delete timer
+		delete attackTimer;
+		attackTimer = NULL;
+		delete glideTimer;
+		glideTimer = NULL;
+		delete flyTimer;
+		flyTimer = NULL;
+		delete untouchableTimer;
+		untouchableTimer = NULL;
+		delete turnHoldTimer;
+		turnHoldTimer = NULL;
+		delete shellProtectTimer;
+		shellProtectTimer = NULL;
+		
 	}
 
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -382,12 +404,9 @@ public:
 
 	void GoingPipe(DWORD dt);
 
-	CPoint* GetPoint(int id) {
-		if (id < 0 || id >= points.size()) return NULL;
-		return points[id];
+	void WinCutscene() {
+		SetState(MARIO_STATE_WIN);
 	}
-	
-
 	//bool DownPress() { return DownPress; }
 	//bool UpPress() { return UpPress; }
 };

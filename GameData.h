@@ -9,6 +9,8 @@
 #define FRAME_8 133
 #define FRAME_255 4250
 
+#define SCORE_REDUCE_SPEED 0.1f
+
 using namespace std;
 
 class CGameData
@@ -20,6 +22,8 @@ public:
 	int score;
 	int coin;
 	CTimer* countDown;
+	int fixedRemainingTime = -1;
+	bool timeToScore = false;
 	CTimer* f24;
 	CTimer* f16;
 	CTimer* f8;
@@ -30,6 +34,7 @@ public:
 	bool isPaused = 0;
 	ULONGLONG pauseStart = 0;
 	ULONGLONG levelTime = 300;
+	int justWonCard = -1;
 	vector<int> cards;
 	MarioLevel marioLevel;
 
@@ -52,6 +57,7 @@ public:
 	}
 
 	void OnDeath();
+	void OnWin();
 
 	void NextLevel()
 	{
@@ -87,6 +93,17 @@ public:
 	bool IsFlightMode()
 	{
 		return flightMode;
+	}
+
+	void SetJustWonCard(int card)
+	{
+		justWonCard = card;
+		fixedRemainingTime = GetRemainingTime();
+	}
+
+	void StartTimeToScore() 
+	{
+		timeToScore = true;
 	}
 
 	static CGameData* GetInstance();

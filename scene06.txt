@@ -6,8 +6,8 @@ coin.txt
 goomba.txt
 cloud.txt
 pipe.txt
-Fireball.txt
-Plant.txt
+fireball.txt
+plant.txt
 number.txt
 background.txt
 koopa-green.txt

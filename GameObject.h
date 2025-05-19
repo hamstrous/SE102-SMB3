@@ -49,8 +49,8 @@ public:
 	bool GetKillOffCam() { return killOffCam; }
 
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
-	int GetX() { return x; }
-	int GetY() { return y; }
+	float GetX() { return x; }
+	float GetY() { return y; }
 
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 	bool GetSleep() { return sleep; }

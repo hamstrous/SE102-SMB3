@@ -22,11 +22,29 @@ void CGameData::OnDeath()
 	}
 	countDown->Start();
 	pmeter = 0;
+	ptimer->Reset();
+	ptimer = f8;
+	ptimer->Reset();
+}
+
+void CGameData::OnWin()
+{
+	countDown->Start();
+	pmeter = 0;
+	ptimer->Reset();
+	ptimer = f8;
+	ptimer->Reset();
+	if(justWonCard != -1) 
+		cards.push_back(justWonCard);
+	justWonCard = -1;
+	fixedRemainingTime = -1;
+	timeToScore = false;
 }
 
 int CGameData::GetRemainingTime()
 
 {
+	if(fixedRemainingTime != -1) return fixedRemainingTime;
 	int time = levelTime - (countDown->ElapsedTime() / 1000);
 
 	CGame* game = CGame::GetInstance();
@@ -43,10 +61,13 @@ void CGameData::Update(DWORD dt)
 	float mvx , mvy;
 	mario->GetSpeed(mvx, mvy);
 	
-	if (debug) {
-		DebugOut(L"GD: %d\n", pmeter);
+	if(justWonCard != -1)
+	{
+		int curTime = fixedRemainingTime;
+		if (timeToScore && fixedRemainingTime > 0) fixedRemainingTime -= dt * SCORE_REDUCE_SPEED;
+		score += (curTime - fixedRemainingTime) * 50;
+		return;
 	}
-
 	if (pmeter < 7) {
 		if (ptimer->IsRunning()) return;
 		if (ptimer == f8) {
@@ -92,7 +113,6 @@ void CGameData::Update(DWORD dt)
 					pmeter = 0;
 					ptimer->Reset();
 					flightMode = false;
-					mario->SetState(MARIO_STATE_JUMP);
 				}
 			}else ptimer = f255, ptimer->Start();
 		}
