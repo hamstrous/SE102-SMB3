@@ -375,7 +375,9 @@ public:
 	void SetRunInput(int run) { this->runInput = run; }
 	int GetRunInput() { return runInput; }
 
-	void SetDirInput(int dir) { this->dirInput = dir; }
+	void SetDirInput(int dir) { 
+		this->dirInput = dir; 
+	}
 	int GetDirInput() { return dirInput; }
 
 	void SetPointsPosition();

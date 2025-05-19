@@ -719,36 +719,52 @@ void CMario::SetState(int state)
 
 	// run then walk mean release
 
+	int curState = this->state;
+	if (curState == MARIO_STATE_RUNNING_LEFT || curState == MARIO_STATE_RUNNING_RIGHT || curState == MARIO_STATE_WALKING_RIGHT || curState == MARIO_STATE_WALKING_LEFT) {
+		if (state == MARIO_STATE_SIT) return;
+	}
+	
+	if (isSitting) {
+		if (state == MARIO_STATE_RUNNING_LEFT || state == MARIO_STATE_RUNNING_RIGHT || state == MARIO_STATE_WALKING_RIGHT || state == MARIO_STATE_WALKING_LEFT) {
+			if (isOnPlatform) {
+				SetState(MARIO_STATE_SIT_RELEASE);
+			}
+		}
+
+	}
+
+
 	switch (state)
 	{
 	case MARIO_STATE_RUNNING_RIGHT:
-		if (isSitting) break;
 		maxVx = MARIO_RUNNING_SPEED;
 		ax = MARIO_ACCEL_RUN_X;
 		nx = 1;
+		dirInput = 1;
+		runInput = 1;
 		break;
 	case MARIO_STATE_RUNNING_LEFT:
-		if (isSitting) break;
 		maxVx = -MARIO_RUNNING_SPEED;
 		ax = -MARIO_ACCEL_RUN_X;
 		nx = -1;
+		dirInput = -1;
+		runInput = 1;
 		break;
 	case MARIO_STATE_WALKING_RIGHT:
-		if (isSitting) break;
 		maxVx = MARIO_WALKING_SPEED;
 		ax = MARIO_ACCEL_WALK_X;
 		nx = 1;
 		dirInput = 1;
+		runInput = 0;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
-		if (isSitting) break;
 		maxVx = -MARIO_WALKING_SPEED;
 		ax = -MARIO_ACCEL_WALK_X;
 		nx = -1;
 		dirInput = -1;
+		runInput = 0;
 		break;
 	case MARIO_STATE_JUMP:
-		if (isSitting) break;
 		if (isOnPlatform)
 		{
 			vy = 0;
@@ -792,6 +808,9 @@ void CMario::SetState(int state)
 	case MARIO_STATE_IDLE:
 		ax = 0.0f;
 		dirInput = 0;
+		runInput = 0;
+		dirInput = 0;
+		runInput = 0;
 		break;
 	case MARIO_STATE_GOIN_PIPE:
 		vy = vx = 0;
