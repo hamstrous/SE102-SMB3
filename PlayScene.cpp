@@ -541,6 +541,10 @@ void CPlayScene::Update(DWORD dt)
 			{
 				objects[i]->Update(dt, nullptr);
 			}
+			if (dynamic_cast<CGameFX*>(objects[i]))
+			{
+				objects[i]->Update(dt, nullptr);
+			}
 		}
 		return; 
 	}
@@ -600,6 +604,14 @@ void CPlayScene::Update(DWORD dt)
 				character->Reset(characterCopy[dynamic_cast<CCharacter*>(obj)]);
 			}
 		}
+		if (CMovingPlatform* mvp = dynamic_cast<CMovingPlatform*>(obj)) {
+			if (IsObjectOutOfCamera(obj)) {
+				obj->SetSleep(true);
+			}
+			else if (obj->GetSleep()) {
+				obj->SetSleep(false);
+			}
+		}
 	}
 
 	vector<LPGAMEOBJECT> coObjects;
@@ -621,8 +633,15 @@ void CPlayScene::Update(DWORD dt)
 	{
 		LPGAMEOBJECT obj = objects[i];
 		if (!objects[i]->GetSleep() && !deathTimer->IsRunning() && !winTimer->IsRunning()) objects[i]->Update(dt, &coObjects);
+		if (!objects[i]->GetSleep() && deathTimer->IsRunning()) {
+			if (dynamic_cast<CGameFX*>(obj)) {
+				obj->Update(dt, &coObjects);
+			}
+		}
+  }
+	if (deathTimer->IsRunning()) {
+		player->Update(dt, &coObjects)
 	}
-	if(deathTimer->IsRunning()) player->Update(dt, &coObjects);
 	else CGameData::GetInstance()->Update(dt);
 	camera->Update(dt, &coObjects);
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
