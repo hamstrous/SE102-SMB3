@@ -9,13 +9,18 @@
 #define BBOX_WIDTH 48
 #define BBOX_HEIGHT 16
 
-#define SPEED_Y_MOVING_PLATFORM	0.07f
-#define SPEED_X_MOVING_PLATFORM -0.05f
+#define SPEED_Y_MOVING_PLATFORM_DELAY 0.02f
+#define SPEED_Y_MOVING_PLATFORM	0.06f
+#define SPEED_X_MOVING_PLATFORM -0.04f
+
+#define TIME_DELAY 150
 
 class CMovingPlatform : public CGameObject
 {
 protected:
 	bool isActive = false;
+	ULONGLONG delayTime;
+	bool noDelay = false;
 public:
 	CMovingPlatform(float x, float y) :CGameObject(x, y) {}
 	void Render();
