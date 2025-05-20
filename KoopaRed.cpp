@@ -8,11 +8,11 @@ void CKoopaRed::GetFloorBoundingBox(float& left, float& top, float& right, float
 	top = y + KOOPA_BBOX_HEIGHT / 2;
 	bottom = top + KOOPA_FLOOR_CHECK_BBOX_HEIGHT;
 	if (vx > 0) {
-		left = x + KOOPA_BBOX_WIDTH / 2;
+		left = x;
 		right = left + KOOPA_FLOOR_CHECK_BBOX_WIDTH;
 	}
 	else {
-		right = x - KOOPA_BBOX_WIDTH / 2;
+		right = x;
 		left = right - KOOPA_FLOOR_CHECK_BBOX_WIDTH;
 	}
 }

@@ -19,5 +19,9 @@ public:
 		r = l + TILE_SIZE;
 		b = t + TILE_SIZE;
 	};
+
+	LPSPRITE GetCurrentSprite() {
+		return CSprites::GetInstance()->Get(colorSpriteId[type]);
+	}
 };
 

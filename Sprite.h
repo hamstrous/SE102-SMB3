@@ -39,6 +39,12 @@ public:
 	bool IsOnScreen() { return onScreen; }
 	float GetOffsetX() { return offsetX; }
 	float GetOffsetY() { return offsetY; }
+	void GetBox(int& l, int& t, int& r, int& b) {
+		l = left;
+		t = top;
+		r = right;
+		b = bottom;
+	}
 };
 
 typedef CSprite* LPSPRITE;

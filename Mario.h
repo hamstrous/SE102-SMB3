@@ -147,6 +147,8 @@ namespace std {
 
 #define MARIO_STATE_GOIN_PIPE		602
 
+#define MARIO_STATE_DEBUG		999
+
 #define MARIO_STATE_WIN			700
 
 #define MARIO_TURN_TIME 500
