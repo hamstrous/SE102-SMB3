@@ -59,6 +59,7 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_SPACE:
 		debug = true;
+		mario->SetState(MARIO_STATE_DEBUG);
 		break;
 	}
 }
@@ -115,4 +116,14 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 		mario->SetState(MARIO_STATE_IDLE);
 	}
 	
+	if (mario->GetState() == MARIO_STATE_DEBUG) {
+		if (game->IsKeyDown(DIK_S)) {
+			mario->SetState(MARIO_STATE_JUMP);
+		}
+		else 
+			if (game->IsKeyDown(DIK_DOWN)) {
+				mario->SetState(MARIO_STATE_SIT);
+			}
+	}
+
 }

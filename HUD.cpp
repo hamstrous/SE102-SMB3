@@ -27,7 +27,7 @@
 #define PMETER_Y_OFFSET		-3
 
 #define BLACK_X_OFFSET		-124
-#define BLACK_Y_OFFSET		23
+#define BLACK_Y_OFFSET		10
 
 #define CARD_X_OFFSET		56
 
@@ -52,7 +52,14 @@ void CHUD::Render()
 	CFont* font = CFont::GetInstance();
 
 	float hx = game->GetBackBufferWidth() / 2;
-	float hy = game->GetBackBufferHeight() - HUD_SIZE_Y;
+	float hy = game->GetBackBufferHeight() - HUD_SIZE_Y - 4;
+
+	for (int i = 0; i < 17; i++) {
+		for (int j = 0; j < 4; j++) {
+			sprites->Get(ID_SPRITE_BLACK)->Draw(hx + BLACK_X_OFFSET + (i * 16), hy + BLACK_Y_OFFSET + (j * 16));
+		}
+	}
+
 	sprites->Get(ID_SPRITE_HUD)->Draw(hx, hy);
 
 	int life = gameData->life;
@@ -85,11 +92,7 @@ void CHUD::Render()
 		sprites->Get(cardsSpriteId[cardType])->Draw(hx + CARD_X_OFFSET + (CARD_WIDTH + 2) * i, hy);
 	}
 
-	for (int i = 0; i < 17; i++) {
-		for (int j = 0; j < 4; j++) {
-			sprites->Get(ID_SPRITE_BLACK)->Draw(hx + BLACK_X_OFFSET + (i * 16), hy + BLACK_Y_OFFSET + (j * 16));
-		}
-	}
+	
 }
 
 void CHUD::RenderEnd()

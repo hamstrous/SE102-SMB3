@@ -719,18 +719,6 @@ void CPlayScene::Render()
 		i->Render();
 	if (!mario->GetHolding() && !mario->ReturnRenderMarioInPipe() && !mario->IsBehind()) mario->Render();
 	
-	vector<LPSPRITE> overlapSprite;
-	CSprites* sprites = CSprites::GetInstance();
-	CAnimations* animations = CAnimations::GetInstance();
-	if(mario->IsBehind())
-		for(auto i : firstRenderObjects)
-		{
-			if (dynamic_cast<CBackgroundColor*>(i))
-			{
-
-			}
-		}
-
 	backgroundRenderObjects.clear();
 	firstRenderObjects.clear();
 	secondRenderObjects.clear();

@@ -211,6 +211,7 @@ void CMario::GoingPipe(DWORD dt) {
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if(state == MARIO_STATE_DEBUG) return;
 	if (renderMarioInPipe) {
 		GoingPipe(dt);
 		return;
@@ -756,12 +757,29 @@ void CMario::Render()
 
 void CMario::SetState(int state)
 {
+	int curState = this->state;
+	if (curState == state && state == MARIO_STATE_DEBUG)
+	{
+		this->state = MARIO_STATE_IDLE;
+		return;
+	}
+
+	if (curState == MARIO_STATE_DEBUG) {
+		if (state == MARIO_STATE_WALKING_LEFT) x -= 2;
+		else if (state == MARIO_STATE_WALKING_RIGHT) x += 2;
+		else if (state == MARIO_STATE_RUNNING_LEFT) x -= 4;
+		else if (state == MARIO_STATE_RUNNING_RIGHT) x += 4;
+		else if (state == MARIO_STATE_JUMP) y -= 2;
+		else if (state == MARIO_STATE_SIT) y += 2;
+		return;
+	}
+
+
 	// DIE is the end state, cannot be changed! 
 	if (this->state == MARIO_STATE_DIE || this->state == MARIO_STATE_WIN) return; 
 
 	// run then walk mean release
 
-	int curState = this->state;
 	if (curState == MARIO_STATE_RUNNING_LEFT || curState == MARIO_STATE_RUNNING_RIGHT || curState == MARIO_STATE_WALKING_RIGHT || curState == MARIO_STATE_WALKING_LEFT) {
 		if (state == MARIO_STATE_SIT) return;
 	}
@@ -772,10 +790,8 @@ void CMario::SetState(int state)
 				SetState(MARIO_STATE_SIT_RELEASE);
 			}
 		}
-
 	}
-
-
+	
 	switch (state)
 	{
 	case MARIO_STATE_RUNNING_RIGHT:
