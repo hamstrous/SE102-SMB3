@@ -65,6 +65,7 @@
     <ClCompile Include="MovingPlatform.cpp" />
     <ClCompile Include="Prize.cpp" />
     <ClCompile Include="Decoration.cpp" />
+    <ClCompile Include="CloudEllipse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -134,6 +135,7 @@
     <ClInclude Include="MovingPlatform.h" />
     <ClInclude Include="Prize.h" />
     <ClInclude Include="Decoration.h" />
+    <ClInclude Include="CloudEllipse.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
