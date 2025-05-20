@@ -47,6 +47,7 @@
 #include "Boomerang.h"
 #include "Decoration.h"
 #include "Prize.h"
+#include "CloudEllipse.h"
 
 using namespace std;
 
@@ -312,6 +313,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_UNBREAKABLEBRICK: obj = new CUnbreakableBrick(x,y, atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_CLOUDPLATFORM: obj = new CCloudPlatform(x, y); break;
 	case OBJECT_TYPE_PRIZE: obj = new CPrize(x, y); break;
+	case OBJECT_TYPE_CLOUDELLIPSE: obj = new CCloudEllipse(x,y,atoi(tokens[3].c_str())); break;
 	case OBJECT_TYPE_INVISIBLE_WALL: 
 	{
 		float width = (float)atof(tokens[3].c_str());
@@ -669,6 +671,7 @@ void CPlayScene::Render()
 			backgroundRenderObjects.push_back(i);
 
 		if(dynamic_cast<CGenericPlatform*>(i)
+			|| dynamic_cast<CCloudEllipse*>(i)
 			|| dynamic_cast<CMountain*>(i)
 			|| dynamic_cast<CCloud*>(i)
 			|| dynamic_cast<CDecoration*>(i))
