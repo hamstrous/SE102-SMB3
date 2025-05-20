@@ -640,7 +640,7 @@ void CPlayScene::Update(DWORD dt)
 		}
   }
 	if (deathTimer->IsRunning()) {
-		player->Update(dt, &coObjects)
+		player->Update(dt, &coObjects);
 	}
 	else CGameData::GetInstance()->Update(dt);
 	camera->Update(dt, &coObjects);
@@ -720,13 +720,16 @@ void CPlayScene::Render()
 	if (!mario->GetHolding() && !mario->ReturnRenderMarioInPipe() && !mario->IsBehind()) mario->Render();
 	
 	vector<LPSPRITE> overlapSprite;
-	for(auto i : firstRenderObjects)
-	{
-		if (dynamic_cast<CBackgroundColor*>(i))
+	CSprites* sprites = CSprites::GetInstance();
+	CAnimations* animations = CAnimations::GetInstance();
+	if(mario->IsBehind())
+		for(auto i : firstRenderObjects)
 		{
+			if (dynamic_cast<CBackgroundColor*>(i))
+			{
 
+			}
 		}
-	}
 
 	backgroundRenderObjects.clear();
 	firstRenderObjects.clear();

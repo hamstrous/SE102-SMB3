@@ -142,4 +142,6 @@ public:
 	bool GetIsDead();
 
 	void GetPlayerPosition(float &x, float &y);
+
+	virtual LPSPRITE GetCurrentSprite() { return NULL; };
 };
