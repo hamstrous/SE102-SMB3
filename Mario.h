@@ -193,8 +193,8 @@ class CMario : public CCharacter
 protected:
 
 	vector<pair<float, float>> PipeLocation{
-		{2367, 395},
-		{3022, 252},
+		{2335, 395},
+		{3022, 255},
 		{2207, 391}
 	}; // type % 2 == 0 ? OutDown : OutUp di len la so chan, di xuong la so le
 	static unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;

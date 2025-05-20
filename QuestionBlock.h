@@ -57,7 +57,7 @@ public:
 	};
 	bool Hit() { return isUnbox; };
 	int IsBlocking() {
-		if (state == QUESTION_BLOCK_STATE_MOVEUP || state == QUESTION_BLOCK_STATE_MOVEDOWN)
+		if (/*state == QUESTION_BLOCK_STATE_MOVEUP ||*/ state == QUESTION_BLOCK_STATE_MOVEDOWN)
 			return 0;
 		return 1;
 	};
