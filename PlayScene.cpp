@@ -526,6 +526,7 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
+
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	//if (GetIsPause() || GetIsStop() ) return;
@@ -549,10 +550,16 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	CMario* mario = dynamic_cast<CMario*>(player);
+
+	if ((!winTimer->IsRunning() && !deathTimer->IsRunning()) && fadeoutAlpha > 0) {
+		fadeoutAlpha -= dt * fadeoutSpeed;
+	}
+
 	if (mario->GetState() == MARIO_STATE_WIN && IsObjectOutOfCamera(mario)) {
 		if (!winTimer->IsDone()) {
 			if (winTimer->IsRunning()) {
-
+				if (winTimer->RemainingTime() <= FADE_TIME)
+					fadeoutAlpha += dt * fadeoutSpeed;
 			}
 			else {
 				CGameData::GetInstance()->StartTimeToScore();
@@ -562,8 +569,6 @@ void CPlayScene::Update(DWORD dt)
 		else {
 			CGame::GetInstance()->SwitchScene(6);
 		}
-		CGameData::GetInstance()->Update(dt);
-		return;
 	}
 	
 
@@ -627,17 +632,15 @@ void CPlayScene::Update(DWORD dt)
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		LPGAMEOBJECT obj = objects[i];
-		if (!objects[i]->GetSleep()) {
+		if (!objects[i]->GetSleep() && !deathTimer->IsRunning() && !winTimer->IsRunning()) objects[i]->Update(dt, &coObjects);
+		if (!objects[i]->GetSleep() && deathTimer->IsRunning()) {
 			if (dynamic_cast<CGameFX*>(obj)) {
 				obj->Update(dt, &coObjects);
 			}
-			else if (!deathTimer->IsRunning()) {
-				obj->Update(dt, &coObjects);
-			}
 		}
-	}
+  }
 	if (deathTimer->IsRunning()) {
-		player->Update(dt, &coObjects);
+		player->Update(dt, &coObjects)
 	}
 	else CGameData::GetInstance()->Update(dt);
 	camera->Update(dt, &coObjects);
@@ -651,6 +654,8 @@ void CPlayScene::Update(DWORD dt)
 		deathTimer->Reset();
 	}
 	
+	if(deathTimer->RemainingTime() <= FADE_TIME || winTimer->RemainingTime() <= FADE_TIME)
+		fadeoutAlpha += dt * fadeoutSpeed;
 
 }
 
@@ -660,13 +665,13 @@ void CPlayScene::Render()
 	for (auto i : objects) {
 		if (i->GetSleep()) continue;
 
-		if (dynamic_cast<CBackgroundColor*>(i)
-			|| dynamic_cast<CDecoration*>(i))
+		if (dynamic_cast<CBackgroundColor*>(i))
 			backgroundRenderObjects.push_back(i);
 
 		if(dynamic_cast<CGenericPlatform*>(i)
 			|| dynamic_cast<CMountain*>(i)
-			|| dynamic_cast<CCloud*>(i))
+			|| dynamic_cast<CCloud*>(i)
+			|| dynamic_cast<CDecoration*>(i))
 
 			firstRenderObjects.push_back(i);
 		
@@ -701,6 +706,7 @@ void CPlayScene::Render()
 
 	for(auto i : backgroundRenderObjects)
 		i->Render();
+	if(mario->IsBehind()) mario->Render();
 	for (auto i : firstRenderObjects)
 		i->Render();
 	if (mario->ReturnRenderMarioInPipe()) mario->Render();
@@ -711,8 +717,16 @@ void CPlayScene::Render()
 		i->Render();
 	for (auto i : projectileRenderObjects)
 		i->Render();
-	if (!mario->GetHolding() && !mario->ReturnRenderMarioInPipe()) mario->Render();
+	if (!mario->GetHolding() && !mario->ReturnRenderMarioInPipe() && !mario->IsBehind()) mario->Render();
 	
+	vector<LPSPRITE> overlapSprite;
+	for(auto i : firstRenderObjects)
+	{
+		if (dynamic_cast<CBackgroundColor*>(i))
+		{
+
+		}
+	}
 
 	backgroundRenderObjects.clear();
 	firstRenderObjects.clear();
@@ -720,7 +734,11 @@ void CPlayScene::Render()
 	thirdRenderObjects.clear();
 	projectileRenderObjects.clear();
 	hud->Render();
-	if(winTimer->IsRunning()) hud->RenderEnd();
+	if (winTimer->IsRunning()) {
+		hud->RenderEnd();
+	}
+	
+	ScreenTransition();
 }
 
 /*

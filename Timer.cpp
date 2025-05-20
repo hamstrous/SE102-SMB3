@@ -84,3 +84,12 @@ ULONGLONG CTimer::ElapsedTime()
 	if (timeStart == -1) return 0;
 	return GetTickCount64() - timeStart;
 }
+
+ULONGLONG CTimer::RemainingTime()
+{
+	if (timeStart == -1) return MAXULONGLONG;
+	if (timeSpan == -1) return MAXULONGLONG;
+	ULONGLONG elapsed = GetTickCount64() - timeStart;
+	if (elapsed >= timeSpan) return 0;
+	return timeSpan - elapsed;
+}

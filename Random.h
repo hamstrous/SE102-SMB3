@@ -5,7 +5,7 @@
 class CRandom {
 public:
     CRandom()
-        : rng(std::chrono::steady_clock::now().time_since_epoch().count()) {}
+        : rng(static_cast<unsigned int>(std::chrono::steady_clock::now().time_since_epoch().count())) {}
 
     // Returns a random integer in [min, max]
     int GetInt(int min, int max) {

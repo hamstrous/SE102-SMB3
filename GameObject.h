@@ -15,6 +15,7 @@ using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
 #define ID_TEX_POINT -90		// special texture to draw mario's points
+#define ID_TEX_TRANSITION -80		// special texture to draw mario's points
 #define BBOX_ALPHA 0.25f		// Bounding box transparency
 #define POINT_ALPHA 1.f		// Bounding box transparency
 
@@ -69,6 +70,10 @@ public:
 		left = top = right = bottom = 0; // default bounding box is (0,0,0,0)
 	};
 
+	virtual void GetSpriteBox(float &left, float& top, float& right, float& bottom) {
+		left = top = right = bottom = 0; // default bounding box is (0,0,0,0)
+	};
+
 	virtual float GetBoundingBoxTop() {
 		float l, t, r, b;
 		GetBoundingBox(l, t, r, b);
@@ -107,6 +112,9 @@ public:
 
 	// When collision with an object has been detected (triggered by CCollision::Process)
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e) {};
+
+	virtual void OnNoOverlap(LPCOLLISIONEVENT e) {};
+	virtual void OnOverlapWith(LPCOLLISIONEVENT e) {};
 	
 	// Is this object blocking other object? If YES, collision framework will automatically push the other object
 	virtual int IsBlocking() { return 1; }

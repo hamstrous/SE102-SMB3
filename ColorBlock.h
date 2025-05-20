@@ -57,8 +57,12 @@ public:
 	void Render();
 	void Update(DWORD dt) {}
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
+    void GetSpriteBox(float& l, float& t, float& r, float& b);
+
     virtual int IsCollidable() { return 1; };
 	virtual int IsBlocking() { return 1; };
+
+    int GetColor() { return color; }
 
     int IsDirectionColliable(float nx, float ny) {
         if (nx == 0 && ny == -1) return 1;

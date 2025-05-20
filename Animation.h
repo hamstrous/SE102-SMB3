@@ -61,6 +61,11 @@ public:
 			t += frames[i]->GetTime();
 		return t;
 	}
+	LPSPRITE GetCurrentFrame()
+	{
+		if (currentFrame == -1) return NULL;
+		return frames[currentFrame]->GetSprite();
+	}
 };
 
 typedef CAnimation* LPANIMATION;

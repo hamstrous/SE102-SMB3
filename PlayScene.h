@@ -8,12 +8,15 @@
 
 //#include "Koopas.h"
 
-#define DEAD_TIME	4000
+#define DEAD_TIME	3000
 #define WIN_TIME	3000
+#define FADE_TIME	800
 
 class CPlayScene : public CScene
 {
 protected:
+	const float fadeoutSpeed = 0.002f;
+
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;
 	CCamera* camera;
@@ -29,6 +32,8 @@ protected:
 	CTimer* pauseTimer = new CTimer(-1), * stopTimer = new CTimer();
 	CTimer* deathTimer = new CTimer(DEAD_TIME);
 	CTimer* winTimer = new CTimer(WIN_TIME);
+
+	float fadeoutAlpha = 1;
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_SPRITES_SCREEN(string line);
@@ -108,6 +113,44 @@ public:
 	{
 		CMario* mario = dynamic_cast<CMario*>(player);
 		mario->SetPosition(x, y);
+	}
+
+	void ScreenTransition() {
+		if (fadeoutAlpha > 1) {
+			fadeoutAlpha = 1;
+		}
+		if(fadeoutAlpha < 0) {
+			fadeoutAlpha = 0;
+		}
+
+		float w, h;
+		h = CGame::GetInstance()->GetBackBufferHeight();
+		w = CGame::GetInstance()->GetBackBufferWidth();
+
+		float x, y;
+		x = w / 2;
+		y = h / 2;
+
+		D3DXVECTOR3 p(x, y, 0);
+		RECT rect;
+
+		LPTEXTURE bbox = CTextures::GetInstance()->Get(ID_TEX_TRANSITION);
+
+		float l, t, r, b;
+
+		l = x - w / 2;
+		t = y - h / 2;
+		r = l + w;
+		b = t + h;
+
+		rect.left = 0;
+		rect.top = 0;
+		rect.right = (int)r - (int)l;
+		rect.bottom = (int)b - (int)t;
+
+		
+
+		CGame::GetInstance()->Draw(x, y, bbox, &rect, fadeoutAlpha);
 	}
 };
 

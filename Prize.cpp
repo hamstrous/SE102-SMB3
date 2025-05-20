@@ -27,7 +27,7 @@ void CPrize::Render() {
 }
 
 void CPrize::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 	if(state == PRIZE_STATE_FLICKER)
 	{
 		if (changeTimer->IsDone())

@@ -46,5 +46,11 @@ public:
 	void Render();
 	void Update(DWORD dt) {}
 	CMountain(float x, float y, int width, int height,int type, int color);
+	void GetSpriteBox(float& l, float& t, float& r, float& b) {
+		l = x - TILE_SIZE / 2;
+		t = y - TILE_SIZE / 2;
+		r = l + this->width * TILE_SIZE;
+		b = t + this->height * TILE_SIZE;
+	};
 };
 

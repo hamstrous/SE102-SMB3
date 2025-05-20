@@ -168,10 +168,12 @@ namespace std {
 #define ATTACK_TIME	210
 #define GLIDE_TIME	267
 #define FLY_TIME	267
-#define TURN_TIME	75
+#define TURN_TIME	300
 #define PROTECT_TIME	267
+#define HIDE_TIME	8000
 
 #define UNTOUCHABLE_TIME 3000
+#define SIT_TIME_TO_HIDE 4000
 
 
 // for Pipe
@@ -197,6 +199,8 @@ protected:
 	}; // type % 2 == 0 ? OutDown : OutUp di len la so chan, di xuong la so le
 	static unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;
 	BOOLEAN isSitting;
+	bool isHiding = false;
+	bool isBehind = false;
 	MarioLevel level;
 	BOOLEAN isOnPlatform;
 	int coin;
@@ -208,6 +212,8 @@ protected:
 	int dirInput = 0; // 1: right, -1: left
 	int jumpInput = 0; // 1: jump, 0: no jump
 	int runInput = 0; // 1: run, 0: no run
+
+	int pointsDisable = 0; //disable points in many frame
 
 	//Check to go down - up in pipe and distance, press
 	bool downPress, upPress = false;
@@ -223,7 +229,7 @@ protected:
 	bool isOnMovingFlatform = false;
 
 	// timers for animations
-	CTimer *attackTimer, *glideTimer, *flyTimer, *untouchableTimer, *turnHoldTimer, *shellProtectTimer;
+	CTimer *attackTimer, *glideTimer, *flyTimer, *untouchableTimer, *turnHoldTimer, *shellProtectTimer, *sittingTimer, *hideTimer;
 
 	int currentAnimation = -1;
 
@@ -231,7 +237,6 @@ protected:
 	void OnCollisionWithBaseBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
-	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
 	void OnCollisionWithFireball(LPCOLLISIONEVENT e);
 	void OnCollisionWithBoomerang(LPCOLLISIONEVENT e);
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
@@ -239,6 +244,15 @@ protected:
 	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
 	void OnCollisionWithSwitch(LPCOLLISIONEVENT e);
 	void OnCollisionWithMovingPlatfrom(LPCOLLISIONEVENT e);
+	void OnCollisionWithColorBlock(LPCOLLISIONEVENT e);
+
+	void OnOverlapWithCoin(LPCOLLISIONEVENT e);
+	void OnOverlapWithBackGroundObjectWhenHide(LPCOLLISIONEVENT e);
+	void OnOverlapWithFireball(LPCOLLISIONEVENT e);
+	void OnOverlapWithBoomerang(LPCOLLISIONEVENT e);
+	void OnOverlapWithLeaf(LPCOLLISIONEVENT e);
+	void OnOverlapWithMushroom(LPCOLLISIONEVENT e);
+
 	void GetAniId();
 	void GetAniIdInPipe();
 	void AssignCurrentAnimation(MarioLevel level, MarioAnimationType type) {
@@ -265,7 +279,8 @@ public:
 		untouchableTimer = new CTimer(UNTOUCHABLE_TIME);
 		turnHoldTimer = new CTimer(TURN_TIME);
 		shellProtectTimer = new CTimer(PROTECT_TIME);
-		
+		sittingTimer = new CTimer(-1); 
+		hideTimer = new CTimer(-1); //-1 cause even tho hiding have finished if mario still hide then still apply
 		isSitting = false;
 		maxVx = 0.0f;
 		maxVy = 0.3f;
@@ -307,6 +322,8 @@ public:
 		turnHoldTimer = NULL;
 		delete shellProtectTimer;
 		shellProtectTimer = NULL;
+		delete sittingTimer;
+		sittingTimer = NULL;
 		
 	}
 
@@ -326,10 +343,13 @@ public:
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
+	void OnOverlapWith(LPCOLLISIONEVENT e);
+
 	void SetLevel(MarioLevel l);
 	void StartUntouchable() { untouchableTimer->Start(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	void GetSpriteBox(float& left, float& top, float& right, float& bottom);
 	void GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2, float& t2, float& r2, float& b2);
 	void SetCanHold(bool pick) { this->canHold = pick; }
 	bool GetHolding() { return holdingShell != NULL; }
@@ -369,13 +389,18 @@ public:
 	void SetIsOnPlatform() { isOnPlatform = true; }
 	bool IsPMeterFull();
 
+	bool IsHiding() { return hideTimer->IsRunning(); }
+	bool IsBehind() { return isBehind; }
+
 	void SetJumpInput(int jump) { this->jumpInput = jump; }
 	int GetJumpInput() { return jumpInput; }
 
 	void SetRunInput(int run) { this->runInput = run; }
 	int GetRunInput() { return runInput; }
 
-	void SetDirInput(int dir) { this->dirInput = dir; }
+	void SetDirInput(int dir) { 
+		this->dirInput = dir; 
+	}
 	int GetDirInput() { return dirInput; }
 
 	void SetPointsPosition();
@@ -408,8 +433,17 @@ public:
 	// mario vx speed at jump point, for midair physics
 	float jumpVx = 0;
 
+
+	int GetPointsDisable() { return pointsDisable; }
 	//bool DownPress() { return DownPress; }
 	//bool UpPress() { return UpPress; }
+
+	LPSPRITE GetCurrentSprite() {
+		if (currentAnimation > 0) {
+			return CAnimations::GetInstance()->Get(currentAnimation)->GetCurrentFrame();
+		}
+		return NULL;
+	}
 };
 
 //GROUND PHYSICS

@@ -19,7 +19,7 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			nx = 1;
 		}
 	}
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 
 	if (IsDead()) return;
 

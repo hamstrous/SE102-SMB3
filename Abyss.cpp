@@ -9,7 +9,7 @@ void CAbyss::Render()
 void CAbyss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
     CGameObject::Update(dt, coObjects);
-    CCollision::GetInstance()->Process(this, dt, coObjects);
+    CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 }
 
 void CAbyss::GetBoundingBox(float& l, float& t, float& r, float& b)

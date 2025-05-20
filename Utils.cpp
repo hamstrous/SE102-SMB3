@@ -102,7 +102,9 @@ void Clamp(float& x, float min, float max)
 
 void ToUpperCase(std::string& str)
 {
-	std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) { return std::toupper(c); });
+	for (char& c : str) {
+		c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+	}
 }
 
 void DebugObjectType(LPGAMEOBJECT obj)

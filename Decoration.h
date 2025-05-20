@@ -13,5 +13,11 @@ public:
 		l = t = r = b = 0;
 	}
 	void Render();
+	void GetSpriteBox(float& l, float& t, float& r, float& b) {
+		l = x - TILE_SIZE / 2;
+		t = y - TILE_SIZE / 2;
+		r = l + TILE_SIZE;
+		b = t + TILE_SIZE;
+	};
 };
 

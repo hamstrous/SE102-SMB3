@@ -98,7 +98,6 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	if(mario == NULL) return;
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
-		mario->SetDirInput(1);
 		if (game->IsKeyDown(DIK_A)) {
 			mario->SetState(MARIO_STATE_RUNNING_RIGHT);
 		}
@@ -107,7 +106,6 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	}
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
-		mario->SetDirInput(-1);
 		if (game->IsKeyDown(DIK_A))
 			mario->SetState(MARIO_STATE_RUNNING_LEFT);
 		else
@@ -115,7 +113,6 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	}
 	else {
 		mario->SetState(MARIO_STATE_IDLE);
-		mario->SetDirInput(0);
 	}
 	
 }

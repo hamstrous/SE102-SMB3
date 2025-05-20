@@ -191,7 +191,6 @@ void CAnimation::BouncingRender(float x, float y)
 	ULONGLONG now = GetTickCount64();
 	if (currentFrame == -1)
 	{
-		dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->SetIsStop(FullTime());
 		currentFrame = 0;
 		lastFrameTime = now;
 	}
