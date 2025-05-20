@@ -437,6 +437,13 @@ public:
 	int GetPointsDisable() { return pointsDisable; }
 	//bool DownPress() { return DownPress; }
 	//bool UpPress() { return UpPress; }
+
+	LPSPRITE GetCurrentSprite() {
+		if (currentAnimation > 0) {
+			return CAnimations::GetInstance()->Get(currentAnimation)->GetCurrentFrame();
+		}
+		return NULL;
+	}
 };
 
 //GROUND PHYSICS

@@ -26,6 +26,19 @@ public:
 	virtual void Draw(float x, float y);
 	virtual void DrawOnCamera(float x, float y);
 	virtual void DrawOnScreen(float x, float y);
+
+	// Helper methods for overlap handling
+	void GetBoundingBox(int& left, int& top, int& right, int& bottom) {
+		left = this->left;
+		top = this->top;
+		right = this->right;
+		bottom = this->bottom;
+	}
+
+	LPTEXTURE GetTexture() { return texture; }
+	bool IsOnScreen() { return onScreen; }
+	float GetOffsetX() { return offsetX; }
+	float GetOffsetY() { return offsetY; }
 };
 
 typedef CSprite* LPSPRITE;

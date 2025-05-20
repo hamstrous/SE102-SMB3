@@ -13,7 +13,6 @@ public:
 		this->width = width;
 		this->height = height;
 		this->color = color;
-		if(color == 7) width = height = 1; // For prize border
 	}
 	void GetBoundingBox(float& l, float& t, float& r, float& b) {
 		l = t = r = b = 0;
