@@ -1,6 +1,7 @@
 #include "KoopaRed.h"
 #include "ColorBlock.h"
 #include "BackgroundColor.h"
+#include "MovingPlatform.h"
 #include "debug.h"
 
 void CKoopaRed::GetFloorBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -28,9 +29,9 @@ int CKoopaRed::OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopaRed::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-
+	if (dynamic_cast<CMovingPlatform*>(e->obj)) return;
 	if (e->obj->IsBlocking()) {
-
+		
 		if (state == KOOPA_STATE_TAILHIT)
 		{
 			if (e->ny < 0)

@@ -5,7 +5,7 @@
 #include "PlayScene.h"
 #include "QuestionBlock.h"
 #include "Scene.h"
-
+#include "MovingPlatform.h"
 
 #define KOOPA_GRAVITY 0.002f
 #define KOOPA_WALKING_SPEED 0.04f
@@ -70,7 +70,7 @@ protected:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) = 0;
 
-	int IsCollidable() { return !IsHeld(); };
+	int IsCollidable() { return !IsHeld(); }
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt) = 0;
 

@@ -9,7 +9,9 @@
 #define ID_ANI_BREAKABLEBRICK 8100
 #define ID_ANI_COIN_TYPE2 11002
 #define ID_ANI_BOUNCING 8102
-#define QUESTION_BLOCK_STATE_UNBOX 400
+
+#define ID_ANI_BLOCK_UNBOX 8001
+#define ID_ANI_BLOCK_UNBOX_BOUNCING 8103
 
 #define BRICK_WIDTH 16
 #define BRICK_BBOX_WIDTH 16
@@ -27,8 +29,9 @@ protected:
 	float start_y;
 	bool bouncing = false;
 	bool unbox = false;
+	bool unbox2 = false;
 	int type = 0;
-	ULONGLONG time_start;
+	ULONGLONG time_start = -1;
 public:
 	CBreakableBrick(float x, float y, int type = 0) : CBaseBrick(x, y) {
 		start_y = y;
