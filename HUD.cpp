@@ -100,7 +100,7 @@ void CHUD::RenderEnd()
 	CGame* game = CGame::GetInstance();
 
 	float midX = game->GetBackBufferWidth() / 2;
-	float hy = game->GetBackBufferHeight() - HUD_SIZE_Y;
+	float hy = game->GetBackBufferHeight() - HUD_SIZE_Y - 4;
 
 
 	int justWonCard = gameData->justWonCard;
@@ -110,8 +110,8 @@ void CHUD::RenderEnd()
 	CSprites::GetInstance()->Get(ID_SPRITE_YOU_GOT)->Draw(midX, GOT_Y_OFFSET);
 	CSprites::GetInstance()->Get(cardsSpriteId[justWonCard])->Draw(midX + youGotCardXOffset, GOT_Y_OFFSET);
 
-	int pos = gameData->cards.size() + 1;
-	CAnimations::GetInstance()->Get(flickerCardsAniId[justWonCard])->Render(midX + CARD_X_OFFSET + (CARD_WIDTH + 2) * (pos - 1), hy);
+	int pos = gameData->cards.size();
+	CAnimations::GetInstance()->Get(flickerCardsAniId[justWonCard])->Render(midX + CARD_X_OFFSET + (CARD_WIDTH + 2) * pos, hy);
 
 }
 

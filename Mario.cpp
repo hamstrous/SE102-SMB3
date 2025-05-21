@@ -356,6 +356,7 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		if (CGame::GetInstance()->IsKeyDown(DIK_S)) SetJumpInput(1);
 		if (jumpInput == 1) vy = -MARIO_JUMP_DEFLECT_SPEED;
 		else vy = -MARIO_JUMP_WEAK_DEFLECT_SPEED;
+		glideTimer->Reset();
 	}
 	else if (e->ny > 0)
 	{
@@ -722,7 +723,7 @@ void CMario::Render()
 	if (GetIsPause()) return;
 	CAnimations* animations = CAnimations::GetInstance();
 		// if animation havent finished (for special animation )
-	if (currentAnimation <= 0 || animations->Get(currentAnimation)->IsDone())
+	if (currentAnimation <= 0 || animations->Get(currentAnimation)->IsDone() || IsSitting())
 	{
 		GetAniId();
 	}
@@ -779,6 +780,11 @@ void CMario::SetState(int state)
 	if (this->state == MARIO_STATE_DIE || this->state == MARIO_STATE_WIN) return; 
 
 	// run then walk mean release
+
+	if(curState == state && curState == MARIO_STATE_SIT)
+	{
+		return;
+	}
 
 	if (curState == MARIO_STATE_RUNNING_LEFT || curState == MARIO_STATE_RUNNING_RIGHT || curState == MARIO_STATE_WALKING_RIGHT || curState == MARIO_STATE_WALKING_LEFT) {
 		if (state == MARIO_STATE_SIT) return;
@@ -971,7 +977,8 @@ void CMario::Acceleration(DWORD dt)
 		else {
 			// midair
 			if (!IsPMeterFull()) {
-				if((abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X && runInput == 0) || glideTimer->IsRunning()) topSpeed = MARIO_WALK_MAX_SPEED_X;
+				if (glideTimer->IsRunning()) topSpeed = abs(vx);
+				else if((abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X && runInput == 0)) topSpeed = MARIO_WALK_MAX_SPEED_X;
 				else topSpeed = MARIO_RUN_MAX_SPEED_X;
 			}else topSpeed = MARIO_SPRINT_MAX_SPEED_X;
 

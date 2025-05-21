@@ -388,6 +388,7 @@ public:
 	bool IsBig() { return level >= MarioLevel::BIG; }
 	bool IsRaccoon() { return level == MarioLevel::RACCOON; }
 	bool IsOnPlatform() { return isOnPlatform; }
+	bool IsSitting() { return isSitting; }
 	void SetIsOnPlatform() { isOnPlatform = true; }
 	bool IsPMeterFull();
 
