@@ -5,11 +5,10 @@
 void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
-	vx += ax * dt;
-
+	vy = min(vy, BOOMERANG_MAX_VERTICAL_SPEED);
 	CCollision::GetInstance()->ProcessNoBlock(this, dt, coObjects);
 
-	 if (state == BOOMERANG_STATE_MOVING_UP)
+	 /*if (state == BOOMERANG_STATE_MOVING_UP)
 	{
 		 if(y <= startY - BOOMERANG_VERTICAL_LENGTH)
 		 {
@@ -28,7 +27,7 @@ void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		 {
 			 SetState(BOOMERANG_STATE_FLYING_DOWN);
 		 }
-	}
+	}*/
 }
 
 void CBoomerang::Render()
@@ -53,15 +52,17 @@ void CBoomerang::SetState(int state)
 {
 	switch (state)
 	{
-	case BOOMERANG_STATE_FLYING_UP:
-		ay = 0;
-		vy = 0;
-		break;
-	case BOOMERANG_STATE_FLYING_DOWN:
-		ay = 0;
-		vy = 0;
-		break;
 	case BOOMERANG_STATE_MOVING_UP:
+		vy = -BOOMERANG_INITAL_UPWARD_SPEED;
+		ay = BOOMERANG_GRAVITY;
+		vx = BOOMERANG_HORIZONTAL_SPEED * nx;
+		vy = 0;
+		break;
+	/*case BOOMERANG_STATE_FLYING_DOWN:
+		ay = 0;
+		vy = 0;
+		break;
+	case BOOMERANG_STATE_FLYING_UP:
 		ay = -BOOMERANG_VERTICAL_ACCE;
 		ax = nx * BOOMERANG_HORIZONTAL_ACCE;
 		break;
@@ -69,7 +70,7 @@ void CBoomerang::SetState(int state)
 		ay = 0;
 		vy = BOOMERANG_VERTICAL_SPEED;
 		ax = -nx * BOOMERANG_HORIZONTAL_ACCE;
-		break;
+		break;*/
 	case BOOMERANG_STATE_HOLDING:
 		vx = 0;
 		vy = 0;
