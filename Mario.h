@@ -170,7 +170,7 @@ namespace std {
 #define ATTACK_TIME	210
 #define GLIDE_TIME	267
 #define FLY_TIME	267
-#define TURN_TIME	300
+#define TURN_TIME	200
 #define PROTECT_TIME	267
 #define HIDE_TIME	8000
 

@@ -24,12 +24,12 @@ void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 		{
 			if (e->ny < 0)
 			{
-				vx = 0;
-				vy = 0;
+				vx = vx * 0.3f;
+				vy = - 0.3f * vy;
 			}
 			else if (e->nx != 0)
 			{
-				vx = 0;
+				vx = -vx;
 			}
 		}
 		else if (e->ny != 0)
@@ -142,6 +142,12 @@ void CKoopaGreen::SetState(int state)
 		if (this->state == KOOPA_STATE_WALKING) y = (y + KOOPA_BBOX_HEIGHT / 2) - KOOPA_BBOX_HEIGHT_SHELL / 2;
 		shell_start = GetTickCount64();
 		isIdle = true;
+		if (player->GetX() < x) {
+			vx = KOOPA_TAILHIT_SPEED_x;
+		}
+		else {
+			vx = -KOOPA_TAILHIT_SPEED_x;
+		}
 		break;
 	case KOOPA_STATE_MARIO_DEAD:
 		//call when mario is dead whild holding
