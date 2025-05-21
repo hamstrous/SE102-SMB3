@@ -121,6 +121,9 @@ void CBreakableBrick::AddScoreBrick()
 	coin->SetState(COIN_STATE_MOVEUP);
 	scene->AddObject(coin);
 	CGameData::GetInstance()->AddCoin(1);
-	bouncing = true;
+	if (!bouncing) {
+		bouncing = true;
+		time_start = GetTickCount64();
+	}
 	time_start = GetTickCount64();
 }

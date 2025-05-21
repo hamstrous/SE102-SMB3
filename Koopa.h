@@ -54,6 +54,9 @@
 #define KOOPA_STATE_HIT_DIE 1000
 
 #define KOOPA_TIME_DELETE 1000
+
+//get hit by brick
+#define KOOPA_STATE_BOUNCING 0.3f
 class CKoopa : public CCharacter
 {
 protected:
@@ -64,6 +67,9 @@ protected:
 	bool isIdle = false;
 
 	bool hit = false;
+
+	bool bouncing = false;
+
 	ULONGLONG shell_start;
 	ULONGLONG fly_start;
 	ULONGLONG delete_time;

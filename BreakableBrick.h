@@ -51,4 +51,5 @@ public:
 	virtual void SideHit();
 	virtual void BottomHit();
 	virtual void AddScoreBrick();
+	virtual bool GetBouncing() { return bouncing; }
 };
