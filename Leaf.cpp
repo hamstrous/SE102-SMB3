@@ -21,8 +21,13 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(LEAF_STATE_FALL);
 		
 	}
+	if (state == LEAF_STATE_FALL && GetTickCount64() - fallReverse_start >= 450)
+	{
+		vy = -0.02;
+	}
 	if (state == LEAF_STATE_FALL && GetTickCount64() - fallReverse_start >= LEAF_FALL_REVERSE_TIME)
 	{
+		vy = 0.03f;
 		vx = -vx;
 		fallReverse_start = GetTickCount64();
 	}
