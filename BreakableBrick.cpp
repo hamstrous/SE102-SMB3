@@ -26,8 +26,11 @@ void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		time_start = -1;
 		bouncing = false;
-		unbox = false;
-		if(type != 0) unbox2 = true;
+		//unbox = false;
+		if (type != 0 && unbox == true) {
+			unbox2 = true;
+			unbox = false;
+		}
 	}
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
@@ -74,9 +77,15 @@ void CBreakableBrick::SideHit()
 		isDeleted = true;
 		CGameFXManager::GetInstance()->AddBreak(x, y);
 	}
-	if (type == TYPE_ADDSCORE)
+
+	float cx, cy;
+	CGame::GetInstance()->GetCamPos(cx, cy);
+
+	if (type == TYPE_ADDSCORE && !unbox2)
 	{
 		AddScoreBrick();
+		if (cx + 20 >= x) unbox = true;
+		time_start = GetTickCount64();
 	}
 }
 
@@ -98,9 +107,9 @@ void CBreakableBrick::BottomHit()
 		bouncing = true;
 		time_start = GetTickCount64();
 	}
-	if (type == TYPE_ADDSCORE){
+	if (type == TYPE_ADDSCORE && !unbox2){
 		AddScoreBrick();
-		if (x >= cx) unbox = true;
+		if (cx + 20 >= x) unbox = true;
 		time_start = GetTickCount64();
 	}
 }
