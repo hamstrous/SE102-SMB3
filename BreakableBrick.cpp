@@ -84,7 +84,7 @@ void CBreakableBrick::SideHit()
 	if (type == TYPE_ADDSCORE && !unbox2)
 	{
 		AddScoreBrick();
-		if (cx + 20 >= x) unbox = true;
+		if (cx + 30 >= x) unbox = true;
 		time_start = GetTickCount64();
 	}
 }
@@ -109,7 +109,7 @@ void CBreakableBrick::BottomHit()
 	}
 	if (type == TYPE_ADDSCORE && !unbox2){
 		AddScoreBrick();
-		if (cx + 20 >= x) unbox = true;
+		if (cx + 30 >= x) unbox = true;
 		time_start = GetTickCount64();
 	}
 }
