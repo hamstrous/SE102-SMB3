@@ -152,6 +152,8 @@ public:
 
 		CGame::GetInstance()->Draw(x, y, bbox, &rect, fadeoutAlpha);
 	}
+
+	bool IsBackgroundObject(LPGAMEOBJECT obj);
 };
 
 

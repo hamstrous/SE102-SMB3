@@ -627,7 +627,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 			{
 				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
 				objSrc->OnCollisionWith(colY); // set position and call OnCollisionWith
-				marked.insert(colY->obj);
+				//marked.insert(colY->obj);
 				//
 				// see if after correction on Y, is there still a collision on X ? 
 				//
@@ -648,7 +648,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 				{
 					x += colX_other->t * dx + colX_other->nx * BLOCK_PUSH_FACTOR;
 					objSrc->OnCollisionWith(colX_other);
-					marked.insert(colX_other->obj);
+					//marked.insert(colX_other->obj);
 				}
 				else
 				{
@@ -681,7 +681,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 				{
 					y += colY_other->t * dy + colY_other->ny * BLOCK_PUSH_FACTOR;
 					objSrc->OnCollisionWith(colY_other);
-					marked.insert(colY_other->obj);
+					//marked.insert(colY_other->obj);
 				}
 				else
 				{
@@ -695,7 +695,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 				x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
 				y += dy;
 				objSrc->OnCollisionWith(colX);
-				marked.insert(colX->obj);
+				//marked.insert(colX->obj);
 			}
 			else
 				if (colY != NULL)
@@ -703,7 +703,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 					x += dx;
 					y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
 					objSrc->OnCollisionWith(colY);
-					marked.insert(colY->obj);
+					//marked.insert(colY->obj);
 				}
 				else // both colX & colY are NULL 
 				{

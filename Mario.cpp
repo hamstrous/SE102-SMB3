@@ -232,9 +232,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// reset untouchable timer if untouchable time has passed
 	// for mario has to be called first so process can call OnCollision
 	SetPointsPosition();
-	//CCollision::GetInstance()->Process(this, dt, coObjects);
-	CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
-	CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, dt);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
+	//CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
+	//CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, dt);
 
 	if (!isBehind && hideTimer->ElapsedTime() >= HIDE_TIME) {
 		hideTimer->Reset();
@@ -252,8 +252,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (untouchableTimer->IsDone()) {
 		untouchableTimer->Reset();
-		CCollision::GetInstance()->ProcessMarioOverlap(this, dt, coObjects);
-		//this will call mario->attacked if overlap enemies
 	}
 }
 
@@ -484,7 +482,7 @@ void CMario::OnCollisionWithColorBlock(LPCOLLISIONEVENT e)
 	{
 		if (isSitting && sittingTimer->ElapsedTime() >= SIT_TIME_TO_HIDE) {
 			y += 1;
-			pointsDisable = 7;
+			pointsDisable = 3;
 			hideTimer->Start();
 		}
 	}
@@ -799,8 +797,8 @@ void CMario::SetState(int state)
 	if (curState == MARIO_STATE_DEBUG) {
 		if (state == MARIO_STATE_WALKING_LEFT) x -= 2;
 		else if (state == MARIO_STATE_WALKING_RIGHT) x += 2;
-		else if (state == MARIO_STATE_RUNNING_LEFT) x -= 4;
-		else if (state == MARIO_STATE_RUNNING_RIGHT) x += 4;
+		else if (state == MARIO_STATE_RUNNING_LEFT) x -= 10;
+		else if (state == MARIO_STATE_RUNNING_RIGHT) x += 10;
 		else if (state == MARIO_STATE_JUMP) y -= 2;
 		else if (state == MARIO_STATE_SIT) y += 2;
 		return;
@@ -905,6 +903,7 @@ void CMario::SetState(int state)
 		vx = 0;
 		vy = 0;
 		holdingShell = NULL;
+		dirInput = 0;
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_SPEED_Y;

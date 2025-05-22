@@ -157,6 +157,8 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	return hWnd;
 }
 
+DWORD maxdt = 0;
+
 int Run()
 {
 	MSG msg;
@@ -179,14 +181,15 @@ int Run()
 		// dt: the time between (beginning of last frame) and now
 		// this frame: the frame we are about to render
 		DWORD dt = (DWORD)(now - frameStart);
+		maxdt = max(maxdt, dt);
 		if (dt >= tickPerFrame)
 		{
 			DT = dt;
 			frameStart = now;
-
+			DebugOutTitle(L"DT = %d\n", dt);
 			CGame::GetInstance()->ProcessKeyboard();	
 			//DebugOut(L"-------------[INFO] FRAME = %d\n", frame);
-			Update(dt);
+			Update(min(dt, 60));
 			Render();
 			//DebugOut(L"\n\n", dt);
 			CGame::GetInstance()->SwitchScene();

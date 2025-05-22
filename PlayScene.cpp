@@ -619,16 +619,9 @@ void CPlayScene::Update(DWORD dt)
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if(!objects[i]->GetSleep()) coObjects.push_back(objects[i]);
+		if(!objects[i]->GetSleep() && !IsBackgroundObject(objects[i])) coObjects.push_back(objects[i]);
 	}
-
-
-	//if (deathTimer->IsRunning()) {
-	//	player->Update(dt, &coObjects);
-	//	PurgeDeletedObjects();
-	//	return;
-	//}
-
+	//DebugOutTitle(L"coObjects: %d", coObjects.size());
 	
 
 	for (size_t i = 0; i < objects.size(); i++)
@@ -804,6 +797,22 @@ void CPlayScene::SetIsPause()
 		CTimerManager::GetInstance()->Pause();
 	}
 	pauseTimer->Flip();
+}
+
+bool CPlayScene::IsBackgroundObject(LPGAMEOBJECT obj)
+{
+	CMario* mario = dynamic_cast<CMario*>(player);
+	if(mario->IsHiding()) return false;
+
+	if (dynamic_cast<CBackgroundColor*>(obj))
+		return true;
+	if (dynamic_cast<CCloud*>(obj))
+		return true;
+	if(dynamic_cast<CMountain*>(obj))
+		return true;
+	if (dynamic_cast<CDecoration*>(obj))
+		return true;
+	return false;
 }
 
 void CPlayScene::PurgeDeletedObjects()
