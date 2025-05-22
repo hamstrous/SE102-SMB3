@@ -324,12 +324,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CMario::OnOverlapWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CCharacter*>(e->obj))
-		OnCollisionWithCharacter(e);
-	else if (dynamic_cast<CCoin*>(e->obj));
-	else if (dynamic_cast<CBoomerang*>(e->obj))
-		OnCollisionWithBoomerang(e);
-	else if (dynamic_cast<CColorBlock*>(e->obj)
+	if (dynamic_cast<CColorBlock*>(e->obj)
 		|| dynamic_cast<CMountain*>(e->obj)
 		|| dynamic_cast<CDecoration*>(e->obj)
 		|| dynamic_cast<CCloud*>(e->obj)) 
@@ -390,7 +385,6 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
 	CGameData::GetInstance()->AddCoin(1);
-	
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
@@ -731,7 +725,7 @@ void CMario::Render()
 
 	animations->Get(currentAnimation)->Render(x, y);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 	for(int i=0;i<7;i++)
 	{
 		points[i]->RenderBoundingBox();

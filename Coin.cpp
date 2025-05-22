@@ -9,7 +9,7 @@ void CCoin::Render()
 		animations->Get(aniId)->Render(x, y);
 	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -39,6 +39,10 @@ void CCoin::GetBoundingBox(float& l, float& t, float& r, float& b)
 	t = y - COIN_BBOX_HEIGHT / 2;
 	r = l + COIN_BBOX_WIDTH;
 	b = t + COIN_BBOX_HEIGHT;
+	if(state != COIN_STATE_NORMAL)
+	{
+		l = t = r = b = 0;
+	}
 }
 
 void CCoin::SetState(int state)

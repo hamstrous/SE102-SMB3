@@ -206,7 +206,7 @@ protected:
 	MarioLevel level;
 	BOOLEAN isOnPlatform;
 	int coin;
-	CKoopa* holdingShell;
+	
 	vector<CPoint*> points;
 	int count = 0;
 	bool timesup = false;
@@ -272,6 +272,7 @@ protected:
 	}
 
 public:
+	CKoopa* holdingShell;
 	bool canHold = false;
 	CMario(float x, float y) : CCharacter(x, y)
 	{
