@@ -4,8 +4,8 @@
 #include "Score.h"
 #include "Mario.h"
 #define LEAF_GRAVITY 0.00002f
-#define LEAF_SPEED_UP 0.1f
-#define LEAF_SPEED 0.08f
+#define LEAF_SPEED_UP 0.09f
+#define LEAF_SPEED 0.07f
 
 #define LEAF_BBOX_WIDTH 16
 #define LEAF_BBOX_HEIGHT 14
@@ -18,8 +18,8 @@
 #define ID_ANI_LEAF_RIGHT 8601
 #define ID_ANI_LEAF_LEFT 8600
 
-#define LEAF_UP_DISTANCE 20
-#define LEAF_FALL_REVERSE_TIME 300
+#define LEAF_UP_DISTANCE 26
+#define LEAF_FALL_REVERSE_TIME 600
 
 #define LEAF_TIME_STOP 10
 

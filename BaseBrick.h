@@ -11,5 +11,6 @@ public:
 	virtual int IsBlocking() { return 1; }
 	virtual void SideHit() {};
 	virtual void BottomHit() {};
+	virtual bool GetBouncing() { return 0; }
 };
 

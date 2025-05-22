@@ -12,7 +12,10 @@ void CBreakableBrick::Render()
 	if(CGame::GetInstance()->GetChangeBricktoCoin()) animations->Get(ID_ANI_COIN_TYPE2)->Render(x, y);
 	else if (unbox) animations->Get(ID_ANI_BLOCK_UNBOX_BOUNCING)->Render(x, y);
 	else if (unbox2)  animations->Get(ID_ANI_BLOCK_UNBOX)->Render(x, y);
-	else if(bouncing) animations->Get(ID_ANI_BOUNCING)->Render(x, y);
+	else if (bouncing) {
+		//animations->Get(ID_ANI_BOUNCING)->ResetBouncing();
+		animations->Get(ID_ANI_BOUNCING)->Render(x, y);
+	}
 	else animations->Get(ID_ANI_BREAKABLEBRICK)->Render(x, y);
 	//RenderBoundingBox();
 }
@@ -22,12 +25,15 @@ void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	y += vy * dt;
 
 
-	if (time_start != -1 && GetTickCount64() - time_start >= 230)
+	if (time_start != -1 && GetTickCount64() - time_start >= 180)
 	{
 		time_start = -1;
 		bouncing = false;
-		unbox = false;
-		if(type != 0) unbox2 = true;
+		//unbox = false;
+		if (type != 0 && unbox == true) {
+			unbox2 = true;
+			unbox = false;
+		}
 	}
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
@@ -74,9 +80,15 @@ void CBreakableBrick::SideHit()
 		isDeleted = true;
 		CGameFXManager::GetInstance()->AddBreak(x, y);
 	}
-	if (type == TYPE_ADDSCORE)
+
+	float cx, cy;
+	CGame::GetInstance()->GetCamPos(cx, cy);
+
+	if (type == TYPE_ADDSCORE && !unbox2)
 	{
 		AddScoreBrick();
+		if (cx + 30 >= x) unbox = true;
+		time_start = GetTickCount64();
 	}
 }
 
@@ -98,9 +110,9 @@ void CBreakableBrick::BottomHit()
 		bouncing = true;
 		time_start = GetTickCount64();
 	}
-	if (type == TYPE_ADDSCORE){
+	if (type == TYPE_ADDSCORE && !unbox2){
 		AddScoreBrick();
-		if (x >= cx) unbox = true;
+		if (cx + 30 >= x) unbox = true;
 		time_start = GetTickCount64();
 	}
 }
@@ -112,6 +124,9 @@ void CBreakableBrick::AddScoreBrick()
 	coin->SetState(COIN_STATE_MOVEUP);
 	scene->AddObject(coin);
 	CGameData::GetInstance()->AddCoin(1);
-	bouncing = true;
+	if (!bouncing) {
+		bouncing = true;
+		time_start = GetTickCount64();
+	}
 	time_start = GetTickCount64();
 }

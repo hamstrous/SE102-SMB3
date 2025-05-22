@@ -53,6 +53,11 @@ public:
 	bool IsDone() { return done; }
 	void Reset() { currentFrame = -1; done = false; }
 	void Skip() { currentFrame = -1; done = true; }
+	void ResetBouncing()
+	{
+		bouncingState = 0;
+		bouncingOffset = 0.0f;
+	}
 	int FullTime()
 	{
 		if(doneTime != 0) return doneTime; // Return the animation time if it has been set

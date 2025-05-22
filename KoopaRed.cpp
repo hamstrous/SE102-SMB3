@@ -67,6 +67,10 @@ void CKoopaRed::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 	CBaseBrick* basebrick = (CBaseBrick*)e->obj;
 	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 	CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
+
+	float bx, by;
+	basebrick->GetPosition(bx, by);
+
 	if (basebrick->GetState() == QUESTION_BLOCK_STATE_MOVEUP) {
 		if (state == KOOPA_STATE_WALKING) {
 			float xx, yy;
@@ -79,9 +83,13 @@ void CKoopaRed::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 			}
 			vy = -KOOPA_BOUNCE_SPEED;
 		}
-
-
 	}
+
+	if (basebrick->GetBouncing()) {
+		bouncing = true;
+		TailHit(bx);
+	}
+
 	if (e->nx != 0 && (state == KOOPA_STATE_SHELL_MOVING || state == KOOPA_STATE_SHELL_MOVING_TAILHIT)) {
 		basebrick->SideHit();
 	}
@@ -443,9 +451,13 @@ void CKoopaRed::TailHit(float x)
 	SetState(KOOPA_STATE_TAILHIT);
 	if (x < this->x) vx = KOOPA_FLYING_SPEED_X;
 	else if (x > this->x) vx = -KOOPA_FLYING_SPEED_X;
-	vy = -KOOPA_TAILHIT_SPEED_Y;
+	if (bouncing) {
+		DebugOut(L"bouncing true");
+		vy = -KOOPA_STATE_BOUNCING;
+		bouncing = false;
+	}
+	else vy = -KOOPA_TAILHIT_SPEED_Y;
 	hasWing = false;
-
 	hit = false;
 }
 
