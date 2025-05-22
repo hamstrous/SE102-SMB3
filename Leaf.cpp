@@ -21,7 +21,7 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(LEAF_STATE_FALL);
 		
 	}
-	if (state == LEAF_STATE_FALL && GetTickCount64() - fallReverse_start >= 450)
+	if (state == LEAF_STATE_FALL && GetTickCount64() - fallReverse_start >= 350)
 	{
 		vy = -0.02;
 	}
@@ -41,8 +41,9 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CLeaf::Render()
 {	
 	if (GetIsPause()) return;
-	int aniId = ID_ANI_LEAF_RIGHT;
+	int aniId = ID_ANI_LEAF_LEFT;
 	if (vx < 0) aniId = ID_ANI_LEAF_LEFT;
+	else aniId = ID_ANI_LEAF_RIGHT;
 	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	//RenderBoundingBox();
