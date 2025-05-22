@@ -631,6 +631,43 @@ void CMario::SetPointsPosition()
 
 }
 
+void CMario::SetPointsPositionForNonBlockingOverlap()
+{
+
+	if (!IsBig() || isSitting) {
+		points[0]->SetPosition(x, y - MARIO_SMALL_BBOX_HEIGHT / 2.f);
+
+		points[1]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y - MARIO_SMALL_BBOX_HEIGHT / 2.f);
+
+		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y);
+
+		points[3]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
+
+		points[4]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
+
+		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y);
+
+		points[6]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y - MARIO_SMALL_BBOX_HEIGHT / 2.f);
+
+	}
+	else {
+		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
+
+		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
+
+		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f, y);
+
+		points[3]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_BBOX_HEIGHT / 2.f);
+
+		points[4]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_BBOX_HEIGHT / 2.f);
+
+		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y);
+
+		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
+	}
+	SetSpeed(vx, vy);
+}
+
 void CMario::GetAniId()
 {
 	if (state == -1) {

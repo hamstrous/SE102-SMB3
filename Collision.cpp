@@ -873,9 +873,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	objSrc->GetPosition(x, y);
 	objSrc->GetSpeed(vx, vy);
 	k = 0;
-	mario->SetPointsPosition();
-
-	
+	mario->SetPointsPositionForNonBlockingOverlap();
 
 	for (auto obj : *coObjects)
 	{

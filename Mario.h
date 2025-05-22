@@ -404,6 +404,7 @@ public:
 	int GetDirInput() { return dirInput; }
 
 	void SetPointsPosition();
+	void SetPointsPositionForNonBlockingOverlap();
 
 	void StartHoldTurn(int nx) {
 		if(this->nx != nx) turnHoldTimer->Start();
