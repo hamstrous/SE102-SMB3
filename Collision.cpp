@@ -659,7 +659,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 			{
 				x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
 				objSrc->OnCollisionWith(colX);
-				marked.insert(colX->obj);
+				//marked.insert(colX->obj);
 
 				// see if after correction on X, is there still a collision on Y ? 
 				//
@@ -847,6 +847,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 
 	if ((pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT]) && !(pointsMaybeTouched[LEFTUP] || pointsMaybeTouched[LEFTDOWN] || pointsMaybeTouched[RIGHTUP] || pointsMaybeTouched[RIGHTDOWN])) {
 		dirY = -2;
+		DebugOut(L"[Mario] touched pushed %f\n", y);
 	}
 
 	x += dirX;
@@ -865,9 +866,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	pointsMaybeTouched.clear();
 	collidedObjects.clear();
 
-	
-
-#pragma endregion
+	#pragma endregion
 
 	#pragma region overlap_non_block
 	objSrc->GetPosition(x, y);
@@ -877,9 +876,6 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 
 	for (auto obj : *coObjects)
 	{
-		if (debug) {
-			debug = 0;
-		}
 		if (dynamic_cast<CMario*>(obj)) continue; //skip brick objects
 		if(mario->holdingShell!=NULL && mario->holdingShell == dynamic_cast<CKoopa*>(obj)) continue; //skip holding shell
 		if (marked.find(obj) != marked.end()) continue;

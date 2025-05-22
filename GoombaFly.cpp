@@ -24,7 +24,6 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if ( ( (state == GOOMBAFLY_STATE_DIE) || (state == GOOMBAFLY_STATE_DIE_UP))
 		&& (GetTickCount64() - die_start > GOOMBAFLY_DIE_TIMEOUT))
 	{
-		DebugOut(L"State: ", state);
 		isDeleted = true;
 		return;
 	}

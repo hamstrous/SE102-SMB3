@@ -298,7 +298,6 @@ public:
 			points[i] = new CPoint(0, 0);
 			float px = 0, py = 0;
 			points[i]->GetPosition(px, py);
-			DebugOut(L"[INFO] Mario::CMario: point %d position: %f, %f\n", i, px, py); // Debugging output
 		}
 	}
 

@@ -186,10 +186,10 @@ int Run()
 		{
 			DT = dt;
 			frameStart = now;
-			DebugOutTitle(L"DT = %d\n", dt);
+			//DebugOutTitle(L"DT = %d\n", dt);
 			CGame::GetInstance()->ProcessKeyboard();	
 			//DebugOut(L"-------------[INFO] FRAME = %d\n", frame);
-			Update(min(dt, 60));
+			Update(dt);
 			Render();
 			//DebugOut(L"\n\n", dt);
 			CGame::GetInstance()->SwitchScene();
