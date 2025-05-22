@@ -29,6 +29,7 @@
 #include "Mountain.h"
 #include "Decoration.h"
 #include "Cloud.h"
+#include "BreakableBrick.h"
 
 unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animationMap = {
 	{
@@ -292,6 +293,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	if (dynamic_cast<CCharacter*>(e->obj))
 		OnCollisionWithCharacter(e);
+	else if (dynamic_cast<CBreakableBrick*>(e->obj))
+		OnCollisionWithBreakableBrick(e);
 	else if (dynamic_cast<CBaseBrick*>(e->obj))
 		OnCollisionWithBaseBrick(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
@@ -359,12 +362,16 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 	}
 	else
 	{
-		if (character->CanHold() && canHold)
-		{
-			CKoopa* koopa = dynamic_cast<CKoopa*>(character);
-			holdingShell = koopa;
-			koopa->Held();
-		}else if (!untouchableTimer->IsRunning())
+		if (CKoopa* koopa = dynamic_cast<CKoopa*>(character)) {
+			if (koopa->CanHold() && canHold)
+			{
+				holdingShell = koopa;
+				koopa->Held();
+				return;
+			}
+			else if (shellProtectTimer->IsRunning()) return;
+		}
+		if (!untouchableTimer->IsRunning())
 		{
 			character->Touched();
 		}
@@ -379,6 +386,15 @@ void CMario::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 	{
 		brick->BottomHit();
 	}
+}
+
+void CMario::OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e)
+{
+	if (!CGame::GetInstance()->GetChangeBricktoCoin()) return;
+	e->obj->Delete();
+	CGameData::GetInstance()->AddCoin(1);
+	CGameData::GetInstance()->AddScore(50);
+	
 }
 
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
@@ -445,11 +461,11 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)
 {	
-	/*if (e->ny > 0)
+	if(e->ny < 0)
 	{
-		CSwitch* sw = dynamic_cast<CSwitch*>(e->obj);
+		CSwitch* sw = (CSwitch*)e->obj;
 		sw->Enable();
-	}*/
+	}
 }
 
 void CMario::OnCollisionWithMovingPlatfrom(LPCOLLISIONEVENT e)
@@ -942,7 +958,10 @@ void CMario::Acceleration(DWORD dt)
 		else {
 			// midair
 			if (!IsPMeterFull()) {
-				if (glideTimer->IsRunning()) topSpeed = abs(vx);
+				if (glideTimer->IsRunning()) {
+					if (abs(vx) <= MARIO_WALK_MAX_SPEED_X) topSpeed = MARIO_WALK_MAX_SPEED_X;
+					else topSpeed = MARIO_RUN_MAX_SPEED_X;
+				}
 				else if((abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X && runInput == 0)) topSpeed = MARIO_WALK_MAX_SPEED_X;
 				else topSpeed = MARIO_RUN_MAX_SPEED_X;
 			}else topSpeed = MARIO_SPRINT_MAX_SPEED_X;
@@ -1084,6 +1103,7 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		KickedShell();
 		holdingShell->ThrownInBlock(dt, coObjects);
 		holdingShell = NULL;
+		shellProtectTimer->Start();
 	}
 }
 

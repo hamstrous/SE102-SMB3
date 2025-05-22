@@ -171,7 +171,7 @@ namespace std {
 #define GLIDE_TIME	267
 #define FLY_TIME	267
 #define TURN_TIME	200
-#define PROTECT_TIME	267
+#define PROTECT_FROM_SHELL_TIME	267
 #define HIDE_TIME	8000
 
 #define UNTOUCHABLE_TIME 3000
@@ -237,6 +237,7 @@ protected:
 
 	void OnCollisionWithCharacter(LPCOLLISIONEVENT e);
 	void OnCollisionWithBaseBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithFireball(LPCOLLISIONEVENT e);
@@ -248,12 +249,7 @@ protected:
 	void OnCollisionWithMovingPlatfrom(LPCOLLISIONEVENT e);
 	void OnCollisionWithColorBlock(LPCOLLISIONEVENT e);
 
-	void OnOverlapWithCoin(LPCOLLISIONEVENT e);
 	void OnOverlapWithBackGroundObjectWhenHide(LPCOLLISIONEVENT e);
-	void OnOverlapWithFireball(LPCOLLISIONEVENT e);
-	void OnOverlapWithBoomerang(LPCOLLISIONEVENT e);
-	void OnOverlapWithLeaf(LPCOLLISIONEVENT e);
-	void OnOverlapWithMushroom(LPCOLLISIONEVENT e);
 
 	void GetAniId();
 	void GetAniIdInPipe();
@@ -281,7 +277,7 @@ public:
 		attackTimer = new CTimer(ATTACK_TIME);
 		untouchableTimer = new CTimer(UNTOUCHABLE_TIME);
 		turnHoldTimer = new CTimer(TURN_TIME);
-		shellProtectTimer = new CTimer(PROTECT_TIME);
+		shellProtectTimer = new CTimer(PROTECT_FROM_SHELL_TIME);
 		sittingTimer = new CTimer(-1); 
 		hideTimer = new CTimer(-1); //-1 cause even tho hiding have finished if mario still hide then still apply
 		isSitting = false;

@@ -47,16 +47,6 @@ void CBreakableBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 	b = t + BRICK_BBOX_HEIGHT;
 }
 
-void CBreakableBrick::OnCollisionWith(LPCOLLISIONEVENT e)
-{
-	if (dynamic_cast<CMario*>(e->obj) && CGame::GetInstance()->GetChangeBricktoCoin())
-	{
-		isDeleted = true;
-		CGameData::GetInstance()->AddCoin(1);
-		CGameData::GetInstance()->AddScore(50);
-	}
-}
-
 void CBreakableBrick::SetState(int state)
 {
 	switch (state)

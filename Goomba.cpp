@@ -120,6 +120,7 @@ void CGoomba::SetState(int state)
 			die_start = GetTickCount64();
 			if (tailhit) vy = -GOOMBA_TAILHIT_SPEED_Y;
 			else vy = -GOOMBA_FLYING_SPEED;
+			killOffCam = true;
 			break;
 	}
 	CGameObject::SetState(state);
