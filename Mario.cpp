@@ -324,12 +324,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CMario::OnOverlapWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CCharacter*>(e->obj))
-		OnCollisionWithCharacter(e);
-	else if (dynamic_cast<CCoin*>(e->obj));
-	else if (dynamic_cast<CBoomerang*>(e->obj))
-		OnCollisionWithBoomerang(e);
-	else if (dynamic_cast<CColorBlock*>(e->obj)
+	if (dynamic_cast<CColorBlock*>(e->obj)
 		|| dynamic_cast<CMountain*>(e->obj)
 		|| dynamic_cast<CDecoration*>(e->obj)
 		|| dynamic_cast<CCloud*>(e->obj)) 
@@ -356,6 +351,7 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		if (CGame::GetInstance()->IsKeyDown(DIK_S)) SetJumpInput(1);
 		if (jumpInput == 1) vy = -MARIO_JUMP_DEFLECT_SPEED;
 		else vy = -MARIO_JUMP_WEAK_DEFLECT_SPEED;
+		glideTimer->Reset();
 	}
 	else if (e->ny > 0)
 	{
@@ -389,7 +385,6 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
 	CGameData::GetInstance()->AddCoin(1);
-	
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
@@ -643,18 +638,19 @@ void CMario::GetAniId()
 			return;
 		}
 
-		if (nx > 0) {
-			if(vx == 0) currentAnimation = animationMap[level][MarioAnimationType::IDLE_HOLD_RIGHT];
-			else if(vx <= MARIO_WALK_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_RIGHT];
-			else if (vx <= MARIO_RUN_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::RUN_HOLD_RIGHT];
-			else if (vx <= MARIO_SPRINT_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::SPRINT_HOLD_RIGHT];
+		if (nx != 0) {
+			bool right = nx > 0;
+			float absVx = abs(vx);
+
+			MarioAnimationType animType =
+				absVx == 0 ? (right ? MarioAnimationType::IDLE_HOLD_RIGHT : MarioAnimationType::IDLE_HOLD_LEFT) :
+				absVx <= MARIO_WALK_MAX_SPEED_X ? (right ? MarioAnimationType::WALK_HOLD_RIGHT : MarioAnimationType::WALK_HOLD_LEFT) :
+				absVx <= MARIO_RUN_MAX_SPEED_X ? (right ? MarioAnimationType::RUN_HOLD_RIGHT : MarioAnimationType::RUN_HOLD_LEFT) :
+				(right ? MarioAnimationType::SPRINT_HOLD_RIGHT : MarioAnimationType::SPRINT_HOLD_LEFT);
+
+			currentAnimation = animationMap[level][animType];
 		}
-		else { // vx < 0
-			if (abs(vx) == 0) currentAnimation = animationMap[level][MarioAnimationType::IDLE_HOLD_LEFT];
-			else if (abs(vx) <= MARIO_WALK_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::WALK_HOLD_LEFT];
-			else if (abs(vx) <= MARIO_RUN_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::RUN_HOLD_LEFT];
-			else if (abs(vx) <= MARIO_SPRINT_MAX_SPEED_X) currentAnimation = animationMap[level][MarioAnimationType::SPRINT_HOLD_LEFT];
-		}
+
 		return;
 	}
 
@@ -675,34 +671,17 @@ void CMario::GetAniId()
 	else if (vx == 0) {
 		currentAnimation = animationMap[level][nx > 0 ? MarioAnimationType::IDLE_RIGHT : MarioAnimationType::IDLE_LEFT];
 	}
-	else if (vx > 0) {
-		if (ax < 0) {
-			currentAnimation = animationMap[level][MarioAnimationType::BRACE_RIGHT];
-		}
-		else if (vx <= MARIO_WALK_MAX_SPEED_X) {
-			currentAnimation = animationMap[level][MarioAnimationType::WALKING_RIGHT];
-		}
-		else if (vx <= MARIO_RUN_MAX_SPEED_X) {
-			currentAnimation = animationMap[level][MarioAnimationType::RUNNING_RIGHT];
-		}
-		else {
-			currentAnimation = animationMap[level][MarioAnimationType::SPRINTING_RIGHT];
-		}
-		
-	}
-	else { // vx < 0
-		if (ax > 0) {
-			currentAnimation = animationMap[level][MarioAnimationType::BRACE_LEFT];
-		}
-		else if (abs(vx) <= MARIO_WALK_MAX_SPEED_X) {
-			currentAnimation = animationMap[level][MarioAnimationType::WALKING_LEFT];
-		}
-		else if (abs(vx) <= MARIO_RUN_MAX_SPEED_X) {
-			currentAnimation = animationMap[level][MarioAnimationType::RUNNING_LEFT];
-		}
-		else {
-			currentAnimation = animationMap[level][MarioAnimationType::SPRINTING_LEFT];
-		}
+	else if (vx != 0) {
+		bool right = vx > 0;
+		bool bracing = (right && dirInput < 0) || (!right && dirInput > 0);
+
+		currentAnimation = bracing
+			? animationMap[level][right ? MarioAnimationType::BRACE_RIGHT : MarioAnimationType::BRACE_LEFT]
+			: (abs(vx) <= MARIO_WALK_MAX_SPEED_X
+				? animationMap[level][right ? MarioAnimationType::WALKING_RIGHT : MarioAnimationType::WALKING_LEFT]
+				: (abs(vx) <= MARIO_RUN_MAX_SPEED_X
+					? animationMap[level][right ? MarioAnimationType::RUNNING_RIGHT : MarioAnimationType::RUNNING_LEFT]
+					: animationMap[level][right ? MarioAnimationType::SPRINTING_RIGHT : MarioAnimationType::SPRINTING_LEFT]));
 	}
 
 	if (currentAnimation == -1) {
@@ -722,7 +701,7 @@ void CMario::Render()
 	if (GetIsPause()) return;
 	CAnimations* animations = CAnimations::GetInstance();
 		// if animation havent finished (for special animation )
-	if (currentAnimation <= 0 || animations->Get(currentAnimation)->IsDone())
+	if (currentAnimation <= 0 || animations->Get(currentAnimation)->IsDone() || IsSitting())
 	{
 		GetAniId();
 	}
@@ -746,7 +725,7 @@ void CMario::Render()
 
 	animations->Get(currentAnimation)->Render(x, y);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 	for(int i=0;i<7;i++)
 	{
 		points[i]->RenderBoundingBox();
@@ -780,6 +759,11 @@ void CMario::SetState(int state)
 
 	// run then walk mean release
 
+	if(curState == state && curState == MARIO_STATE_SIT)
+	{
+		return;
+	}
+
 	if (curState == MARIO_STATE_RUNNING_LEFT || curState == MARIO_STATE_RUNNING_RIGHT || curState == MARIO_STATE_WALKING_RIGHT || curState == MARIO_STATE_WALKING_LEFT) {
 		if (state == MARIO_STATE_SIT) return;
 	}
@@ -795,29 +779,21 @@ void CMario::SetState(int state)
 	switch (state)
 	{
 	case MARIO_STATE_RUNNING_RIGHT:
-		maxVx = MARIO_RUNNING_SPEED;
-		ax = MARIO_ACCEL_RUN_X;
 		nx = 1;
 		dirInput = 1;
 		runInput = 1;
 		break;
 	case MARIO_STATE_RUNNING_LEFT:
-		maxVx = -MARIO_RUNNING_SPEED;
-		ax = -MARIO_ACCEL_RUN_X;
 		nx = -1;
 		dirInput = -1;
 		runInput = 1;
 		break;
 	case MARIO_STATE_WALKING_RIGHT:
-		maxVx = MARIO_WALKING_SPEED;
-		ax = MARIO_ACCEL_WALK_X;
 		nx = 1;
 		dirInput = 1;
 		runInput = 0;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
-		maxVx = -MARIO_WALKING_SPEED;
-		ax = -MARIO_ACCEL_WALK_X;
 		nx = -1;
 		dirInput = -1;
 		runInput = 0;
@@ -866,15 +842,11 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_IDLE:
-		ax = 0.0f;
-		dirInput = 0;
-		runInput = 0;
 		dirInput = 0;
 		runInput = 0;
 		break;
 	case MARIO_STATE_GOIN_PIPE:
 		vy = vx = 0;
-		ay = ax = 0;
 		break;
 	case MARIO_STATE_WIN:
 		vx = 0;
@@ -886,7 +858,6 @@ void CMario::SetState(int state)
 		CPlayScene* s = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 		s->OnPlayerDeath();
 		vx = 0;
-		ax = 0;
 		canHold = false;
 		if(holdingShell != NULL) holdingShell->SetState(KOOPA_STATE_MARIO_DEAD); 
 		holdingShell = NULL;
@@ -971,7 +942,8 @@ void CMario::Acceleration(DWORD dt)
 		else {
 			// midair
 			if (!IsPMeterFull()) {
-				if((abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X && runInput == 0) || glideTimer->IsRunning()) topSpeed = MARIO_WALK_MAX_SPEED_X;
+				if (glideTimer->IsRunning()) topSpeed = abs(vx);
+				else if((abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X && runInput == 0)) topSpeed = MARIO_WALK_MAX_SPEED_X;
 				else topSpeed = MARIO_RUN_MAX_SPEED_X;
 			}else topSpeed = MARIO_SPRINT_MAX_SPEED_X;
 

@@ -6,20 +6,23 @@
 #define BOOMERANG_VERTICAL_ACCE 0.0007f
 #define BOOMERANG_HORIZONTAL_ACCE 0.0003f
 
-#define BOOMERANG_FLYING_SPEED 0.2f
-#define BOOMERANG_VERTICAL_SPEED 0.1
+#define BOOMERANG_HORIZONTAL_SPEED 0.12f
+#define BOOMERANG_VERTICAL_SPEED 0.1f
+#define BOOMERANG_MAX_VERTICAL_SPEED 0.24f
 
-#define BOOMERANG_VERTICAL_LENGTH 56.f
+#define BOOMERANG_INITAL_UPWARD_SPEED 0.12f
+
+#define BOOMERANG_GRAVITY 0.000225f//0.001125f
+#define BOOMERANG_VERTICAL_DECEL 0.001125f
+
 #define BOOMERANG_HORIZONTAL_LENGTH 64.f
 
 #define BOOMERANG_BBOX_WIDTH 16
 #define BOOMERANG_BBOX_HEIGHT 16
 
-#define BOOMERANG_STATE_FLYING_UP 100
-#define BOOMERANG_STATE_FLYING_DOWN 200
-#define BOOMERANG_STATE_MOVING_UP 300
-#define BOOMERANG_STATE_MOVING_DOWN 400
-#define BOOMERANG_STATE_HOLDING 500
+#define BOOMERANG_STATE_OUTWARD 100
+#define BOOMERANG_STATE_RETURN 200
+#define BOOMERANG_STATE_HOLDING 300
 
 #define ID_ANI_BOOMERANG_FLYING_RIGHT 3600
 #define ID_ANI_BOOMERANG_FLYING_LEFT 3601
@@ -35,12 +38,11 @@ class CBoomerang : public CGameObject
 	float startY = 0;
 	float startX = 0;
 	CTimer * upTimer;
+	float BOOMERANG_VERTICAL_LENGTH = 0.f;
 public:
 
 	CBoomerang(float x, float y) : CGameObject(x, y)
 	{
-		startY = y;
-		startX = x;
 		upTimer = new CTimer(1000);
 		upTimer->Start();
 		killOffCam = false;
@@ -67,7 +69,7 @@ public:
 
 	void SetStartFlying(int nx)
 	{
-		SetState(BOOMERANG_STATE_MOVING_UP);
+		SetState(BOOMERANG_STATE_OUTWARD);
 		killOffCam = true;
 	}
 

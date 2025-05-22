@@ -1,33 +1,25 @@
 #include "Boomerang.h"
 #include "BoomerangBro.h"
 #include "Collision.h"
+#include "debug.h"
 
 void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
-	vx += ax * dt;
-
+	vy = min(vy, BOOMERANG_MAX_VERTICAL_SPEED);
 	CCollision::GetInstance()->ProcessNoBlock(this, dt, coObjects);
-
-	 if (state == BOOMERANG_STATE_MOVING_UP)
+	DebugOutTitle(L"Boomerang: %f, %f\n", x, y);
+	if (state == BOOMERANG_STATE_OUTWARD)
 	{
-		 if(y <= startY - BOOMERANG_VERTICAL_LENGTH)
-		 {
-			 SetState(BOOMERANG_STATE_FLYING_UP);
-		 }
+		BOOMERANG_VERTICAL_LENGTH = max(BOOMERANG_VERTICAL_LENGTH, abs(y - startY));
+		if (abs(x - startX) < BOOMERANG_HORIZONTAL_LENGTH) vy = min(vy, 0);
+		if (vy > 0 && startY - y <= BOOMERANG_VERTICAL_LENGTH / 2)
+		{
+			SetState(BOOMERANG_STATE_RETURN);
+		}
 	}
-	else if (state == BOOMERANG_STATE_FLYING_UP)
-	{
-		 if(abs(startX - x) >= BOOMERANG_HORIZONTAL_LENGTH)
-		 {
-			 SetState(BOOMERANG_STATE_MOVING_DOWN);
-		 }
-	}else if(state == BOOMERANG_STATE_MOVING_DOWN)
-	{
-		 if(y >= startY)
-		 {
-			 SetState(BOOMERANG_STATE_FLYING_DOWN);
-		 }
+	else if (state == BOOMERANG_STATE_RETURN) {
+		if (y >= startY) vy = 0, y = startY;
 	}
 }
 
@@ -53,22 +45,15 @@ void CBoomerang::SetState(int state)
 {
 	switch (state)
 	{
-	case BOOMERANG_STATE_FLYING_UP:
-		ay = 0;
-		vy = 0;
+	case BOOMERANG_STATE_OUTWARD:
+		vy = -BOOMERANG_INITAL_UPWARD_SPEED;
+		ay = BOOMERANG_GRAVITY;
+		vx = BOOMERANG_HORIZONTAL_SPEED * nx;
+		startX = x;
+		startY = y + 12;
 		break;
-	case BOOMERANG_STATE_FLYING_DOWN:
-		ay = 0;
-		vy = 0;
-		break;
-	case BOOMERANG_STATE_MOVING_UP:
-		ay = -BOOMERANG_VERTICAL_ACCE;
-		ax = nx * BOOMERANG_HORIZONTAL_ACCE;
-		break;
-	case BOOMERANG_STATE_MOVING_DOWN:
-		ay = 0;
-		vy = BOOMERANG_VERTICAL_SPEED;
-		ax = -nx * BOOMERANG_HORIZONTAL_ACCE;
+	case BOOMERANG_STATE_RETURN:
+		vx = -vx;
 		break;
 	case BOOMERANG_STATE_HOLDING:
 		vx = 0;

@@ -170,7 +170,7 @@ namespace std {
 #define ATTACK_TIME	210
 #define GLIDE_TIME	267
 #define FLY_TIME	267
-#define TURN_TIME	300
+#define TURN_TIME	200
 #define PROTECT_TIME	267
 #define HIDE_TIME	8000
 
@@ -206,7 +206,7 @@ protected:
 	MarioLevel level;
 	BOOLEAN isOnPlatform;
 	int coin;
-	CKoopa* holdingShell;
+	
 	vector<CPoint*> points;
 	int count = 0;
 	bool timesup = false;
@@ -272,6 +272,7 @@ protected:
 	}
 
 public:
+	CKoopa* holdingShell;
 	bool canHold = false;
 	CMario(float x, float y) : CCharacter(x, y)
 	{
@@ -388,6 +389,7 @@ public:
 	bool IsBig() { return level >= MarioLevel::BIG; }
 	bool IsRaccoon() { return level == MarioLevel::RACCOON; }
 	bool IsOnPlatform() { return isOnPlatform; }
+	bool IsSitting() { return isSitting; }
 	void SetIsOnPlatform() { isOnPlatform = true; }
 	bool IsPMeterFull();
 
