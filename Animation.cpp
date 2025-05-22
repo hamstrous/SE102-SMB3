@@ -186,9 +186,10 @@ void CAnimation::StillRender(float x, float y)
 
 void CAnimation::BouncingRender(float x, float y)
 {
-	const float BOUNCE_MAX = 10.0f; 
-	const float BOUNCE_SPEED = 1.5f; 
+	const float BOUNCE_MAX = 16.0f;
+	const float BOUNCE_SPEED = 5.0f;
 	ULONGLONG now = GetTickCount64();
+
 	if (currentFrame == -1)
 	{
 		currentFrame = 0;
@@ -206,13 +207,17 @@ void CAnimation::BouncingRender(float x, float y)
 				currentFrame = 0;
 			}
 		}
+	}
+
+	// Do once
+	if (bouncingState != -1)
+	{
 		if (bouncingState == 0)
 		{
 			bouncingState = 1;
 			bouncingOffset = 0.0f;
 		}
 
-		// Moving offset
 		if (bouncingState == 1) // Going up
 		{
 			bouncingOffset += BOUNCE_SPEED;
@@ -232,8 +237,8 @@ void CAnimation::BouncingRender(float x, float y)
 			}
 		}
 	}
-	
 
 	frames[currentFrame]->GetSprite()->Draw(x, y - bouncingOffset);
 }
+
 
