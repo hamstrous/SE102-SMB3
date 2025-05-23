@@ -4,7 +4,7 @@
 #define INVISIBLE_WALL_STATE_MOVING 1
 #define INVISIBLE_WALL_STATE_STATIC 0
 
-#define INVISIBLE_WALL_SPEED 0.01f
+#define INVISIBLE_WALL_SPEED 0.03f
 
 class CInvisibleWall : public CGameObject
 {
