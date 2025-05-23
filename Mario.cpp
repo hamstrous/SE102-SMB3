@@ -387,6 +387,12 @@ void CMario::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e)
 {
+	CBaseBrick* brick = dynamic_cast<CBaseBrick*>(e->obj);
+	if (e->ny > 0)
+	{
+		brick->BottomHit();
+	}
+
 	if (!CGame::GetInstance()->GetChangeBricktoCoin()) return;
 	e->obj->Delete();
 	CGameData::GetInstance()->AddCoin(1);
