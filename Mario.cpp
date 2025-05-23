@@ -468,8 +468,10 @@ void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithMovingPlatfrom(LPCOLLISIONEVENT e)
 {
-	isOnPlatform = true;
-	isOnMovingFlatform = true;
+	if (e->ny < 0) {
+		isOnPlatform = true;
+		isOnMovingFlatform = true;
+	}
 	//currentPlatform = dynamic_cast<CMovingPlatform*>(e->obj);
 	//vy + 0.05;
 }
