@@ -23,9 +23,6 @@ void CQuestionBlock::Render()
 
 void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {	
-	if (y!= startY) bouncing = true;
-	else bouncing = false;
-
 	if (state == QUESTION_BLOCK_STATE_MOVEUP && GetTickCount64() - start_up >= TIME_UP) {
 		SetState(QUESTION_BLOCK_STATE_MOVEDOWN);
 		start_up = -1;
@@ -35,6 +32,8 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		y = startY;
 		vy = 0;
 	}
+
+	if (isUnbox) bouncing = false;
 
 	y += vy * dt;
 
@@ -66,7 +65,7 @@ void CQuestionBlock::SetState(int state)
 		start_up = GetTickCount64();
 		vy = -SPEED_QUESTION_BLOCK;
 		isUnbox = true;
-		//up = true;
+		up = true;
 		if (type == ITEM_COIN)
 		{
 			CCoin* coin = new CCoin(x, y, TYPE_1);
@@ -110,7 +109,18 @@ void CQuestionBlock::SetState(int state)
 }
 
 void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
-{	
+{
+	if(dynamic_cast<CMario*>(e->obj))
+	{
+		CMario* mario = dynamic_cast<CMario*>(e->obj);
+		if (e->ny < 0)
+		{
+			if (!isUnbox)
+				bouncing = true;
+			else
+				bouncing = false;
+		}
+	}
 }
 
 void CQuestionBlock::SideHit()
