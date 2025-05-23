@@ -43,12 +43,16 @@
 class CHUD : public CGameObject
 {
 	CGameData* gameData;
-	CTimer* endTimer;
+	CTimer* tempTimer;
 	int flickerCardsAniId[3] = { ID_ANI_CARD_FLICKERING_STAR, ID_ANI_CARD_FLICKERING_FLOWER, ID_ANI_CARD_FLICKERING_MUSHROOM };
 	int cardsSpriteId[3] = { ID_SPRITE_CARD_STAR, ID_SPRITE_CARD_FLOWER, ID_SPRITE_CARD_MUSHROOM };
 
 public:
 	CHUD();
+	~CHUD(){
+		if (tempTimer != NULL)
+			delete tempTimer;
+	}
 	void Render();
 	void RenderEnd();
 };
