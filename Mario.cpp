@@ -226,7 +226,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (pointsDisable > 0) pointsDisable--;
 	isBehind = false;
 
-	//DebugOutTitle(L"vx: %f, vx: %f\n", vx, vy);
 	//DebugOutTitle(L"l: %f, vt: %f, r: %f, b: %f\n", l, t, r, b);
 
 	// reset untouchable timer if untouchable time has passed
@@ -573,7 +572,8 @@ void CMario::JumpPressed()
 			vy = -MARIO_RACCOON_FLY_SPEED;
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_FLY_RIGHT : MarioAnimationType::TAIL_JUMP_FLY_LEFT);
 		}
-	}else(SetJumpInput(1));
+	}
+	SetJumpInput(1);
 	
 }
 
@@ -854,6 +854,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_JUMP:
 		if (isOnPlatform)
 		{
+			isOnPlatform = false;
 			vy = 0;
 			for (int i = 0; i < 3; i++) {
 				if (abs(vx) < MARIO_JUMP_SPEED_CHECK_X[i]) {

@@ -779,7 +779,8 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	(*points)[RIGHTUP]->GetBeforeBlockPosition(bodyRightBeforeX, idk);
 	(*points)[LEFTUP]->GetBeforeBlockPosition(bodyLeftBeforeX, idk);
 
-
+	bool overlapedInvisibleWall = false;
+	bool overlapedBaseBrick = false;
 	for (auto i : *points) {
 		CPoint* point = i;
 		bool touched = false;
@@ -813,6 +814,12 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 
 				if (IsOverlapping(ml, mt, mr, mb, sl, st, sr, sb))
 				{
+					if (dynamic_cast<CInvisibleWall*>(obj)) {
+						overlapedInvisibleWall = true;
+					}
+					if (dynamic_cast<CBaseBrick*>(obj)) {
+						overlapedBaseBrick = true;
+					}
 					collidedObjects.push_back(obj);
 					pointsTouched.push_back(true);
 					touched = true;
@@ -835,6 +842,10 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 		k++;
 	}
 
+	if(overlapedBaseBrick && overlapedInvisibleWall) {
+		objSrc->SetState(MARIO_STATE_DIE);
+		return;
+	}
 
 	int dirX = 0;
 	int dirY = 0;
