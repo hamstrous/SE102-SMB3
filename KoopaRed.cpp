@@ -71,7 +71,7 @@ void CKoopaRed::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 	float bx, by;
 	basebrick->GetPosition(bx, by);
 
-	if (basebrick->GetState() == QUESTION_BLOCK_STATE_MOVEUP) {
+	/*if (basebrick->GetState() == QUESTION_BLOCK_STATE_MOVEUP) {
 		if (state == KOOPA_STATE_WALKING) {
 			float xx, yy;
 			player->GetPosition(xx, yy);
@@ -83,7 +83,7 @@ void CKoopaRed::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 			}
 			vy = -KOOPA_BOUNCE_SPEED;
 		}
-	}
+	}*/
 
 	if (basebrick->GetBouncing()) {
 		bouncing = true;

@@ -76,5 +76,7 @@ public:
 	float getY() { return startY; };
 	void SideHit();
 	void BottomHit();
+
+	bool GetBouncing() { return bouncing; };
 };
 

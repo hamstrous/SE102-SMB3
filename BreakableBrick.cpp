@@ -8,6 +8,7 @@
 #include "PlayScene.h"
 void CBreakableBrick::Render()
 {
+	if (GetIsPause() && (unbox|| bouncing)) return;
 	CAnimations* animations = CAnimations::GetInstance();
 	if(CGame::GetInstance()->GetChangeBricktoCoin()) animations->Get(ID_ANI_COIN_TYPE2)->Render(x, y);
 	else if (unbox) animations->Get(ID_ANI_BLOCK_UNBOX_BOUNCING)->Render(x, y);
