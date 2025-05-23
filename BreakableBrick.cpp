@@ -64,6 +64,8 @@ void CBreakableBrick::SetState(int state)
 
 void CBreakableBrick::SideHit()
 {
+	if(invincibleTimer->IsRunning()) return;
+	invincibleTimer->Start();
 	if (!CGame::GetInstance()->GetChangeBricktoCoin() && type != TYPE_ADDSCORE && !CGame::GetInstance()->GetChangeBricktoCoin())
 	{
 		CScoreManager::GetInstance()->AddScore(x, y, 10);
