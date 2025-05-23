@@ -113,12 +113,10 @@ void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
 	if(dynamic_cast<CMario*>(e->obj))
 	{
 		CMario* mario = dynamic_cast<CMario*>(e->obj);
-		if (e->ny < 0)
+		if (e->ny < 0 )
 		{
 			if (!isUnbox)
 				bouncing = true;
-			else
-				bouncing = false;
 		}
 	}
 }

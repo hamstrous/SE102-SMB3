@@ -95,6 +95,7 @@ void CBreakableBrick::BottomHit()
 
 	if (mario->GetLevel() != MarioLevel::SMALL && type != TYPE_ADDSCORE && !CGame::GetInstance()->GetChangeBricktoCoin())
 	{
+		bouncing = true;
 		CScoreManager::GetInstance()->AddScore(x, y, 10);
 		isDeleted = true;
 		CGameFXManager::GetInstance()->AddBreak(x, y);
