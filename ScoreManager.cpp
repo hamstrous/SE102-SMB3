@@ -30,6 +30,7 @@ void CScoreManager::AddScoreDouble(float x, float y, int count)
 	else
 	{
 		AddScore(x, y, SCORE_1UP);
+		CGameData::GetInstance()->AddLife();
 	}	
 	
 }
