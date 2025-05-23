@@ -6,6 +6,7 @@ class CBaseBrick : public CGameObject
 {
 protected:
 	CTimer* invincibleTimer = NULL;
+	bool bouncing = false;
 public:
 	CBaseBrick(float x, float y) : CGameObject(x, y) {
 		invincibleTimer = new CTimer(INVINCIBLE_TIME_FROM_TAIL_HIT);

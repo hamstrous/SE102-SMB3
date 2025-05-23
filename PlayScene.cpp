@@ -776,6 +776,8 @@ void CPlayScene::Unload()
 	stopTimer->Reset();
 	pauseTimer->Reset();
 
+	CGame::GetInstance()->SetChangeBricktoCoin(false);
+
 	delete camera;
 	camera = NULL;
 

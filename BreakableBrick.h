@@ -27,7 +27,7 @@
 class CBreakableBrick : public CBaseBrick {
 protected:
 	float start_y;
-	bool bouncing = false;
+	
 	bool unbox = false;
 	bool unbox2 = false;
 	int type = 0;
