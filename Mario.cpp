@@ -1127,8 +1127,8 @@ void CMario::GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2
 void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float hx, hy;
-	const float bigOffX = 9.f;
-	const float smallOffX = 5.f;
+	const float bigOffX = 10.f;
+	const float smallOffX = 6.f;
 	//holdingShell->SetPosition(x, y);
 	holdingShell->GetPosition(hx, hy);
 
