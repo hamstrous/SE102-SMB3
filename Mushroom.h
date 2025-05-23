@@ -45,8 +45,12 @@ protected:
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
+	virtual void OnCollisionWithBaseBrick(LPCOLLISIONEVENT e);
+
 	int OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void InitHorizontalSpeed(float speed, float awayMario = 1);
+
+	void Bouncing(float bx);
 public:
 	CMushroom(float x, float y, int type, bool dir)
 	{

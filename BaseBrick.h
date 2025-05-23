@@ -2,6 +2,8 @@
 #include "GameObject.h"
 class CBaseBrick : public CGameObject
 {
+protected:
+	bool bouncing = false;
 public:
 	CBaseBrick(float x, float y) : CGameObject(x, y) {}
 	virtual void Render() {};

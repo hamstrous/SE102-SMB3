@@ -60,7 +60,7 @@ prize.txt
 100	0	200	2816	480	0
 
 #Abyss test
-25	1415	525	
+25	1415	530	
 #26	16	415	
 
 #BG COLOR, flower:3, mushroom:2, star:4

@@ -23,22 +23,20 @@ void CQuestionBlock::Render()
 
 void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {	
-	if (state != QUESTION_BLOCK_STATE_MOVEUP) up = false;
-
 	if (state == QUESTION_BLOCK_STATE_MOVEUP && GetTickCount64() - start_up >= TIME_UP) {
 		SetState(QUESTION_BLOCK_STATE_MOVEDOWN);
 		start_up = -1;
-	}
-	if (startY - y > DISTANCE_UP )
-	{
-		
 	}
 	if (vy > 0 && y >= startY) {
 		SetState(QUESTION_BLOCK_STATE_UNBOX);
 		y = startY;
 		vy = 0;
 	}
+
+	if (isUnbox) bouncing = false;
+
 	y += vy * dt;
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 }
@@ -111,41 +109,18 @@ void CQuestionBlock::SetState(int state)
 }
 
 void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
-{	
-	/*DebugOut(L"[INFO] OnCollisionWith called\n");
-	if (vy != 0)
+{
+	if(dynamic_cast<CMario*>(e->obj))
 	{
-		DebugOut(L"[INFO] OnCollisionWith: Block is moving\n");
-	}
-	else
-	{
-		DebugOut(L"[INFO] OnCollisionWith: Block is not moving\n");
-	}
-	if (dynamic_cast<CMushroom*>(e->obj))
-	{
-		DebugOut(L"[INFO] Collided with Mushroom\n");
-
-		CMushroom* mushroom = dynamic_cast<CMushroom*>(e->obj);
-
-		if (mushroom == nullptr)
+		CMario* mario = dynamic_cast<CMario*>(e->obj);
+		if (e->ny < 0)
 		{
-			DebugOut(L"[ERROR] e->obj is not a valid Mushroom\n");
-			return;
-		}
-
-		DebugOut(L"[INFO] Mushroom is valid\n");
-
-		if (state == QUESTION_BLOCK_STATE_MOVEUP)
-		{
-			DebugOut(L"[INFO] QuestionBlock State: %d\n", state);
-			mushroom->SetState(MUSHROOM_STATE_BOUNCING_REVERSE);
-			return;
+			if (!isUnbox)
+				bouncing = true;
+			else
+				bouncing = false;
 		}
 	}
-	else
-	{
-		DebugOut(L"[INFO] Collided with another object\n");
-	}*/
 }
 
 void CQuestionBlock::SideHit()

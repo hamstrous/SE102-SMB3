@@ -67,7 +67,7 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (e->ny < 0) 
 		{	
 			
-			if (dynamic_cast<CQuestionBlock*>(e->obj))
+			/*if (dynamic_cast<CQuestionBlock*>(e->obj))
 			{	
 				
 				CQuestionBlock* qb = dynamic_cast<CQuestionBlock*>(e->obj);
@@ -82,7 +82,7 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 					SetState(MUSHROOM_STATE_BOUNCING_REVERSE);
 					return;
 				}
-			}
+			}*/
 			vy = 0;
 		}
 		else 
@@ -94,6 +94,22 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = -vx;
 	}
+
+	if (dynamic_cast<CBaseBrick*>(e->obj)) {
+		OnCollisionWithBaseBrick(e);
+	}
+}
+
+void CMushroom::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
+{
+	CBaseBrick* basebrick = (CBaseBrick*)e->obj;
+	float bx, by;
+	basebrick->GetPosition(bx, by);
+
+	if (basebrick->GetBouncing()) {
+		Bouncing(bx);
+	}
+	
 }
 
 int CMushroom::OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -106,6 +122,13 @@ int CMushroom::OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CMushroom::InitHorizontalSpeed(float speed, float awayMario)
 {
 
+}
+
+void CMushroom::Bouncing(float bx)
+{
+	if (x < this->x) vx = vx;
+	else if (x > this->x) vx = -vx;
+	vy = -MUSHROOM_BOUNCING;
 }
 
 void CMushroom::SetState(int state)
