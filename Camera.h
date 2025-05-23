@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-#define CAMERA_SPEED 0.01f
+#define CAMERA_SPEED 0.03f
 #define FIXED_BOX_SIZE 20.0f
 #define OUT_CAMERA 32.f
 

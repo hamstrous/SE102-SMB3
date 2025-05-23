@@ -52,7 +52,7 @@ effect.txt
 [OBJECTS]
 
 #CAMERA
-100	0	300	2816	475	0
+100	0	300	2816	475	1
 
 
 
