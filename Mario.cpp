@@ -232,7 +232,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// for mario has to be called first so process can call OnCollision
 	SetPointsPosition();
 	//CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
-	//CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
 	CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, dt);
 
 	if (!isBehind && hideTimer->ElapsedTime() >= HIDE_TIME) {
