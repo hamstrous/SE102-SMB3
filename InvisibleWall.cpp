@@ -1,7 +1,7 @@
 #include "InvisibleWall.h"
 #include "debug.h"
 
-CInvisibleWall::CInvisibleWall(float x, float y, float width, float height) : CBaseBrick(x, y)
+CInvisibleWall::CInvisibleWall(float x, float y, float width, float height) : CGameObject(x, y)
 {
 	this->width = width;
 	this->height = height;
@@ -10,7 +10,7 @@ CInvisibleWall::CInvisibleWall(float x, float y, float width, float height) : CB
 	SetState(INVISIBLE_WALL_STATE_STATIC);
 }
 
-CInvisibleWall::CInvisibleWall(float x, float y, float width, float height, float endX, int state) : CBaseBrick(x, y)
+CInvisibleWall::CInvisibleWall(float x, float y, float width, float height, float endX, int state) : CGameObject(x, y)
 {
 	this->width = width;
 	this->height = height;
@@ -30,5 +30,5 @@ void CInvisibleWall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CInvisibleWall::Render()
 {
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }

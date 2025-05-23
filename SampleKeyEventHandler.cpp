@@ -58,6 +58,7 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->SetIsPause();
 		break;
 	case DIK_SPACE:
+		debug = true;
 		mario->SetState(MARIO_STATE_DEBUG);
 		break;
 	}

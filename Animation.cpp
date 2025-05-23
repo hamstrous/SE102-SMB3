@@ -112,6 +112,7 @@ void CAnimation::FlickeringRender(float x, float y)
 			}
 			else {
 				flickering = true;
+				lastFrameTime = now;
 			}
 
 		}
@@ -145,6 +146,8 @@ void CAnimation::StoppingFlickeringRender(float x, float y)
 			}
 			else {
 				flickering = true;
+				lastFrameTime = now;
+
 			}
 
 		}

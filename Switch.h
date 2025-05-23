@@ -10,7 +10,7 @@
 
 #define TIME_SWITCH 8000
 
-class CSwitch : public CBaseBrick
+class CSwitch : public CGameObject
 {
 protected:
 	bool off = false;
@@ -27,7 +27,7 @@ protected:
 		}
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 public:
-	CSwitch(float x, float y) : CBaseBrick(x, y) {};
+	CSwitch(float x, float y) : CGameObject(x, y) {};
 	virtual void SetState(int state);
 	void SetOff() { off = true; }
 	void Enable();

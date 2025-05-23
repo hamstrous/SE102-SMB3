@@ -7,7 +7,7 @@
 #include "Scene.h"
 #include "MovingPlatform.h"
 
-#define KOOPA_GRAVITY 0.001225f
+#define KOOPA_GRAVITY 0.001f
 #define KOOPA_WALKING_SPEED 0.03f
 #define KOOPA_SHELL_SPEED 0.2f
 #define KOOPA_SHELL_COOLDOWN 6000
@@ -47,7 +47,7 @@
 
 #define KOOPA_BOUNCE_SPEED 0.5f
 
-#define KOOPA_TAILHIT_SPEED_Y 0.4225f
+#define KOOPA_TAILHIT_SPEED_Y 0.4f
 #define KOOPA_TAILHIT_SPEED_x 0.02f
 
 #define KOOPA_STATE_DIE_UP_ANI 800

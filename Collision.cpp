@@ -627,7 +627,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 			{
 				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
 				objSrc->OnCollisionWith(colY); // set position and call OnCollisionWith
-				marked.insert(colY->obj);
+				//marked.insert(colY->obj);
 				//
 				// see if after correction on Y, is there still a collision on X ? 
 				//
@@ -648,7 +648,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 				{
 					x += colX_other->t * dx + colX_other->nx * BLOCK_PUSH_FACTOR;
 					objSrc->OnCollisionWith(colX_other);
-					marked.insert(colX_other->obj);
+					//marked.insert(colX_other->obj);
 				}
 				else
 				{
@@ -659,7 +659,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 			{
 				x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
 				objSrc->OnCollisionWith(colX);
-				marked.insert(colX->obj);
+				//marked.insert(colX->obj);
 
 				// see if after correction on X, is there still a collision on Y ? 
 				//
@@ -681,7 +681,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 				{
 					y += colY_other->t * dy + colY_other->ny * BLOCK_PUSH_FACTOR;
 					objSrc->OnCollisionWith(colY_other);
-					marked.insert(colY_other->obj);
+					//marked.insert(colY_other->obj);
 				}
 				else
 				{
@@ -695,7 +695,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 				x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
 				y += dy;
 				objSrc->OnCollisionWith(colX);
-				marked.insert(colX->obj);
+				//marked.insert(colX->obj);
 			}
 			else
 				if (colY != NULL)
@@ -703,7 +703,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 					x += dx;
 					y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
 					objSrc->OnCollisionWith(colY);
-					marked.insert(colY->obj);
+					//marked.insert(colY->obj);
 				}
 				else // both colX & colY are NULL 
 				{
@@ -779,7 +779,8 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	(*points)[RIGHTUP]->GetBeforeBlockPosition(bodyRightBeforeX, idk);
 	(*points)[LEFTUP]->GetBeforeBlockPosition(bodyLeftBeforeX, idk);
 
-
+	bool overlapedInvisibleWall = false;
+	bool overlapedBaseBrick = false;
 	for (auto i : *points) {
 		CPoint* point = i;
 		bool touched = false;
@@ -813,6 +814,12 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 
 				if (IsOverlapping(ml, mt, mr, mb, sl, st, sr, sb))
 				{
+					if (dynamic_cast<CInvisibleWall*>(obj)) {
+						overlapedInvisibleWall = true;
+					}
+					if (dynamic_cast<CBaseBrick*>(obj)) {
+						overlapedBaseBrick = true;
+					}
 					collidedObjects.push_back(obj);
 					pointsTouched.push_back(true);
 					touched = true;
@@ -835,6 +842,10 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 		k++;
 	}
 
+	if(overlapedBaseBrick && overlapedInvisibleWall) {
+		objSrc->SetState(MARIO_STATE_DIE);
+		return;
+	}
 
 	int dirX = 0;
 	int dirY = 0;
@@ -847,6 +858,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 
 	if ((pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT]) && !(pointsMaybeTouched[LEFTUP] || pointsMaybeTouched[LEFTDOWN] || pointsMaybeTouched[RIGHTUP] || pointsMaybeTouched[RIGHTDOWN])) {
 		dirY = -2;
+		DebugOut(L"[Mario] touched pushed %f\n", y);
 	}
 
 	x += dirX;
@@ -865,23 +877,16 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	pointsMaybeTouched.clear();
 	collidedObjects.clear();
 
-	
-
-#pragma endregion
+	#pragma endregion
 
 	#pragma region overlap_non_block
 	objSrc->GetPosition(x, y);
 	objSrc->GetSpeed(vx, vy);
 	k = 0;
-	mario->SetPointsPosition();
-
-	
+	mario->SetPointsPositionForNonBlockingOverlap();
 
 	for (auto obj : *coObjects)
 	{
-		if (debug) {
-			debug = 0;
-		}
 		if (dynamic_cast<CMario*>(obj)) continue; //skip brick objects
 		if(mario->holdingShell!=NULL && mario->holdingShell == dynamic_cast<CKoopa*>(obj)) continue; //skip holding shell
 		if (marked.find(obj) != marked.end()) continue;

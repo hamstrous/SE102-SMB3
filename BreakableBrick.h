@@ -42,7 +42,6 @@ public:
 	void Render();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
-	void OnCollisionWith(LPCOLLISIONEVENT e);
 	virtual int IsCollidable() { return 1; };
 	virtual int IsBlocking() { 
 		if (CGame::GetInstance()->GetChangeBricktoCoin()) return 0;

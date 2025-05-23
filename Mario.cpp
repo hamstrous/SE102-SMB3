@@ -29,6 +29,7 @@
 #include "Mountain.h"
 #include "Decoration.h"
 #include "Cloud.h"
+#include "BreakableBrick.h"
 
 unordered_map<MarioLevel, unordered_map<MarioAnimationType, int>> CMario::animationMap = {
 	{
@@ -225,14 +226,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (pointsDisable > 0) pointsDisable--;
 	isBehind = false;
 
-	//DebugOutTitle(L"vx: %f, vx: %f\n", vx, vy);
 	//DebugOutTitle(L"l: %f, vt: %f, r: %f, b: %f\n", l, t, r, b);
 
 	// reset untouchable timer if untouchable time has passed
 	// for mario has to be called first so process can call OnCollision
 	SetPointsPosition();
-	//CCollision::GetInstance()->Process(this, dt, coObjects);
-	CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
+	//CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
+	//CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
 	CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, dt);
 
 	if (!isBehind && hideTimer->ElapsedTime() >= HIDE_TIME) {
@@ -251,8 +251,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (untouchableTimer->IsDone()) {
 		untouchableTimer->Reset();
-		CCollision::GetInstance()->ProcessMarioOverlap(this, dt, coObjects);
-		//this will call mario->attacked if overlap enemies
 	}
 }
 
@@ -292,6 +290,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	if (dynamic_cast<CCharacter*>(e->obj))
 		OnCollisionWithCharacter(e);
+	else if (dynamic_cast<CBreakableBrick*>(e->obj))
+		OnCollisionWithBreakableBrick(e);
 	else if (dynamic_cast<CBaseBrick*>(e->obj))
 		OnCollisionWithBaseBrick(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
@@ -359,12 +359,16 @@ void CMario::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 	}
 	else
 	{
-		if (character->CanHold() && canHold)
-		{
-			CKoopa* koopa = dynamic_cast<CKoopa*>(character);
-			holdingShell = koopa;
-			koopa->Held();
-		}else if (!untouchableTimer->IsRunning())
+		if (CKoopa* koopa = dynamic_cast<CKoopa*>(character)) {
+			if (koopa->CanHold() && canHold)
+			{
+				holdingShell = koopa;
+				koopa->Held();
+				return;
+			}
+			else if (shellProtectTimer->IsRunning()) return;
+		}
+		if (!untouchableTimer->IsRunning())
 		{
 			character->Touched();
 		}
@@ -379,6 +383,15 @@ void CMario::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 	{
 		brick->BottomHit();
 	}
+}
+
+void CMario::OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e)
+{
+	if (!CGame::GetInstance()->GetChangeBricktoCoin()) return;
+	e->obj->Delete();
+	CGameData::GetInstance()->AddCoin(1);
+	CGameData::GetInstance()->AddScore(50);
+	
 }
 
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
@@ -445,17 +458,19 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithSwitch(LPCOLLISIONEVENT e)
 {	
-	/*if (e->ny > 0)
+	if(e->ny < 0)
 	{
-		CSwitch* sw = dynamic_cast<CSwitch*>(e->obj);
+		CSwitch* sw = (CSwitch*)e->obj;
 		sw->Enable();
-	}*/
+	}
 }
 
 void CMario::OnCollisionWithMovingPlatfrom(LPCOLLISIONEVENT e)
 {
-	isOnPlatform = true;
-	isOnMovingFlatform = true;
+	if (e->ny < 0) {
+		isOnPlatform = true;
+		isOnMovingFlatform = true;
+	}
 	//currentPlatform = dynamic_cast<CMovingPlatform*>(e->obj);
 	//vy + 0.05;
 }
@@ -468,7 +483,7 @@ void CMario::OnCollisionWithColorBlock(LPCOLLISIONEVENT e)
 	{
 		if (isSitting && sittingTimer->ElapsedTime() >= SIT_TIME_TO_HIDE) {
 			y += 1;
-			pointsDisable = 7;
+			pointsDisable = 3;
 			hideTimer->Start();
 		}
 	}
@@ -557,7 +572,8 @@ void CMario::JumpPressed()
 			vy = -MARIO_RACCOON_FLY_SPEED;
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_FLY_RIGHT : MarioAnimationType::TAIL_JUMP_FLY_LEFT);
 		}
-	}else(SetJumpInput(1));
+	}
+	SetJumpInput(1);
 	
 }
 
@@ -613,6 +629,43 @@ void CMario::SetPointsPosition()
 	}
 	SetSpeed(vx, vy);
 
+}
+
+void CMario::SetPointsPositionForNonBlockingOverlap()
+{
+
+	if (!IsBig() || isSitting) {
+		points[0]->SetPosition(x, y - MARIO_SMALL_BBOX_HEIGHT / 2.f);
+
+		points[1]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y - MARIO_SMALL_BBOX_HEIGHT / 2.f);
+
+		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y);
+
+		points[3]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
+
+		points[4]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
+
+		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y);
+
+		points[6]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y - MARIO_SMALL_BBOX_HEIGHT / 2.f);
+
+	}
+	else {
+		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
+
+		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
+
+		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f, y);
+
+		points[3]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_BBOX_HEIGHT / 2.f);
+
+		points[4]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_BBOX_HEIGHT / 2.f);
+
+		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y);
+
+		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
+	}
+	SetSpeed(vx, vy);
 }
 
 void CMario::GetAniId()
@@ -746,8 +799,8 @@ void CMario::SetState(int state)
 	if (curState == MARIO_STATE_DEBUG) {
 		if (state == MARIO_STATE_WALKING_LEFT) x -= 2;
 		else if (state == MARIO_STATE_WALKING_RIGHT) x += 2;
-		else if (state == MARIO_STATE_RUNNING_LEFT) x -= 4;
-		else if (state == MARIO_STATE_RUNNING_RIGHT) x += 4;
+		else if (state == MARIO_STATE_RUNNING_LEFT) x -= 10;
+		else if (state == MARIO_STATE_RUNNING_RIGHT) x += 10;
 		else if (state == MARIO_STATE_JUMP) y -= 2;
 		else if (state == MARIO_STATE_SIT) y += 2;
 		return;
@@ -801,6 +854,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_JUMP:
 		if (isOnPlatform)
 		{
+			isOnPlatform = false;
 			vy = 0;
 			for (int i = 0; i < 3; i++) {
 				if (abs(vx) < MARIO_JUMP_SPEED_CHECK_X[i]) {
@@ -852,6 +906,7 @@ void CMario::SetState(int state)
 		vx = 0;
 		vy = 0;
 		holdingShell = NULL;
+		dirInput = 0;
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_SPEED_Y;
@@ -942,7 +997,10 @@ void CMario::Acceleration(DWORD dt)
 		else {
 			// midair
 			if (!IsPMeterFull()) {
-				if (glideTimer->IsRunning()) topSpeed = abs(vx);
+				if (glideTimer->IsRunning()) {
+					if (abs(vx) <= MARIO_WALK_MAX_SPEED_X) topSpeed = MARIO_WALK_MAX_SPEED_X;
+					else topSpeed = MARIO_RUN_MAX_SPEED_X;
+				}
 				else if((abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X && runInput == 0)) topSpeed = MARIO_WALK_MAX_SPEED_X;
 				else topSpeed = MARIO_RUN_MAX_SPEED_X;
 			}else topSpeed = MARIO_SPRINT_MAX_SPEED_X;
@@ -1084,6 +1142,7 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		KickedShell();
 		holdingShell->ThrownInBlock(dt, coObjects);
 		holdingShell = NULL;
+		shellProtectTimer->Start();
 	}
 }
 
