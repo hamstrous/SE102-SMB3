@@ -277,7 +277,6 @@ effect.txt
 
 # MARIO
 0	100	300
-30	200	350
 
 #ENEMIES
 #KOOPARED
