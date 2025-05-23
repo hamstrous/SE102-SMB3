@@ -52,7 +52,7 @@ effect.txt
 [OBJECTS]
 
 #CAMERA
-100	0	300	2816	475	1
+100	0	300	2816	475	0
 
 
 
@@ -277,6 +277,7 @@ effect.txt
 
 # MARIO
 0	100	300
+30	200	350
 
 #ENEMIES
 #KOOPARED

@@ -6,7 +6,7 @@
 
 #define INVISIBLE_WALL_SPEED 0.01f
 
-class CInvisibleWall : public CBaseBrick
+class CInvisibleWall : public CGameObject
 {
 	float width;
 	float height;
@@ -25,7 +25,6 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state) {
-		CBaseBrick::SetState(state);
 		switch (state)
 		{
 		case INVISIBLE_WALL_STATE_MOVING:
@@ -37,6 +36,8 @@ public:
 		default:
 			break;
 		}
+		CGameObject::SetState(state);
+
 	}
 
 	int IsCollidable() { return 1; }
