@@ -101,6 +101,7 @@ void CKoopaGreen::SetState(int state)
 
 	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 	CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
+	int passedShellTime = GetTickCount64() - shell_start;
 
 	switch (state)
 	{
@@ -140,6 +141,7 @@ void CKoopaGreen::SetState(int state)
 		break;
 	case KOOPA_STATE_SHELL_HELD:
 	case KOOPA_STATE_SHELL_HELD_TAILHIT:
+		shell_start += passedShellTime;
 		vx = 0;
 		vy = 0;
 		ay = 0;
@@ -222,7 +224,7 @@ void CKoopaGreen::Render()
 		if (isIdle && shellTime > KOOPA_SHELL_COOLDOWN_VIBRATION && shellTime <= KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
 			aniId = ID_ANI_KOOPA_SHELL_VIBRATING;
 		}
-		else if (isIdle && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+		else if (isIdle && shellTime > KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
 			aniId = ID_ANI_KOOPA_SHELL_VIBRATING_LEG;
 		}
 		else {
@@ -246,7 +248,7 @@ void CKoopaGreen::Render()
 		if (isIdle && shellTime > KOOPA_SHELL_COOLDOWN_VIBRATION && shellTime <= KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
 			aniId = ID_ANI_KOOPA_SHELLHIT_VIBRATING;
 		}
-		else if (isIdle && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+		else if (isIdle && shellTime > KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
 			aniId = ID_ANI_KOOPA_SHELLHIT_VIBRATING_LEG;
 		}
 		else aniId = ID_ANI_KOOPA_DIE_UP;
@@ -426,7 +428,7 @@ void CKoopaGreen::TailHit(float x)
 	if (x < this->x) vx = KOOPA_FLYING_SPEED_X;
 	else if (x > this->x) vx = -KOOPA_FLYING_SPEED_X;
 	if (bouncing) {
-		DebugOut(L"bouncing true");
+		//DebugOut(L"bouncing true");
 		vy = -KOOPA_STATE_BOUNCING;
 		bouncing = false;
 	}

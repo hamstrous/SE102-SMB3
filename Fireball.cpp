@@ -22,7 +22,7 @@ void CFireball::Render()
 		return;
 	}
 	int aniId = ID_ANI_FIREBALL; 
-	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	if (!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	RenderBoundingBox();
 }

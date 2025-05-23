@@ -692,7 +692,8 @@ void CPlayScene::Render()
 			|| dynamic_cast<CAbyss*>(i)
 			|| dynamic_cast<CPipe*>(i)
 			|| dynamic_cast<CMovingPlatform*>(i)
-			|| dynamic_cast<CGameFXManager*>(i)) {
+			|| dynamic_cast<CGameFXManager*>(i)
+			|| dynamic_cast<CInvisibleWall*>(i)){
 			projectileRenderObjects.push_back(i);
 		}
 	}
@@ -707,7 +708,7 @@ void CPlayScene::Render()
 	for (auto i : firstRenderObjects)
 		i->Render();
 	if (mario->ReturnRenderMarioInPipe()) mario->Render();
-	if (mario->GetHolding()) mario->Render();
+	if (mario->GetHolding() && !mario->IsBehind()) mario->Render();
 	for (auto i : secondRenderObjects)
 		if (i != player) i->Render();
 	for (auto i : thirdRenderObjects)

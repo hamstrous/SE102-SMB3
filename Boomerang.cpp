@@ -37,7 +37,8 @@ void CBoomerang::Render()
 		aniId = nx > 0 ? ID_ANI_BOOMERANG_FLYING_RIGHT : ID_ANI_BOOMERANG_FLYING_LEFT;
 	}
 
-	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	if (!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	RenderBoundingBox();
 }
 

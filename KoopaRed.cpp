@@ -124,6 +124,8 @@ void CKoopaRed::SetState(int state)
 {	
 	CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
 	CMario* player = dynamic_cast<CMario*>(scene->GetPlayer());
+	int passedShellTime = GetTickCount64() - shell_start;
+
 	if (IsHeld()) {
 		ay = KOOPA_GRAVITY;
 	}
@@ -163,6 +165,7 @@ void CKoopaRed::SetState(int state)
 		break;
 	case KOOPA_STATE_SHELL_HELD:
 	case KOOPA_STATE_SHELL_HELD_TAILHIT:
+		shell_start += passedShellTime;
 		vx = 0;
 		vy = 0;
 		ay = 0;
@@ -245,7 +248,7 @@ void CKoopaRed::Render()
 		if (isIdle && shellTime > KOOPA_SHELL_COOLDOWN_VIBRATION && shellTime <= KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
 			aniId = ID_ANI_KOOPA_SHELL_VIBRATING;
 		}
-		else if (isIdle && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+		else if (isIdle && shellTime> KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
 			aniId = ID_ANI_KOOPA_SHELL_VIBRATING_LEG;
 		}
 		else {
@@ -269,7 +272,7 @@ void CKoopaRed::Render()
 		if (isIdle && shellTime > KOOPA_SHELL_COOLDOWN_VIBRATION && shellTime <= KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
 			aniId = ID_ANI_KOOPA_SHELLHIT_VIBRATING;
 		}
-		else if (isIdle && GetTickCount64() - shell_start > KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
+		else if (isIdle && shellTime > KOOPA_SHELL_COOLDOWN_VIBRATION_LEG) {
 			aniId = ID_ANI_KOOPA_SHELLHIT_VIBRATING_LEG;
 		}
 		else aniId = ID_ANI_KOOPA_DIE_UP;

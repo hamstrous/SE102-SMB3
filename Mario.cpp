@@ -232,7 +232,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// for mario has to be called first so process can call OnCollision
 	SetPointsPosition();
 	//CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
-	//CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
 	CCollision::GetInstance()->ProcessMarioPoints(this, &points, coObjects, dt);
 
 	if (!isBehind && hideTimer->ElapsedTime() >= HIDE_TIME) {
@@ -387,6 +387,12 @@ void CMario::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e)
 {
+	CBaseBrick* brick = dynamic_cast<CBaseBrick*>(e->obj);
+	if (e->ny > 0)
+	{
+		brick->BottomHit();
+	}
+
 	if (!CGame::GetInstance()->GetChangeBricktoCoin()) return;
 	e->obj->Delete();
 	CGameData::GetInstance()->AddCoin(1);
@@ -1121,8 +1127,8 @@ void CMario::GetTailHitBox(float& l1, float& t1, float& r1, float& b1, float& l2
 void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float hx, hy;
-	const float bigOffX = 9.f;
-	const float smallOffX = 5.f;
+	const float bigOffX = 10.f;
+	const float smallOffX = 6.f;
 	//holdingShell->SetPosition(x, y);
 	holdingShell->GetPosition(hx, hy);
 
