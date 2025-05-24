@@ -25,6 +25,8 @@
 class CKoopaRed : public CKoopa
 {
 protected:
+	int dir;
+
 	CGameObject* floorCheck;
 	int count = 0;
 	virtual void GetFloorBoundingBox(float& left, float& top, float& right, float& bottom);

@@ -100,9 +100,24 @@ void CKoopaRed::Walking(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 void CKoopaRed::Flying()
 {
+	
 	if (GetTickCount64() - fly_start > KOOPA_FLY_CHANGE_DIRECTION_TIME) {
-		vy = -vy;
+		//vy = -vy;
+		if (dir == 1) {	
+			vy = -KOOPA_FLYING_SPEED;
+		}
+		else {
+			vy = KOOPA_FLYING_SPEED;
+		}
 		fly_start = GetTickCount64();
+	}
+
+	if (GetTickCount64() - fly_start > KOOPA_FLY_CHANGE_DIRECTION_NEAR_TIME) {
+		vy = vy * 0.8f; // slow down flying
+		if (vy < 0) dir = -1; // flying up
+		else
+			dir = 1; // flying down
+		//if (vy == 0) vy = KOOPA_FLYING_SPEED; // if stopped, start flying again
 	}
 }
 
@@ -253,15 +268,15 @@ void CKoopaRed::Render()
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 	if (hasWing && nx == 1) {
 		if (!GetIsStop() && !GetIsDead())
-			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 8);
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 7);
 		else
-			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 8, 1);
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 7, 1);
 	}
 	else if (hasWing && nx == -1) {
 		if (!GetIsStop() && !GetIsDead())
-			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 8);
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 7);
 		else
-			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 8, 1);
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 7, 1);
 	}//RenderBoundingBox();
 }
 CKoopaRed::CKoopaRed(float x, float y, bool hasWing) : CKoopa(x, y)
@@ -334,7 +349,7 @@ void CKoopaRed::OnCollisionWithCharacter(LPCOLLISIONEVENT e)
 		HeldDie();
 		character->ShellHit(e->nx);
 	}
-	else if (state == KOOPA_STATE_WALKING)
+	else if (state == KOOPA_STATE_WALKING || state == KOOPA_STATE_FLYING)
 	{
 		if (dynamic_cast<CMario*>(e->obj) && e->ny >= 0) {
 
