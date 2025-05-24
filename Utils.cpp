@@ -69,8 +69,9 @@ wstring ToWSTR(string st)
 	mbstowcs_s(&convertedChars, wcstring, newsize, str, _TRUNCATE);
 
 	wstring wstr(wcstring);
-
 	// delete wcstring   // << can I ? 
+	delete[] wcstring; // << I can ?
+
 	return wstr;
 }
 
@@ -79,17 +80,11 @@ wstring ToWSTR(string st)
 */
 LPCWSTR ToLPCWSTR(string st)
 {
-	const char *str = st.c_str();
-
-	size_t newsize = strlen(str) + 1;
-	wchar_t * wcstring = new wchar_t[newsize];
+	size_t newsize = st.length() + 1;
+	wchar_t* wcstring = new wchar_t[newsize];
 	size_t convertedChars = 0;
-	mbstowcs_s(&convertedChars, wcstring, newsize, str, _TRUNCATE);
-
-	wstring *w = new wstring(wcstring);
-
-	// delete wcstring   // << can I ? 
-	return w->c_str();
+	mbstowcs_s(&convertedChars, wcstring, newsize, st.c_str(), _TRUNCATE);
+	return wcstring;// << I can return it, but I should delete it later
 }
 
 void Clamp(float& x, float min, float max)

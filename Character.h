@@ -4,6 +4,7 @@
 class CCharacter : public CGameObject
 {
 protected:
+	bool frontRender = false;
 	float ax;	// acceleration on x-axis
 	float ay;	// acceleration on y-axis
 	float maxVx;
@@ -41,5 +42,6 @@ public:
 		return 0;
 	}
 
+	bool IsFrontRender() { return frontRender; }
 };
 

@@ -1,25 +1,6 @@
-/* =============================================================
-	INTRODUCTION TO GAME PROGRAMMING SE102
-	
-	SAMPLE 05 - SCENE MANAGER
-
-	This sample illustrates how to:
-
-		1/ Read scene (textures, sprites, animations and objects) from files 
-		2/ Handle multiple scenes in game
-
-	Key classes/functions:
-		CScene
-		CPlayScene		
-
-
-HOW TO INSTALL Microsoft.DXSDK.D3DX
-===================================
-1) Tools > NuGet package manager > Package Manager Console
-2) execute command :  Install-Package Microsoft.DXSDK.D3DX
-
-
-================================================================ */
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 #include <windows.h>
 #include <d3d10.h>
@@ -54,6 +35,12 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "AssetIDs.h"
 #include "Prize.h"
 
+//#ifdef _DEBUG
+//#define new new( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+//#else
+//#define new new
+//#endif
+
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"Super Mario Bros 3"
 #define WINDOW_ICON_PATH L"mario.ico"
@@ -63,10 +50,18 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #define SCREEN_WIDTH 277
 #define SCREEN_HEIGHT 273
 
+// Add these at the top with other global variables
+HICON g_hIcon = NULL;
+HCURSOR g_hCursor = NULL;
+HBRUSH g_hBackground = NULL;
+
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message) {
 	case WM_DESTROY:
+		if (g_hIcon) DestroyIcon(g_hIcon);
+		if (g_hCursor) DestroyCursor(g_hCursor);
+		if (g_hBackground) DeleteObject(g_hBackground);
 		PostQuitMessage(0);
 		break;
 	default:
@@ -121,9 +116,12 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	wc.lpfnWndProc = (WNDPROC)WinProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hIcon = (HICON)LoadImage(hInstance, WINDOW_ICON_PATH, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+	g_hIcon = (HICON)LoadImage(hInstance, WINDOW_ICON_PATH, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+	wc.hIcon = g_hIcon;
+	g_hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hCursor = g_hCursor;
+	g_hBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+	wc.hbrBackground = g_hBackground;
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = WINDOW_CLASS_NAME;
 	wc.hIconSm = NULL;
@@ -208,6 +206,8 @@ int WINAPI WinMain(
 	_In_ LPSTR lpCmdLine,
 	_In_ int nCmdShow
 ) {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	HWND hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	SetDebugWindow(hWnd);
@@ -223,6 +223,8 @@ int WINAPI WinMain(
 	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH*3, SCREEN_HEIGHT*3, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
 	Run();
-
+	delete CGame::GetInstance();
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+	_CrtDumpMemoryLeaks();
 	return 0;
 }

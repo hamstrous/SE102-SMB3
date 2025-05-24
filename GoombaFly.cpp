@@ -196,6 +196,7 @@ void CGoombaFly::SetState(int state)
 		vy = -GOOMBA_FLYING_SPEED;
 		break;
 	case GOOMBAFLY_STATE_DIE_UP:
+		frontRender = true;
 		if ((this->state == GOOMBAFLY_STATE_DIE_UP) && (GetTickCount64() - die_start <= GOOMBAFLY_DIE_TIMEOUT))
 			break;
 		die_start = GetTickCount64();

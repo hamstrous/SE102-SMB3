@@ -57,7 +57,7 @@ class CGame
 
 	unordered_map<int, LPSCENE> scenes;
 	int current_scene;
-	int next_scene = -1;
+	int next_scene = -1; //-1 is none, -2 is reset
 
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_SCENES(string line);
@@ -127,6 +127,7 @@ public:
 	void SetChangeBricktoCoin(bool set) { ChangeBricktoCoin = set; }
 
 	~CGame();
+	void UnloadEverything();
 };
 typedef CGame* LPGAME;
 

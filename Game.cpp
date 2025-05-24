@@ -7,7 +7,14 @@
 
 #include "Texture.h"
 #include "Animations.h"
+#include "Sprites.h"
+#include "Textures.h"
+#include "GameFXManager.h"
+#include "Font.h"
 #include "PlayScene.h"
+#include "GameData.h"
+#include "TimerManager.h"
+#include "Collision.h"
 
 CGame * CGame::__instance = NULL;
 
@@ -493,7 +500,7 @@ void CGame::Load(LPCWSTR gameFile)
 		if (line[0] == '[') 
 		{ 
 			section = GAME_FILE_SECTION_UNKNOWN; 
-			DebugOut(L"[ERROR] Unknown section: %s\n", ToLPCWSTR(line));
+			DebugOut(L"[ERROR] Unknown section\n");
 			continue; 
 		}
 
@@ -516,16 +523,22 @@ void CGame::Load(LPCWSTR gameFile)
 
 void CGame::SwitchScene()
 {
-	if (next_scene < 0 || next_scene == current_scene) return; 
+	if (next_scene == -1 || next_scene == current_scene) return; 
+	
+	if(next_scene == -2) next_scene = current_scene;
 
 	DebugOut(L"[INFO] Switching to scene %d\n", next_scene);
 
-	scenes[current_scene]->Unload();
+	// call gamedate first when level still not unloaded
+	// also check if current scene exist
+	if (scenes.find(current_scene) != scenes.end()) {
+		CGameData::GetInstance()->OnWin();
+		scenes[current_scene]->Unload();
+	}
 
 	CSprites::GetInstance()->Clear();
 	CAnimations::GetInstance()->Clear();
 	CGameFXManager::GetInstance()->Clear();
-	CGameData::GetInstance()->OnWin();
 
 	current_scene = next_scene;
 	LPSCENE s = scenes[current_scene];
@@ -535,25 +548,15 @@ void CGame::SwitchScene()
 
 void CGame::SwitchScene(int sceneId)
 {
-	if (sceneId < 0 || sceneId == current_scene) return;
+	if (sceneId == -1 || sceneId == current_scene) return;
 	InitiateSwitchScene(sceneId);
-
 }
 
 void CGame::ResetCurrentScene()
 {
 	if (current_scene < 0) return;
-
+	SwitchScene(-2);
 	DebugOut(L"[INFO] Resetting scene %d\n", current_scene);
-
-	scenes[current_scene]->Unload();
-
-	CSprites::GetInstance()->Clear();
-	CAnimations::GetInstance()->Clear();
-	CGameFXManager::GetInstance()->Clear();
-	CGameData::GetInstance()->OnDeath();
-
-	scenes[current_scene]->Load();
 }
 
 void CGame::InitiateSwitchScene(int scene_id)
@@ -582,6 +585,29 @@ CGame::~CGame()
 	pRenderTargetView->Release();
 	pSwapChain->Release();
 	pD3DDevice->Release();
+	UnloadEverything();
+}
+
+void CGame::UnloadEverything()
+{
+	for (auto& scene : scenes)
+	{
+		delete scene.second;
+	}
+	scenes.clear();
+	delete CGameData::GetInstance();
+	delete CTextures::GetInstance();
+	delete CAnimations::GetInstance();
+	delete CGameFXManager::GetInstance();
+	delete CFont::GetInstance();
+	delete CSprites::GetInstance();
+	delete CTimerManager::GetInstance();	
+	delete CCollision::GetInstance();
+
+	if (di) di->Release();
+	if (didv) didv->Release();
+
+	if (pPointSamplerState) pPointSamplerState->Release();
 }
 
 CGame* CGame::GetInstance()

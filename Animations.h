@@ -11,6 +11,9 @@ class CAnimations
 	unordered_map<int, LPANIMATION> animations;
 
 public:
+	~CAnimations() {
+		Clear();
+	};
 	void Add(int id, LPANIMATION ani);
 	LPANIMATION Get(int id);
 	void Clear();

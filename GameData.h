@@ -46,6 +46,15 @@ public:
 		ptimer = f8;
 		countDown = new CTimer(300);
 		countDown->Start();
+		marioLevel = MarioLevel::SMALL;
+	}
+
+	~CGameData() {
+		if (f24 != NULL) delete f24;
+		if (f16 != NULL) delete f16;
+		if (f8 != NULL) delete f8;
+		if (f255 != NULL) delete f255;
+		if (countDown != NULL) delete countDown;
 	}
 	void Reset()
 	{

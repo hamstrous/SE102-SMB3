@@ -37,6 +37,12 @@ public:
 		this->doneTime = doneTime; 
 		done = false;
 	}
+	~CAnimation()
+	{
+		for (int i = 0; i < frames.size(); i++)
+			delete frames[i];
+		frames.clear();
+	}
 	void Add(int spriteId, DWORD time = 0);
 	virtual void Render(float x, float y, int mode = 0);
 	virtual void NormalRender(float x, float y);

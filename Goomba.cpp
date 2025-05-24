@@ -116,6 +116,7 @@ void CGoomba::SetState(int state)
 			vx = -GOOMBA_WALKING_SPEED;
 			break;
 		case GOOMBA_STATE_DIE_UP:
+			frontRender = true;
 			ay = GOOMBA_GRAVITY;
 			die_start = GetTickCount64();
 			if (tailhit) vy = -GOOMBA_TAILHIT_SPEED_Y;

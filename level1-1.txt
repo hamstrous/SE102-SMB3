@@ -12,8 +12,6 @@ color-block.txt
 koopa.txt
 koopa-red.txt
 koopa-green.txt
-cloud.txt
-font.txt
 hud.txt
 pipe.txt
 plant.txt
