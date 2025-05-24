@@ -492,6 +492,11 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 
 void CPlayScene::Load()
 {
+	pauseTimer = new CTimer(-1);
+	stopTimer = new CTimer();
+	deathTimer = new CTimer(DEAD_TIME);
+	winTimer = new CTimer(WIN_TIME);
+
 	DebugOut(L"[INFO] Start loading scene from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -640,7 +645,7 @@ void CPlayScene::Update(DWORD dt)
 	else CGameData::GetInstance()->Update(dt);
 	camera->Update(dt, &coObjects);
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return;
+	//if (player == NULL) return;
 
 	PurgeDeletedObjects();
 
@@ -779,14 +784,32 @@ void CPlayScene::Unload()
 
 	player = NULL;
 
-	deathTimer->Reset();
-	stopTimer->Reset();
-	pauseTimer->Reset();
-
 	CGame::GetInstance()->SetChangeBricktoCoin(false);
 
-	delete camera;
+	if(camera != NULL) delete camera;
 	camera = NULL;
+
+	//clear timer
+	CTimerManager::GetInstance()->Clear();
+	CGameFXManager::GetInstance()->Clear();
+
+	// clear playscene running timer like win death
+	if (winTimer != NULL) {
+		delete winTimer;
+		winTimer = NULL;
+	}
+	if (deathTimer != NULL) {
+		delete deathTimer;
+		deathTimer = NULL;
+	}
+	if (stopTimer != NULL) {
+		delete stopTimer;
+		stopTimer = NULL;
+	}
+	if (pauseTimer != NULL) {
+		delete pauseTimer;
+		pauseTimer = NULL;
+	}
 
 	DebugOut(L"[INFO] Scene %d unloaded! \n", id);
 }

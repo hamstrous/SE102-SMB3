@@ -814,10 +814,10 @@ void CMario::Render()
 
 	animations->Get(currentAnimation)->Render(x, y);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 	for(int i=0;i<7;i++)
 	{
-		points[i]->RenderBoundingBox();
+		//points[i]->RenderBoundingBox();
 	}
 	
 	//DebugOutTitle(L"Coins: %d", coin);

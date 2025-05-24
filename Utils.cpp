@@ -69,8 +69,9 @@ wstring ToWSTR(string st)
 	mbstowcs_s(&convertedChars, wcstring, newsize, str, _TRUNCATE);
 
 	wstring wstr(wcstring);
-
 	// delete wcstring   // << can I ? 
+	delete[] wcstring; // << I can ?
+
 	return wstr;
 }
 
@@ -89,6 +90,7 @@ LPCWSTR ToLPCWSTR(string st)
 	wstring *w = new wstring(wcstring);
 
 	// delete wcstring   // << can I ? 
+	delete[] wcstring; // << I can ?
 	return w->c_str();
 }
 

@@ -19,7 +19,7 @@ protected:
 
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;
-	CCamera* camera;
+	CCamera* camera = NULL;
 
 	unordered_map<CCharacter*, CCharacter*> characterCopy;
 	vector<LPGAMEOBJECT> objects;
@@ -29,9 +29,10 @@ protected:
 	vector<LPGAMEOBJECT> thirdRenderObjects;
 	vector<LPGAMEOBJECT> projectileRenderObjects;
 
-	CTimer* pauseTimer = new CTimer(-1), * stopTimer = new CTimer();
-	CTimer* deathTimer = new CTimer(DEAD_TIME);
-	CTimer* winTimer = new CTimer(WIN_TIME);
+	CTimer* pauseTimer = NULL;
+	CTimer* stopTimer = NULL;
+	CTimer* deathTimer = NULL;
+	CTimer* winTimer = NULL;
 
 	float fadeoutAlpha = 1;
 

@@ -261,7 +261,10 @@ void CCollision::Scan(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* objDe
 				|| dir == 1 && e->ny < 0  // top
 				|| dir == 2 && e->nx > 0  // right
 				|| dir == 3 && e->ny > 0)) // bottom
+			{
+				delete e;
 				continue;
+			}
 		}
 
 		if (e->WasCollided() == 1) {
@@ -513,27 +516,6 @@ void CCollision::ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJE
 	coEvents.clear();
 }
 
-// For mario when untouchable done, check if ovelapping with any enemies
-// no speed need to account for
-void CCollision::ProcessMarioOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
-	if (!objSrc->IsCollidable() || objSrc->IsBlocking()) return; //for non blocking objects only
-	float ml, mt, mr, mb;
-	objSrc->GetBoundingBox(ml, mt, mr, mb);
-	for (auto i : *coObjects) {
-		if (!i->IsCollidable() || i->IsBlocking()) continue; //for non blocking objects only
-		if (!dynamic_cast<CCharacter*>(i)) continue; //to check character only
-		if (objSrc == i) continue;
-		float sl, st, sr, sb;
-		i->GetBoundingBox(sl, st, sr, sb);
-		if (IsOverlapping(ml,mt , mr, mb, sl, st, sr, sb)) {
-			dynamic_cast<CMario*>(objSrc)->Attacked();
-			return;
-
-		}
-	}
-}
-
 void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points, vector<LPGAMEOBJECT>* coObjects, DWORD dt)
 {
 
@@ -709,7 +691,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 					x += dx;
 					y += dy;
 				}
-	}
+		}
 	objSrc->SetPosition(x, y);
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

@@ -516,7 +516,9 @@ void CGame::Load(LPCWSTR gameFile)
 
 void CGame::SwitchScene()
 {
-	if (next_scene < 0 || next_scene == current_scene) return; 
+	if (next_scene == -1 || next_scene == current_scene) return; 
+	
+	if(next_scene == -2) next_scene = current_scene;
 
 	DebugOut(L"[INFO] Switching to scene %d\n", next_scene);
 
@@ -536,25 +538,15 @@ void CGame::SwitchScene()
 
 void CGame::SwitchScene(int sceneId)
 {
-	if (sceneId < 0 || sceneId == current_scene) return;
+	if (sceneId == -1 || sceneId == current_scene) return;
 	InitiateSwitchScene(sceneId);
-
 }
 
 void CGame::ResetCurrentScene()
 {
 	if (current_scene < 0) return;
-
+	SwitchScene(-2);
 	DebugOut(L"[INFO] Resetting scene %d\n", current_scene);
-
-	scenes[current_scene]->Unload();
-
-	CSprites::GetInstance()->Clear();
-	CAnimations::GetInstance()->Clear();
-	CGameFXManager::GetInstance()->Clear();
-	CGameData::GetInstance()->OnDeath();
-
-	scenes[current_scene]->Load();
 }
 
 void CGame::InitiateSwitchScene(int scene_id)

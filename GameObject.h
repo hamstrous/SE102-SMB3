@@ -9,6 +9,12 @@
 #include "Sprites.h"
 #include "Collision.h"
 
+#ifdef _DEBUG
+#define new new( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#else
+#define new new
+#endif
+
 #define TILE_SIZE 16
 
 using namespace std;
