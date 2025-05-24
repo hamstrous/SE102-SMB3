@@ -174,7 +174,7 @@ namespace std {
 #define PROTECT_FROM_SHELL_TIME	267
 #define HIDE_TIME	8000
 
-#define UNTOUCHABLE_TIME 3000
+#define UNTOUCHABLE_TIME 2500
 #define SIT_TIME_TO_HIDE 4000
 
 

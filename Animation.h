@@ -48,7 +48,7 @@ public:
 	virtual void NormalRender(float x, float y);
 	virtual void VibratingRender(float x, float y);
 	virtual void FlickeringRender(float x, float y);
-	virtual void StoppingFlickeringRender(float x, float y);
+	//virtual void StoppingFlickeringRender(float x, float y);
 	virtual void StoppingRender(float x, float y);
 	virtual void StillRender(float x, float y);
 	virtual void BouncingRender(float x, float y);

@@ -797,10 +797,8 @@ void CMario::Render()
 
 	if(untouchableTimer->IsRunning())
 	{
-		// if stopping animation then flicker and stopping 
-		if(animations->Get(currentAnimation)->GetType() == 3) 
-			animations->Get(currentAnimation)->SetType(4);
-		else 
+		// when stop dont flicker too
+		if(animations->Get(currentAnimation)->GetType() != 3) 
 			animations->Get(currentAnimation)->SetType(2);
 	}
 	else {
