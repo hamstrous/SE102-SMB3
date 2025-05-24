@@ -127,6 +127,7 @@ public:
 	void SetChangeBricktoCoin(bool set) { ChangeBricktoCoin = set; }
 
 	~CGame();
+	void UnloadEverything();
 };
 typedef CGame* LPGAME;
 

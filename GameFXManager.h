@@ -12,6 +12,9 @@ using namespace std;
 class CGameFXManager
 {
 public:
+	~CGameFXManager() {
+		Clear();
+	}
 	static CGameFXManager* __instance;
 
 	static CGameFXManager* GetInstance();

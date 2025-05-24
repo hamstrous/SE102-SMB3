@@ -13,13 +13,11 @@ prize.txt
 koopa.txt
 koopa-red.txt
 koopa-green.txt
-cloud.txt
 font.txt
 hud.txt
 pipe.txt
 plant.txt
 number.txt
-font.txt
 fireball.txt
 effect.txt
 

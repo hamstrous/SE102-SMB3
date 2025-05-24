@@ -14,6 +14,12 @@ CSprites* CSprites::GetInstance()
 void CSprites::Add(int id, int left, int top, int right, int bottom, LPTEXTURE tex, bool onScreen, float offsetX, float offsetY)
 {
 	LPSPRITE s = new CSprite(id, left, top, right, bottom, tex, onScreen, offsetX, offsetY);
+	if (sprites.find(id) != sprites.end())
+	{
+		DebugOut(L"[ERROR] Sprite with ID %d already exists!\n", id);
+		delete s; // Avoid memory leak
+		return;
+	}
 	sprites[id] = s;
 }
 

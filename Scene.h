@@ -16,6 +16,11 @@ protected:
 	CHUD* hud;
 
 public: 
+	virtual ~CScene() { 
+		if (key_handler != NULL) delete key_handler; 
+		if (hud != NULL) delete hud; 
+		if(sceneFilePath != NULL) delete[] sceneFilePath;
+	}
 	CScene(int id, LPCWSTR filePath)
 	{
 		this->id = id;

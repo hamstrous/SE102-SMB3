@@ -51,6 +51,9 @@ protected:
 
 public:
 	CPlayScene(int id, LPCWSTR filePath);
+	~CPlayScene() {
+		Unload();
+	}
 
 	virtual void Load();
 	virtual void Update(DWORD dt);

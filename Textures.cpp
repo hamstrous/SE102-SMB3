@@ -11,6 +11,11 @@ CTextures::CTextures()
 
 }
 
+CTextures::~CTextures()
+{
+	Clear();
+}
+
 CTextures* CTextures::GetInstance()
 {
 	if (__instance == NULL) __instance = new CTextures();

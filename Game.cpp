@@ -7,7 +7,14 @@
 
 #include "Texture.h"
 #include "Animations.h"
+#include "Sprites.h"
+#include "Textures.h"
+#include "GameFXManager.h"
+#include "Font.h"
 #include "PlayScene.h"
+#include "GameData.h"
+#include "TimerManager.h"
+#include "Collision.h"
 
 CGame * CGame::__instance = NULL;
 
@@ -493,7 +500,7 @@ void CGame::Load(LPCWSTR gameFile)
 		if (line[0] == '[') 
 		{ 
 			section = GAME_FILE_SECTION_UNKNOWN; 
-			DebugOut(L"[ERROR] Unknown section: %s\n", ToLPCWSTR(line));
+			DebugOut(L"[ERROR] Unknown section\n");
 			continue; 
 		}
 
@@ -578,6 +585,29 @@ CGame::~CGame()
 	pRenderTargetView->Release();
 	pSwapChain->Release();
 	pD3DDevice->Release();
+	UnloadEverything();
+}
+
+void CGame::UnloadEverything()
+{
+	for (auto& scene : scenes)
+	{
+		delete scene.second;
+	}
+	scenes.clear();
+	delete CGameData::GetInstance();
+	delete CTextures::GetInstance();
+	delete CAnimations::GetInstance();
+	delete CGameFXManager::GetInstance();
+	delete CFont::GetInstance();
+	delete CSprites::GetInstance();
+	delete CTimerManager::GetInstance();	
+	delete CCollision::GetInstance();
+
+	if (di) di->Release();
+	if (didv) didv->Release();
+
+	if (pPointSamplerState) pPointSamplerState->Release();
 }
 
 CGame* CGame::GetInstance()

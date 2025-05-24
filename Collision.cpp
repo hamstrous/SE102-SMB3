@@ -518,14 +518,16 @@ void CCollision::ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJE
 
 void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points, vector<LPGAMEOBJECT>* coObjects, DWORD dt)
 {
-
+	if (!objSrc->IsCollidable()) {
+		objSrc->OnNoCollision(dt);
+		return;
+	}
 	//collision check
 	float x, y;
 	float vx, vy;
 
 	objSrc->GetPosition(x, y);
 	objSrc->GetSpeed(vx, vy);
-
 	unordered_set<LPGAMEOBJECT> marked;
 
 	vector<LPCOLLISIONEVENT> coEventsVertical;
@@ -573,11 +575,6 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	CBox* foot = new CBox(foot_l, foot_t, foot_r, foot_b);	
 	foot->SetSpeed(vx, vy);
 	foot->SetPosition(x, y);
-
-	if (!objSrc->IsCollidable()) {
-		objSrc->OnNoCollision(dt);
-		return;
-	}
 
 	Scan(head, dt, coObjects, coEventsVertical, 1, 3);
 	Scan(body, dt, coObjects, coEventsHorizontal, 1, 0);

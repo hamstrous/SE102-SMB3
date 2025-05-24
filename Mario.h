@@ -293,6 +293,8 @@ public:
 		shellProtectTimer = NULL;
 		delete sittingTimer;
 		sittingTimer = NULL;
+		delete hideTimer;
+		hideTimer = NULL;
 		
 	}
 
