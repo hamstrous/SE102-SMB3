@@ -136,7 +136,7 @@ public:
 
 	void Clear();
 
-	~CGameObject();
+	virtual ~CGameObject();
 
 	static bool IsDeleted(const LPGAMEOBJECT &o) { return o->isDeleted; }
 	

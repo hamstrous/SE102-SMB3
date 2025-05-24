@@ -25,7 +25,6 @@
 class CKoopaRed : public CKoopa
 {
 protected:
-	CGameObject* floorCheck;
 	int count = 0;
 	virtual void GetFloorBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual int IsBlocking() { return 0; }
@@ -44,12 +43,7 @@ protected:
 
 public:
 	CKoopaRed(float x, float y, bool hasWing);
-	~CKoopaRed() {
-		if (floorCheck != NULL) {
-			floorCheck->Delete();
-			floorCheck = NULL;
-		}
-	}
+
 	virtual void SetState(int state);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
