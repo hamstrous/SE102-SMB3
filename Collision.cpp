@@ -610,7 +610,6 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 
 	int eventCount = coEvents.size();
 
-	// No collision detected
 	if (coEvents.size() > 0)
 	{
 		//objsrc doesnt affect filter
@@ -761,6 +760,9 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	pointsTouched.clear();
 	pointsMaybeTouched.clear();
 	collidedObjects.clear();
+
+	CMario* mario = dynamic_cast<CMario*>(objSrc);
+
 	//overlap with block
 	#pragma region overlap_block
 	
@@ -772,7 +774,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	float footBeforeY, footBeforeX;
 	float bodyLeftBeforeX, bodyRightBeforeX;
 	
-	CMario* mario = dynamic_cast<CMario*>(objSrc);
+	
 	mario->SetPointsPosition();
 
 	(*points)[DOWNLEFT]->GetBeforeBlockPosition(idk, footBeforeY);

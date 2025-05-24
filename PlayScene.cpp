@@ -569,7 +569,7 @@ void CPlayScene::Update(DWORD dt)
 			}
 		}
 		else {
-			CGame::GetInstance()->SwitchScene(6);
+			CGame::GetInstance()->SwitchScene(10);
 		}
 	}
 	

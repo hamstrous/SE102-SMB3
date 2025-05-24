@@ -15,12 +15,7 @@ public:
 	CInvisibleWall(float x, float y, float width, float height);
 	CInvisibleWall(float x, float y, float width, float height, float endX, int state);
 
-	void GetBoundingBox(float& l, float& t, float& r, float& b) {
-		l = x - width/2;
-		t = y - height/2;
-		r = x + width;
-		b = y + height;
-	};
+	void GetBoundingBox(float& l, float& t, float& r, float& b);
 
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
