@@ -1079,6 +1079,7 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 						if (nx > 0)
 						{
 							brick->SideHit();
+							return isTouching;
 						}
 
 					}

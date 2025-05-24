@@ -64,29 +64,8 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 	e->obj->GetPosition(qbX, qbY);
 	if (e->ny != 0)
 	{
-		if (e->ny < 0) 
+		if (e->ny != 0) 
 		{	
-			
-			/*if (dynamic_cast<CQuestionBlock*>(e->obj))
-			{	
-				
-				CQuestionBlock* qb = dynamic_cast<CQuestionBlock*>(e->obj);
-				if (qb->getUp() && x >= qbX)
-				{	
-					DebugOut(L"[INFO] MUSHROOM REFLECT VY\n");
-					SetState(MUSHROOM_STATE_BOUNCING);
-					return;
-				}
-				else if (qb->getUp() && x < qbX)
-				{
-					SetState(MUSHROOM_STATE_BOUNCING_REVERSE);
-					return;
-				}
-			}*/
-			vy = 0;
-		}
-		else 
-		{
 			vy = 0;
 		}
 	}
