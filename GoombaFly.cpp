@@ -74,13 +74,13 @@ void CGoombaFly::Render()
 	}
 	if (hasWing && state == GOOMBAFLY_STATE_SMALL_JUMP)
 	{
-		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_SMALL_JUMP)->Render(x - 6, y - 8);
-		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_SMALL_JUMP)->Render(x + 6, y - 8);
+		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_SMALL_JUMP)->Render(x - 6, y - 9);
+		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_SMALL_JUMP)->Render(x + 6, y - 9);
 	}
 	if (hasWing && state == GOOMBAFLY_STATE_BIG_JUMP)
 	{
-		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_BIG_JUMP)->Render(x - 6, y - 8);
-		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_BIG_JUMP)->Render(x + 6, y - 8);
+		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_BIG_JUMP)->Render(x - 6, y - 9);
+		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_BIG_JUMP)->Render(x + 6, y - 9);
 		
 	}
 	if (state == GOOMBAFLY_STATE_DIE)
