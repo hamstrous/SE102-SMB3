@@ -147,7 +147,7 @@ void CKoopaGreen::SetState(int state)
 		ay = 0;
 		break;
 	case KOOPA_STATE_FLYING:
-		InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
+		InitHorizontalSpeedBasedOnMario(KOOPA_FLYING_WALKING_SPEED, -1);
 		break;
 	case KOOPA_STATE_DIE:
 		isDeleted = true;
@@ -346,6 +346,9 @@ void CKoopaGreen::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
+
+	vy = min(vy, 0.12);
+
 	if (hasWing)
 		Flying();
 	else
