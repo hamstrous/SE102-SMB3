@@ -57,7 +57,6 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
 	hud = new CHUD();
-
 }
 
 
@@ -787,7 +786,11 @@ void CPlayScene::Unload()
 	CGame::GetInstance()->SetChangeBricktoCoin(false);
 
 	if(camera != NULL) delete camera;
+	if(hud != NULL) delete hud;
+	if(key_handler != NULL) delete key_handler;
+	key_handler = NULL;
 	camera = NULL;
+	hud = NULL;
 
 	//clear timer
 	CTimerManager::GetInstance()->Clear();
