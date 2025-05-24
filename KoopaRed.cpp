@@ -191,6 +191,7 @@ void CKoopaRed::SetState(int state)
 		}
 		break;
 	case KOOPA_STATE_DIE_UP: //when hold shell, vy = mario speed
+		frontRender = true;
 		Release(true);
 		float player_x, player_y;
 		player->GetSpeed(player_x, player_y);

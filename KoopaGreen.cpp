@@ -169,6 +169,7 @@ void CKoopaGreen::SetState(int state)
 		state = this->state == KOOPA_STATE_SHELL_HELD ? KOOPA_STATE_SHELL_IDLE : KOOPA_STATE_SHELL_HELD_TAILHIT;
 		break;
 	case KOOPA_STATE_DIE_UP:
+		frontRender = true;
 		Release(true);
 		float player_x, player_y;
 		player->GetSpeed(player_x, player_y);

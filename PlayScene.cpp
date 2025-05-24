@@ -715,6 +715,12 @@ void CPlayScene::Render()
 		i->Render();
 	for (auto i : projectileRenderObjects)
 		i->Render();
+
+	// when die up render front
+	for (auto i : secondRenderObjects)
+		if (CCharacter * character = dynamic_cast<CCharacter*>(i)) 
+			if(character->IsFrontRender()) i->Render();
+
 	if (!mario->GetHolding() && !mario->ReturnRenderMarioInPipe() && !mario->IsBehind()) mario->Render();
 	
 	backgroundRenderObjects.clear();

@@ -132,6 +132,7 @@ void CBoomerangBro::SetState(int state)
 			}
 			break;
 		case BOOMERANG_BRO_STATE_DIE:
+			frontRender = true;
 			if(boomerang != NULL) {
 				boomerang->Delete();
 				boomerang = NULL;
