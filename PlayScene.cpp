@@ -436,8 +436,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	obj->SetPosition(x, y);
 
 	if (CCharacter* character = dynamic_cast<CCharacter*>(obj)) {
-		CCharacter* copy = character->Clone();
-		characterCopy[character] = copy;
+			CCharacter* copy = character->Clone();
+			characterCopy[character] = copy;
+		
 	}
 	objects.push_back(obj);
 }
@@ -854,9 +855,6 @@ void CPlayScene::PurgeDeletedObjects()
 		LPGAMEOBJECT o = *it;
 		if (o->IsDeleted())
 		{
-			// delete the cocy
-			if(dynamic_cast<CCharacter*>(o))
-				characterCopy.erase(dynamic_cast<CCharacter*>(o));
 			delete o;
 			*it = NULL;
 		}

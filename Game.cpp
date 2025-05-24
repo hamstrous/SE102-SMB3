@@ -15,6 +15,7 @@
 #include "GameData.h"
 #include "TimerManager.h"
 #include "Collision.h"
+#include "ScoreManager.h"
 
 CGame * CGame::__instance = NULL;
 
@@ -603,6 +604,7 @@ void CGame::UnloadEverything()
 	delete CSprites::GetInstance();
 	delete CTimerManager::GetInstance();	
 	delete CCollision::GetInstance();
+	delete CScoreManager::GetInstance();
 
 	if (di) di->Release();
 	if (didv) didv->Release();
