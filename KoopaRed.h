@@ -25,6 +25,7 @@
 class CKoopaRed : public CKoopa
 {
 protected:
+	int dir;
 	int count = 0;
 	virtual void GetFloorBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual int IsBlocking() { return 0; }

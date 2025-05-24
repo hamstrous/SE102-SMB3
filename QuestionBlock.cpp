@@ -32,6 +32,10 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		y = startY;
 		vy = 0;
 	}
+	if (bouncing == true && GetTickCount64() - stillUnbox >= 100 && isUnbox == false)
+	{
+		bouncing = false;
+	}
 
 	if (isUnbox) bouncing = false;
 
@@ -116,7 +120,11 @@ void CQuestionBlock::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (e->ny < 0 )
 		{
 			if (!isUnbox)
+			{
 				bouncing = true;
+				stillUnbox = GetTickCount64();
+			}
+				
 		}
 	}
 }

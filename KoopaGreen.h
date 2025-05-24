@@ -6,7 +6,8 @@
 #include "PlayScene.h"
 #include "Scene.h"
 
-#define KOOPA_FLYING_BOOST 0.5f
+#define KOOPA_FLYING_BOOST 0.3f
+#define KOOPA_FLYING_WALKING_SPEED 0.031f
 
 #define ID_ANI_KOOPA_WALKING_LEFT 20100
 #define ID_ANI_KOOPA_WALKING_RIGHT 20101

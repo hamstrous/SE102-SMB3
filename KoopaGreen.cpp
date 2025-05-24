@@ -147,7 +147,7 @@ void CKoopaGreen::SetState(int state)
 		ay = 0;
 		break;
 	case KOOPA_STATE_FLYING:
-		InitHorizontalSpeedBasedOnMario(KOOPA_WALKING_SPEED, -1);
+		InitHorizontalSpeedBasedOnMario(KOOPA_FLYING_WALKING_SPEED, -1);
 		break;
 	case KOOPA_STATE_DIE:
 		isDeleted = true;
@@ -260,8 +260,18 @@ void CKoopaGreen::Render()
 	}
 	if (!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
-	if (hasWing && nx == 1 && !GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 8);
-	else if (hasWing && nx == -1 && !GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 8);
+	if (hasWing && nx == 1) {
+		if (!GetIsStop() && !GetIsDead())
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 8);
+		else
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 8, 1);
+	}
+	else if (hasWing && nx == -1) {
+		if (!GetIsStop() && !GetIsDead())
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 8);
+		else
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 8, 1);
+	}
 	//RenderBoundingBox();
 }
 
@@ -347,6 +357,9 @@ void CKoopaGreen::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
+
+	vy = min(vy, 0.12);
+
 	if (hasWing)
 		Flying();
 	else

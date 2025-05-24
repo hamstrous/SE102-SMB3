@@ -40,6 +40,7 @@ private:
 	bool isUnbox;
 	bool up;
 	ULONGLONG start_up = -1;
+	ULONGLONG stillUnbox = -1;
 public:
 	CQuestionBlock(float x, float y, int type) : CBaseBrick(x, y) {
 		this->type = type;
