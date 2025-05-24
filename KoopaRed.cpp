@@ -75,20 +75,6 @@ void CKoopaRed::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 	float bx, by;
 	basebrick->GetPosition(bx, by);
 
-	/*if (basebrick->GetState() == QUESTION_BLOCK_STATE_MOVEUP) {
-		if (state == KOOPA_STATE_WALKING) {
-			float xx, yy;
-			player->GetPosition(xx, yy);
-			if (xx < x) {
-				vx = KOOPA_FLYING_SPEED_X;
-			}
-			else {
-				vx = -KOOPA_FLYING_SPEED_X;
-			}
-			vy = -KOOPA_BOUNCE_SPEED;
-		}
-	}*/
-
 	if (basebrick->GetBouncing()) {
 		bouncing = true;
 		TailHit(bx);
@@ -204,24 +190,6 @@ void CKoopaRed::SetState(int state)
 		//call when mario is dead whild holding
 		state = this->state == KOOPA_STATE_SHELL_HELD ? KOOPA_STATE_SHELL_IDLE : KOOPA_STATE_SHELL_HELD_TAILHIT;
 		break;
-	//case KOOPA_STATE_HIT_DIE: //when question block hit
-	//	float xx, yy;
-	//	player->GetPosition(xx, yy);
-	//	if (xx < x) {
-	//		vx = KOOPA_FLYING_SPEED_X;
-	//		vy = -2.0f;
-	//	}
-	//	else {
-	//		vx = -KOOPA_FLYING_SPEED_X;
-	//		vy = -2.0f;
-	//	}
-	//	
-	//	vy = -2.0f;
-	//	DebugOut(L"vy cua hit die vy: %f\n", vy);
-	//	hit = true;
-	//	hasWing = false;
-	//	delete_time = GetTickCount64();
-	//	break;
 	}
 	CGameObject::SetState(state);
 
@@ -283,9 +251,18 @@ void CKoopaRed::Render()
 	}
 	if (!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
-	if (hasWing && nx == 1 && !GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 8);
-	else if (hasWing && nx == -1 && !GetIsStop()) CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 8);
-	//RenderBoundingBox();
+	if (hasWing && nx == 1) {
+		if (!GetIsStop() && !GetIsDead())
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 8);
+		else
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_RIGHT)->Render(x - 4, y - 8, 1);
+	}
+	else if (hasWing && nx == -1) {
+		if (!GetIsStop() && !GetIsDead())
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 8);
+		else
+			CAnimations::GetInstance()->Get(ID_ANI_KOOPA_WING_LEFT)->Render(x + 4, y - 8, 1);
+	}//RenderBoundingBox();
 }
 CKoopaRed::CKoopaRed(float x, float y, bool hasWing) : CKoopa(x, y)
 {
