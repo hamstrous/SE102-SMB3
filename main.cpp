@@ -35,11 +35,11 @@
 #include "AssetIDs.h"
 #include "Prize.h"
 
-#ifdef _DEBUG
-#define new new( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#else
-#define new new
-#endif
+//#ifdef _DEBUG
+//#define new new( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+//#else
+//#define new new
+//#endif
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"Super Mario Bros 3"
