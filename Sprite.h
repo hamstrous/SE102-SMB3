@@ -22,6 +22,7 @@ protected:
 	D3DXMATRIX matScaling;
 public:
 	CSprite(int id, int left, int top, int right, int bottom, LPTEXTURE tex, bool onScreen = false, float offsetX = 0, float offsexY = 0);
+	~CSprite();	
 
 	virtual void Draw(float x, float y);
 	virtual void DrawOnCamera(float x, float y);

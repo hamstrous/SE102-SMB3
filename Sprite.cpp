@@ -35,6 +35,10 @@ CSprite::CSprite(int id, int left, int top, int right, int bottom, LPTEXTURE tex
 	D3DXMatrixScaling(&this->matScaling, (FLOAT)spriteWidth, (FLOAT)spriteHeight, 1.0f);
 }
 
+CSprite::~CSprite()
+{
+}
+
 void CSprite::Draw(float x, float y)
 {
 	if(onScreen)
