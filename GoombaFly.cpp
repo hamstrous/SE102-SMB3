@@ -69,19 +69,43 @@ void CGoombaFly::Render()
 	int aniId = ID_ANI_GOOMBAFLY_WALKING;
 	if (hasWing && state == GOOMBAFLY_STATE_WALKING) 
 	{	
-		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_WALKING)->Render(x - 6, y - 6);
-		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_WALKING)->Render(x + 6, y - 6);
+		if (!GetIsStop() && !GetIsDead())
+		{
+			CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_WALKING)->Render(x - 6, y - 6);
+			CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_WALKING)->Render(x + 6, y - 6);
+		}
+		else
+		{
+			CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_WALKING)->Render(x - 6, y - 6, 1);
+			CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_WALKING)->Render(x + 6, y - 6, 1);
+		}
 	}
 	if (hasWing && state == GOOMBAFLY_STATE_SMALL_JUMP)
 	{
-		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_SMALL_JUMP)->Render(x - 6, y - 9);
-		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_SMALL_JUMP)->Render(x + 6, y - 9);
+
+		if (!GetIsStop() && !GetIsDead())
+		{
+			CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_SMALL_JUMP)->Render(x - 6, y - 9);
+			CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_SMALL_JUMP)->Render(x + 6, y - 9);
+		}
+		else
+		{
+			CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_SMALL_JUMP)->Render(x - 6, y - 9, 1);
+			CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_SMALL_JUMP)->Render(x + 6, y - 9, 1);
+		}
 	}
 	if (hasWing && state == GOOMBAFLY_STATE_BIG_JUMP)
 	{
-		CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_BIG_JUMP)->Render(x - 6, y - 9);
-		CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_BIG_JUMP)->Render(x + 6, y - 9);
-		
+		if (!GetIsStop() && !GetIsDead())
+		{
+			CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_BIG_JUMP)->Render(x - 6, y - 9);
+			CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_BIG_JUMP)->Render(x + 6, y - 9);
+		}
+		else
+		{
+			CAnimations::GetInstance()->Get(ID_ANI_RIGHT_WING_BIG_JUMP)->Render(x - 6, y - 9, 1);
+			CAnimations::GetInstance()->Get(ID_ANI_LEFT_WING_BIG_JUMP)->Render(x + 6, y - 9, 1);
+		}		
 	}
 	if (state == GOOMBAFLY_STATE_DIE)
 	{
@@ -97,6 +121,7 @@ void CGoombaFly::Render()
 	}
 	if(!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
+
 	RenderBoundingBox();
 }
 
