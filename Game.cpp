@@ -520,12 +520,13 @@ void CGame::SwitchScene()
 
 	DebugOut(L"[INFO] Switching to scene %d\n", next_scene);
 
+	// call gamedate first when level still not unloaded
+	CGameData::GetInstance()->OnWin();
 	scenes[current_scene]->Unload();
 
 	CSprites::GetInstance()->Clear();
 	CAnimations::GetInstance()->Clear();
 	CGameFXManager::GetInstance()->Clear();
-	CGameData::GetInstance()->OnWin();
 
 	current_scene = next_scene;
 	LPSCENE s = scenes[current_scene];

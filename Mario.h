@@ -203,7 +203,7 @@ protected:
 	BOOLEAN isSitting;
 	bool isHiding = false;
 	bool isBehind = false;
-	MarioLevel level;
+	MarioLevel level = MarioLevel::SMALL;
 	BOOLEAN isOnPlatform;
 	int coin;
 	
@@ -270,36 +270,7 @@ protected:
 public:
 	CKoopa* holdingShell;
 	bool canHold = false;
-	CMario(float x, float y) : CCharacter(x, y)
-	{
-		glideTimer = new CTimer(GLIDE_TIME);
-		flyTimer = new CTimer(FLY_TIME);
-		attackTimer = new CTimer(ATTACK_TIME);
-		untouchableTimer = new CTimer(UNTOUCHABLE_TIME);
-		turnHoldTimer = new CTimer(TURN_TIME);
-		shellProtectTimer = new CTimer(PROTECT_FROM_SHELL_TIME);
-		sittingTimer = new CTimer(-1); 
-		hideTimer = new CTimer(-1); //-1 cause even tho hiding have finished if mario still hide then still apply
-		isSitting = false;
-		maxVx = 0.0f;
-		maxVy = 0.3f;
-		ax = 0.0f;
-		ay = MARIO_GRAVITY;
-		level = MarioLevel::SMALL;
-		isOnPlatform = false;
-		coin = 0;
-		canHold = false;
-
-		holdingShell = NULL;
-
-		SetState(MARIO_STATE_IDLE);
-		points.resize(7); // top, left, leftdown, downleft, dowmright, rightdown, rightup
-		for (int i = 0; i < 7; i++) {
-			points[i] = new CPoint(0, 0);
-			float px = 0, py = 0;
-			points[i]->GetPosition(px, py);
-		}
-	}
+	CMario(float x, float y);
 
 	~CMario() {
 		for (CPoint* point : points) {

@@ -46,6 +46,7 @@ public:
 		ptimer = f8;
 		countDown = new CTimer(300);
 		countDown->Start();
+		marioLevel = MarioLevel::SMALL;
 	}
 	void Reset()
 	{

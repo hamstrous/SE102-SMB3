@@ -25,10 +25,14 @@ void CGameData::OnDeath()
 	ptimer->Reset();
 	ptimer = f8;
 	ptimer->Reset();
+	marioLevel = MarioLevel::SMALL;
 }
 
 void CGameData::OnWin()
 {
+	CGame* game = CGame::GetInstance();
+	CMario* mario = (CMario*) dynamic_cast<CPlayScene*>(game->GetCurrentScene())->GetPlayer();
+	if (mario != NULL) marioLevel = mario->GetLevel();
 	countDown->Start();
 	pmeter = 0;
 	ptimer->Reset();
