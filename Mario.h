@@ -392,7 +392,7 @@ public:
 			points[i]->SetSpeed(vx, vy);
 		}
 	}
-	void SetPressDown() { downPress = true; }
+	void SetPressDown() { if (!downPress) downPress = true; }
 	void SetPressUp() {  upPress = true; }
 	void ReleasePress() { downPress = upPress = false; }
 
