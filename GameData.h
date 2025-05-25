@@ -38,7 +38,7 @@ public:
 	vector<int> cards;
 	MarioLevel marioLevel;
 
-	CGameData() : life(3), pmeter(0), score(0), worldName(1), coin(0) {
+	CGameData() : life(4), pmeter(0), score(0), worldName(1), coin(0) {
 		f24 = new CTimer(FRAME_24);
 		f16 = new CTimer(FRAME_16);
 		f8 = new CTimer(FRAME_8);

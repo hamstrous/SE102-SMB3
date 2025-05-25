@@ -532,7 +532,8 @@ void CGame::SwitchScene()
 	// call gamedate first when level still not unloaded
 	// also check if current scene exist
 	if (scenes.find(current_scene) != scenes.end()) {
-		CGameData::GetInstance()->OnWin();
+		if(next_scene != current_scene )CGameData::GetInstance()->OnWin();
+		else CGameData::GetInstance()->OnDeath();
 		scenes[current_scene]->Unload();
 	}
 

@@ -567,18 +567,19 @@ void CMario::SpecialPressed()
 
 void CMario::JumpPressed()
 {
-	SetState(MARIO_STATE_JUMP);
 	if (!isOnPlatform && level == MarioLevel::RACCOON) {
 		if (!IsPMeterFull() && vy >= 0) {
 			glideTimer->Start();
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_GLIDE_RIGHT : MarioAnimationType::TAIL_JUMP_GLIDE_LEFT);
 			vy = MARIO_RACCOON_GLIDE_SPEED;
-		}else if(IsPMeterFull()){
+		}
+		else if (IsPMeterFull()) {
 			flyTimer->Start();
 			vy = -MARIO_RACCOON_FLY_SPEED;
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_FLY_RIGHT : MarioAnimationType::TAIL_JUMP_FLY_LEFT);
 		}
 	}
+	SetState(MARIO_STATE_JUMP);
 	SetJumpInput(1);
 	
 }
