@@ -156,9 +156,11 @@ void CAnimation::StillRender(float x, float y)
 
 void CAnimation::BouncingRender(float x, float y)
 {
-	const float BOUNCE_MAX = 16.0f;
-	const float BOUNCE_SPEED = 5.0f;
+	const float BOUNCE_MAX = 10.0f;
+	const float BOUNCE_SPEED = 2.0f;
 	ULONGLONG now = GetTickCount64();
+
+	done = false; // Reset done state for bouncing animation
 
 	if (currentFrame == -1)
 	{
@@ -180,7 +182,7 @@ void CAnimation::BouncingRender(float x, float y)
 	}
 
 	// Do once
-	if (bouncingState != -1)
+	if (bouncingState != -1 && done == false)
 	{
 		if (bouncingState == 0)
 		{
@@ -204,6 +206,7 @@ void CAnimation::BouncingRender(float x, float y)
 			{
 				bouncingOffset = 0.0f;
 				bouncingState = 0; // Done
+				done = true; // Mark as done
 			}
 		}
 	}

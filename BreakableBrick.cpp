@@ -15,7 +15,10 @@ void CBreakableBrick::Render()
 	else if (unbox2)  animations->Get(ID_ANI_BLOCK_UNBOX)->Render(x, y);
 	else if (bouncing) {
 		animations->Get(ID_ANI_BOUNCING)->Render(x, y);
-		animations->Get(ID_ANI_BOUNCING)->ResetBouncing();
+		if (animations->Get(ID_ANI_BOUNCING)->IsDone()) {
+			bouncing = false;
+		}
+		//animations->Get(ID_ANI_BOUNCING)->ResetBouncing();
 	}
 	else animations->Get(ID_ANI_BREAKABLEBRICK)->Render(x, y);
 	//RenderBoundingBox();
@@ -26,11 +29,10 @@ void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	y += vy * dt;
 
 
-	if (time_start != -1 && GetTickCount64() - time_start >= 180)
+	if (time_start != -1 && GetTickCount64() - time_start >= 150)
 	{
 		time_start = -1;
-		bouncing = false;
-		//unbox = false;
+		//bouncing = false;
 		if (type != 0 && unbox == true) {
 			unbox2 = true;
 			unbox = false;
