@@ -199,7 +199,7 @@ void CMario::GoingPipe(DWORD dt) {
 	if (outUpPipe)
 	{	
 		
-		if (typePipe == 0) camera->SetState(CAMERA_STATE_STATIC);
+		if (typePipe == 0) camera->SetState(CAMERA_STATE_FOLLOW);
 		else if (typePipe == 2) camera->SetState(CAMERA_STATE_1_4_END);
 		y -= SPEED_IN_PIPE * dt;
 		if (y <= distancePipeOut)
@@ -543,12 +543,12 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//left
 	if (nx < 0 && elapsed < ATTACK_TIME / 2
 		|| nx > 0 && (elapsed >= ATTACK_TIME / 2))
-			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, vx, 0, dt, coObjects, x, -nx, y);
+			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, 0, 0, dt, coObjects, x, -nx, y);
 
 	//right
 	if (nx > 0 && elapsed < ATTACK_TIME / 2
 		|| nx < 0 && (elapsed >= ATTACK_TIME / 2))
-	CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, vx, 0, dt, coObjects, x, nx, y);
+			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, 0, 0, dt, coObjects, x, nx, y);
 }
 
 //Change animaion when mario kick the shell
@@ -567,18 +567,19 @@ void CMario::SpecialPressed()
 
 void CMario::JumpPressed()
 {
-	SetState(MARIO_STATE_JUMP);
 	if (!isOnPlatform && level == MarioLevel::RACCOON) {
 		if (!IsPMeterFull() && vy >= 0) {
 			glideTimer->Start();
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_GLIDE_RIGHT : MarioAnimationType::TAIL_JUMP_GLIDE_LEFT);
 			vy = MARIO_RACCOON_GLIDE_SPEED;
-		}else if(IsPMeterFull()){
+		}
+		else if (IsPMeterFull()) {
 			flyTimer->Start();
 			vy = -MARIO_RACCOON_FLY_SPEED;
 			AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_JUMP_FLY_RIGHT : MarioAnimationType::TAIL_JUMP_FLY_LEFT);
 		}
 	}
+	SetState(MARIO_STATE_JUMP);
 	SetJumpInput(1);
 	
 }
