@@ -12,6 +12,7 @@ CMario* CCamera::GetMario()
 }
 
 CCamera::CCamera() : CGameObject(0, 0) {
+	int shakeStart = -1;
 	CGame* game = CGame::GetInstance();
 	screenHeight = game->GetBackBufferHeight();
 	screenWidth = game->GetBackBufferWidth();
@@ -37,8 +38,8 @@ CCamera::CCamera(float x, float y, float levelWidth, float levelHeight, float st
 
 void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (state == CAMERA_STATE_STATIC) {
-		UpdateStatic(dt, coObjects);
+	if (state == CAMERA_STATE_FOLLOW) {
+		UpdateFollow(dt, coObjects);
 	}
 	else if (state == CAMERA_STATE_MOVING) {
 		UpdateMoving(dt, coObjects);
@@ -52,7 +53,7 @@ void CCamera::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 }
 
-void CCamera::UpdateStatic(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CCamera::UpdateFollow(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CMario* mario = GetMario();
 	if (mario == NULL) return;
@@ -75,6 +76,7 @@ void CCamera::UpdateStatic(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	Clamp(x, 0, levelWidth - screenWidth);
 	Clamp(y, 0, levelHeight - screenHeight);
+	if(GetTickCount64() - shakeStart <= SHAKY_TIME) y += (GetTickCount64() & 1) * 2;
 }
 
 void CCamera::UpdateMoving(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -82,7 +84,7 @@ void CCamera::UpdateMoving(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	x += vx * dt;
 	if(x > levelWidth - screenWidth)
 	{
-		SetState(CAMERA_STATE_STATIC);
+		SetState(CAMERA_STATE_FOLLOW);
 	}
 	Clamp(x, 0, levelWidth - screenWidth);
 	Clamp(y, 0, levelHeight - screenHeight);

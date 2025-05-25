@@ -42,6 +42,12 @@ void CSwitch::Enable()
 {
 	if (!off)
 	{
+		//get camera from game scene
+		CGame* game = CGame::GetInstance();
+		CPlayScene* scene = (CPlayScene*)game->GetCurrentScene();
+		CCamera* camera = scene->GetCamera();
+		camera->StartShake();
+
 		off = true;
 		CGame::GetInstance()->SetChangeBricktoCoin(true);
 		time_start = GetTickCount64();

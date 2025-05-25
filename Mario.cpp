@@ -199,7 +199,7 @@ void CMario::GoingPipe(DWORD dt) {
 	if (outUpPipe)
 	{	
 		
-		if (typePipe == 0) camera->SetState(CAMERA_STATE_STATIC);
+		if (typePipe == 0) camera->SetState(CAMERA_STATE_FOLLOW);
 		else if (typePipe == 2) camera->SetState(CAMERA_STATE_1_4_END);
 		y -= SPEED_IN_PIPE * dt;
 		if (y <= distancePipeOut)
