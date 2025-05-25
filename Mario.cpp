@@ -559,6 +559,7 @@ void CMario::KickedShell()
 
 void CMario::SpecialPressed()
 {
+	if (state == MARIO_STATE_WIN || state == MARIO_STATE_DIE) return;
 	SetRunInput(1);
 	if (level == MarioLevel::RACCOON) {
 		if (!attackTimer->IsRunning()) TailAttackInit();
@@ -567,6 +568,7 @@ void CMario::SpecialPressed()
 
 void CMario::JumpPressed()
 {
+	if (state == MARIO_STATE_WIN || state == MARIO_STATE_DIE) return;
 	if (!isOnPlatform && level == MarioLevel::RACCOON) {
 		if (!IsPMeterFull() && vy >= 0) {
 			glideTimer->Start();
