@@ -157,6 +157,7 @@ void CKoopaRed::SetState(int state)
 			break;
 		}
 		vx = KOOPA_WALKING_SPEED * nx;
+		vy = 0;
 		// when start walking, walk toward mario
 		break;
 	case KOOPA_STATE_SHELL_MOVING:
