@@ -3,6 +3,7 @@
 #include "Mario.h"
 #include "Smoke.h"
 #include "GameData.h"
+#include "ScoreManager.h"
 
 void CCharacter::Touched()
 {
@@ -16,5 +17,6 @@ void CCharacter::Ending()
 	CSmoke* smoke = new CSmoke(x, y);
 	((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(smoke);
 	CGameData::GetInstance()->AddScore(1000);
+	//CScoreManager::GetInstance()->AddScore(x, y, SCORE_1000);
 	isDeleted = true;
 }

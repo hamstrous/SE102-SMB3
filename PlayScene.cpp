@@ -598,7 +598,7 @@ void CPlayScene::Update(DWORD dt)
 				continue;
 			}
 
-			if (mario->GetState() == MARIO_STATE_WIN && !IsObjectOutOfCamera(mario)){
+			if (mario->GetState() == MARIO_STATE_WIN && !IsObjectOutOfCamera(obj)){
 				character->Ending();
 			}
 
