@@ -444,8 +444,8 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 	float pipeX, pipeY;
 	pipe->GetPosition(pipeX, pipeY);
 	tempState = state;
-	if ( (pipe->IsGoInside() == 1) && y < pipeY && downPress && (pipeX) < x && x < (pipeX + PIPE_RANGE))
-	{
+	if ( (pipe->IsGoInside() == 1) && y < pipeY && downPress && (pipeX) < x && x < (pipeX + PIPE_RANGE) )
+	{	
 		renderMarioInPipe = true;
 		typePipe = pipe->GetType();
 		goDownPipe = true;

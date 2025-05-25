@@ -22,9 +22,9 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		mario->SpecialPressed();
 		break;
 	case DIK_DOWN:
-		if (mario->ReturnRenderMarioInPipe()) break;
-		//if(!mario->GetHolding()) mario->SetState(MARIO_STATE_SIT);
-		mario->SetPressDown();
+		//if (mario->ReturnDownPress()) break;
+		////if(!mario->GetHolding()) mario->SetState(MARIO_STATE_SIT);
+		//mario->SetPressDown();
 		break;
 	case DIK_UP:
 		if (mario->ReturnRenderMarioInPipe()) break;
@@ -104,6 +104,8 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 		}
 		else
 			mario->SetState(MARIO_STATE_WALKING_RIGHT);
+
+		mario->ReleasePress();
 	}
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
@@ -111,6 +113,8 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 			mario->SetState(MARIO_STATE_RUNNING_LEFT);
 		else
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
+
+		mario->ReleasePress();
 	}
 	else {
 		mario->SetState(MARIO_STATE_IDLE);
@@ -127,6 +131,8 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	}
 
 	if (game->IsKeyDown(DIK_DOWN)) {
-		if (!mario->GetHolding() && !mario->IsSitting()) mario->SetState(MARIO_STATE_SIT);
+		if (!mario->GetHolding() && !mario->IsSitting() && !mario->ReturnRenderMarioInPipe()) mario->SetState(MARIO_STATE_SIT);
+		mario->SetPressDown();
+		
 	}
 }

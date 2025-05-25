@@ -41,6 +41,7 @@ public:
 	virtual int IsBlocking() {
 		return 0;
 	}
+	virtual void Ending();
 
 	bool IsFrontRender() { return frontRender; }
 };

@@ -597,6 +597,11 @@ void CPlayScene::Update(DWORD dt)
 			if(dynamic_cast<CMario*>(character)) {
 				continue;
 			}
+
+			if (mario->GetState() == MARIO_STATE_WIN && !IsObjectOutOfCamera(mario)){
+				character->Ending();
+			}
+
 			if (IsObjectOutOfCamera(obj)) {
 				//when out of camera, go to sleep and put back at og pos
 				obj->SetSleep(true);

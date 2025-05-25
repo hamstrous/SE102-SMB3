@@ -14,8 +14,8 @@ void CBreakableBrick::Render()
 	else if (unbox) animations->Get(ID_ANI_BLOCK_UNBOX_BOUNCING)->Render(x, y);
 	else if (unbox2)  animations->Get(ID_ANI_BLOCK_UNBOX)->Render(x, y);
 	else if (bouncing) {
-		//animations->Get(ID_ANI_BOUNCING)->ResetBouncing();
 		animations->Get(ID_ANI_BOUNCING)->Render(x, y);
+		animations->Get(ID_ANI_BOUNCING)->ResetBouncing();
 	}
 	else animations->Get(ID_ANI_BREAKABLEBRICK)->Render(x, y);
 	//RenderBoundingBox();
