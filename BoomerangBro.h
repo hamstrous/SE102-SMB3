@@ -41,7 +41,7 @@ class CBoomerangBro : public CCharacter
 	bool cycleChecker = false; //to check the middwle of the cycle and count only one
 	bool canThrow = false;
 	CRandom random;
-	CTimer *waitTimer, *jumpTimer, *throwTimer;
+	CTimer *waitTimer = NULL, *jumpTimer = NULL, *throwTimer = NULL;
 	CBoomerang* boomerang = NULL;
 public:
 	CBoomerangBro(float x, float y) : CCharacter(x, y)
@@ -56,18 +56,25 @@ public:
 		jumpTimer->Start();
 	}
 
-	~CBoomerangBro() {
+	 ~CBoomerangBro() {
 		if (boomerang != NULL) {
 			boomerang->Delete();
 			boomerang = NULL;
 		}
-		delete waitTimer;
-		delete throwTimer;
-		delete jumpTimer;
+		if (waitTimer) {
+			delete waitTimer;
+			waitTimer = NULL;
+		}
 
-		waitTimer = NULL;
-		throwTimer = NULL;
-		jumpTimer = NULL;
+		if (throwTimer) {
+			delete throwTimer;
+			throwTimer = NULL;
+		}
+
+		if (jumpTimer) {
+			delete jumpTimer;
+			jumpTimer = NULL;
+		}
 	}
 
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -109,7 +116,7 @@ public:
 	}
 
 	void Reset(const CCharacter* og) {
-		*this = *(const CBoomerangBro*) og;
+		*this = CBoomerangBro(*(const CBoomerangBro*)og);
 	}
 
 	bool IsDead() {
@@ -117,6 +124,72 @@ public:
 	}
 
 	CCharacter* Clone() { return new CBoomerangBro(*this); }
+
+	CBoomerangBro(const CBoomerangBro& other) : CCharacter(other)
+	{
+		startX = other.startX;
+		startY = other.startY;
+		cycleCounter = other.cycleCounter;
+		toLeft = other.toLeft;
+		cycleChecker = other.cycleChecker;
+		canThrow = other.canThrow;
+		random = other.random;
+
+		waitTimer = other.waitTimer ? new CTimer(*other.waitTimer) : nullptr;
+		jumpTimer = other.jumpTimer ? new CTimer(*other.jumpTimer) : nullptr;
+		throwTimer = other.throwTimer ? new CTimer(*other.throwTimer) : nullptr;
+
+		// Do not copy boomerang ¨C keep it null to avoid duplicate rendering/logic
+		boomerang = nullptr;
+
+		state = other.state;
+		x = other.x;
+		y = other.y;
+		vx = other.vx;
+		vy = other.vy;
+		nx = other.nx;
+		ax = other.ax;
+		ay = other.ay;
+		isDeleted = other.isDeleted;
+	}
+
+	CBoomerangBro& operator=(const CBoomerangBro& other) {
+		if (this == &other) return *this;
+
+		CCharacter::operator=(other); // Copy base class
+
+		startX = other.startX;
+		startY = other.startY;
+		cycleCounter = other.cycleCounter;
+		toLeft = other.toLeft;
+		cycleChecker = other.cycleChecker;
+		canThrow = other.canThrow;
+		random = other.random;
+
+		// Clean up existing timers
+		delete waitTimer;
+		delete jumpTimer;
+		delete throwTimer;
+
+		waitTimer = other.waitTimer ? new CTimer(*other.waitTimer) : nullptr;
+		jumpTimer = other.jumpTimer ? new CTimer(*other.jumpTimer) : nullptr;
+		throwTimer = other.throwTimer ? new CTimer(*other.throwTimer) : nullptr;
+
+		// Don't copy boomerang
+		boomerang = nullptr;
+
+		state = other.state;
+		x = other.x;
+		y = other.y;
+		vx = other.vx;
+		vy = other.vy;
+		nx = other.nx;
+		ax = other.ax;
+		ay = other.ay;
+		isDeleted = other.isDeleted;
+
+		return *this;
+	}
 
 };
 
