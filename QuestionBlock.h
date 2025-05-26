@@ -31,7 +31,7 @@
 #define ITEM_SWITCH 4
 #define ITEM_BREAK_LEVEL_UP 5
 
-#define TIME_UP 80
+#define TIME_UP 130
 class CQuestionBlock : public CBaseBrick
 {	
 private:

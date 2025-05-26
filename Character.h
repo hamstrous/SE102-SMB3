@@ -22,6 +22,7 @@ public:
 		minVx = 0.0f;
 		minVy = 0.0f;
 	}
+	virtual ~CCharacter() {}	
 
 	// clone to make a copy so that we can reinit when enemy reenter the camera
 	virtual CCharacter* Clone() { return NULL; };
@@ -41,6 +42,7 @@ public:
 	virtual int IsBlocking() {
 		return 0;
 	}
+	virtual void Ending();
 
 	bool IsFrontRender() { return frontRender; }
 };

@@ -218,9 +218,9 @@ protected:
 	int pointsDisable = 0; //disable points in many frame
 
 	//Check to go down - up in pipe and distance, press
-	bool downPress, upPress = false;
-	bool goDownPipe, goUpPipe = false;
-	bool outDownPipe, outUpPipe = false;
+	bool downPress = false; bool upPress = false;
+	bool goDownPipe = false; bool goUpPipe = false;
+	bool outDownPipe = false; bool outUpPipe = false;
 	bool renderMarioInPipe = false;
 	float distancePipeGo = 0;
 	float distancePipeOut = 0;
@@ -392,9 +392,13 @@ public:
 			points[i]->SetSpeed(vx, vy);
 		}
 	}
-	void SetPressDown() { downPress = true; }
+	void SetPressDown() { if (!downPress) downPress = true; }
 	void SetPressUp() {  upPress = true; }
 	void ReleasePress() { downPress = upPress = false; }
+
+	bool ReturnDownPress() { return downPress; }
+	bool ReturnUpPress() { return upPress; }
+
 	bool ReturnRenderMarioInPipe() { return renderMarioInPipe; }
 
 	void GoingPipe(DWORD dt);

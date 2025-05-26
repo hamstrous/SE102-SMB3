@@ -172,6 +172,7 @@ void CKoopaRed::SetState(int state)
 		ay = 0;
 		break;
 	case KOOPA_STATE_FLYING:
+		vx = 0;
 		ay = 0;
 		vy = KOOPA_FLYING_SPEED;
 		fly_start = GetTickCount64();
