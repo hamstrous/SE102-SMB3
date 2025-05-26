@@ -17,6 +17,7 @@
 #include "Box.h"
 #include "Pipe.h"
 #include "InvisibleWall.h"
+#include "Plant.h"
 #include <unordered_set>
 #define BLOCK_PUSH_FACTOR 0.01f
 
@@ -1055,15 +1056,15 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 
 				if (IsOverlapping(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) {
 					isTouching = true;
+					CPlant* plant = dynamic_cast<CPlant*>(obj);
 					if (CCharacter* character = dynamic_cast<CCharacter*>(obj))
 					{
 						character->TailHit(x);
-						CGameFXManager::GetInstance()->AddGameFX((ml + mr) / 2, (mt + mb) / 2, 1);
-						/*CGameFX* timeUpEffect = new CGameFX(x,y,TYPE_TIMEUP);
-						timeUpEffect->SetState(STATE_TIME_MOVEUP);
-						LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
-						scene->AddObject(timeUpEffect);*/
-						if (!dynamic_cast<CKoopa*>(obj))
+
+						if (!dynamic_cast<CPlant*>(obj)) CGameFXManager::GetInstance()->AddGameFX((ml + mr) / 2, (mt + mb) / 2, 1);
+						else if (plant->ReturnTailEffect()) CGameFXManager::GetInstance()->AddGameFX((ml + mr) / 2, (mt + mb) / 2, 1);
+
+						if (!dynamic_cast<CKoopa*>(obj) && !dynamic_cast<CPlant*>(obj))
 						{
 							float enemy_x, enemy_y;
 							obj->GetPosition(enemy_x, enemy_y);
