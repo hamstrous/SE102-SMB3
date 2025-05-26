@@ -3,7 +3,7 @@
 
 #define CAMERA_SPEED 0.03f
 #define FIXED_BOX_SIZE 20.0f
-#define OUT_CAMERA 32.f
+#define OUT_CAMERA 48.f
 #define SHAKY_TIME 500 //ms
 
 #define CAMERA_STATE_FOLLOW 0

@@ -815,10 +815,10 @@ void CMario::Render()
 
 	animations->Get(currentAnimation)->Render(x, y);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 	for(int i=0;i<7;i++)
 	{
-		//points[i]->RenderBoundingBox();
+		points[i]->RenderBoundingBox();
 	}
 	
 	//DebugOutTitle(L"Coins: %d", coin);
@@ -967,6 +967,7 @@ void CMario::SetState(int state)
 void CMario::Acceleration(DWORD dt)
 {
 	//debug vx
+	DebugOutTitle(L"[INFO] Mario vx: %f\n", vx);
 	CGameData* gameData = CGameData::GetInstance();
 
 	float topSpeed = 0;
@@ -1036,7 +1037,7 @@ void CMario::Acceleration(DWORD dt)
 			if (!IsPMeterFull()) {
 				if (glideTimer->IsRunning()) {
 					if (abs(vx) <= MARIO_WALK_MAX_SPEED_X) topSpeed = MARIO_WALK_MAX_SPEED_X;
-					else topSpeed = MARIO_RUN_MAX_SPEED_X;
+					else topSpeed = MARIO_RUN_MAX_SPEED_X ;
 				}
 				else if((abs(jumpVx) <= MARIO_WALK_MAX_SPEED_X && runInput == 0)) topSpeed = MARIO_WALK_MAX_SPEED_X;
 				else topSpeed = MARIO_RUN_MAX_SPEED_X;
@@ -1054,7 +1055,7 @@ void CMario::Acceleration(DWORD dt)
 				}
 			}
 			else {
-				const float NEW_MARIO_RACCOON_MIDAIR_DECEL = 0.00005625f;
+				const float NEW_MARIO_RACCOON_MIDAIR_DECEL = 0.00006f;
 				const float NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE = 0.000675f; //0030
 				if (gameData->IsFlightMode()) {
 					if (vx < 0 && dirInput> 0 || vx > 0 && dirInput < 0) {
@@ -1071,7 +1072,10 @@ void CMario::Acceleration(DWORD dt)
 						vx += dirInput * NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE * dt;
 					}
 					else {
-						vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+						if(!glideTimer->IsRunning()) vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+						else {
+							if(abs(vx) > MARIO_WALK_MAX_SPEED_X) vx += -dirInput * NEW_MARIO_RACCOON_MIDAIR_DECEL * dt;
+						}
 					}
 
 					if (abs(vx) > topSpeed) {
