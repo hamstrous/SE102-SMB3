@@ -213,10 +213,13 @@ void CMario::GoingPipe(DWORD dt) {
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if(state == MARIO_STATE_DEBUG) return;
+
 	if (renderMarioInPipe) {
 		GoingPipe(dt);
 		return;
 	}
+	else canSit = false;
+
 	if (isOnMovingFlatform) {
 		y += SPEED_Y_MOVING_PLATFORM * dt;
 		isOnMovingFlatform = false;
@@ -444,6 +447,10 @@ void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
 	float pipeX, pipeY;
 	pipe->GetPosition(pipeX, pipeY);
 	tempState = state;
+
+	if ((pipe->IsGoInside() == 1) && y < pipeY && (pipeX) < x && x < (pipeX + PIPE_RANGE)) canSit = true;
+	
+
 	if ( (pipe->IsGoInside() == 1) && y < pipeY && downPress && (pipeX) < x && x < (pipeX + PIPE_RANGE) )
 	{	
 		renderMarioInPipe = true;

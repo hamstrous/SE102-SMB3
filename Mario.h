@@ -226,6 +226,7 @@ protected:
 	float distancePipeOut = 0;
 	int tempState;
 	int typePipe;
+	bool canSit = false;
 
 	//Moving flatform
 	bool isOnMovingFlatform = false;
@@ -400,6 +401,8 @@ public:
 	bool ReturnUpPress() { return upPress; }
 
 	bool ReturnRenderMarioInPipe() { return renderMarioInPipe; }
+
+	bool ReturnCanSit() { return canSit; }
 
 	void GoingPipe(DWORD dt);
 
