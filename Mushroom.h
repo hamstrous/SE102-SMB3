@@ -48,7 +48,6 @@ protected:
 	virtual void OnCollisionWithBaseBrick(LPCOLLISIONEVENT e);
 
 	int OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	void InitHorizontalSpeed(float speed, float awayMario = 1);
 
 	void Bouncing(float bx);
 public:
