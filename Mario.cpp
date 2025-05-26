@@ -188,6 +188,7 @@ void CMario::GoingPipe(DWORD dt) {
 	}
 	if (outDownPipe)
 	{	
+		scene->SetFadeoutAlpha();
 		if (typePipe == 1) camera->SetState(CAMERA_STATE_SECRET_ROOM); 
 		y += SPEED_IN_PIPE * dt;
 		if (y >= distancePipeOut)
@@ -198,7 +199,7 @@ void CMario::GoingPipe(DWORD dt) {
 	}
 	if (outUpPipe)
 	{	
-		
+		scene->SetFadeoutAlpha();
 		if (typePipe == 0) camera->SetState(CAMERA_STATE_FOLLOW);
 		else if (typePipe == 2) camera->SetState(CAMERA_STATE_1_4_END);
 		y -= SPEED_IN_PIPE * dt;
