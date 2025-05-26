@@ -46,14 +46,6 @@ public:
 	~CGameData() {
 		RemoveTimers();
 	}
-	void Reset()
-	{
-		life = 4;
-		pmeter = 0;
-		score = 0;
-		worldName = 1;
-		cards.clear();
-	}
 
 	void OnDeath();
 	void OnWin();
@@ -68,9 +60,14 @@ public:
 		score += s;
 	}
 
-	void AddCoin(int c)
+	void AddCoin(int c = 1)
 	{
 		coin += c;
+		if(coin >= 100)
+		{
+			coin = 0;
+			AddLife();
+		}
 	}
 
 	void AddLife(int l = 1)
