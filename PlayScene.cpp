@@ -497,6 +497,8 @@ void CPlayScene::Load()
 	deathTimer = new CTimer(DEAD_TIME);
 	winTimer = new CTimer(WIN_TIME);
 
+	CGameData::GetInstance()->CreateTimers();
+
 	DebugOut(L"[INFO] Start loading scene from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -718,20 +720,19 @@ void CPlayScene::Render()
 	for (auto i : firstRenderObjects)
 		i->Render();
 	if (mario->ReturnRenderMarioInPipe()) mario->Render();
-	if (mario->GetHolding() && !mario->IsBehind()) mario->Render();
 	for (auto i : secondRenderObjects)
 		if (i != player) i->Render();
+	if (mario->GetHolding() && !mario->IsBehind()) mario->Render();
 	for (auto i : thirdRenderObjects)
 		i->Render();
 	for (auto i : projectileRenderObjects)
 		i->Render();
-
+	
+	if (!mario->GetHolding() && !mario->ReturnRenderMarioInPipe() && !mario->IsBehind()) mario->Render();
 	// when die up render front
 	for (auto i : secondRenderObjects)
 		if (CCharacter * character = dynamic_cast<CCharacter*>(i)) 
 			if(character->IsFrontRender()) i->Render();
-
-	if (!mario->GetHolding() && !mario->ReturnRenderMarioInPipe() && !mario->IsBehind()) mario->Render();
 	
 	backgroundRenderObjects.clear();
 	firstRenderObjects.clear();

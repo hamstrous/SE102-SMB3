@@ -127,6 +127,7 @@ void CKoopaGreen::SetState(int state)
 			break;
 		}
 		vx = KOOPA_WALKING_SPEED * nx;
+		vy = 0;
 		// when start walking, walk toward mario
 		break;
 	case KOOPA_STATE_SHELL_MOVING:
@@ -427,6 +428,7 @@ void CKoopaGreen::ShellHit(int shellX)
 {	
 	/*if (state == KOOPA_STATE_SHELL_HELD_TAILHIT) return;*/
 	SetState(KOOPA_STATE_DIE_UP_ANI);
+	frontRender = true;
 	if (shellX == -1) vx = KOOPA_FLYING_SPEED_X;
 	else if (shellX == 1) vx = -KOOPA_FLYING_SPEED_X;
 	else if (shellX < x) vx = KOOPA_FLYING_SPEED_X;

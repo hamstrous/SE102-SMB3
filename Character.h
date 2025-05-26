@@ -45,5 +45,6 @@ public:
 	virtual void Ending();
 
 	bool IsFrontRender() { return frontRender; }
+	void SetFrontRender(bool front) { frontRender = front; }
 };
 

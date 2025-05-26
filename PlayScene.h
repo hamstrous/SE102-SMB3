@@ -128,8 +128,8 @@ public:
 		}
 
 		float w, h;
-		h = CGame::GetInstance()->GetBackBufferHeight();
-		w = CGame::GetInstance()->GetBackBufferWidth();
+		h = (float)CGame::GetInstance()->GetBackBufferHeight();
+		w = (float)CGame::GetInstance()->GetBackBufferWidth();
 
 		float x, y;
 		x = w / 2;

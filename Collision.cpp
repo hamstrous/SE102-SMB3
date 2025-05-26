@@ -48,6 +48,15 @@ static bool IsOverlapping(LPGAMEOBJECT a, LPGAMEOBJECT b, DWORD dt) {
 
 }
 
+// Check right now (no vx vy applied) did collision happened
+static bool IsOverlappingNow(LPGAMEOBJECT a, LPGAMEOBJECT b, DWORD dt) {
+	float al, at, ar, ab;
+	a->GetBoundingBox(al, at, ar, ab);
+	float bl, bt, br, bb;
+	b->GetBoundingBox(bl, bt, br, bb);
+	return IsOverlapping(al, at, ar, ab, bl, bt, br, bb);
+}
+
 static int StillOverlapping(float al, float at, float ar, float ab, float dx, float dy, float bl, float bt, float br, float bb) {
 	int curTouch = IsOverlapping(al, at, ar, ab, bl, bt, br, bb);
 	int nexTouch = IsOverlapping(al + dx, at + dy, ar + dx, ab + dy, bl, bt, br, bb);
@@ -830,16 +839,20 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 
 	int dirX = 0;
 	int dirY = 0;
+
+	const float X_PUSH_SPEED = 0.06f;
+	const float Y_PUSH_SPEED = 0.12f;
+
+	// not a good idea to change directly by frame, should use dt to account for the lag
 	if (pointsTouched[LEFTUP] || pointsTouched[LEFTDOWN]) {
-		dirX = 1;
+		dirX = X_PUSH_SPEED * dt;
 	}
 	else if (pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN]) {
-		dirX = -1;
+		dirX = -X_PUSH_SPEED * dt;
 	}
 
 	if ((pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT]) && !(pointsMaybeTouched[LEFTUP] || pointsMaybeTouched[LEFTDOWN] || pointsMaybeTouched[RIGHTUP] || pointsMaybeTouched[RIGHTDOWN])) {
-		dirY = -2;
-		DebugOut(L"[Mario] touched pushed %f\n", y);
+		dirY = -Y_PUSH_SPEED * dt;
 	}
 
 	x += dirX;
@@ -875,6 +888,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 		if (obj->IsBlocking()) continue;
 			
 		for (auto i : *points) pointsTouched.push_back(IsOverlapping(i, obj, dt));
+		for (auto i : *points) pointsMaybeTouched.push_back(IsOverlappingNow(i, obj, dt));
 
 		LPCOLLISIONEVENT e = NULL;
 
@@ -886,7 +900,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 				else ny = 1;
 				e = new CCollisionEvent(0, nx, ny, vx, vy, obj, objSrc);
 			}
-			else if (pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT])
+			else if ((pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT]) && !(pointsMaybeTouched[DOWNLEFT] || pointsMaybeTouched[DOWNRIGHT]))
 				e = new CCollisionEvent(0, 0, -1, vx, vy, obj, objSrc);
 		}
 		// not enemy
@@ -899,6 +913,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 			delete e;
 		}
 		pointsTouched.clear();
+		pointsMaybeTouched.clear();
 	}
 		
 	#pragma endregion

@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Timer.h"
-#define INVINCIBLE_TIME_FROM_TAIL_HIT 500 // 2 seconds
+#define INVINCIBLE_TIME_FROM_TAIL_HIT 500
 class CBaseBrick : public CGameObject
 {
 protected:

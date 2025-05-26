@@ -33,46 +33,22 @@ public:
 	bool flightMode = 0;
 	bool isPaused = 0;
 	ULONGLONG pauseStart = 0;
-	ULONGLONG levelTime = 300;
+	ULONGLONG levelTime = 300; // in second
 	int justWonCard = -1;
 	vector<int> cards;
 	MarioLevel marioLevel;
 
-	CGameData() : life(3), pmeter(0), score(0), worldName(1), coin(0) {
-		f24 = new CTimer(FRAME_24);
-		f16 = new CTimer(FRAME_16);
-		f8 = new CTimer(FRAME_8);
-		f255 = new CTimer(FRAME_255);
-		ptimer = f8;
-		countDown = new CTimer(300);
-		countDown->Start();
+	CGameData() : life(4), pmeter(0), score(0), worldName(1), coin(0) {
+		CreateTimers();
 		marioLevel = MarioLevel::SMALL;
 	}
 
 	~CGameData() {
-		if (f24 != NULL) delete f24;
-		if (f16 != NULL) delete f16;
-		if (f8 != NULL) delete f8;
-		if (f255 != NULL) delete f255;
-		if (countDown != NULL) delete countDown;
-	}
-	void Reset()
-	{
-		life = 4;
-		pmeter = 0;
-		score = 0;
-		worldName = 1;
-		cards.clear();
+		RemoveTimers();
 	}
 
 	void OnDeath();
 	void OnWin();
-
-	void NextLevel()
-	{
-		countDown->Reset();
-		pmeter = 0;
-	}
 
 	int GetRemainingTime();
 
@@ -84,9 +60,14 @@ public:
 		score += s;
 	}
 
-	void AddCoin(int c)
+	void AddCoin(int c = 1)
 	{
 		coin += c;
+		if(coin >= 100)
+		{
+			coin = 0;
+			AddLife();
+		}
 	}
 
 	void AddLife(int l = 1)
@@ -114,6 +95,10 @@ public:
 	{
 		timeToScore = true;
 	}
+
+	void CreateTimers();
+	void RemoveTimers();
+
 
 	static CGameData* GetInstance();
 };

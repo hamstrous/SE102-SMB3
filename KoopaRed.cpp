@@ -157,6 +157,7 @@ void CKoopaRed::SetState(int state)
 			break;
 		}
 		vx = KOOPA_WALKING_SPEED * nx;
+		vy = 0;
 		// when start walking, walk toward mario
 		break;
 	case KOOPA_STATE_SHELL_MOVING:
@@ -384,8 +385,6 @@ void CKoopaRed::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	
-
 	if (hasWing)
 		Flying();
 	else
@@ -447,6 +446,7 @@ void CKoopaRed::Release(bool dead = false)
 void CKoopaRed::ShellHit(int shellX)
 {
 	SetState(KOOPA_STATE_DIE_UP_ANI);
+	frontRender = true;
 	if (shellX == -1) vx = KOOPA_FLYING_SPEED_X;
 	else if (shellX == 1) vx = -KOOPA_FLYING_SPEED_X;
 	else if (shellX < x) vx = KOOPA_FLYING_SPEED_X;

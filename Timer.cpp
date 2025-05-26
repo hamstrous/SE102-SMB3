@@ -2,11 +2,11 @@
 
 #include "TimerManager.h"
 
-
+// timeStart == -1 <=> time start = largest value so comparision with -1 after overflow still work
 CTimer::CTimer(ULONGLONG timeSpan)
 {
 	this->timeSpan = timeSpan;
-	timeStart = -1;
+	timeStart = -1; // overflow to largest value
 	started = false;
 	AddToManager();
 }

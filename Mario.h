@@ -107,7 +107,7 @@ namespace std {
 #define MARIO_SMALL_ACCEL_FRIC_X	0.000140625f
 #define MARIO_BIG_ACCEL_FRIC_X	0.000196875f
 
-#define MARIO_ACCEL_MIDAIR_X	0.00021094f
+#define MARIO_ACCEL_MIDAIR_X	0.00020094f
 #define MARIO_DECEL_MIDAIR_X	0.00045f
 
 #define MARIO_RACCOON_MIDAIR_SPEED_LIMIT 0.08625f
@@ -195,9 +195,9 @@ class CMario : public CCharacter
 protected:
 
 	vector<pair<float, float>> PipeLocation{
-		{2335, 395},
-		{3022, 255},
-		{2207, 391}
+		{2335.f, 395.f},
+		{3022.f, 255.f},
+		{2207.f, 391.f}
 	}; // type % 2 == 0 ? OutDown : OutUp di len la so chan, di xuong la so le
 	static unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;
 	BOOLEAN isSitting;
