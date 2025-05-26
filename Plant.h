@@ -7,7 +7,7 @@
 #include "Smoke.h"
 
 #define PIRANHA_SPEED 0.04f
-#define PIRANHA_BBOX 44
+#define PIRANHA_BBOX 45
 #define PRIRANHA_BBOX_WIDTH 15
 #define PRIRANHA_BBOX_HEIGHT 32
 #define PRIRANHA_STOP_TIMEOUT 1700

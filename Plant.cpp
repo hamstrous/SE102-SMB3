@@ -38,6 +38,7 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (startY - y > PIRANHA_BBOX - size)
 		{
+			y = startY - (PIRANHA_BBOX - size);
 			SetState(STATE_PRIRANHA_STOP);
 		}
 	}
