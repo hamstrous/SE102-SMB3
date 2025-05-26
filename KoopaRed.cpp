@@ -384,8 +384,6 @@ void CKoopaRed::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	
-
 	if (hasWing)
 		Flying();
 	else

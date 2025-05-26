@@ -225,6 +225,6 @@ int WINAPI WinMain(
 	Run();
 	delete CGame::GetInstance();
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-	//_CrtDumpMemoryLeaks();
+	_CrtDumpMemoryLeaks();
 	return 0;
 }
