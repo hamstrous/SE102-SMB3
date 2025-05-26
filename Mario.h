@@ -219,8 +219,8 @@ protected:
 
 	//Check to go down - up in pipe and distance, press
 	bool downPress = false; bool upPress = false;
-	bool goDownPipe, goUpPipe = false;
-	bool outDownPipe, outUpPipe = false;
+	bool goDownPipe = false; bool goUpPipe = false;
+	bool outDownPipe = false; bool outUpPipe = false;
 	bool renderMarioInPipe = false;
 	float distancePipeGo = 0;
 	float distancePipeOut = 0;
