@@ -33,7 +33,7 @@ public:
 	bool flightMode = 0;
 	bool isPaused = 0;
 	ULONGLONG pauseStart = 0;
-	ULONGLONG levelTime = 300;
+	ULONGLONG levelTime = 300; // in second
 	int justWonCard = -1;
 	vector<int> cards;
 	MarioLevel marioLevel;
@@ -44,7 +44,7 @@ public:
 		f8 = new CTimer(FRAME_8);
 		f255 = new CTimer(FRAME_255);
 		ptimer = f8;
-		countDown = new CTimer(300);
+		countDown = new CTimer(300000);
 		countDown->Start();
 		marioLevel = MarioLevel::SMALL;
 	}
@@ -67,12 +67,6 @@ public:
 
 	void OnDeath();
 	void OnWin();
-
-	void NextLevel()
-	{
-		countDown->Reset();
-		pmeter = 0;
-	}
 
 	int GetRemainingTime();
 
