@@ -62,7 +62,6 @@ public:
 		SetState(MUSHROOM_STATE_WALKING_RIGHT);
 		startY = y;
 		this->dir = dir;
-		time_start = GetTickCount64();
 		killOffCam = true;
 	}
 	virtual void SetState(int state);
