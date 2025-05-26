@@ -39,22 +39,12 @@ public:
 	MarioLevel marioLevel;
 
 	CGameData() : life(4), pmeter(0), score(0), worldName(1), coin(0) {
-		f24 = new CTimer(FRAME_24);
-		f16 = new CTimer(FRAME_16);
-		f8 = new CTimer(FRAME_8);
-		f255 = new CTimer(FRAME_255);
-		ptimer = f8;
-		countDown = new CTimer(300000);
-		countDown->Start();
+		CreateTimers();
 		marioLevel = MarioLevel::SMALL;
 	}
 
 	~CGameData() {
-		if (f24 != NULL) delete f24;
-		if (f16 != NULL) delete f16;
-		if (f8 != NULL) delete f8;
-		if (f255 != NULL) delete f255;
-		if (countDown != NULL) delete countDown;
+		RemoveTimers();
 	}
 	void Reset()
 	{
@@ -108,6 +98,10 @@ public:
 	{
 		timeToScore = true;
 	}
+
+	void CreateTimers();
+	void RemoveTimers();
+
 
 	static CGameData* GetInstance();
 };

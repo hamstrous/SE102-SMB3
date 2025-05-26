@@ -447,6 +447,7 @@ void CKoopaRed::Release(bool dead = false)
 void CKoopaRed::ShellHit(int shellX)
 {
 	SetState(KOOPA_STATE_DIE_UP_ANI);
+	frontRender = true;
 	if (shellX == -1) vx = KOOPA_FLYING_SPEED_X;
 	else if (shellX == 1) vx = -KOOPA_FLYING_SPEED_X;
 	else if (shellX < x) vx = KOOPA_FLYING_SPEED_X;

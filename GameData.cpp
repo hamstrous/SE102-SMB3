@@ -20,11 +20,8 @@ void CGameData::OnDeath()
 	else {
 		CGame* game = CGame::GetInstance();
 	}
-	countDown->Start();
 	pmeter = 0;
-	ptimer->Reset();
-	ptimer = f8;
-	ptimer->Reset();
+	RemoveTimers();
 	marioLevel = MarioLevel::SMALL;
 }
 
@@ -33,11 +30,9 @@ void CGameData::OnWin()
 	CGame* game = CGame::GetInstance();
 	CMario* mario = (CMario*) dynamic_cast<CPlayScene*>(game->GetCurrentScene())->GetPlayer();
 	if (mario != NULL) marioLevel = mario->GetLevel();
-	countDown->Start();
+	
 	pmeter = 0;
-	ptimer->Reset();
-	ptimer = f8;
-	ptimer->Reset();
+	RemoveTimers();
 	if(justWonCard != -1) 
 		cards.push_back(justWonCard);
 	justWonCard = -1;
@@ -155,6 +150,27 @@ void CGameData::Update(DWORD dt)
 			}
 		}
 	}
+}
+
+void CGameData::CreateTimers()
+{
+	// re make timers
+	f24 = new CTimer(FRAME_24);
+	f16 = new CTimer(FRAME_16);
+	f8 = new CTimer(FRAME_8);
+	f255 = new CTimer(FRAME_255);
+	ptimer = f8;
+	countDown = new CTimer(300000);
+	countDown->Start();
+}
+
+void CGameData::RemoveTimers()
+{
+	if (f24 != NULL) delete f24;
+	if (f16 != NULL) delete f16;
+	if (f8 != NULL) delete f8;
+	if (f255 != NULL) delete f255;
+	if (countDown != NULL) delete countDown;
 }
 
 CGameData* CGameData::GetInstance()

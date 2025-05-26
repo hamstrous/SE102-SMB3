@@ -497,6 +497,8 @@ void CPlayScene::Load()
 	deathTimer = new CTimer(DEAD_TIME);
 	winTimer = new CTimer(WIN_TIME);
 
+	CGameData::GetInstance()->CreateTimers();
+
 	DebugOut(L"[INFO] Start loading scene from : %s \n", sceneFilePath);
 
 	ifstream f;
