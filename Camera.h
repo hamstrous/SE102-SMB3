@@ -31,7 +31,7 @@ class CCamera : public CGameObject
 	//const float levelHeight = 626;
 	float screenWidth = 320;
 	float screenHeight = 240;
-	int shakeStart = -1;
+	ULONGLONG shakeStart = -1;
 public:
 	CMario* GetMario();
 	

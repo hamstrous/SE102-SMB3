@@ -967,7 +967,7 @@ void CMario::SetState(int state)
 void CMario::Acceleration(DWORD dt)
 {
 	//debug vx
-	DebugOutTitle(L"[INFO] Mario vx: %f\n", vx);
+	//DebugOutTitle(L"[INFO] Mario vx: %f\n", vx);
 	CGameData* gameData = CGameData::GetInstance();
 
 	float topSpeed = 0;
@@ -1072,7 +1072,7 @@ void CMario::Acceleration(DWORD dt)
 						vx += dirInput * NEW_MARIO_RACCOON_MIDAIR_DECEL_OPPOSITE * dt;
 					}
 					else {
-						if(!glideTimer->IsRunning()) vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
+						if(!glideTimer->IsRunning() || vx < MARIO_WALK_MAX_SPEED_X) vx += dirInput * MARIO_ACCEL_MIDAIR_X * dt;
 						else {
 							if(abs(vx) > MARIO_WALK_MAX_SPEED_X) vx += -dirInput * NEW_MARIO_RACCOON_MIDAIR_DECEL * dt;
 						}
@@ -1170,11 +1170,13 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// move the shell, also move faster when mario turn
 
 	if (turnHoldTimer->IsRunning()) {
+		holdingShell->SetFrontRender(true);
 		ULONGLONG elapsed = turnHoldTimer->ElapsedTime();
 		int half = elapsed < TURN_TIME / 2 ? -1 : 1;
 		holdingShell->SetPosition(x + half * nx * smallOffX, y);
 	}
 	else {
+		holdingShell->SetFrontRender(false);
 		holdingShell->SetPosition(x + nx * bigOffX, y);
 	}
 	if (!canHold)
