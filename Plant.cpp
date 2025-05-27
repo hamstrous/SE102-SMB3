@@ -11,7 +11,6 @@
 
 void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {	
-	
 
 	if (state == STATE_PRIRANHA_STOP)
 	{
@@ -20,12 +19,19 @@ void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		right = left + PRIRANHA_BBOX_WIDTH;
 		bottom = top + PRIRANHA_BBOX_HEIGHT;
 	}
-	else
+	else if (state == STATE_PRIRANHA_DOWN)
 	{
 		left = x - PRIRANHA_BBOX_WIDTH / 2;
 		top = y - PRIRANHA_BBOX_HEIGHT / 2;
 		right = left + PRIRANHA_BBOX_WIDTH;
-		bottom = top + PRIRANHA_BBOX_HEIGHT + 100 + size;
+		bottom = top + PRIRANHA_BBOX_HEIGHT + 3;
+	}
+	else 
+	{
+		left = x - PRIRANHA_BBOX_WIDTH / 2;
+		top = y - PRIRANHA_BBOX_HEIGHT / 2;
+		right = left + PRIRANHA_BBOX_WIDTH;
+		bottom = top + PRIRANHA_BBOX_HEIGHT + 100;
 	}
 	//RenderBoundingBox();
 }

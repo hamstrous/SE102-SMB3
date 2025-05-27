@@ -21,6 +21,9 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
+
+	vy = min(vy, 0.2f);
+
 	if ( ( (state == GOOMBAFLY_STATE_DIE) || (state == GOOMBAFLY_STATE_DIE_UP))
 		&& (GetTickCount64() - die_start > GOOMBAFLY_DIE_TIMEOUT))
 	{

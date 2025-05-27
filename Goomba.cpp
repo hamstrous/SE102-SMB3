@@ -56,16 +56,15 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	pvx = vx;
 	vy += ay * dt;
 	vx += ax * dt;
+
+	vy = min(vy, 0.2f);
+
 	if ( ( (state==GOOMBA_STATE_DIE) || (state == GOOMBA_STATE_DIE_UP) )
 		&& (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT) )
 	{
 		isDeleted = true;
 		return;
 	}
-	/*if ((state == GOOMBA_STATE_DIE_UP) && (GetTickCount64() - die_up >= TIME_UP))
-	{
-		SetState(GOOMBA_STATE_DIE_DOWN);
-	}*/
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 	if (((state == GOOMBA_STATE_DIE) || (state == GOOMBA_STATE_DIE_UP))
