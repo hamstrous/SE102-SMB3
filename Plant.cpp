@@ -25,7 +25,7 @@ void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		left = x - PRIRANHA_BBOX_WIDTH / 2;
 		top = y - PRIRANHA_BBOX_HEIGHT / 2;
 		right = left + PRIRANHA_BBOX_WIDTH;
-		bottom = top + PRIRANHA_BBOX_HEIGHT + 100;
+		bottom = top + PRIRANHA_BBOX_HEIGHT + 100 + size;
 	}
 	//RenderBoundingBox();
 }
