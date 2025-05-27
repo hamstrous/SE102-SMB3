@@ -158,43 +158,45 @@ void CMario::GoingPipe(DWORD dt) {
 	SetState(MARIO_STATE_GOIN_PIPE);
 	if (goDownPipe)
 	{
-		y += SPEED_IN_PIPE * dt;
-		if (y >= distancePipeGo)
-		{
+		if (!pipeFadeoutStarted && y >= distancePipeGo - 25) {
 			scene->SetTimeFadeoutAlphaPipe();
+			pipeFadeoutStarted = true;
+		}
+		y += SPEED_IN_PIPE * dt;
+		if (y >= distancePipeGo )
+		{
 			goDownPipe = false;
 			if (typePipe % 2 == 0) outUpPipe = true;
 			else outDownPipe = true;
-			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 3 : PipeLocation[typePipe].second - 16;
+			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 38 : PipeLocation[typePipe].second - 44;
 			if (level != MarioLevel::SMALL)
-				distancePipeOut -= 4;
+				distancePipeOut -= 8;
 			scene->SetPlayerPosition(PipeLocation[typePipe].first, PipeLocation[typePipe].second);
+			pipeFadeoutStarted = false;
 		}
 		
 	}
 	if (goUpPipe)
 	{
+		if (!pipeFadeoutStarted && y <= distancePipeGo + 15) {
+			scene->SetTimeFadeoutAlphaPipe();
+			pipeFadeoutStarted = true;
+		}
 		y -= SPEED_IN_PIPE * dt;
 		if (y <= distancePipeGo)
 		{
-			scene->SetTimeFadeoutAlphaPipe();
 			goUpPipe = false;
 			if (typePipe % 2 == 0) outUpPipe = true;
 			else outDownPipe = true;
-			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 3 : PipeLocation[typePipe].second - 16;
+			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 38 : PipeLocation[typePipe].second - 44;
 			if (level != MarioLevel::SMALL)
-				distancePipeOut -= 4;
+				distancePipeOut -= 8;
 			scene->SetPlayerPosition(PipeLocation[typePipe].first, PipeLocation[typePipe].second);
-
+			pipeFadeoutStarted = false;
 		}
 	}
 	if (outDownPipe)
 	{	
-		if (!pipeFadeoutStarted) {
-			scene->SetFadeoutAlpha();
-			scene->SetTimeFadeoutAlphaPipe();
-			pipeFadeoutStarted = true;
-		}
 		if (typePipe == 1) camera->SetState(CAMERA_STATE_SECRET_ROOM); 
 		y += SPEED_IN_PIPE * dt;
 		if (y >= distancePipeOut)
@@ -206,11 +208,6 @@ void CMario::GoingPipe(DWORD dt) {
 	}
 	if (outUpPipe)
 	{	
-		if (!pipeFadeoutStarted) {
-			scene->SetFadeoutAlpha();
-			scene->SetTimeFadeoutAlphaPipe();
-			pipeFadeoutStarted = true;
-		}
 		if (typePipe == 0) camera->SetState(CAMERA_STATE_FOLLOW);
 		else if (typePipe == 2) camera->SetState(CAMERA_STATE_1_4_END);
 		y -= SPEED_IN_PIPE * dt;

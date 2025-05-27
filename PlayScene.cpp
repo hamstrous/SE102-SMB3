@@ -560,19 +560,19 @@ void CPlayScene::Update(DWORD dt)
 
 	CMario* mario = dynamic_cast<CMario*>(player);
 
-	if ((!winTimer->IsRunning() && !deathTimer->IsRunning()) && fadeoutAlpha > 0) {
+	if  ((!winTimer->IsRunning() && !deathTimer->IsRunning() && pipeFadeoutAlpha == -1) && fadeoutAlpha > 0) {
 		fadeoutAlpha -= dt * fadeoutSpeed;
 	}
 
-	if ((GetTickCount64() - pipeFadeoutAlpha <= 300) && fadeoutAlpha < 1.0f) {
+	/*if ((GetTickCount64() - pipeFadeoutAlpha <= FADE_TIME) && fadeoutAlpha < 1.0f) {
 		fadeoutAlpha += dt * fadeoutSpeed;
 		pipeFadeoutAlpha = -1;
-	}
+	}*/
 
-	if ((GetTickCount64() - pipeFadeoutAlpha <= 300) && fadeoutAlpha > 0) {
+	/*if ((GetTickCount64() - pipeFadeoutAlpha <= FADE_TIME) && fadeoutAlpha > 0) {
 		fadeoutAlpha -= dt * fadeoutSpeed; 
 		pipeFadeoutAlpha = -1;
-	}
+	}*/
 
 
 	if (mario->GetState() == MARIO_STATE_WIN && IsObjectOutOfCamera(mario)) {
@@ -672,9 +672,14 @@ void CPlayScene::Update(DWORD dt)
 		deathTimer->Reset();
 	}
 	
-	if(deathTimer->RemainingTime() <= FADE_TIME || winTimer->RemainingTime() <= FADE_TIME
-	|| GetTickCount64() - pipeFadeoutAlpha <= FADE_TIME)
+	if (deathTimer->RemainingTime() <= FADE_TIME || winTimer->RemainingTime() <= FADE_TIME
+		|| GetTickCount64() - pipeFadeoutAlpha <= FADE_TIME)
+	{
 		fadeoutAlpha += dt * fadeoutSpeed;
+	}
+
+	if (GetTickCount64() - pipeFadeoutAlpha > FADE_TIME) pipeFadeoutAlpha = -1;
+		
 
 }
 
