@@ -153,9 +153,6 @@ namespace std {
 
 #define MARIO_TURN_TIME 500
 
-#define GROUND_Y 160.0f
-
-
 #define MARIO_BIG_BBOX_WIDTH  14
 #define MARIO_BIG_BBOX_HEIGHT 26
 #define MARIO_BIG_SITTING_BBOX_WIDTH  13
@@ -167,7 +164,8 @@ namespace std {
 #define MARIO_SMALL_BBOX_HEIGHT 14
 
 // time = animation time (sum of all frame duration)
-#define ATTACK_TIME	210
+#define ATTACK_TIME	610
+#define COOLDOWN_TIME	400
 #define GLIDE_TIME	267
 #define FLY_TIME	267
 #define TURN_TIME	150
@@ -232,6 +230,7 @@ protected:
 
 	// timers for animations
 	CTimer *attackTimer, *glideTimer, *flyTimer, *untouchableTimer, *turnHoldTimer, *shellProtectTimer, *sittingTimer, *hideTimer;
+	bool brickHit = false;
 
 	int currentAnimation = -1;
 

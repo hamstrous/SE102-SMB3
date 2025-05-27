@@ -530,6 +530,7 @@ void CMario::Attacked() {
 void CMario::TailAttackInit()
 {
 	attackTimer->Start();
+	brickHit = false;
 	AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::TAIL_ATTACK_RIGHT : MarioAnimationType::TAIL_ATTACK_LEFT);
 }
 
@@ -537,18 +538,19 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!attackTimer->IsRunning()) return;
 	float elapsed = attackTimer->ElapsedTime();
+	if (elapsed >= ATTACK_TIME - COOLDOWN_TIME) return;
 	float l1, t1, r1, b1;
 	float l2, t2, r2, b2;
 	GetTailHitBox(l1, t1, r1, b1, l2, t2, r2, b2);
 	//left
 	if (nx < 0 && elapsed < ATTACK_TIME / 2
 		|| nx > 0 && (elapsed >= ATTACK_TIME / 2))
-			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, 0, 0, dt, coObjects, x, -nx, y);
+			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l1, t1, r1, b1, 0, 0, dt, coObjects, x, -nx, y, brickHit);
 
 	//right
 	if (nx > 0 && elapsed < ATTACK_TIME / 2
 		|| nx < 0 && (elapsed >= ATTACK_TIME / 2))
-			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, 0, 0, dt, coObjects, x, nx, y);
+			CCollision::GetInstance()->CheckTouchCharacterForTailAttack(l2, t2, r2, b2, 0, 0, dt, coObjects, x, nx, y, brickHit);
 }
 
 //Change animaion when mario kick the shell
