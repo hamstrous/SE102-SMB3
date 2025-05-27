@@ -25,7 +25,7 @@ void CKoopaGreen::OnCollisionWith(LPCOLLISIONEVENT e)
 			if (e->ny < 0)
 			{
 				vx = vx * 0.3f;
-				vy = - 0.3f * vy;
+				vy = -0.45f * vy;
 			}else if (e->ny > 0)
 			{
 				vy = 0.2f * vy;

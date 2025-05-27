@@ -57,7 +57,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	vy = min(vy, 0.2f);
+	vy = min(vy, 0.23f);
 
 	if ( (state==GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT) )
 	{
