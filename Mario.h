@@ -213,6 +213,8 @@ protected:
 	int jumpInput = 0; // 1: jump, 0: no jump
 	int runInput = 0; // 1: run, 0: no run
 
+
+
 	int pointsDisable = 0; //disable points in many frame
 
 	//Check to go down - up in pipe and distance, press
@@ -225,6 +227,7 @@ protected:
 	int tempState;
 	int typePipe;
 	bool canSit = false;
+	bool pipeFadeoutStarted = false;
 
 	//Moving flatform
 	bool isOnMovingFlatform = false;

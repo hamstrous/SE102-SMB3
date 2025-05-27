@@ -34,6 +34,8 @@ protected:
 	CTimer* deathTimer = NULL;
 	CTimer* winTimer = NULL;
 
+	ULONGLONG pipeFadeoutAlpha = -1;
+
 	float fadeoutAlpha = 1;
 
 	void _ParseSection_SPRITES(string line);
@@ -159,6 +161,10 @@ public:
 
 	void SetFadeoutAlpha() {
 		fadeoutAlpha = 1;
+	}
+
+	void SetTimeFadeoutAlphaPipe() {
+		pipeFadeoutAlpha = GetTickCount64();
 	}
 
 	bool IsBackgroundObject(LPGAMEOBJECT obj);

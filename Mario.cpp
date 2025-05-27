@@ -161,6 +161,7 @@ void CMario::GoingPipe(DWORD dt) {
 		y += SPEED_IN_PIPE * dt;
 		if (y >= distancePipeGo)
 		{
+			scene->SetTimeFadeoutAlphaPipe();
 			goDownPipe = false;
 			if (typePipe % 2 == 0) outUpPipe = true;
 			else outDownPipe = true;
@@ -176,6 +177,7 @@ void CMario::GoingPipe(DWORD dt) {
 		y -= SPEED_IN_PIPE * dt;
 		if (y <= distancePipeGo)
 		{
+			scene->SetTimeFadeoutAlphaPipe();
 			goUpPipe = false;
 			if (typePipe % 2 == 0) outUpPipe = true;
 			else outDownPipe = true;
@@ -188,18 +190,27 @@ void CMario::GoingPipe(DWORD dt) {
 	}
 	if (outDownPipe)
 	{	
-		scene->SetFadeoutAlpha();
+		if (!pipeFadeoutStarted) {
+			scene->SetFadeoutAlpha();
+			scene->SetTimeFadeoutAlphaPipe();
+			pipeFadeoutStarted = true;
+		}
 		if (typePipe == 1) camera->SetState(CAMERA_STATE_SECRET_ROOM); 
 		y += SPEED_IN_PIPE * dt;
 		if (y >= distancePipeOut)
 		{
 			outDownPipe = false;
 			renderMarioInPipe = false;
+			pipeFadeoutStarted = false;
 		}
 	}
 	if (outUpPipe)
 	{	
-		scene->SetFadeoutAlpha();
+		if (!pipeFadeoutStarted) {
+			scene->SetFadeoutAlpha();
+			scene->SetTimeFadeoutAlphaPipe();
+			pipeFadeoutStarted = true;
+		}
 		if (typePipe == 0) camera->SetState(CAMERA_STATE_FOLLOW);
 		else if (typePipe == 2) camera->SetState(CAMERA_STATE_1_4_END);
 		y -= SPEED_IN_PIPE * dt;
@@ -207,6 +218,7 @@ void CMario::GoingPipe(DWORD dt) {
 		{
 			outUpPipe = false;
 			renderMarioInPipe = false;
+			pipeFadeoutStarted = false;
 		}
 	}
 }
