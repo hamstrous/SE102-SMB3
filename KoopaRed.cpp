@@ -507,6 +507,7 @@ void CKoopaRed::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(this, dt, coObjects, true)) {
 			SetState(KOOPA_STATE_DIE_UP);
+			CScoreManager::GetInstance()->AddScore(x, y, SCORE_100);
 		}
 	}
 }
