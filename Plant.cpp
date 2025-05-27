@@ -4,6 +4,7 @@
 #include "Pipe.h"
 #include "PlayScene.h"
 #include "Fireball.h"
+#include "ScoreManager.h"
 #include <map>
 
 
@@ -12,7 +13,8 @@ void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	left = x - PRIRANHA_BBOX_WIDTH / 2;
 	top = y - PRIRANHA_BBOX_HEIGHT / 2;
 	right = left + PRIRANHA_BBOX_WIDTH;
-	bottom = top + PRIRANHA_BBOX_HEIGHT + size;
+	bottom = top + PRIRANHA_BBOX_HEIGHT + size + 100;
+	//RenderBoundingBox();
 }
 
 void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -32,10 +34,15 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else tailhit = false;
 	}
 
-	if ((state == STATE_PRIRANHA_UP) && startY - y > PIRANHA_BBOX - size )
+	if ((state == STATE_PRIRANHA_UP))
 	{
-		SetState(STATE_PRIRANHA_STOP);
+		if (startY - y > PIRANHA_BBOX - size)
+		{
+			y = startY - (PIRANHA_BBOX - size);
+			SetState(STATE_PRIRANHA_STOP);
+		}
 	}
+	
 
 	if ((state == STATE_PRIRANHA_STOP) && (GetTickCount64() - up_start > PRIRANHA_STOP_TIMEOUT))
 	{
@@ -69,28 +76,7 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
 }
-void CPlant::RenderBoundingBox()
-{
-	D3DXVECTOR3 p(x, y, 0);
-	RECT rect;
 
-	LPTEXTURE bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
-
-	float l, t, r, b;
-
-	GetBoundingBox(l, t, r, b);
-	rect.left = 0;
-	rect.top = 0;
-	rect.right = (int)r - (int)l;
-	rect.bottom = (int)b - (int)t;
-
-	float cx, cy;
-	CGame::GetInstance()->GetCamPos(cx, cy);
-
-	float yy = y - PIRANHA_BBOX / 2 + PRIRANHA_BBOX_HEIGHT / 2 + rect.right / 2;
-
-	CGame::GetInstance()->Draw(x - cx, yy - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
-}
 void CPlant::Render()
 {
 	if (GetIsPause()) return;
@@ -269,7 +255,15 @@ void CPlant::ShellHit(int shellX)
 
 void CPlant::TailHit(float x)
 {
-	SetState(STATE_PRIRANHA_SHELL_HIT);
+	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	float mx, my;
+	mario->GetPosition(mx, my);
+	
+	if (my <= y + 5) {
+		tailEffect = true;
+		SetState(STATE_PRIRANHA_SHELL_HIT);
+		CScoreManager::GetInstance()->AddScore(this->x, this->y, SCORE_100);
+	}
 }
 
 
