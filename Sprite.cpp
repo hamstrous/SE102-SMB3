@@ -54,8 +54,10 @@ void CSprite::DrawOnCamera(float x, float y)
 	g->GetCurrentScene()->GetCamera()->GetPosition(cx, cy);
 
 	D3DXMATRIX matTranslation;
+	x = (FLOAT)floor(x);
+	cx = (FLOAT)floor(cx);
 
-	D3DXMatrixTranslation(&matTranslation, (FLOAT)floor(x - cx + offsetX), (FLOAT)floor(g->GetBackBufferHeight() - y + cy - offsetY), 0.1f);
+	D3DXMatrixTranslation(&matTranslation, x - cx + offsetX, (FLOAT)floor(g->GetBackBufferHeight() - y + cy - offsetY), 0.1f);
 
 	this->sprite.matWorld = (this->matScaling * matTranslation);
 
