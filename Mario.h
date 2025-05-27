@@ -153,8 +153,8 @@ namespace std {
 
 #define MARIO_TURN_TIME 500
 
-#define MARIO_BIG_BBOX_WIDTH  14
-#define MARIO_BIG_BBOX_HEIGHT 26
+#define MARIO_BIG_BBOX_WIDTH  14.0f
+#define MARIO_BIG_BBOX_HEIGHT 26.0f
 #define MARIO_BIG_SITTING_BBOX_WIDTH  13
 #define MARIO_BIG_SITTING_BBOX_HEIGHT 16
 
@@ -224,6 +224,7 @@ protected:
 	float distancePipeOut = 0;
 	int tempState;
 	int typePipe;
+	bool canSit = false;
 
 	//Moving flatform
 	bool isOnMovingFlatform = false;
@@ -399,6 +400,8 @@ public:
 	bool ReturnUpPress() { return upPress; }
 
 	bool ReturnRenderMarioInPipe() { return renderMarioInPipe; }
+
+	bool ReturnCanSit() { return canSit; }
 
 	void GoingPipe(DWORD dt);
 

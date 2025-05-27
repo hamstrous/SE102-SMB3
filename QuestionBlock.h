@@ -23,7 +23,8 @@
 
 #define SPEED_QUESTION_BLOCK 0.14f
 #define DISTANCE_UP 16
-#define DISTANCE_SPAWN 5
+#define DISTANCE_SPAWN_MUSHROOM 8
+#define DISTANCE_SPAWN_LEAF 20
 
 #define ITEM_COIN 1
 #define ITEM_RED_MUSHROOM 2
@@ -58,7 +59,7 @@ public:
 	};
 	bool Hit() { return isUnbox; };
 	int IsBlocking() {
-		if (/*state == QUESTION_BLOCK_STATE_MOVEUP ||*/ state == QUESTION_BLOCK_STATE_MOVEDOWN && type >=3)
+		if (state == QUESTION_BLOCK_STATE_MOVEDOWN && type >=3)
 			return 0;
 		return 1;
 	};

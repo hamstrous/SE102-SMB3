@@ -7,9 +7,9 @@
 #include "Smoke.h"
 
 #define PIRANHA_SPEED 0.04f
-#define PIRANHA_BBOX 44
+#define PIRANHA_BBOX 45
 #define PRIRANHA_BBOX_WIDTH 15
-#define PRIRANHA_BBOX_HEIGHT 30
+#define PRIRANHA_BBOX_HEIGHT 32
 #define PRIRANHA_STOP_TIMEOUT 1700
 
 #define STATE_PRIRANHA_UP 100
@@ -38,6 +38,7 @@ class CPlant : public CCharacter
 {
 protected:
 	bool tailhit = false;
+	bool tailEffect = false;
 	ULONGLONG up_start;
 	float startY;
 	bool isFired;
@@ -51,7 +52,6 @@ protected:
 		else return 0; };
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
-	virtual void RenderBoundingBox();
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	virtual void OnCollisionWithCharacter(LPCOLLISIONEVENT e) {};
 
@@ -75,5 +75,6 @@ public:
 	virtual void ShellHit(int shellX);
 	virtual void TailHit(float x);
 	virtual void BlockHit() {};
+	bool ReturnTailEffect() { return tailEffect; }
 };
 

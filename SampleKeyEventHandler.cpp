@@ -131,7 +131,7 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	}
 
 	if (game->IsKeyDown(DIK_DOWN)) {
-		if (!mario->GetHolding() && !mario->IsSitting() && !mario->ReturnRenderMarioInPipe()) mario->SetState(MARIO_STATE_SIT);
+		if (!mario->GetHolding() && !mario->IsSitting() && !mario->ReturnRenderMarioInPipe() && !mario->ReturnCanSit()) mario->SetState(MARIO_STATE_SIT);
 		mario->SetPressDown();
 		
 	}
