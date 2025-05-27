@@ -841,7 +841,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	int dirX = 0;
 	int dirY = 0;
 
-	const float X_PUSH_SPEED = 0.06f;
+	const float X_PUSH_SPEED = 0.08f;
 	const float Y_PUSH_SPEED = 0.12f;
 
 	// not a good idea to change directly by frame, should use dt to account for the lag
@@ -1028,7 +1028,7 @@ bool CCollision::CheckTouchCharacterForShellHeldHit(LPGAMEOBJECT objSrc, DWORD d
 	}return isTouching;
 }
 
-bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, int nx, float y)
+bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, float mb, float vx, float vy, DWORD dt, vector<LPGAMEOBJECT>* coObjects, float x, int nx, float y, bool& brickHit)
 {
 	bool isTouching = false;
 	if (coObjects->size() > 0)
@@ -1073,8 +1073,9 @@ bool CCollision::CheckTouchCharacterForTailAttack(float ml, float mt, float mr, 
 					}
 					else if (CBaseBrick* brick = dynamic_cast<CBaseBrick*>(obj))
 					{
-						if (nx > 0)
+						if (nx > 0 && !brickHit)
 						{
+							brickHit = true;
 							brick->SideHit();
 							return isTouching;
 						}
