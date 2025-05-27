@@ -24,13 +24,17 @@ void CGoombaFly::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	vy = min(vy, 0.2f);
 
-	if ( ( (state == GOOMBAFLY_STATE_DIE) || (state == GOOMBAFLY_STATE_DIE_UP))
-		&& (GetTickCount64() - die_start > GOOMBAFLY_DIE_TIMEOUT))
+	if ( (state == GOOMBAFLY_STATE_DIE) && (GetTickCount64() - die_start > GOOMBAFLY_DIE_TIMEOUT))
 	{
 		isDeleted = true;
 		return;
 	}
-	//if (state == GOOMBAFLY_STATE_DIE_UP)  SetState(GOOMBAFLY_STATE_DIE);
+	else if ((state == GOOMBAFLY_STATE_DIE_UP) && (GetTickCount64() - die_start > GOOMBAFLY_DIE_UP_TIMEOUT))
+	{
+		isDeleted = true;
+		return;
+	}
+
 	if (state == GOOMBAFLY_STATE_WALKING && (GetTickCount64() - walking_start >= WALKING_TIME) && hasWing)
 	{	
 		if (GetTickCount64() - toward_mario_start >= TOWARD_MARIO_TIME)

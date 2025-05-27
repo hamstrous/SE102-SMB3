@@ -8,6 +8,7 @@
 #include "MovingPlatform.h"
 
 #define KOOPA_GRAVITY 0.001f
+#define KOOPA_GRAVITY_SHELL_MOVING 0.005f
 #define KOOPA_WALKING_SPEED 0.03f
 #define KOOPA_SHELL_SPEED 0.2f
 #define KOOPA_SHELL_COOLDOWN 7000
