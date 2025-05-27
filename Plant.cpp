@@ -11,10 +11,22 @@
 
 void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {	
-	left = x - PRIRANHA_BBOX_WIDTH / 2;
-	top = y - PRIRANHA_BBOX_HEIGHT / 2;
-	right = left + PRIRANHA_BBOX_WIDTH;
-	bottom = top + PRIRANHA_BBOX_HEIGHT + size + 100;
+	
+
+	if (state == STATE_PRIRANHA_STOP)
+	{
+		left = x - PRIRANHA_BBOX_WIDTH / 2;
+		top = y - PRIRANHA_BBOX_HEIGHT / 2;
+		right = left + PRIRANHA_BBOX_WIDTH;
+		bottom = top + PRIRANHA_BBOX_HEIGHT;
+	}
+	else
+	{
+		left = x - PRIRANHA_BBOX_WIDTH / 2;
+		top = y - PRIRANHA_BBOX_HEIGHT / 2;
+		right = left + PRIRANHA_BBOX_WIDTH;
+		bottom = top + PRIRANHA_BBOX_HEIGHT + 100;
+	}
 	//RenderBoundingBox();
 }
 
@@ -255,7 +267,7 @@ void CPlant::ShellHit(int shellX)
 	float kpx, kpy;
 	kp->GetPosition(kpx, kpy);
 
-	//if (kpy <= y + 5)/* SetState(STATE_PRIRANHA_SHELL_HIT);*/
+	SetState(STATE_PRIRANHA_SHELL_HIT);
 	
 }
 
@@ -264,8 +276,12 @@ void CPlant::TailHit(float x)
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	float mx, my;
 	mario->GetPosition(mx, my);
+
+	CKoopa* kp = (CKoopa*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene());
+	float kpx, kpy;
+	kp->GetPosition(kpx, kpy);
 	
-	if (my <= y + 5) {
+	if (my <= y + 5 && kpy <= y + 5) {
 		tailEffect = true;
 		SetState(STATE_PRIRANHA_SHELL_HIT);
 		CScoreManager::GetInstance()->AddScore(this->x, this->y, SCORE_100);
