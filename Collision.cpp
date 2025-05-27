@@ -961,7 +961,7 @@ bool CCollision::CheckTouchingSolid(float ml, float mt, float mr, float mb, floa
 	{
 		for (auto obj : *coObjects)
 		{
-			if (dynamic_cast<CBaseBrick*>(obj))
+			if (dynamic_cast<CBaseBrick*>(obj) || dynamic_cast<CPipe*>(obj))
 			{
 				float sl, st, sr, sb;
 				obj->GetBoundingBox(sl, st, sr, sb);

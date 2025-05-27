@@ -5,6 +5,7 @@
 #include "PlayScene.h"
 #include "Fireball.h"
 #include "ScoreManager.h"
+#include "Koopa.h"
 #include <map>
 
 
@@ -249,8 +250,13 @@ void CPlant::Stomped()
 }
 
 void CPlant::ShellHit(int shellX)
-{
-	SetState(STATE_PRIRANHA_SHELL_HIT);
+{	
+	CKoopa* kp = (CKoopa*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene());
+	float kpx, kpy;
+	kp->GetPosition(kpx, kpy);
+
+	//if (kpy <= y + 5)/* SetState(STATE_PRIRANHA_SHELL_HIT);*/
+	
 }
 
 void CPlant::TailHit(float x)
