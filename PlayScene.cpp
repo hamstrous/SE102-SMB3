@@ -564,17 +564,6 @@ void CPlayScene::Update(DWORD dt)
 		fadeoutAlpha -= dt * fadeoutSpeed;
 	}
 
-	/*if ((GetTickCount64() - pipeFadeoutAlpha <= FADE_TIME) && fadeoutAlpha < 1.0f) {
-		fadeoutAlpha += dt * fadeoutSpeed;
-		pipeFadeoutAlpha = -1;
-	}*/
-
-	/*if ((GetTickCount64() - pipeFadeoutAlpha <= FADE_TIME) && fadeoutAlpha > 0) {
-		fadeoutAlpha -= dt * fadeoutSpeed; 
-		pipeFadeoutAlpha = -1;
-	}*/
-
-
 	if (mario->GetState() == MARIO_STATE_WIN && IsObjectOutOfCamera(mario)) {
 		if (!winTimer->IsDone()) {
 			if (winTimer->IsRunning()) {
