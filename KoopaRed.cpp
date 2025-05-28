@@ -314,14 +314,22 @@ void CKoopaRed::GetBoundingBox(float& left, float& top, float& right, float& bot
 		right = left + KOOPA_BBOX_WIDTH;
 		bottom = top + KOOPA_BBOX_HEIGHT;
 	}
+	else if (state == KOOPA_STATE_SHELL_MOVING || state == KOOPA_STATE_SHELL_MOVING_TAILHIT)
+	{
+		left = x - KOOPA_BBOX_WIDTH / 2 + 3;
+		top = y - KOOPA_BBOX_HEIGHT_SHELL / 2;
+		right = left + KOOPA_BBOX_WIDTH - 3;
+		bottom = top + KOOPA_BBOX_HEIGHT_SHELL;
+	}
 	else {
 		left = x - KOOPA_BBOX_WIDTH / 2;
 		top = y - KOOPA_BBOX_HEIGHT_SHELL / 2;
-		right = left + KOOPA_BBOX_WIDTH ;
+		right = left + KOOPA_BBOX_WIDTH;
 		bottom = top + KOOPA_BBOX_HEIGHT_SHELL;
 	}
 	if (hit)
 		left = top = right = bottom = 0;
+	//RenderBoundingBox();
 }
 
 void CKoopaRed::OnNoCollision(DWORD dt)
