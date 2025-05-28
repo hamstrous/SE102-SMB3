@@ -679,17 +679,18 @@ void CMario::SetPointsPositionForNonBlockingOverlap()
 
 	}
 	else {
+		const float MARIO_BIG_Y_OFFSET = 3.0f;
 		points[0]->SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
 
 		points[1]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
 
-		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f, y);
+		points[2]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_Y_OFFSET);
 
 		points[3]->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_BBOX_HEIGHT / 2.f);
 
 		points[4]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_BBOX_HEIGHT / 2.f);
 
-		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y);
+		points[5]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y + MARIO_BIG_Y_OFFSET);
 
 		points[6]->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2.f, y - MARIO_BIG_BBOX_HEIGHT / 2.f);
 	}
