@@ -86,7 +86,7 @@ void CCamera::UpdateMoving(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		SetState(CAMERA_STATE_FOLLOW);
 	}
-	Clamp(x, 0, levelWidth - screenWidth);
+	Clamp(x, 0, levelWidth3 - screenWidth);
 	Clamp(y, 0, levelHeight - screenHeight);
 }
 
