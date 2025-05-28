@@ -526,6 +526,21 @@ void CCollision::ProcessOverlap(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJE
 	coEvents.clear();
 }
 
+void CCollision::ProcessOverlapNow(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	vector<LPCOLLISIONEVENT> coEvents;
+	for (auto i : *coObjects) {
+		if (objSrc == i) continue;
+		if (IsOverlappingNow(objSrc, i, dt)) {
+			LPCOLLISIONEVENT e = new CCollisionEvent(0, 0, 0, 0, 0, i, objSrc);
+			coEvents.push_back(e);
+			objSrc->OnOverlapWith(e);
+		}
+	}
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	coEvents.clear();
+}
+
 void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points, vector<LPGAMEOBJECT>* coObjects, DWORD dt)
 {
 	if (!objSrc->IsCollidable()) {
