@@ -25,19 +25,8 @@ void CMovingPlatform::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CMovingPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	float cx, cy;
-	CGame::GetInstance()->GetCamPos(cx, cy);
-
-	float camWidth = CGame::GetInstance()->GetScreenWidth();
-	float camHeight = CGame::GetInstance()->GetScreenHeight();
-
 	if (!isActive) x += SPEED_X_MOVING_PLATFORM * dt;
 	if (isActive) y += SPEED_Y_MOVING_PLATFORM * dt;
-
-	/*if (isActive && (GetTickCount64() - delayTime >= TIME_DELAY) && noDelay) {
-		y += SPEED_Y_MOVING_PLATFORM * dt;
-		noDelay = false;
-	}*/
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
@@ -48,8 +37,7 @@ void CMovingPlatform::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<CMario*>(e->obj) && e->ny > 0)
 	{
 		isActive = true;
-		/*delayTime = GetTickCount64();
-		noDelay = true;*/
 	}
+	if (dynamic_cast<CMovingPlatform*>(e->obj)) noKoopa = true;
 	if (dynamic_cast<CAbyss*>(e->obj)) isDeleted = true;
 }

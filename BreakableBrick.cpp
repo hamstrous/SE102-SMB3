@@ -31,7 +31,7 @@ void CBreakableBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (time_start != -1 && GetTickCount64() - time_start >= 150)
 	{
-		time_start = -1;
+		//time_start = -1;
 		//bouncing = false;
 		if (type != 0 && unbox == true) {
 			unbox2 = true;
@@ -110,7 +110,7 @@ void CBreakableBrick::BottomHit()
 		AddScoreBrick();
 		bouncing = true;
 		if (cx + 30 >= x) unbox = true;
-		time_start = GetTickCount64();
+		//time_start = GetTickCount64();
 	}
 }
 

@@ -18,6 +18,7 @@
 class CMovingPlatform : public CGameObject
 {
 protected:
+	bool noKoopa = false;
 	bool isActive = false;
 	ULONGLONG delayTime;
 	bool noDelay = false;
@@ -25,8 +26,13 @@ public:
 	CMovingPlatform(float x, float y) :CGameObject(x, y) {}
 	void Render();
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
-	int IsBlocking() { return 1; }
-	int IsCollidable() { return 1; }
+	int IsBlocking() { 
+		if (noKoopa) return 0;
+		else return 1; }
+	int IsCollidable() {
+		if (noKoopa) return 0;
+		else return 1;
+	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 };
