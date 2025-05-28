@@ -961,7 +961,7 @@ bool CCollision::CheckTouchingSolid(float ml, float mt, float mr, float mb, floa
 	{
 		for (auto obj : *coObjects)
 		{
-			if (dynamic_cast<CBaseBrick*>(obj))
+			if (dynamic_cast<CBaseBrick*>(obj) || dynamic_cast<CPipe*>(obj))
 			{
 				float sl, st, sr, sb;
 				obj->GetBoundingBox(sl, st, sr, sb);
@@ -1021,7 +1021,12 @@ bool CCollision::CheckTouchCharacterForShellHeldHit(LPGAMEOBJECT objSrc, DWORD d
 				if (IsOverlapping(ml + dx, mt + dy, mr + dx, mb + dy, sl, st, sr, sb)) {
 					isTouching = true;
 					DebugObjectType(obj);
-					character->ShellHeldHit((ml + mr) / 2);
+					if (CPlant* plant = dynamic_cast<CPlant*>(obj)) {
+						plant->ShellHit((ml + mr) / 2);
+					}
+					else if (CCharacter* character = dynamic_cast<CCharacter*>(obj)) {
+						character->ShellHeldHit((ml + mr) / 2);
+					}
 				}
 			}
 		}

@@ -7,6 +7,9 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vx += 0;
 	vy += BOOMERANG_BRO_GRAVITY * dt;
+
+	vy = min(vy, 0.2f);
+
 	float playerX, playerY;
 	GetPlayerPosition(playerX, playerY);
 	if (!IsDead()) {

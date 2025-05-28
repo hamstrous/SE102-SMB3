@@ -181,8 +181,8 @@ namespace std {
 #define SPEED_IN_PIPE 0.03f
 
 #define PIPE_RANGE 14
-#define DISTANCE_GO_DOWN_PIPE 10
-#define DISTANCE_GO_UP_PIPE 6
+#define DISTANCE_GO_DOWN_PIPE 30
+#define DISTANCE_GO_UP_PIPE 11
 
 const float MARIO_JUMP_SPEED[4] = { 0.20625f, 0.21375f, 0.22125f, 0.23625f };
 const float MARIO_JUMP_SPEED_CHECK_X[3] = { 0.06f, 0.12f, 0.18f};
@@ -193,9 +193,9 @@ class CMario : public CCharacter
 protected:
 
 	vector<pair<float, float>> PipeLocation{
-		{2335.f, 395.f},
-		{3022.f, 255.f},
-		{2207.f, 391.f}
+		{2335.f, 415.f},
+		{3022.f, 230.f},
+		{2207.f, 420.f}
 	}; // type % 2 == 0 ? OutDown : OutUp di len la so chan, di xuong la so le
 	static unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;
 	BOOLEAN isSitting;
@@ -213,6 +213,8 @@ protected:
 	int jumpInput = 0; // 1: jump, 0: no jump
 	int runInput = 0; // 1: run, 0: no run
 
+
+
 	int pointsDisable = 0; //disable points in many frame
 
 	//Check to go down - up in pipe and distance, press
@@ -225,6 +227,7 @@ protected:
 	int tempState;
 	int typePipe;
 	bool canSit = false;
+	bool pipeFadeoutStarted = false;
 
 	//Moving flatform
 	bool isOnMovingFlatform = false;

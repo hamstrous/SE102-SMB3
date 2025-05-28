@@ -37,7 +37,7 @@ void CKoopaRed::OnCollisionWith(LPCOLLISIONEVENT e)
 			if (e->ny < 0)
 			{
 				vx = vx * 0.3f;
-				vy = - 0.3f * vy;
+				vy = - 0.45f * vy;
 			}
 			else if (e->ny > 0)
 			{
@@ -385,6 +385,8 @@ void CKoopaRed::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	vy = min(vy, 0.2f);
+
 	if (hasWing)
 		Flying();
 	else
@@ -495,6 +497,7 @@ void CKoopaRed::ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchingSolid(ml, mt, mr, mb, vx, vy, dt, coObjects)) {
 			SetState(KOOPA_STATE_DIE_UP);
+			CScoreManager::GetInstance()->AddScore(x, y, SCORE_100);
 		}
 	}
 }
@@ -506,6 +509,7 @@ void CKoopaRed::ShellHeldTouch(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		GetBoundingBox(ml, mt, mr, mb);
 		if (CCollision::GetInstance()->CheckTouchCharacterForShellHeldHit(this, dt, coObjects, true)) {
 			SetState(KOOPA_STATE_DIE_UP);
+			CScoreManager::GetInstance()->AddScore(x, y, SCORE_100);
 		}
 	}
 }

@@ -560,7 +560,7 @@ void CPlayScene::Update(DWORD dt)
 
 	CMario* mario = dynamic_cast<CMario*>(player);
 
-	if ((!winTimer->IsRunning() && !deathTimer->IsRunning()) && fadeoutAlpha > 0) {
+	if  ((!winTimer->IsRunning() && !deathTimer->IsRunning() && pipeFadeoutAlpha == -1) && fadeoutAlpha > 0) {
 		fadeoutAlpha -= dt * fadeoutSpeed;
 	}
 
@@ -661,8 +661,14 @@ void CPlayScene::Update(DWORD dt)
 		deathTimer->Reset();
 	}
 	
-	if(deathTimer->RemainingTime() <= FADE_TIME || winTimer->RemainingTime() <= FADE_TIME)
+	if (deathTimer->RemainingTime() <= FADE_TIME || winTimer->RemainingTime() <= FADE_TIME
+		|| GetTickCount64() - pipeFadeoutAlpha <= FADE_TIME)
+	{
 		fadeoutAlpha += dt * fadeoutSpeed;
+	}
+
+	if (GetTickCount64() - pipeFadeoutAlpha > FADE_TIME) pipeFadeoutAlpha = -1;
+		
 
 }
 

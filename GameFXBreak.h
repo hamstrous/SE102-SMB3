@@ -2,15 +2,15 @@
 #include "GameFX.h"
 
 #define GRAVITY 0.002f
-#define SPEED_X 0.08f
+#define SPEED_X 0.1f
 #define SPEED_X2 0.1f
-#define SPEED_X3 0.03f
+#define SPEED_X3 0.05f
 #define SPEED_Y 0.15f
 
 #define LOW_JUMP 0.12f
 #define HIGH_JUMP 0.15f
-#define DOWN_LOW_JUMP 0.1f
-#define DOWN_HIG_JUMP 0.13
+#define DOWN_LOW_JUMP 0.15f
+#define DOWN_HIG_JUMP 0.18f
 
 #define STATE_LOW_JUMP 400
 #define STATE_HIGH_JUMP 500
