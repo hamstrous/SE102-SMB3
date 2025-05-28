@@ -474,7 +474,7 @@ void CKoopaGreen::ThrownInBlock(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (IsMoving()) {
 		float ml, mt, mr, mb;
 		GetBoundingBox(ml, mt, mr, mb);
-		if (CCollision::GetInstance()->CheckTouchingSolid(ml, mt, mr, mb, vx, vy, dt, coObjects)) {
+		if (CCollision::GetInstance()->CheckTouchingSolid(this, dt, coObjects)) {
 			SetState(KOOPA_STATE_DIE_UP);
 			DebugOut(L"[INFO] KoopaGreen::throwinblock\n");
 			CScoreManager::GetInstance()->AddScore(x, y, 100);
