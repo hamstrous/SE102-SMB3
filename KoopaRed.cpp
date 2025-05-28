@@ -162,11 +162,13 @@ void CKoopaRed::SetState(int state)
 		break;
 	case KOOPA_STATE_SHELL_MOVING:
 	case KOOPA_STATE_SHELL_MOVING_TAILHIT:
+		//ay = KOOPA_GRAVITY_SHELL_MOVING
 		isIdle = false;
-		InitHorizontalSpeedBasedOnMario(KOOPA_SHELL_SPEED); // when kicked, move away from mario
+		InitHorizontalSpeedBasedOnMario(KOOPA_SHELL_SPEED ); // when kicked, move away from mario
 		break;
 	case KOOPA_STATE_SHELL_HELD:
 	case KOOPA_STATE_SHELL_HELD_TAILHIT:
+		//ay = KOOPA_GRAVITY_SHELL_MOVING;
 		shell_start += passedShellTime;
 		vx = 0;
 		vy = 0;
@@ -315,7 +317,7 @@ void CKoopaRed::GetBoundingBox(float& left, float& top, float& right, float& bot
 	else {
 		left = x - KOOPA_BBOX_WIDTH / 2;
 		top = y - KOOPA_BBOX_HEIGHT_SHELL / 2;
-		right = left + KOOPA_BBOX_WIDTH;
+		right = left + KOOPA_BBOX_WIDTH ;
 		bottom = top + KOOPA_BBOX_HEIGHT_SHELL;
 	}
 	if (hit)
