@@ -852,7 +852,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 		dirX = -X_PUSH_SPEED * dt;
 	}
 
-	if ((pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT]) && !(pointsMaybeTouched[LEFTUP] || pointsMaybeTouched[LEFTDOWN] || pointsMaybeTouched[RIGHTUP] || pointsMaybeTouched[RIGHTDOWN])) {
+	if ((pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT]) && !(pointsMaybeTouched[LEFTDOWN] || pointsMaybeTouched[RIGHTDOWN])) {
 		dirY = -Y_PUSH_SPEED * dt;
 	}
 
