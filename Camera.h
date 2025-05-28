@@ -27,6 +27,7 @@ class CCamera : public CGameObject
 	float levelWidth = 2816;
 	float levelHeight = 626;
 	float levelWidth2 = 2575;
+	float levelWidth3 = 2050; // for 1-4 end
 	//const float levelWidth = 3500; //2816 - 3500
 	//const float levelHeight = 626;
 	float screenWidth = 320;

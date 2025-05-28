@@ -108,6 +108,7 @@ void CBreakableBrick::BottomHit()
 	}
 	if (type == TYPE_ADDSCORE && !unbox2){
 		AddScoreBrick();
+		bouncing = true;
 		if (cx + 30 >= x) unbox = true;
 		time_start = GetTickCount64();
 	}
@@ -120,9 +121,4 @@ void CBreakableBrick::AddScoreBrick()
 	coin->SetState(COIN_STATE_MOVEUP);
 	scene->AddObject(coin);
 	CGameData::GetInstance()->AddCoin(1);
-	if (!bouncing) {
-		bouncing = true;
-		time_start = GetTickCount64();
-	}
-	time_start = GetTickCount64();
 }
