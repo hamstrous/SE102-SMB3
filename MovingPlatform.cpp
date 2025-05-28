@@ -38,6 +38,5 @@ void CMovingPlatform::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		isActive = true;
 	}
-	if (dynamic_cast<CMovingPlatform*>(e->obj)) noKoopa = true;
 	if (dynamic_cast<CAbyss*>(e->obj)) isDeleted = true;
 }
