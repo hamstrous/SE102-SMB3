@@ -544,9 +544,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	vector<LPCOLLISIONEVENT> coEventsHorizontal;
 	vector<LPCOLLISIONEVENT> coEvents;
 	LPCOLLISIONEVENT colX = NULL;
-	LPCOLLISIONEVENT _colX = NULL;
 	LPCOLLISIONEVENT colY = NULL;
-	LPCOLLISIONEVENT _colY = NULL;
 
 	coEvents.clear();
 	coEventsVertical.clear();
@@ -888,7 +886,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 
 		if (obj->IsBlocking()) continue;
 			
-		for (auto i : *points) pointsTouched.push_back(IsOverlapping(i, obj, dt));
+		for (auto i : *points) pointsTouched.push_back(IsOverlappingNow(i, obj, dt));
 		for (auto i : *points) pointsMaybeTouched.push_back(IsOverlappingNow(i, obj, dt));
 
 		LPCOLLISIONEVENT e = NULL;
