@@ -722,6 +722,7 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 		LPCOLLISIONEVENT e = coEvents[i];
 		if (marked.find(e->obj) != marked.end()) continue;
 		if (e->isDeleted) continue;
+		if (dynamic_cast<CCharacter*>(e->obj) && e->ny != -1) continue; //skip collision with enemies when not stomping, overlap for hit
 		//if (e->obj->IsBlocking()) continue;  // blocking collisions were handled already, skip them
 		objSrc->OnCollisionWith(e);
 		marked.insert(e->obj);
@@ -899,8 +900,8 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 				else ny = 1;
 				e = new CCollisionEvent(0, nx, ny, vx, vy, obj, objSrc);
 			}
-			else if ((pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT]) && !(pointsMaybeTouched[DOWNLEFT] || pointsMaybeTouched[DOWNRIGHT]))
-				e = new CCollisionEvent(0, 0, -1, vx, vy, obj, objSrc);
+			//else if (((pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT])) && !(pointsMaybeTouched[LEFTDOWN] || pointsMaybeTouched[RIGHTDOWN]) || pointsMaybeTouched[LEFTUP] || pointsMaybeTouched[RIGHTUP])
+			//	e = new CCollisionEvent(0, 0, -1, vx, vy, obj, objSrc);
 		}
 		// not enemy
 		else if (pointsTouched[TOP] || pointsTouched[LEFTUP] || pointsTouched[LEFTDOWN] || pointsTouched[RIGHTUP] || pointsTouched[RIGHTDOWN] || pointsTouched[DOWNLEFT] || pointsTouched[DOWNRIGHT])
