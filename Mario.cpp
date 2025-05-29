@@ -303,8 +303,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	if (dynamic_cast<CCharacter*>(e->obj))
 		OnCollisionWithCharacter(e);
-	else if (dynamic_cast<CBreakableBrick*>(e->obj))
-		OnCollisionWithBreakableBrick(e);
+	/*else if (dynamic_cast<CBreakableBrick*>(e->obj))
+		OnCollisionWithBreakableBrick(e);*/
 	else if (dynamic_cast<CBaseBrick*>(e->obj))
 		OnCollisionWithBaseBrick(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
@@ -394,23 +394,13 @@ void CMario::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 	CBaseBrick* brick = dynamic_cast<CBaseBrick*>(e->obj);
 	if (e->ny > 0)
 	{
+		if (brick->GetBouncing()) vy = 0.03;
 		brick->BottomHit();
 	}
 }
 
 void CMario::OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e)
 {
-	CBaseBrick* brick = dynamic_cast<CBaseBrick*>(e->obj);
-	if (e->ny > 0)
-	{
-		brick->BottomHit();
-	}
-
-	if (!CGame::GetInstance()->GetChangeBricktoCoin()) return;
-	e->obj->Delete();
-	CGameData::GetInstance()->AddCoin(1);
-	CGameData::GetInstance()->AddScore(50);
-	
 }
 
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
