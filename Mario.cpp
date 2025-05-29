@@ -168,9 +168,9 @@ void CMario::GoingPipe(DWORD dt) {
 			goDownPipe = false;
 			if (typePipe % 2 == 0) outUpPipe = true;
 			else outDownPipe = true;
-			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 38 : PipeLocation[typePipe].second - 44;
+			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 38 : PipeLocation[typePipe].second - 31;
 			if (level != MarioLevel::SMALL)
-				distancePipeOut -= 8;
+				distancePipeOut -= 6;
 			scene->SetPlayerPosition(PipeLocation[typePipe].first, PipeLocation[typePipe].second);
 			pipeFadeoutStarted = false;
 		}
@@ -188,9 +188,9 @@ void CMario::GoingPipe(DWORD dt) {
 			goUpPipe = false;
 			if (typePipe % 2 == 0) outUpPipe = true;
 			else outDownPipe = true;
-			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 38 : PipeLocation[typePipe].second - 44;
+			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 38 : PipeLocation[typePipe].second - 31;
 			if (level != MarioLevel::SMALL)
-				distancePipeOut -= 8;
+				distancePipeOut -= 6;
 			scene->SetPlayerPosition(PipeLocation[typePipe].first, PipeLocation[typePipe].second);
 			pipeFadeoutStarted = false;
 		}

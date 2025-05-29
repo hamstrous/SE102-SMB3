@@ -76,5 +76,9 @@ public:
 	virtual void TailHit(float x);
 	virtual void BlockHit() {};
 	bool ReturnTailEffect() { return tailEffect; }
+
+	int GetType() {
+		return 1;
+	}
 };
 

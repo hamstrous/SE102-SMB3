@@ -685,21 +685,23 @@ void CPlayScene::Render()
 			|| dynamic_cast<CCloudEllipse*>(i)
 			|| dynamic_cast<CMountain*>(i)
 			|| dynamic_cast<CCloud*>(i)
+
+			
 			|| dynamic_cast<CDecoration*>(i))
 
 			firstRenderObjects.push_back(i);
 		
 		if(dynamic_cast<CCoin*>(i)
 			|| dynamic_cast<CMushroom*>(i)
+			|| (dynamic_cast<CCharacter*>(i) && dynamic_cast<CPlant*>(i))
 			|| dynamic_cast<CPrize*>(i))
 			secondRenderObjects.push_back(i);
 
-		if (dynamic_cast<CCharacter*>(i)
+		if( (dynamic_cast<CCharacter*>(i) && !dynamic_cast<CPlant*>(i))
 			|| dynamic_cast<CFloor*>(i)
 			|| dynamic_cast<CBaseBrick*>(i)
 			|| dynamic_cast<CCharacter*>(i)
-			|| dynamic_cast<CSwitch*>(i)
-			/*|| dynamic_cast<CPipe*>(i)*/)
+			|| dynamic_cast<CSwitch*>(i))
 			thirdRenderObjects.push_back(i);
 
 		if (dynamic_cast<CFireball*>(i)
