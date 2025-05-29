@@ -468,7 +468,7 @@ void CKoopaGreen::Touched()
 	}
 	else if (IsIdle()) {
 		Kicked();
-		mario->KickedShell();
+		mario->KickedShell(x);
 	}
 }
 

@@ -689,14 +689,14 @@ void CPlayScene::Render()
 
 			firstRenderObjects.push_back(i);
 		
-		if(dynamic_cast<CCharacter*>(i)
-			|| dynamic_cast<CCoin*>(i)
+		if( dynamic_cast<CCoin*>(i)
 			|| dynamic_cast<CMushroom*>(i)
 			|| dynamic_cast<CPrize*>(i))
 			secondRenderObjects.push_back(i);
 
-		if (dynamic_cast<CFloor*>(i)
+		if ((dynamic_cast<CFloor*>(i) && ((CFloor*)i)->GetType() != 1)
 			|| dynamic_cast<CBaseBrick*>(i)
+			|| dynamic_cast<CCharacter*>(i)
 			|| dynamic_cast<CSwitch*>(i)
 			/*|| dynamic_cast<CPipe*>(i)*/)
 			thirdRenderObjects.push_back(i);

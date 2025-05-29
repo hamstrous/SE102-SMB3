@@ -351,7 +351,7 @@ public:
 	void TailAttackInit();
 	void TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
-	void KickedShell();
+	void KickedShell(float kx);
 
 	void SpecialPressed();
 	void JumpPressed();

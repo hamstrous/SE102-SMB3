@@ -29,7 +29,6 @@ int CKoopaRed::OnFloor(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopaRed::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CMovingPlatform*>(e->obj)) return;
 	if (e->obj->IsBlocking()) {
 		
 		if (state == KOOPA_STATE_TAILHIT)
@@ -492,7 +491,7 @@ void CKoopaRed::Touched()
 	}
 	else if (IsIdle()) {
 		Kicked();
-		mario->KickedShell();
+		mario->KickedShell(x);
 	}
 }
 
