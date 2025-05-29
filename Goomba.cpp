@@ -71,6 +71,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessOverlapNow(this, dt, coObjects);
 }
 
 

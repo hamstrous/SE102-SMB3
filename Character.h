@@ -44,6 +44,8 @@ public:
 	}
 	virtual void Ending();
 
+	void OnOverlapWith(LPCOLLISIONEVENT e);
+
 	bool IsFrontRender() { return frontRender; }
 	void SetFrontRender(bool front) { frontRender = front; }
 };

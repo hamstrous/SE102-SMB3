@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "Koopa.h"
 #include "PlayScene.h"
 #include "Mario.h"
 #include "Smoke.h"
@@ -18,4 +19,14 @@ void CCharacter::Ending()
 	((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->AddObject(smoke);
 	CScoreManager::GetInstance()->AddScore(x, y, SCORE_1000);
 	isDeleted = true;
+}
+
+void CCharacter::OnOverlapWith(LPCOLLISIONEVENT e)
+{
+	{
+		if (CKoopa *koopa = dynamic_cast<CKoopa*>(e->obj))
+		{
+			if (koopa->IsMoving()) ShellHit(koopa->GetX());
+		}
+	}
 }

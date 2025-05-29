@@ -377,8 +377,9 @@ void CKoopaGreen::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (IsHeld()) {
 		ShellHeldTouch(dt, coObjects);
 	}
-	CCollision::GetInstance()->ProcessOverlap(this, dt, coObjects);
-	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);	
+	CCollision::GetInstance()->ProcessOverlapNow(this, dt, coObjects);
+
 }
 
 void CKoopaGreen::Kicked()

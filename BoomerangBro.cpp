@@ -23,6 +23,7 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
+	CCollision::GetInstance()->ProcessOverlapNow(this, dt, coObjects);
 
 	if (IsDead()) return;
 

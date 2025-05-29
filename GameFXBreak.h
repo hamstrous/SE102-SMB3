@@ -1,16 +1,16 @@
 #pragma once
 #include "GameFX.h"
 
-#define GRAVITY 0.002f
-#define SPEED_X 0.1f
-#define SPEED_X2 0.1f
+#define GRAVITY 0.0007f
+#define SPEED_X 0.08f
+#define SPEED_X2 0.08f
 #define SPEED_X3 0.05f
 #define SPEED_Y 0.15f
 
-#define LOW_JUMP 0.12f
-#define HIGH_JUMP 0.15f
+#define LOW_JUMP 0.15f
+#define HIGH_JUMP 0.3f
 #define DOWN_LOW_JUMP 0.15f
-#define DOWN_HIG_JUMP 0.18f
+#define DOWN_HIGH_JUMP 0.18f
 
 #define STATE_LOW_JUMP 400
 #define STATE_HIGH_JUMP 500
@@ -37,10 +37,11 @@ public:
 		else if (type == TYPE_LEFT_TOP_BREAK) vx = -SPEED_X;
 		else if (type == TYPE_RIGHT_TOP_BREAK) vx = SPEED_X;
 		else vx = SPEED_X;
+		if(type == TYPE_LEFT_BOT_BREAK || type == TYPE_RIGHT_BOT_BREAK) SetState(STATE_LOW_JUMP);
+		else SetState(STATE_HIGH_JUMP);
 	}
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	virtual void SetState(int state);
 	/*virtual void OnNoCollision(DWORD dt);
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e, DWORD dt);*/

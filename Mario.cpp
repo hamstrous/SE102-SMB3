@@ -573,6 +573,7 @@ void CMario::TailAttack(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 //Change animaion when mario kick the shell
 void CMario::KickedShell(float kx)
 {
+	shellProtectTimer->Start();
 	nx = kx > x ? 1 : -1;
 	AssignCurrentAnimation(level, nx > 0 ? MarioAnimationType::KICK_RIGHT : MarioAnimationType::KICK_LEFT);
 }
