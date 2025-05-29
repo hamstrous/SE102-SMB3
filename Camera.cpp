@@ -30,6 +30,7 @@ CCamera::CCamera(float x, float y, float levelWidth, float levelHeight, float st
 	screenWidth = game->GetBackBufferWidth();
 	this->x = x;
 	this->y = y;
+	this->startX = x;
 	this->levelWidth = levelWidth;
 	this->levelHeight = levelHeight;
 	SetState(state);

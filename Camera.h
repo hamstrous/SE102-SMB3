@@ -33,6 +33,8 @@ class CCamera : public CGameObject
 	float screenWidth = 320;
 	float screenHeight = 240;
 	ULONGLONG shakeStart = -1;
+
+	float startX;
 public:
 	CMario* GetMario();
 	
