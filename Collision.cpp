@@ -259,6 +259,14 @@ void CCollision::Scan(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* objDe
 		if (!obj->IsCollidable()) continue; // if the other obj not collidable then skip (2 way)
 		if(obj->IsBoundBoxZero()) continue; // if the other obj not collidable then skip (2 way)	
 		if(dynamic_cast<CMario*>(obj) && dynamic_cast<CBox*>(objSrc)) continue; 
+		if (dynamic_cast<CKoopa*>(objSrc) && dynamic_cast<CFloor*>(obj))
+		{
+			LPCOLLISIONEVENT e = SweptAABB(objSrc, dt, obj);
+			CKoopa* koopa = dynamic_cast<CKoopa*>(objSrc);
+			CFloor* floor = dynamic_cast<CFloor*>(obj);
+			if (floor->GetType() == 1 && e->nx !=0 ) continue; // skip moving koopa
+		}
+
 		if (dynamic_cast<CMovingPlatform*>(obj) && dynamic_cast<CKoopa*>(objSrc)) continue; // skip koopa on moving platform
 		if (type == 1 && !obj->IsBlocking()) continue;
 		else if (type == 2 && obj->IsBlocking()) continue;

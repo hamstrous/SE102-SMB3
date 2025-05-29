@@ -54,5 +54,6 @@ public:
     void RenderBoundingBox();
     virtual int IsCollidable() { return 1; };
 
+	virtual int GetType() { return type; }
 };
 
