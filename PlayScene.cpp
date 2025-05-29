@@ -696,7 +696,6 @@ void CPlayScene::Render()
 
 		if ((dynamic_cast<CFloor*>(i) && ((CFloor*)i)->GetType() != 1)
 			|| dynamic_cast<CBaseBrick*>(i)
-
 			|| dynamic_cast<CCharacter*>(i)
 			|| dynamic_cast<CSwitch*>(i)
 			/*|| dynamic_cast<CPipe*>(i)*/)
