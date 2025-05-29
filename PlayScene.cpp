@@ -697,6 +697,7 @@ void CPlayScene::Render()
 		if (dynamic_cast<CCharacter*>(i)
 			|| dynamic_cast<CFloor*>(i)
 			|| dynamic_cast<CBaseBrick*>(i)
+			|| dynamic_cast<CCharacter*>(i)
 			|| dynamic_cast<CSwitch*>(i)
 			/*|| dynamic_cast<CPipe*>(i)*/)
 			thirdRenderObjects.push_back(i);
