@@ -52,25 +52,16 @@ void CBreakableBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 
 void CBreakableBrick::SetState(int state)
 {
-	switch (state)
-	{
-	case STATE_MOVE_UP:
-		vy = -0.02f;
-		time_start = GetTickCount64();
-		break;
-	case STATE_MOVE_DOWN:
-		vy = 0.02f;
-		break;
-	}
 
 }
 
 void CBreakableBrick::SideHit()
 {
+	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	if(invincibleTimer->IsRunning()) return;
 	invincibleTimer->Start();
 	CAnimations* animations = CAnimations::GetInstance();
-	if (!CGame::GetInstance()->GetChangeBricktoCoin() && type != TYPE_ADDSCORE && !CGame::GetInstance()->GetChangeBricktoCoin())
+	if (!CGame::GetInstance()->GetChangeBricktoCoin() && type != TYPE_ADDSCORE && !CGame::GetInstance()->GetChangeBricktoCoin() && mario->GetLevel() != MarioLevel::SMALL)
 	{
 		CScoreManager::GetInstance()->AddScore(x, y, 10);
 		isDeleted = true;
@@ -99,6 +90,8 @@ void CBreakableBrick::BottomHit()
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
 
+	SideHit();
+
 	if (mario->GetLevel() != MarioLevel::SMALL && type != TYPE_ADDSCORE && !CGame::GetInstance()->GetChangeBricktoCoin())
 	{
 		bouncing = true;
@@ -110,16 +103,10 @@ void CBreakableBrick::BottomHit()
 	else {
 		bouncing = true;
 		animations->Get(ID_ANI_BOUNCING)->Reset();
-
 		time_start = GetTickCount64();
 	}
-	if (type == TYPE_ADDSCORE && !unbox2){
-		AddScoreBrick();
-		bouncing = true;
-		animations->Get(ID_ANI_BOUNCING)->Reset();
-		if (cx + 30 >= x) unbox = true;
-		//time_start = GetTickCount64();
-	}
+
+	
 }
 
 void CBreakableBrick::AddScoreBrick()
@@ -129,4 +116,5 @@ void CBreakableBrick::AddScoreBrick()
 	coin->SetState(COIN_STATE_MOVEUP);
 	scene->AddObject(coin);
 	CGameData::GetInstance()->AddCoin(1);
+	DebugOut(L"Add coin to scene\n");
 }

@@ -168,9 +168,9 @@ void CMario::GoingPipe(DWORD dt) {
 			goDownPipe = false;
 			if (typePipe % 2 == 0) outUpPipe = true;
 			else outDownPipe = true;
-			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 38 : PipeLocation[typePipe].second - 44;
+			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 38 : PipeLocation[typePipe].second - 31;
 			if (level != MarioLevel::SMALL)
-				distancePipeOut -= 8;
+				distancePipeOut -= 6;
 			scene->SetPlayerPosition(PipeLocation[typePipe].first, PipeLocation[typePipe].second);
 			pipeFadeoutStarted = false;
 		}
@@ -188,9 +188,9 @@ void CMario::GoingPipe(DWORD dt) {
 			goUpPipe = false;
 			if (typePipe % 2 == 0) outUpPipe = true;
 			else outDownPipe = true;
-			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 38 : PipeLocation[typePipe].second - 44;
+			distancePipeOut = typePipe % 2 ? PipeLocation[typePipe].second + 38 : PipeLocation[typePipe].second - 31;
 			if (level != MarioLevel::SMALL)
-				distancePipeOut -= 8;
+				distancePipeOut -= 6;
 			scene->SetPlayerPosition(PipeLocation[typePipe].first, PipeLocation[typePipe].second);
 			pipeFadeoutStarted = false;
 		}
@@ -303,8 +303,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	if (dynamic_cast<CCharacter*>(e->obj))
 		OnCollisionWithCharacter(e);
-	else if (dynamic_cast<CBreakableBrick*>(e->obj))
-		OnCollisionWithBreakableBrick(e);
+	/*else if (dynamic_cast<CBreakableBrick*>(e->obj))
+		OnCollisionWithBreakableBrick(e);*/
 	else if (dynamic_cast<CBaseBrick*>(e->obj))
 		OnCollisionWithBaseBrick(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
@@ -394,23 +394,13 @@ void CMario::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 	CBaseBrick* brick = dynamic_cast<CBaseBrick*>(e->obj);
 	if (e->ny > 0)
 	{
+		if (brick->GetBouncing()) vy = 0.03;
 		brick->BottomHit();
 	}
 }
 
 void CMario::OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e)
 {
-	CBaseBrick* brick = dynamic_cast<CBaseBrick*>(e->obj);
-	if (e->ny > 0)
-	{
-		brick->BottomHit();
-	}
-
-	if (!CGame::GetInstance()->GetChangeBricktoCoin()) return;
-	e->obj->Delete();
-	CGameData::GetInstance()->AddCoin(1);
-	CGameData::GetInstance()->AddScore(50);
-	
 }
 
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
