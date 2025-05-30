@@ -99,6 +99,7 @@ public:
 	void CreateTimers();
 	void RemoveTimers();
 
+	int GetLife() { return life; }
 
 	static CGameData* GetInstance();
 };

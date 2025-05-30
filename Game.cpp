@@ -557,7 +557,8 @@ void CGame::SwitchScene(int sceneId)
 void CGame::ResetCurrentScene()
 {
 	if (current_scene < 0) return;
-	SwitchScene(-2);
+	//if(CGameData::GetInstance()->GetLife() >= 0) 
+		SwitchScene(-2);
 	DebugOut(L"[INFO] Resetting scene %d\n", current_scene);
 }
 

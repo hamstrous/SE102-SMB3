@@ -119,6 +119,7 @@ public:
 	void SwitchScene();
 	void SwitchScene(int sceneId);
 	void ResetCurrentScene();
+	int GetCurrentSceneId() { return current_scene; }
 	void InitiateSwitchScene(int scene_id);
 
 	void _ParseSection_TEXTURES(string line);

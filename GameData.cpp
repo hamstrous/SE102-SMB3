@@ -14,7 +14,7 @@ void CGameData::OnDeath()
 
 	if (life < 0) {
 		life = 0;
-		game->SwitchScene(-1);
+		//game->SwitchScene(-1);
 		//lose game
 	}
 	else {
@@ -35,6 +35,16 @@ void CGameData::OnWin()
 	RemoveTimers();
 	if(justWonCard != -1) 
 		cards.push_back(justWonCard);
+	if (cards.size() == 3) {
+		if (cards[0] == cards[1] && cards[1] == cards[2])
+		{
+			if (cards[0] == 0) life += 5;
+			else if (cards[0] == 1) life += 3;
+			else life += 2;
+		}
+		else life += 1;
+		cards.clear();
+	}
 	justWonCard = -1;
 	fixedRemainingTime = -1;
 	timeToScore = false;

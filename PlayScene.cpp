@@ -576,7 +576,9 @@ void CPlayScene::Update(DWORD dt)
 			}
 		}
 		else {
-			CGame::GetInstance()->SwitchScene(10);
+			CGame* game = CGame::GetInstance();
+			if(game->GetCurrentSceneId() == 8) game->SwitchScene(10);
+			else game->SwitchScene(8);
 		}
 	}
 	

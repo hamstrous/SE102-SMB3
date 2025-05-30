@@ -29,7 +29,7 @@ void CMovingPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (isActive) {
 		y += newVy * dt;
 		newVy += GRAVITY_MOVING_PLATFORM * dt;
-		newVy = min(newVy, 0.2f);
+		newVy = min(newVy, 0.18f);
 	}
 
 	CGameObject::Update(dt, coObjects);

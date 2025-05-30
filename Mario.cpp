@@ -265,6 +265,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (untouchableTimer->IsDone()) {
 		untouchableTimer->Reset();
 	}
+	if(isOnPlatform) DebugOutTitle(L"On Platform\n");
+	else DebugOutTitle(L"Not On Platform\n");
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -288,6 +290,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 				count = 0;
 				vy = 0;
 				isOnPlatform = true;
+				if(vx != 0) DebugOut(L"[INFO] Mario on platform\n");
 				if (state == MARIO_STATE_WIN) vx = MARIO_WIN_WALKING_SPEED;
 				if (glideTimer->IsRunning()) {
 					glideTimer->Reset();
@@ -629,9 +632,9 @@ void CMario::SetPointsPosition()
 
 		points[2]->SetPosition(x + MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_BBOX_HEIGHT / 2 - MARIO_RIGHTLEFT_DOWN_Y_OFFSET);
 
-		points[3]->SetPosition(x + MARIO_SMALL_X_OFFSET + (nx > 0 ? MARIO_FOOT_EXTRA_OFFSET : 0), y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
+		points[3]->SetPosition(x + MARIO_SMALL_X_OFFSET + (nx > 0 ? MARIO_FOOT_EXTRA_OFFSET : 0) - 1, y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
 
-		points[4]->SetPosition(x - MARIO_SMALL_X_OFFSET - (nx < 0 ? MARIO_FOOT_EXTRA_OFFSET : 0), y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
+		points[4]->SetPosition(x - MARIO_SMALL_X_OFFSET - (nx < 0 ? MARIO_FOOT_EXTRA_OFFSET : 0) + 1, y + MARIO_SMALL_BBOX_HEIGHT / 2.f);
 
 		points[5]->SetPosition(x - MARIO_SMALL_BBOX_WIDTH / 2.f, y + MARIO_SMALL_BBOX_HEIGHT / 2 - MARIO_RIGHTLEFT_DOWN_Y_OFFSET);
 
