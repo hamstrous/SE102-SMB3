@@ -193,9 +193,9 @@ class CMario : public CCharacter
 protected:
 
 	vector<pair<float, float>> PipeLocation{
-		{2335.f, 415.f},
+		{2335.f, 410.f}, 
 		{3022.f, 230.f},
-		{2207.f, 420.f}
+		{2207.f, 406.f}
 	}; // type % 2 == 0 ? OutDown : OutUp di len la so chan, di xuong la so le
 	static unordered_map<MarioLevel, std::unordered_map<MarioAnimationType, int>> animationMap;
 	BOOLEAN isSitting;
