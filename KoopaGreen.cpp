@@ -106,6 +106,7 @@ void CKoopaGreen::SetState(int state)
 	switch (state)
 	{
 	case KOOPA_STATE_SHELL_IDLE:
+		ay = KOOPA_GRAVITY;
 		if (this->state == KOOPA_STATE_WALKING) y = (y + KOOPA_BBOX_HEIGHT / 2) - KOOPA_BBOX_HEIGHT_SHELL / 2; // when start walking, move up to normal y so dont drop through floor
 		// when start shell idle, move down to shell y so dont float above ground
 		vx = 0;
@@ -131,17 +132,18 @@ void CKoopaGreen::SetState(int state)
 		// when start walking, walk toward mario
 		break;
 	case KOOPA_STATE_SHELL_MOVING:
-		//ay = KOOPA_FLYING_GRAVITY_Y;
+		ay = KOOPA_GRAVITY_SHELL_MOVING;
 		isIdle = false;
 		InitHorizontalSpeedBasedOnMario(KOOPA_SHELL_SPEED); // when kicked, move away from mario
 		break;
 	case KOOPA_STATE_SHELL_MOVING_TAILHIT:
-		//ay = KOOPA_FLYING_GRAVITY_Y;
+		ay = KOOPA_GRAVITY_SHELL_MOVING;
 		isIdle = false;
 		InitHorizontalSpeedBasedOnMario(KOOPA_SHELL_SPEED); // when kicked, move away from mario
 		break;
 	case KOOPA_STATE_SHELL_HELD:
 	case KOOPA_STATE_SHELL_HELD_TAILHIT:
+		ay = KOOPA_GRAVITY;
 		shell_start += passedShellTime;
 		vx = 0;
 		vy = 0;
@@ -155,6 +157,7 @@ void CKoopaGreen::SetState(int state)
 		Release(true);
 		break;
 	case KOOPA_STATE_TAILHIT:
+		ay = KOOPA_GRAVITY;
 		if (this->state == KOOPA_STATE_WALKING) y = (y + KOOPA_BBOX_HEIGHT / 2) - KOOPA_BBOX_HEIGHT_SHELL / 2;
 		shell_start = GetTickCount64();
 		isIdle = true;
@@ -170,6 +173,7 @@ void CKoopaGreen::SetState(int state)
 		state = this->state == KOOPA_STATE_SHELL_HELD ? KOOPA_STATE_SHELL_IDLE : KOOPA_STATE_SHELL_HELD_TAILHIT;
 		break;
 	case KOOPA_STATE_DIE_UP:
+		ay = KOOPA_GRAVITY;
 		frontRender = true;
 		Release(true);
 		float player_x, player_y;

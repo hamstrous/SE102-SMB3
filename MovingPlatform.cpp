@@ -40,7 +40,7 @@ void CMovingPlatform::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (dynamic_cast<CMario*>(e->obj) && e->ny > 0 && !isActive)
 	{
-		newVy = 0.001;
+		newVy = 0.01;
 		isActive = true;
 	}
 	if (dynamic_cast<CAbyss*>(e->obj)) isDeleted = true;
