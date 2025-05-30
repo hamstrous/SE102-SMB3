@@ -13,6 +13,8 @@
 #define SPEED_Y_MOVING_PLATFORM	0.05f
 #define SPEED_X_MOVING_PLATFORM -0.027f
 
+#define GRAVITY_MOVING_PLATFORM 0.000225f
+
 #define TIME_DELAY 150
 
 class CMovingPlatform : public CGameObject
@@ -21,6 +23,7 @@ protected:
 	bool isActive = false;
 	ULONGLONG delayTime;
 	bool noDelay = false;
+	float newVy;
 public:
 	CMovingPlatform(float x, float y) :CGameObject(x, y) {}
 	void Render();
@@ -29,5 +32,6 @@ public:
 	int IsCollidable() { return 1; }
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
+	float GetNewSpeedY() { return newVy; }
 };
 

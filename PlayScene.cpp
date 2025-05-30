@@ -728,10 +728,10 @@ void CPlayScene::Render()
 		i->Render();
 	if (mario->ReturnRenderMarioInPipe()) mario->Render();
 	for (auto i : secondRenderObjects)
-		if (i != player) i->Render();
+		 i->Render();
 	if (mario->GetHolding() && !mario->IsBehind()) mario->Render();
 	for (auto i : thirdRenderObjects)
-		i->Render();
+		if (i != player) i->Render();
 	for (auto i : projectileRenderObjects)
 		i->Render();
 	

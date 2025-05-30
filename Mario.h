@@ -230,7 +230,7 @@ protected:
 	bool pipeFadeoutStarted = false;
 
 	//Moving flatform
-	bool isOnMovingFlatform = false;
+	float movingFlatformSpeed = 0.f;
 
 	// timers for animations
 	CTimer *attackTimer, *glideTimer, *flyTimer, *untouchableTimer, *turnHoldTimer, *shellProtectTimer, *sittingTimer, *hideTimer;
