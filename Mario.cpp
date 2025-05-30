@@ -230,9 +230,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 	else canSit = false;
 
-	if (isOnMovingFlatform) {
-		y += SPEED_Y_MOVING_PLATFORM * dt;
-		isOnMovingFlatform = false;
+	if (movingFlatformSpeed > 0) {
+		y += movingFlatformSpeed * dt;
+		movingFlatformSpeed = 0;
 	}
 	Acceleration(dt);
 
@@ -482,7 +482,9 @@ void CMario::OnCollisionWithMovingPlatfrom(LPCOLLISIONEVENT e)
 {
 	if (e->ny < 0) {
 		isOnPlatform = true;
-		isOnMovingFlatform = true;
+		CMovingPlatform *platform = dynamic_cast<CMovingPlatform*>(e->obj);
+		float phVx;
+		movingFlatformSpeed = platform->GetNewSpeedY();
 	}
 	//currentPlatform = dynamic_cast<CMovingPlatform*>(e->obj);
 	//vy + 0.05;

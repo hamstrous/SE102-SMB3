@@ -59,7 +59,7 @@ public:
 	float GetX() { return x; }
 	float GetY() { return y; }
 
-	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
+	virtual void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 	bool GetSleep() { return sleep; }
 
 	int GetState() { return this->state; }

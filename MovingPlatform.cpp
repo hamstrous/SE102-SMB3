@@ -26,7 +26,11 @@ void CMovingPlatform::GetBoundingBox(float& l, float& t, float& r, float& b)
 void CMovingPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!isActive) x += SPEED_X_MOVING_PLATFORM * dt;
-	if (isActive) y += SPEED_Y_MOVING_PLATFORM * dt;
+	if (isActive) {
+		y += newVy * dt;
+		newVy += GRAVITY_MOVING_PLATFORM * dt;
+		newVy = min(newVy, 0.2f);
+	}
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->ProcessCollision(this, dt, coObjects);
@@ -34,8 +38,9 @@ void CMovingPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMovingPlatform::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CMario*>(e->obj) && e->ny > 0)
+	if (dynamic_cast<CMario*>(e->obj) && e->ny > 0 && !isActive)
 	{
+		newVy = SPEED_Y_MOVING_PLATFORM;
 		isActive = true;
 	}
 	if (dynamic_cast<CAbyss*>(e->obj)) isDeleted = true;
