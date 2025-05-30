@@ -303,8 +303,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	if (dynamic_cast<CCharacter*>(e->obj))
 		OnCollisionWithCharacter(e);
-	/*else if (dynamic_cast<CBreakableBrick*>(e->obj))
-		OnCollisionWithBreakableBrick(e);*/
+	//else if (dynamic_cast<CBreakableBrick*>(e->obj))
+	//	OnCollisionWithBreakableBrick(e);
 	else if (dynamic_cast<CBaseBrick*>(e->obj))
 		OnCollisionWithBaseBrick(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
@@ -394,13 +394,20 @@ void CMario::OnCollisionWithBaseBrick(LPCOLLISIONEVENT e)
 	CBaseBrick* brick = dynamic_cast<CBaseBrick*>(e->obj);
 	if (e->ny > 0)
 	{
-		if (brick->GetBouncing()) vy = 0.03;
+		if (brick->GetBouncing()) vy = 0.08;
 		brick->BottomHit();
 	}
+	if (!dynamic_cast<CBreakableBrick*> (e->obj)) return;
+	if (!CGame::GetInstance()->GetChangeBricktoCoin()) return;
+	e->obj->Delete();
+	CGameData::GetInstance()->AddCoin(1);
+	CGameData::GetInstance()->AddScore(50);
+
 }
 
 void CMario::OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e)
 {
+
 }
 
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
@@ -1196,8 +1203,10 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	if (!canHold)
 	{
+		float shellX, shellY;
+		holdingShell->GetPosition(shellX, shellY);
+		KickedShell(shellX);
 		holdingShell->Kicked();
-		KickedShell(x);
 		holdingShell->ThrownInBlock(dt, coObjects);
 		holdingShell = NULL;
 		shellProtectTimer->Start();

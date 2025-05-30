@@ -58,8 +58,6 @@ void CBreakableBrick::SetState(int state)
 void CBreakableBrick::SideHit()
 {
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-	if(invincibleTimer->IsRunning()) return;
-	invincibleTimer->Start();
 	CAnimations* animations = CAnimations::GetInstance();
 	if (!CGame::GetInstance()->GetChangeBricktoCoin() && type != TYPE_ADDSCORE && !CGame::GetInstance()->GetChangeBricktoCoin() && mario->GetLevel() != MarioLevel::SMALL)
 	{

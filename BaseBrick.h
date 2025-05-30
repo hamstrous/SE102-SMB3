@@ -5,15 +5,9 @@
 class CBaseBrick : public CGameObject
 {
 protected:
-	CTimer* invincibleTimer = NULL;
 	bool bouncing = false;
 public:
-	CBaseBrick(float x, float y) : CGameObject(x, y) {
-		invincibleTimer = new CTimer(INVINCIBLE_TIME_FROM_TAIL_HIT);
-	}
-	~CBaseBrick() {
-		if(invincibleTimer != NULL) delete invincibleTimer;
-	}
+	CBaseBrick(float x, float y) : CGameObject(x, y) {}
 	virtual void Render() {};
 	virtual void Update(DWORD dt) {};
 	void GetBoundingBox(float& l, float& t, float& r, float& b) {};
