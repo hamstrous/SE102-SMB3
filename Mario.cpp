@@ -1124,6 +1124,7 @@ void CMario::Acceleration(DWORD dt)
 	}
 
 	vy = min(vy, MARIO_MAX_FALL_SPEED_Y);
+	vy = max(vy, -MARIO_JUMP_DEFLECT_SPEED);
 
 }
 

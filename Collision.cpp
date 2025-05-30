@@ -867,7 +867,10 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	int dirX = 0;
 	int dirY = 0;
 
-	const float X_PUSH_SPEED = 0.08f;
+	float X_PUSH_SPEED = 0.08f;
+	if (overlapedInvisibleWall) {
+		X_PUSH_SPEED = 0.12f; 
+	}
 	const float Y_PUSH_SPEED = 0.12f;
 
 	// not a good idea to change directly by frame, should use dt to account for the lag
