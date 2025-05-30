@@ -867,9 +867,9 @@ void CCollision::ProcessMarioPoints(LPGAMEOBJECT objSrc, vector<CPoint*>* points
 	int dirX = 0;
 	int dirY = 0;
 
-	float X_PUSH_SPEED = 0.08f;
+	float X_PUSH_SPEED = 0.06f;
 	if (overlapedInvisibleWall) {
-		X_PUSH_SPEED = 0.12f; 
+		X_PUSH_SPEED = 0.8f; 
 	}
 	const float Y_PUSH_SPEED = 0.12f;
 
