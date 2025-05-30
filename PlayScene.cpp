@@ -685,8 +685,6 @@ void CPlayScene::Render()
 			|| dynamic_cast<CCloudEllipse*>(i)
 			|| dynamic_cast<CMountain*>(i)
 			|| dynamic_cast<CCloud*>(i)
-
-			
 			|| dynamic_cast<CDecoration*>(i))
 
 			firstRenderObjects.push_back(i);
@@ -700,7 +698,6 @@ void CPlayScene::Render()
 		if( (dynamic_cast<CCharacter*>(i) && !dynamic_cast<CPlant*>(i))
 			|| dynamic_cast<CFloor*>(i)
 			|| dynamic_cast<CBaseBrick*>(i)
-			|| dynamic_cast<CCharacter*>(i)
 			|| dynamic_cast<CSwitch*>(i))
 			thirdRenderObjects.push_back(i);
 

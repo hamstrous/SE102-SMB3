@@ -786,6 +786,7 @@ CMario::CMario(float x, float y) : CCharacter(x, y)
 	ax = 0.0f;
 	ay = MARIO_GRAVITY;
 	level = CGameData::GetInstance()->marioLevel;
+	if (level > MarioLevel::SMALL) y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 	isOnPlatform = false;
 	coin = 0;
 	canHold = false;
