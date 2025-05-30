@@ -29,7 +29,7 @@ void CMovingPlatform::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (isActive) {
 		y += newVy * dt;
 		newVy += GRAVITY_MOVING_PLATFORM * dt;
-		newVy = min(newVy, 0.18f);
+		newVy = min(newVy, SPEED_Y_MOVING_PLATFORM);
 	}
 
 	CGameObject::Update(dt, coObjects);
@@ -40,7 +40,7 @@ void CMovingPlatform::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (dynamic_cast<CMario*>(e->obj) && e->ny > 0 && !isActive)
 	{
-		newVy = SPEED_Y_MOVING_PLATFORM;
+		newVy = 0.001;
 		isActive = true;
 	}
 	if (dynamic_cast<CAbyss*>(e->obj)) isDeleted = true;
