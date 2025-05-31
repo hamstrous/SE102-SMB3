@@ -3,7 +3,7 @@
 
 void CAbyss::Render()
 {
-    RenderBoundingBox();
+    //RenderBoundingBox();
 }
 
 void CAbyss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

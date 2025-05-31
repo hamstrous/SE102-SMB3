@@ -131,7 +131,7 @@ void CGoombaFly::Render()
 	if(!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CGoombaFly::OnNoCollision(DWORD dt)

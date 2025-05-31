@@ -112,7 +112,7 @@ void CBoomerangBro::Render()
 	if (waitTimer->IsRunning()) mode = 1;
 	if (GetIsStop() || GetIsDead()) mode = 1;
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y, mode);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CBoomerangBro::SetState(int state)

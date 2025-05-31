@@ -24,7 +24,7 @@ void CFireball::Render()
 	int aniId = ID_ANI_FIREBALL; 
 	if (!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CFireball::OnNoCollision(DWORD dt)

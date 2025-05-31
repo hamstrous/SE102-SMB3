@@ -8,7 +8,7 @@ void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vy = min(vy, BOOMERANG_MAX_VERTICAL_SPEED);
 	CCollision::GetInstance()->ProcessNoBlock(this, dt, coObjects);
-	DebugOutTitle(L"Boomerang: %f, %f\n", x, y);
+	//DebugOutTitle(L"Boomerang: %f, %f\n", x, y);
 	if (state == BOOMERANG_STATE_OUTWARD)
 	{
 		BOOMERANG_VERTICAL_LENGTH = max(BOOMERANG_VERTICAL_LENGTH, abs(y - startY));
@@ -39,7 +39,7 @@ void CBoomerang::Render()
 
 	if (!GetIsStop() && !GetIsDead()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CBoomerang::SetState(int state)

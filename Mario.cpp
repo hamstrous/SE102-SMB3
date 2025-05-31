@@ -265,8 +265,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (untouchableTimer->IsDone()) {
 		untouchableTimer->Reset();
 	}
-	if(isOnPlatform) DebugOutTitle(L"On Platform\n");
-	else DebugOutTitle(L"Not On Platform\n");
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -495,6 +493,7 @@ void CMario::OnCollisionWithMovingPlatfrom(LPCOLLISIONEVENT e)
 		CMovingPlatform *platform = dynamic_cast<CMovingPlatform*>(e->obj);
 		float phVx;
 		movingFlatformSpeed = platform->GetNewSpeedY();
+		platform->Enable();
 	}
 	//currentPlatform = dynamic_cast<CMovingPlatform*>(e->obj);
 	//vy + 0.05;
@@ -840,10 +839,10 @@ void CMario::Render()
 
 	animations->Get(currentAnimation)->Render(x, y);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 	for(int i=0;i<7;i++)
 	{
-		points[i]->RenderBoundingBox();
+		//points[i]->RenderBoundingBox();
 	}
 	
 	//DebugOutTitle(L"Coins: %d", coin);
@@ -1219,6 +1218,11 @@ void CMario::HoldingProcess(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMario::SetLevel(MarioLevel l)
 {
+	if (isSitting) {
+		sittingTimer->Reset();
+		isSitting = false;
+		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
+	}
 	if(l > MarioLevel::RACCOON)
 	{
 		l = MarioLevel::RACCOON;

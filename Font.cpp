@@ -76,7 +76,7 @@ void CFont::FontToSprite(int x, int y, string str)
         else
         {
             // Handle unknown character
-            DebugOutTitle(L"[ERROR] CFont::FontToSprite: Unknown character %c\n", c);
+            //DebugOutTitle(L"[ERROR] CFont::FontToSprite: Unknown character %c\n", c);
         }
     }
 }

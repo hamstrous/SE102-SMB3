@@ -33,5 +33,10 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 	float GetNewSpeedY() { return newVy; }
+	void Enable() {
+		if (isActive) return;
+		isActive = true;
+		newVy = 0.01;
+	};
 };
 

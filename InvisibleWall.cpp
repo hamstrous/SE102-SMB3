@@ -48,5 +48,5 @@ void CInvisibleWall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CInvisibleWall::Render()
 {
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }

@@ -9,7 +9,7 @@ void CCoin::Render()
 		animations->Get(aniId)->Render(x, y);
 	if (!GetIsStop()) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	else CAnimations::GetInstance()->Get(aniId)->Render(x, y, 1);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
